@@ -8,7 +8,7 @@
 			"name": "(gdb) Launch",
 			"type": "cppdbg",
 			"request": "launch",
-			"program": "renderer",
+			"program": "/home/pavon/rt_renderer/renderer",
 			"args": [],
 			"stopAtEntry": false,
 			"cwd": "${workspaceFolder}",
