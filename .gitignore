@@ -1,0 +1,5 @@
+renderer
+.vscode/ipch
+*.o
+*.spv
+*.out
