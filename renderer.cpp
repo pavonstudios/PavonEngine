@@ -17,7 +17,7 @@ void Renderer::run() {
 }
 
 void Renderer::VulkanConfig(){
-	 createImageViews();
+	 	createImageViews();
         createRenderPass();
         createDescriptorSetLayout();
         createGraphicsPipeline();
