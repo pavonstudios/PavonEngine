@@ -152,6 +152,7 @@ public:
     float RotationValue = 90;
     bool bIsRunnning = false;
     float move_y = 0;
+	std::string fragment_shader_path = "shaders/red.spv";
 private:
     GLFWwindow* window;
 
@@ -225,9 +226,13 @@ private:
             app->move_y -= 1;
          if (key == GLFW_KEY_M && action == GLFW_PRESS){
              app->loadModel("models/chalet.obj");
-            app->recreateSwapChain();
+            app->VulkanConfig();
          }
-            
+         if (key == GLFW_KEY_Q && action == GLFW_PRESS){
+             app->fragment_shader_path = "shaders/frag.spv";
+			 app->VulkanConfig();
+          
+         }
     }
 	
 
@@ -548,7 +553,7 @@ private:
 
     void createGraphicsPipeline() {
         auto vertShaderCode = readFile("shaders/vert.spv");
-        auto fragShaderCode = readFile("shaders/frag.spv");
+        auto fragShaderCode = readFile(fragment_shader_path);
 
         VkShaderModule vertShaderModule = createShaderModule(vertShaderCode);
         VkShaderModule fragShaderModule = createShaderModule(fragShaderCode);
