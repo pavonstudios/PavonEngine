@@ -1,6 +1,8 @@
 #ifndef _Renderer_H_
 #define _Renderer_H_
 
+#include <GL/glew.h>
+
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
@@ -65,7 +67,11 @@ struct SwapChainSupportDetails {
     std::vector<VkSurfaceFormatKHR> formats;
     std::vector<VkPresentModeKHR> presentModes;
 };
-
+static const GLfloat g_vertex_buffer_data[] = {
+   -1.0f, -1.0f, 0.0f,
+   1.0f, -1.0f, 0.0f,
+   0.0f,  1.0f, 0.0f,
+};
 struct Vertex {
     glm::vec3 pos;
     glm::vec3 color;
@@ -126,25 +132,12 @@ public:
    
 	void run();
 
-    void recreateSwapChain() {
-        int width = 0, height = 0;
-        while (width == 0 || height == 0) {
-            glfwGetFramebufferSize(window, &width, &height);
-            glfwWaitEvents();
-        }
+    void run_opengl();
 
-        vkDeviceWaitIdle(device);
+    void init_opengl();
 
-        cleanupSwapChain();
-
-        createSwapChain();
-        createImageViews();
-        createRenderPass();
-        createGraphicsPipeline();
-        createDepthResources();
-        createFramebuffers();
-        createCommandBuffers();
-    }
+    void recreateSwapChain();
+    
     void VulkanConfig();
 
     void loadModel(std::string model_path);
@@ -153,6 +146,8 @@ public:
     bool bIsRunnning = false;
     float move_y = 0;
 	std::string fragment_shader_path = "shaders/red.spv";
+    bool bIsOpenGl = false;
+    GLuint vertexbuffer;
 private:
     GLFWwindow* window;
 
@@ -239,12 +234,38 @@ private:
     void initWindow() {
         glfwInit();
 
-        glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+        
+        
+        if(bIsOpenGl){
+            glfwWindowHint(GLFW_SAMPLES, 4); // 4x antialiasing
+            glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); // We want OpenGL 3.3
+            glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+            glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
+            glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // We don't want the old OpenGL 
 
-        window = glfwCreateWindow(WIDTH, HEIGHT, "Vulkan", nullptr, nullptr);
-        glfwSetWindowUserPointer(window, this);
-        glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
-        glfwSetKeyCallback(window, key_callback);
+            window = glfwCreateWindow(WIDTH, HEIGHT, "Renderer", nullptr, nullptr);
+
+
+
+            glfwMakeContextCurrent(window); // Initialize GLEW
+            glewExperimental=true; // Needed in core profile
+            if (glewInit() != GLEW_OK) {
+                fprintf(stderr, "Failed to initialize GLEW\n");
+                
+            }
+            GLuint VertexArrayID;
+            glGenVertexArrays(1, &VertexArrayID);
+            glBindVertexArray(VertexArrayID);
+        }else{
+
+            glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+
+            window = glfwCreateWindow(WIDTH, HEIGHT, "Renderer", nullptr, nullptr);
+            glfwSetWindowUserPointer(window, this);
+            glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
+            glfwSetKeyCallback(window, key_callback);
+        }
+        
     }
 
     static void framebufferResizeCallback(GLFWwindow* window, int width, int height) {
@@ -263,17 +284,7 @@ private:
         createSyncObjects();
     }
     
-    void mainLoop() {
-        while (!glfwWindowShouldClose(window)) {
-            bIsRunnning = true;
-            glfwPollEvents();
-            drawFrame();
-            
-        }
-
-        vkDeviceWaitIdle(device);
-        bIsRunnning = false;
-    }
+    void mainLoop();
 
     void cleanupSwapChain() {
         vkDestroyImageView(device, depthImageView, nullptr);
