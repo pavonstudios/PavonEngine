@@ -9,8 +9,12 @@ class Engine {
     public:
         Renderer app;
         pthread_t thread[2];
-        void Execute(){            
-            
+        bool backed_opengl = false;
+/*
+Exucute the engine, is the argument is true then execute opengl backend
+*/
+        void Execute(bool bIsOpengl){            
+            backed_opengl = bIsOpengl;
             pthread_create(&thread[0],NULL, ExecuteRenderHanler, this);
             
             pthread_create(&thread[1],NULL, ExecuteInputHanler, this);
@@ -62,8 +66,11 @@ class Engine {
 
         void *Render(){
             std::cout << "Rendering" << std::endl;
-        
-            app.run();
+
+            if(backed_opengl){
+                app.run_opengl();
+            }else
+                app.run();
             pthread_exit(NULL);
         }
 

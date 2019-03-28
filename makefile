@@ -1,13 +1,13 @@
 CC=g++ -g -std=c++17
-Library=-lvulkan -lglfw -lpthread
+Library=-lvulkan -lglfw -lpthread -lGLEW -lGL
 
 all: main
 
-main: 
-	$(CC) renderer.cpp main.cpp -o renderer $(Library) -I./
+main: renderer.o
+	$(CC) main.cpp -o renderer renderer.o $(Library) -I./
 
 renderer.o:
-	$(CC) -c renderer.cpp -I./
+	$(CC) -c renderer.cpp $(Library) -I./
 clear:
 	rm -rf *.o
 
