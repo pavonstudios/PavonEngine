@@ -3,11 +3,20 @@
 
 #include <pthread.h>
 #include "renderer.h"
+
+#ifdef _OpenGL_Renderer_
+#include "opengl_renderer.h"
+#endif
 /* Engine class who controll 
 threads executions */
 class Engine {
     public:
+#ifndef _OpenGL_Renderer_
         Renderer app;
+#endif
+#ifdef _OpenGL_Renderer_
+        RendererGL app;
+#endif
         pthread_t thread[2];
         void Execute(){            
             
@@ -44,15 +53,15 @@ class Engine {
                 }
                 if(character == 'x'){
                     std::cout << "Rotation value changed to 45";
-                    app.RotationValue = 45;
+                    //app.RotationValue = 45;
                 }
                 if(character == 'z'){
                     std::cout << "LRotation Value changed to 90";
-                     app.RotationValue = 90;
+                     //app.RotationValue = 90;
                 }
                 if(character == 'm'){
                     std::cout << "Loading other model";
-                    app.loadModel("models/chalet.obj");
+                    //app.loadModel("models/chalet.obj");
                 }
                 
             }
@@ -62,8 +71,10 @@ class Engine {
 
         void *Render(){
             std::cout << "Rendering" << std::endl;
-        
+
             app.run();
+
+            
             pthread_exit(NULL);
         }
 
