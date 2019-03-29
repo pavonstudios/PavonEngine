@@ -23,11 +23,11 @@ class Engine {
         pthread_t thread[2];
         void Execute(){            
             
-            pthread_create(&thread[0],NULL, ExecuteRenderHanler, this);
+            //pthread_create(&thread[0],NULL, ExecuteRenderHanler, this);
             
             //pthread_create(&thread[1],NULL, ExecuteInputHanler, this);
           
-          
+            Render();
             
             }
     private:
@@ -78,7 +78,7 @@ class Engine {
             app.run();
 
             
-            pthread_exit(NULL);
+            //pthread_exit(NULL);
         }
 
 };

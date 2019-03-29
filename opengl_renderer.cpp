@@ -74,7 +74,7 @@ void RendererGL::update_matrix(){
 
 }
 void RendererGL::run(){
-
+	main_camera.SetLocation(2.f,3.f,2.f);
 	init_ogl();	
 	generate_mvp_matrix();
 	main_loop();
@@ -118,7 +118,7 @@ void RendererGL::init_ogl(){
 	shadersID = LoadShaders("shaders/simple_vert_mvp.vert","shaders/simple_frag.frag");
 }
 void RendererGL::main_loop(){
-	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
+	//glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 
 	 while (!glfwWindowShouldClose(window)) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
