@@ -25,7 +25,7 @@
 #include <array>
 #include <optional>
 #include <set>
-#include <unordered_map>
+
 
 #include "3D_objects.h"
 
@@ -107,7 +107,7 @@ public:
     float RotationValue = 90;
     bool bIsRunnning = false;
     float move_y = 0;
-    model_3d my_3d_model;
+    mesh my_3d_model;
 
 private:
     GLFWwindow* window;

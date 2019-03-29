@@ -9,4 +9,4 @@ renderer.o:
 	$(CC) -c renderer.cpp -I./
 
 gl:
-	$(CC) opengl_renderer.cpp main.cpp -o renderer $(Library) -lGLEW -lGL -I./ -D_OpenGL_Renderer_
+	$(CC) 3D_objects.cpp opengl_renderer.cpp main.cpp -o renderer $(Library) -lGLEW -lGL -I./ -D_OpenGL_Renderer_
