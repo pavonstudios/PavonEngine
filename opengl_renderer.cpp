@@ -1,6 +1,6 @@
 #include "opengl_renderer.h"
 #include "gl_shader_loader.hpp"
-#include <chrono>
+#include "engine.h"
 
 
 static const GLfloat g_vertex_buffer_data[] = {
@@ -48,13 +48,7 @@ static const GLfloat cube_vertex_data[] = {
     1.0f,-1.0f, 1.0f
 };
 
-float RendererGL::get_time(){
-	    static auto startTime = std::chrono::high_resolution_clock::now();
 
-        auto currentTime = std::chrono::high_resolution_clock::now();
-        float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
-	return time;
-}
 void RendererGL::generate_mvp_matrix(){
 
 	MatrixID = glGetUniformLocation(shadersID, "MVP");
@@ -64,7 +58,7 @@ void RendererGL::update_matrix(){
 	
 	
 
-	glm::mat4 Model = glm::rotate(glm::mat4(1.0f), get_time() * glm::radians(90.f), glm::vec3(0.0f, 0.0f, 1.0f));
+	glm::mat4 Model = glm::rotate(glm::mat4(1.0f), engine->get_time() * glm::radians(90.f), glm::vec3(0.0f, 0.0f, 1.0f));
 
 	//glm::mat4 Model = glm::mat4(1.0f);
 	// Our ModelViewProjection : multiplication of our 3 matrices

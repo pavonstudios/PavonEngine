@@ -2,6 +2,7 @@
 #define _GL_RENDERER_H_
 
 
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
@@ -21,10 +22,12 @@
 #include "3D_objects.h"
 #include "camera.h"
 
+
 class RendererGL{
 public:
 	void run();
 	bool bIsRunnning = false;
+	class Engine* engine;
 private:
 	class GLFWwindow* window; 
 	void main_loop();
@@ -33,7 +36,7 @@ private:
 	void generate_mvp_matrix();
 	void update_matrix();
 
-	float get_time();
+	
 	
 	GLuint vertexbuffer;
 	GLuint VertexArrayID;

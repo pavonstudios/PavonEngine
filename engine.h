@@ -10,8 +10,11 @@
 #ifdef _OpenGL_Renderer_
 #include "opengl_renderer.h"
 #endif
+#include <chrono>
+
 /* Engine class who controll 
 threads executions */
+
 class Engine {
     public:
 #ifndef _OpenGL_Renderer_
@@ -21,6 +24,13 @@ class Engine {
         RendererGL app;
 #endif
         pthread_t thread[2];
+        float get_time(){
+            static auto startTime = std::chrono::high_resolution_clock::now();
+
+            auto currentTime = std::chrono::high_resolution_clock::now();
+            float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
+            return time;
+        }
         void Execute(){            
             
             //pthread_create(&thread[0],NULL, ExecuteRenderHanler, this);
