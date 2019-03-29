@@ -32,6 +32,7 @@ private:
 	class GLFWwindow* window; 
 	void main_loop();
 	void init_ogl();
+	void init_window();
 	void draw_trigangle();
 	void generate_mvp_matrix();
 	void update_matrix();
@@ -45,6 +46,7 @@ private:
 	glm::mat4 mvp;
 
 	Mesh my_model;
+	Mesh cube;
 
 	Camera main_camera;
 

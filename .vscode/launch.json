@@ -5,6 +5,26 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
+			"name": "OpenGL Compile & Run",
+			"type": "cppdbg",
+			"request": "launch",
+			"program": "/home/pavon/rt_renderer/renderer",
+			"args": [],
+			"stopAtEntry": false,
+			"cwd": "${workspaceFolder}",
+			"environment": [],
+			"externalConsole": false,
+			"MIMode": "gdb",
+			"setupCommands": [
+				{
+					"description": "Enable pretty-printing for gdb",
+					"text": "-enable-pretty-printing",
+					"ignoreFailures": true
+				}
+			],
+			"preLaunchTask": "make opengl"
+		},
+		{
 			"name": "(gdb) Launch",
 			"type": "cppdbg",
 			"request": "launch",
