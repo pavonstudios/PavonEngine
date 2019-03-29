@@ -2,7 +2,10 @@
 #define _Engine_H_
 
 #include <pthread.h>
+
+#ifndef _OpenGL_Renderer_
 #include "renderer.h"
+#endif
 
 #ifdef _OpenGL_Renderer_
 #include "opengl_renderer.h"
