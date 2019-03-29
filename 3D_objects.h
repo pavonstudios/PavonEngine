@@ -65,7 +65,7 @@ namespace std {
     };
 }
 
-class mesh : public GameObject{
+class Mesh : public GameObject{
 public:
     std::vector<Vertex> vertices;
     std::vector<uint32_t> indices;
@@ -78,6 +78,10 @@ public:
 
     virtual void SetLocation(float x, float y, float z);
 
+
+#ifndef _OpenGL_Renderer_
+    VkBuffer vertices_buffer;
+#endif
 
 		
 };

@@ -41,7 +41,7 @@ private:
 	GLuint MatrixID;
 	glm::mat4 mvp;
 
-	mesh my_model;
+	Mesh my_model;
 
 	Camera main_camera;
 
