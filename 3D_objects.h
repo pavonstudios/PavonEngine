@@ -69,6 +69,7 @@ class Mesh : public GameObject{
 public:
     std::vector<Vertex> vertices;
     std::vector<uint32_t> indices;
+    std::vector< glm::vec3 > simple_vertices;
 
     void load_model(std::string model_path);
 
@@ -77,6 +78,8 @@ public:
     
 
     virtual void SetLocation(float x, float y, float z);
+
+    bool load_model2(const char * path);
 
 
 #ifndef _OpenGL_Renderer_
