@@ -10,6 +10,6 @@ int main() {
     } */
     Engine my_engine;
     my_engine.Execute();
-    pthread_exit(NULL);
+    //pthread_exit(NULL);
     return EXIT_SUCCESS;
 }
