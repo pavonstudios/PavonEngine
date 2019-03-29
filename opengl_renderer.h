@@ -12,8 +12,13 @@
 #include <GL/glew.h>
 #include "GLFW/glfw3.h"
 
+
+#define GLM_FORCE_RADIANS
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
+#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include "3D_objects.h"
 
 
 class RendererGL{
@@ -21,7 +26,7 @@ public:
 	void run();
 	bool bIsRunnning = false;
 private:
-	class GLFWwindow* window; // (In the accompanying source code, this variable is global for simplicity)
+	class GLFWwindow* window; 
 	void main_loop();
 	void init_ogl();
 	void draw_trigangle();
@@ -29,12 +34,14 @@ private:
 	void update_matrix();
 
 	float get_time();
-	// This will identify our vertex buffer
+	
 	GLuint vertexbuffer;
 	GLuint VertexArrayID;
 	GLuint shadersID;
 	GLuint MatrixID;
 	glm::mat4 mvp;
+
+	mesh my_model;
 
 
 };

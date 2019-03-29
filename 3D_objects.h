@@ -1,10 +1,15 @@
 #ifndef _3D_OBJ_H_
 #define _3D_OBJ_H_
 
-#include <vector>
+
+#define GLM_FORCE_RADIANS
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
+#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/glm.hpp>
-#include <array>
 #include <glm/gtx/hash.hpp>
+#include <unordered_map>
+#include <vector>
+#include <array>
 
 #ifndef _OpenGL_Renderer_
 #include <vulkan/vulkan.h>
@@ -44,11 +49,11 @@ struct Vertex {
 
         return attributeDescriptions;
     }
-
+#endif
     bool operator==(const Vertex& other) const {
         return pos == other.pos && color == other.color && texCoord == other.texCoord;
     }
-#endif
+
 };
 namespace std {
     template<> struct hash<Vertex> {
@@ -58,7 +63,7 @@ namespace std {
     };
 }
 
-class model_3d{
+class mesh{
 public:
     std::vector<Vertex> vertices;
     std::vector<uint32_t> indices;

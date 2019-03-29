@@ -7,6 +7,7 @@
 
 void Renderer::run() {
         bIsRunnning = true;
+        my_3d_model.load_model("models/character.obj");
         initWindow();
         initVulkan();
         mainLoop();
@@ -14,7 +15,7 @@ void Renderer::run() {
 }
 
 void Renderer::VulkanConfig(){
-	 createImageViews();
+	    createImageViews();
         createRenderPass();
         createDescriptorSetLayout();
         createGraphicsPipeline();
@@ -24,7 +25,7 @@ void Renderer::VulkanConfig(){
         createTextureImage("textures/character.jpg");
         createTextureImageView();
         createTextureSampler();
-        my_3d_model.load_model("models/character.obj");
+        //my_3d_model.load_model("models/character.obj");
         createVertexBuffer();
         createIndexBuffer();
         createUniformBuffers();

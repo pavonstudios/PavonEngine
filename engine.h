@@ -25,7 +25,7 @@ class Engine {
             
             pthread_create(&thread[0],NULL, ExecuteRenderHanler, this);
             
-            pthread_create(&thread[1],NULL, ExecuteInputHanler, this);
+            //pthread_create(&thread[1],NULL, ExecuteInputHanler, this);
           
           
             

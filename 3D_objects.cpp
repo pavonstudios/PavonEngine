@@ -2,10 +2,9 @@
 
 #define TINYOBJLOADER_IMPLEMENTATION
 #include <tiny_obj_loader.h>
-#include <glm/gtx/hash.hpp>
-#include <unordered_map>
 
-void model_3d::load_model(std::string model_path){
+
+void mesh::load_model(std::string model_path){
         tinyobj::attrib_t attrib;
         std::vector<tinyobj::shape_t> shapes;
         std::vector<tinyobj::material_t> materials;
