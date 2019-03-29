@@ -9,7 +9,7 @@ static const GLfloat g_vertex_buffer_data[] = {
    0.0f,  0.5f, 0.0f,
 };
 
-static const GLfloat cube_vertex_data[] = {
+static const float cube_vertex_data[] = {
     -1.0f,-1.0f,-1.0f, // triangle 1 : begin
     -1.0f,-1.0f, 1.0f,
     -1.0f, 1.0f, 1.0f, // triangle 1 : end
@@ -73,12 +73,24 @@ void RendererGL::run(){
 		fprintf( stderr, "Failed to load 3d mesh\n" );
 		return;
 	}
+	int size = sizeof(cube_vertex_data)/sizeof(cube_vertex_data[0]);
+	std::cout << "size %i" << size << std::endl;
+	int i = 0;
+	for (i ; i < size; i++){
+		glm::vec3 vertex;
+		for (int o = 0; o < 3; o++){
+			vertex = glm::vec3(cube_vertex_data[i],cube_vertex_data[i+1],cube_vertex_data[i+2]);
+		}
+		i = i + 2;
+		cube.simple_vertices.push_back(vertex);
+
+	}
 	init_ogl();	
 	generate_mvp_matrix();
 	main_loop();
 }
 
-void RendererGL::init_ogl(){
+void RendererGL::init_window(){
 	glewExperimental = true; // Needed for core profile
 	if( !glfwInit() )
 	{
@@ -99,13 +111,44 @@ void RendererGL::init_ogl(){
 		glfwTerminate();
 		return;
 	}
-		glfwMakeContextCurrent(window); // Initialize GLEW
+	
+	glfwMakeContextCurrent(window); // Initialize GLEW
 	
 
 	if (glewInit() != GLEW_OK) {
 		fprintf(stderr, "Failed to initialize GLEW\n");
 		return;
 	}
+}
+
+
+void RendererGL::draw_trigangle(){
+
+
+	Mesh mesh_to_draw = cube;
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(cube_vertex_data), cube_vertex_data, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, mesh_to_draw.simple_vertices.size() * sizeof(glm::vec3),
+					 &mesh_to_draw.simple_vertices[0], GL_STATIC_DRAW);
+
+
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+	glVertexAttribPointer(
+		0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
+		3,                  // size
+		GL_FLOAT,           // type
+		GL_FALSE,           // normalized?
+		0,                  // stride
+		(void*)0            // array buffer offset
+	);
+									//count of triangles
+	glDrawArrays(GL_TRIANGLES, 0, mesh_to_draw.simple_vertices.size()); 
+	glDisableVertexAttribArray(0);
+}
+
+void RendererGL::init_ogl(){
+	init_window();
+	
 	glGenVertexArrays(1, &VertexArrayID);
 	glBindVertexArray(VertexArrayID);
 
@@ -115,6 +158,7 @@ void RendererGL::init_ogl(){
 
 	shadersID = LoadShaders("shaders/simple_vert_mvp.vert","shaders/simple_frag.frag");
 }
+
 void RendererGL::main_loop(){
 	//glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 
@@ -136,25 +180,3 @@ void RendererGL::main_loop(){
 
 }
 
-void RendererGL::draw_trigangle(){
-
-
-
-	//glBufferData(GL_ARRAY_BUFFER, sizeof(cube_vertex_data), cube_vertex_data, GL_STATIC_DRAW);
-	glBufferData(GL_ARRAY_BUFFER, my_model.simple_vertices.size() * sizeof(glm::vec3), &my_model.simple_vertices[0], GL_STATIC_DRAW);
-
-
-	glEnableVertexAttribArray(0);
-		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-		glVertexAttribPointer(
-		0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
-		3,                  // size
-		GL_FLOAT,           // type
-		GL_FALSE,           // normalized?
-		0,                  // stride
-		(void*)0            // array buffer offset
-	);
-	// Draw the triangle !
-	glDrawArrays(GL_TRIANGLES, 0, my_model.simple_vertices.size()/3); // Starting from vertex 0; 3 vertices total -> 1 triangle
-	glDisableVertexAttribArray(0);
-}

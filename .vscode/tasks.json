@@ -2,6 +2,19 @@
   "tasks": [
     {
       "type": "shell",
+      "label": "make opengl",
+      "command": "make",
+      "args": ["gl"],
+      "options": {
+        //"cwd": "/usr/bin"
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "type": "shell",
       "label": "make",
       "command": "make",
       "args": [],
