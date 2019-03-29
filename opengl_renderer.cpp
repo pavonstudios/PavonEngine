@@ -3,13 +3,34 @@
 
 // An array of 3 vectors which represents 3 vertices
 static const GLfloat g_vertex_buffer_data[] = {
-   -1.0f, -1.0f, 0.0f,
-   1.0f, -1.0f, 0.0f,
-   0.0f,  1.0f, 0.0f,
+   -0.5f, -0.5f, 0.0f,
+   0.5f, -0.5f, 0.0f,
+   0.0f,  0.5f, 0.0f,
 };
 
+void RendererGL::generate_mvp_matrix(){
+	glm::mat4 Projection = glm::perspective(glm::radians(45.f), 800.f/600.f, 0.1f, 100.f);
+	glm::mat4 View = glm::lookAt(
+		glm::vec3(4,3,3), // Camera is at (4,3,3), in World Space
+		glm::vec3(0,0,0), // and looks at the origin
+		glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
+    );
+
+	// Model matrix : an identity matrix (model will be at the origin)
+	glm::mat4 Model = glm::mat4(1.0f);
+	// Our ModelViewProjection : multiplication of our 3 matrices
+	mvp = Projection * View * Model; // Remember, matrix multiplication is the other way around
+
+	MatrixID = glGetUniformLocation(shadersID, "MVP");
+
+}
+void RendererGL::update_matrix(){
+	glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &mvp[0][0]);
+
+}
 void RendererGL::run(){
 	init_ogl();
+	generate_mvp_matrix();
 	main_loop();
 }
 
@@ -28,7 +49,7 @@ void RendererGL::init_ogl(){
 
 	// Open a window and create its OpenGL context
 	
-	window = glfwCreateWindow( 1024, 768, "Tutorial 01", NULL, NULL);
+	window = glfwCreateWindow( 800, 600, "OpenGL", NULL, NULL);
 	if( window == NULL ){
 		fprintf( stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n" );
 		glfwTerminate();
@@ -54,7 +75,7 @@ void RendererGL::init_ogl(){
 
 
 	//load shaders
-	shadersID = LoadShaders("shaders/simple_vert.vert","shaders/simple_frag.frag");
+	shadersID = LoadShaders("shaders/simple_vert_mvp.vert","shaders/simple_frag.frag");
 }
 void RendererGL::main_loop(){
 	// Ensure we can capture the escape key being pressed below
@@ -68,6 +89,7 @@ void RendererGL::main_loop(){
 
 		glUseProgram(shadersID);
 
+		update_matrix();
 		draw_trigangle();
 
 		// Swap buffers
