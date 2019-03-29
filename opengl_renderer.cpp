@@ -69,6 +69,10 @@ void RendererGL::update_matrix(){
 }
 void RendererGL::run(){
 	main_camera.SetLocation(2.f,3.f,2.f);
+	if(!my_model.load_model2("models/character.obj")){
+		fprintf( stderr, "Failed to load 3d mesh\n" );
+		return;
+	}
 	init_ogl();	
 	generate_mvp_matrix();
 	main_loop();
@@ -136,7 +140,8 @@ void RendererGL::draw_trigangle(){
 
 
 
-	glBufferData(GL_ARRAY_BUFFER, sizeof(cube_vertex_data), cube_vertex_data, GL_STATIC_DRAW);
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(cube_vertex_data), cube_vertex_data, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, my_model.simple_vertices.size() * sizeof(glm::vec3), &my_model.simple_vertices[0], GL_STATIC_DRAW);
 
 
 	glEnableVertexAttribArray(0);
@@ -150,6 +155,6 @@ void RendererGL::draw_trigangle(){
 		(void*)0            // array buffer offset
 	);
 	// Draw the triangle !
-	glDrawArrays(GL_TRIANGLES, 0, 12*3); // Starting from vertex 0; 3 vertices total -> 1 triangle
+	glDrawArrays(GL_TRIANGLES, 0, my_model.simple_vertices.size()/3); // Starting from vertex 0; 3 vertices total -> 1 triangle
 	glDisableVertexAttribArray(0);
 }
