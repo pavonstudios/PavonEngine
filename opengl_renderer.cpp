@@ -62,18 +62,13 @@ void RendererGL::generate_mvp_matrix(){
 }
 void RendererGL::update_matrix(){
 	
-	glm::mat4 Projection = glm::perspective(glm::radians(45.f), 800.f/600.f, 0.1f, 100.f);
-	glm::mat4 View = glm::lookAt(
-		glm::vec3(4,3,3), // Camera is at (4,3,3), in World Space
-		glm::vec3(0,0,0), // and looks at the origin
-		glm::vec3(0,0,1)  // Head is up (set to 0,-1,0 to look upside-down)
-    );
+	
 
 	glm::mat4 Model = glm::rotate(glm::mat4(1.0f), get_time() * glm::radians(90.f), glm::vec3(0.0f, 0.0f, 1.0f));
 
 	//glm::mat4 Model = glm::mat4(1.0f);
 	// Our ModelViewProjection : multiplication of our 3 matrices
-	mvp = Projection * View * Model; // Remember, matrix multiplication is the other way around
+	mvp = main_camera.Projection * main_camera.View * Model; // Remember, matrix multiplication is the other way around
 
 	glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &mvp[0][0]);
 

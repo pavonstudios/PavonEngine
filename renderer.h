@@ -28,7 +28,7 @@
 
 
 #include "3D_objects.h"
-
+#include "camera.h"
 
 const int WIDTH = 800;
 const int HEIGHT = 600;
@@ -108,6 +108,7 @@ public:
     bool bIsRunnning = false;
     float move_y = 0;
     mesh my_3d_model;
+    Camera main_camera;
 
 private:
     GLFWwindow* window;
@@ -169,6 +170,7 @@ private:
 	void cleanup();
 	void setupDebugMessenger();
 	void createTextureImage(std::string texture_path);
+    void updateUniformBuffer(uint32_t currentImage);
 
     static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
     {
@@ -1147,23 +1149,7 @@ private:
         }
     }
 
-    void updateUniformBuffer(uint32_t currentImage) {
-        static auto startTime = std::chrono::high_resolution_clock::now();
 
-        auto currentTime = std::chrono::high_resolution_clock::now();
-        float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
-
-        UniformBufferObject ubo = {};
-        ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(RotationValue), glm::vec3(0.0f, 0.0f, 1.0f));
-        ubo.view = glm::lookAt(glm::vec3(2.0f, move_y, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-        ubo.proj = glm::perspective(glm::radians(45.0f), swapChainExtent.width / (float) swapChainExtent.height, 0.01f, 100.0f);
-        ubo.proj[1][1] *= -1;
-
-        void* data;
-        vkMapMemory(device, uniformBuffersMemory[currentImage], 0, sizeof(ubo), 0, &data);
-            memcpy(data, &ubo, sizeof(ubo));
-        vkUnmapMemory(device, uniformBuffersMemory[currentImage]);
-    }
 
     void drawFrame() {
         vkWaitForFences(device, 1, &inFlightFences[currentFrame], VK_TRUE, std::numeric_limits<uint64_t>::max());

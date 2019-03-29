@@ -19,7 +19,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include "3D_objects.h"
-
+#include "camera.h"
 
 class RendererGL{
 public:
@@ -42,6 +42,8 @@ private:
 	glm::mat4 mvp;
 
 	mesh my_model;
+
+	Camera main_camera;
 
 
 };
