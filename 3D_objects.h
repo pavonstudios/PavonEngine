@@ -15,6 +15,8 @@
 #include <vulkan/vulkan.h>
 #endif
 
+#include "game_object.h"
+
 struct Vertex {
     glm::vec3 pos;
     glm::vec3 color;
@@ -63,11 +65,20 @@ namespace std {
     };
 }
 
-class mesh{
+class mesh : public GameObject{
 public:
     std::vector<Vertex> vertices;
     std::vector<uint32_t> indices;
 
     void load_model(std::string model_path);
+
+    glm::mat4 model_matrix = glm::rotate(glm::mat4(1.0f), glm::radians(0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+    glm::vec3 location_vector;
+    
+
+    virtual void SetLocation(float x, float y, float z);
+
+
+		
 };
 #endif

@@ -108,6 +108,7 @@ public:
     bool bIsRunnning = false;
     float move_y = 0;
     mesh my_3d_model;
+    mesh my_secodonde_3d_model;
     Camera main_camera;
 
 private:
