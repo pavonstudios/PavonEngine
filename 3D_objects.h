@@ -81,6 +81,10 @@ public:
 
 #ifndef _OpenGL_Renderer_
     VkBuffer vertices_buffer;
+    VkBuffer indexBuffer;
+    std::vector<VkBuffer> uniformBuffers;
+    std::vector<VkDeviceMemory> uniformBuffersMemory;
+    std::vector<VkDescriptorSet> descriptorSets;
 #endif
 
 		
