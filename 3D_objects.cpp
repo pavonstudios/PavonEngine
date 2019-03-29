@@ -42,3 +42,15 @@ void mesh::load_model(std::string model_path){
             }
         }
 }
+
+void mesh::SetLocation(float x, float y, float z){
+		Location.x = x;
+		Location.y = y;
+		Location.z = z;
+
+        glm::mat4 myMatrix = glm::translate(glm::mat4(), glm::vec3(Location.x,Location.y,Location.z));
+        glm::vec4 myVector(10.0f, 10.0f, 10.0f, 0.0f);
+        glm::vec4 transformedVector = myMatrix * myVector; // guess the result
+       // model_matrix = transformedVector;
+       model_matrix = glm::translate(model_matrix, glm::vec3(Location.x,Location.y,Location.z));
+	}

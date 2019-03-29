@@ -8,9 +8,13 @@
 void Renderer::run() {
         bIsRunnning = true;
         my_3d_model.load_model("models/character.obj");
+        my_secodonde_3d_model.load_model("models/chalet.obj");
+
         main_camera.SetLocation(2.f,3.f,2.f);
         initWindow();
         initVulkan();
+        my_3d_model.SetLocation(-1,0,0);
+        my_secodonde_3d_model.SetLocation(1,0,0);
         mainLoop();
         cleanup();
 }
@@ -26,7 +30,6 @@ void Renderer::VulkanConfig(){
         createTextureImage("textures/character.jpg");
         createTextureImageView();
         createTextureSampler();
-        //my_3d_model.load_model("models/character.obj");
         createVertexBuffer();
         createIndexBuffer();
         createUniformBuffers();
@@ -132,9 +135,12 @@ void Renderer::updateUniformBuffer(uint32_t currentImage) {
         float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
         UniformBufferObject ubo = {};
-        ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(RotationValue), glm::vec3(0.0f, 0.0f, 1.0f));
+        
+      
        // ubo.view = glm::lookAt(glm::vec3(2.0f, move_y, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
         //ubo.proj = glm::perspective(glm::radians(45.0f), swapChainExtent.width / (float) swapChainExtent.height, 0.01f, 100.0f);
+        
+        ubo.model = my_3d_model.model_matrix;
         ubo.view = main_camera.View;
         ubo.proj = main_camera.Projection;
         
