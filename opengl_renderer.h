@@ -27,6 +27,8 @@ private:
 	void draw_trigangle();
 	void generate_mvp_matrix();
 	void update_matrix();
+
+	float get_time();
 	// This will identify our vertex buffer
 	GLuint vertexbuffer;
 	GLuint VertexArrayID;

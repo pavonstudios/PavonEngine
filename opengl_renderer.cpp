@@ -1,5 +1,10 @@
 #include "opengl_renderer.h"
 #include "gl_shader_loader.hpp"
+#include <chrono>
+
+#include "3D_objects.h"
+#define TINYOBJLOADER_IMPLEMENTATION
+#include <tiny_obj_loader.h>
 
 // An array of 3 vectors which represents 3 vertices
 static const GLfloat g_vertex_buffer_data[] = {
@@ -8,23 +13,33 @@ static const GLfloat g_vertex_buffer_data[] = {
    0.0f,  0.5f, 0.0f,
 };
 
-void RendererGL::generate_mvp_matrix(){
-	glm::mat4 Projection = glm::perspective(glm::radians(45.f), 800.f/600.f, 0.1f, 100.f);
-	glm::mat4 View = glm::lookAt(
-		glm::vec3(4,3,3), // Camera is at (4,3,3), in World Space
-		glm::vec3(0,0,0), // and looks at the origin
-		glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
-    );
+float RendererGL::get_time(){
+	    static auto startTime = std::chrono::high_resolution_clock::now();
 
-	// Model matrix : an identity matrix (model will be at the origin)
-	glm::mat4 Model = glm::mat4(1.0f);
-	// Our ModelViewProjection : multiplication of our 3 matrices
-	mvp = Projection * View * Model; // Remember, matrix multiplication is the other way around
+        auto currentTime = std::chrono::high_resolution_clock::now();
+        float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
+	return time;
+}
+void RendererGL::generate_mvp_matrix(){
 
 	MatrixID = glGetUniformLocation(shadersID, "MVP");
 
 }
 void RendererGL::update_matrix(){
+	
+	glm::mat4 Projection = glm::perspective(glm::radians(45.f), 800.f/600.f, 0.1f, 100.f);
+	glm::mat4 View = glm::lookAt(
+		glm::vec3(4,3,3), // Camera is at (4,3,3), in World Space
+		glm::vec3(0,0,0), // and looks at the origin
+		glm::vec3(0,0,1)  // Head is up (set to 0,-1,0 to look upside-down)
+    );
+
+	glm::mat4 Model = glm::rotate(glm::mat4(1.0f), get_time() * glm::radians(90.f), glm::vec3(0.0f, 0.0f, 1.0f));
+
+	//glm::mat4 Model = glm::mat4(1.0f);
+	// Our ModelViewProjection : multiplication of our 3 matrices
+	mvp = Projection * View * Model; // Remember, matrix multiplication is the other way around
+
 	glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &mvp[0][0]);
 
 }
@@ -81,8 +96,8 @@ void RendererGL::main_loop(){
 	// Ensure we can capture the escape key being pressed below
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 
-	do{
-		// Clear the screen. It's not mentioned before Tutorial 02, but it can cause flickering, so it's there nonetheless.
+	 while (!glfwWindowShouldClose(window)) {
+		 // Clear the screen. It's not mentioned before Tutorial 02, but it can cause flickering, so it's there nonetheless.
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
@@ -95,10 +110,8 @@ void RendererGL::main_loop(){
 		// Swap buffers
 		glfwSwapBuffers(window);
 		glfwPollEvents();
-
-	} // Check if the ESC key was pressed or the window was closed
-	while( glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS &&
-		glfwWindowShouldClose(window) == 0 );
+	 }
+	
 
 }
 
