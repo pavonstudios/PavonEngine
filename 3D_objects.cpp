@@ -105,4 +105,4 @@ void Mesh::SetLocation(float x, float y, float z){
         glm::vec4 transformedVector = myMatrix * myVector; // guess the result
        // model_matrix = transformedVector;
        model_matrix = glm::translate(model_matrix, glm::vec3(Location.x,Location.y,Location.z));
-	}
+}
