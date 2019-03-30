@@ -11,7 +11,7 @@
 #include <algorithm>
 
 #include <GL/glew.h>
-#include "GLFW/glfw3.h"
+
 
 
 #define GLM_FORCE_RADIANS
@@ -28,14 +28,19 @@ public:
 	void run();
 	bool bIsRunnning = false;
 	class Engine* engine;
+	void main_loop();
+	void finish(){return;}
+	Camera main_camera;
+	
 private:
 	class GLFWwindow* window; 
-	void main_loop();
+	
 	void init_ogl();
-	void init_window();
+	
 	void draw();
 	void generate_mvp_matrix();
 	void update_matrix();
+
 
 	
 	
@@ -47,7 +52,7 @@ private:
 	Mesh my_model;
 	Mesh cube;
 
-	Camera main_camera;
+	
 
 	Mesh *mesh_to_draw;
 

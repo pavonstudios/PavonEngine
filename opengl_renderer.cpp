@@ -91,38 +91,7 @@ void RendererGL::run(){
 
 	init_ogl();	
 	generate_mvp_matrix();
-	main_loop();
-}
-
-void RendererGL::init_window(){
-	glewExperimental = true; // Needed for core profile
-	if( !glfwInit() )
-	{
-		fprintf( stderr, "Failed to initialize GLFW\n" );
-		return;
-	}
-	glfwWindowHint(GLFW_SAMPLES, 4); // 4x antialiasing
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); // We want OpenGL 3.3
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // We don't want the old OpenGL 
-
-	// Open a window and create its OpenGL context
 	
-	window = glfwCreateWindow( 800, 600, "OpenGL", NULL, NULL);
-	if( window == NULL ){
-		fprintf( stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n" );
-		glfwTerminate();
-		return;
-	}
-	
-	glfwMakeContextCurrent(window); // Initialize GLEW
-	
-
-	if (glewInit() != GLEW_OK) {
-		fprintf(stderr, "Failed to initialize GLEW\n");
-		return;
-	}
 }
 
 
@@ -145,7 +114,7 @@ void RendererGL::draw(){
 
 void RendererGL::init_ogl(){
 	mesh_to_draw = &cube;
-	init_window();
+	
 	shadersID = LoadShaders("shaders/simple_vert_mvp.vert","shaders/simple_frag.frag");
 	
 	//generate vertex buffers for any mesh to load in real time
@@ -177,7 +146,7 @@ void RendererGL::init_ogl(){
 void RendererGL::main_loop(){
 	//glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 
-	 while (!glfwWindowShouldClose(window)) {
+	
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		glClearColor(0.0f, 1.0f, .0f, 1.0f);
@@ -187,10 +156,9 @@ void RendererGL::main_loop(){
 		update_matrix();
 		draw();
 
-		// Swap buffers
-		glfwSwapBuffers(window);
-		glfwPollEvents();
-	 }
+	
+		
+	
 	
 
 }
