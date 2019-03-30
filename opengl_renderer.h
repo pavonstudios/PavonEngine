@@ -33,8 +33,9 @@ private:
 	void main_loop();
 	void init_ogl();
 	void init_window();
-	void draw_trigangle();
+	void draw_mesh(Mesh *mesh_to_draw);
 	void generate_mvp_matrix();
+	void InitializeVertexArrayObjects();
 	void update_matrix();
 
 	
@@ -47,6 +48,8 @@ private:
 
 	Mesh my_model;
 	Mesh cube;
+
+	Mesh* pMesh_to_draw;
 
 	Camera main_camera;
 
