@@ -33,7 +33,7 @@ private:
 	void main_loop();
 	void init_ogl();
 	void init_window();
-	void draw_trigangle();
+	void draw();
 	void generate_mvp_matrix();
 	void update_matrix();
 
