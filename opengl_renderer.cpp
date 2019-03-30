@@ -60,7 +60,7 @@ void RendererGL::update_matrix(){
 
 	mesh_to_draw->model_matrix = glm::rotate(glm::mat4(1.0f), engine->get_time() * glm::radians(90.f), glm::vec3(0.0f, 0.0f, 1.0f));
 	cube.SetLocation(-1,0,0);
-	my_model.SetLocation(2,0,0);
+	my_model.SetLocation(0,0,2);
 	//glm::mat4 Model = glm::mat4(1.0f);
 	// Our ModelViewProjection : multiplication of our 3 matrices
 	mvp = main_camera.Projection * main_camera.View * mesh_to_draw->model_matrix;
@@ -126,18 +126,21 @@ void RendererGL::init_window(){
 }
 
 
-void RendererGL::draw_trigangle(){
+void RendererGL::draw(){
 
-	glEnableVertexAttribArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, mesh_to_draw->vertexbuffer);
-	
-									//count of triangles
-	glDrawArrays(GL_TRIANGLES, 0, mesh_to_draw->simple_vertices.size()); 
+	for(int i = 0; i < meshes.size(); i++){
+		mesh_to_draw = &meshes[i];
+		glEnableVertexAttribArray(0);
+		glBindBuffer(GL_ARRAY_BUFFER, meshes[i].vertexbuffer);								
+		glDrawArrays(GL_TRIANGLES, 0, meshes[i].simple_vertices.size()); 
+		glDisableVertexAttribArray(0);
 
+	}
+		
 	//glBindVertexArray(vertexbuffer);
 	//glDrawElements(GL_TRIANGLES, mesh_to_draw->simple_vertices.size(), GL_UNSIGNED_SHORT, 0); 
 
-	glDisableVertexAttribArray(0);
+	
 }
 
 void RendererGL::init_ogl(){
@@ -150,14 +153,16 @@ void RendererGL::init_ogl(){
 		for(int i = 0; i < meshes.size(); i++){
 			glGenVertexArrays(1, &meshes[i].VertexArrayID);
 			glBindVertexArray(meshes[i].VertexArrayID);
+			glGenBuffers(1, &meshes[i].vertexbuffer);
+			glBindBuffer(GL_ARRAY_BUFFER, meshes[i].vertexbuffer);	
+	
+			glBufferData(GL_ARRAY_BUFFER, meshes[i].simple_vertices.size() * sizeof(glm::vec3),
+					 &meshes[i].simple_vertices[0], GL_STATIC_DRAW);
 		}
-		glGenBuffers(1, &mesh_to_draw->vertexbuffer);
+		
 	}	
 
-	glBindBuffer(GL_ARRAY_BUFFER, mesh_to_draw->vertexbuffer);	
 	
-	glBufferData(GL_ARRAY_BUFFER, mesh_to_draw->simple_vertices.size() * sizeof(glm::vec3),
-					 &mesh_to_draw->simple_vertices[0], GL_STATIC_DRAW);
 
 	glVertexAttribPointer(
 		0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
@@ -175,12 +180,12 @@ void RendererGL::main_loop(){
 	 while (!glfwWindowShouldClose(window)) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+		glClearColor(0.0f, 1.0f, .0f, 1.0f);
 
 		glUseProgram(shadersID);
 
 		update_matrix();
-		draw_trigangle();
+		draw();
 
 		// Swap buffers
 		glfwSwapBuffers(window);
