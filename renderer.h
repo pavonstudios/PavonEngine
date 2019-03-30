@@ -94,10 +94,15 @@ public:
     Camera main_camera;
 
     std::vector<Mesh> meshes;
+    bool framebufferResized = false;
+    
+    void mainLoop();
+    void finish();
+    class Engine* engine;
 
 private:
-    class Engine* engine;
-    GLFWwindow* window;
+    
+    
 
     VkInstance instance;
     VkDebugUtilsMessengerEXT debugMessenger;
@@ -152,7 +157,7 @@ private:
     std::vector<VkFence> inFlightFences;
     size_t currentFrame = 0;
 
-    bool framebufferResized = false;
+    
 
 	void cleanup();
 	void setupDebugMessenger();
@@ -164,47 +169,10 @@ private:
     void createGraphicsPipeline(std::string path_fragment_shader, VkPipeline* out_pipeline);
     void createDescriptorPool(Mesh *mesh);
     void createDescriptorSets(Mesh *mesh);
-
-    static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-    {
-        auto app = reinterpret_cast<Renderer*>(glfwGetWindowUserPointer(window));
-        if (key == GLFW_KEY_E && action == GLFW_PRESS)
-            app->RotationValue = 90;
-        if (key == GLFW_KEY_W && action == GLFW_PRESS){
-             app->move_y += 1;
-            app->main_camera.SetLocation(0,app->move_y,0);
-        }
-           
-            
-        if (key == GLFW_KEY_S && action == GLFW_PRESS){
-               app->move_y -= 1;
-            app->main_camera.SetLocation(0,app->move_y,0);
-        }
-            
-         if (key == GLFW_KEY_M && action == GLFW_PRESS){
-             //app->loadModel("models/chalet.obj");
-            app->recreateSwapChain();
-         }
-            
-    }
-	
-
-    void initWindow() {
-        glfwInit();
-
-        glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-
-        window = glfwCreateWindow(WIDTH, HEIGHT, "Vulkan", nullptr, nullptr);
-        glfwSetWindowUserPointer(window, this);
-        glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
-        glfwSetKeyCallback(window, key_callback);
-    }
-
-    static void framebufferResizeCallback(GLFWwindow* window, int width, int height) {
-        auto app = reinterpret_cast<Renderer*>(glfwGetWindowUserPointer(window));
-        app->framebufferResized = true;
-    }
-
+    void createSurface();
+    VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
+   
+    
     void initVulkan() {
         createInstance();
         setupDebugMessenger();
@@ -214,19 +182,8 @@ private:
         createSwapChain();
 		VulkanConfig();
         createSyncObjects();
-    }
-    
-    void mainLoop() {
-        while (!glfwWindowShouldClose(window)) {
-            bIsRunnning = true;
-            glfwPollEvents();
-            drawFrame();
-            
-        }
-
-        vkDeviceWaitIdle(device);
-        bIsRunnning = false;
-    }
+    }    
+   
 
     void cleanupSwapChain() {
         vkDestroyImageView(device, depthImageView, nullptr);
@@ -288,11 +245,7 @@ private:
     }
 
    
-    void createSurface() {
-        if (glfwCreateWindowSurface(instance, window, nullptr, &surface) != VK_SUCCESS) {
-            throw std::runtime_error("failed to create window surface!");
-        }
-    }
+
 
     void pickPhysicalDevice() {
         uint32_t deviceCount = 0;
@@ -982,24 +935,7 @@ VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& avai
         return bestMode;
     }
 
-    VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities) {
-        if (capabilities.currentExtent.width != std::numeric_limits<uint32_t>::max()) {
-            return capabilities.currentExtent;
-        } else {
-            int width, height;
-            glfwGetFramebufferSize(window, &width, &height);
-
-            VkExtent2D actualExtent = {
-                static_cast<uint32_t>(width),
-                static_cast<uint32_t>(height)
-            };
-
-            actualExtent.width = std::max(capabilities.minImageExtent.width, std::min(capabilities.maxImageExtent.width, actualExtent.width));
-            actualExtent.height = std::max(capabilities.minImageExtent.height, std::min(capabilities.maxImageExtent.height, actualExtent.height));
-
-            return actualExtent;
-        }
-    }
+   
 
     SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device) {
         SwapChainSupportDetails details;

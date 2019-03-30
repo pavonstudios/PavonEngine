@@ -15,14 +15,46 @@ void Renderer::run() {
         
 
         main_camera.SetLocation(2.f,3.f,2.f);
-        initWindow();
+        
         initVulkan();
         meshes.push_back(my_3d_model);
         meshes.push_back(my_secodonde_3d_model);
         //my_3d_model.SetLocation(-1,0,0);
         //my_secodonde_3d_model.SetLocation(1,0,0);
-        mainLoop();
-        cleanup();
+        
+       
+}
+ VkExtent2D Renderer::chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities) {
+        if (capabilities.currentExtent.width != std::numeric_limits<uint32_t>::max()) {
+            return capabilities.currentExtent;
+        } else {
+            int width, height;
+            glfwGetFramebufferSize(engine->get_window_pointer(), &width, &height);
+
+            VkExtent2D actualExtent = {
+                static_cast<uint32_t>(width),
+                static_cast<uint32_t>(height)
+            };
+
+            actualExtent.width = std::max(capabilities.minImageExtent.width, std::min(capabilities.maxImageExtent.width, actualExtent.width));
+            actualExtent.height = std::max(capabilities.minImageExtent.height, std::min(capabilities.maxImageExtent.height, actualExtent.height));
+
+            return actualExtent;
+        }
+    }
+void Renderer::createSurface() {
+    if (glfwCreateWindowSurface(instance, engine->get_window_pointer(), nullptr, &surface) != VK_SUCCESS) {
+        throw std::runtime_error("failed to create window surface!");
+    }
+}
+void Renderer::mainLoop(){
+            bIsRunnning = true;            
+            drawFrame();
+}
+void Renderer::finish(){
+    vkDeviceWaitIdle(device);
+    bIsRunnning = false;
+    cleanup();
 }
 
 void Renderer::VulkanConfig(){
@@ -35,6 +67,7 @@ void Renderer::VulkanConfig(){
         createDepthResources();
         createFramebuffers();
         createTextureImage("textures/car01.jpg");
+        //createTextureImage("textures/character.jpg");
         createTextureImageView();
         createTextureSampler();
         createVertexBuffer(&my_3d_model);
@@ -313,12 +346,7 @@ void Renderer::updateUniformBuffer(uint32_t currentImage) {
 
 
 void Renderer::recreateSwapChain() {
-        int width = 0, height = 0;
-        while (width == 0 || height == 0) {
-            glfwGetFramebufferSize(window, &width, &height);
-            glfwWaitEvents();
-        }
-
+       engine->update_window_size();
         vkDeviceWaitIdle(device);
 
         cleanupSwapChain();
@@ -520,7 +548,5 @@ void Renderer::cleanup() {
         vkDestroySurfaceKHR(instance, surface, nullptr);
         vkDestroyInstance(instance, nullptr);
 
-        glfwDestroyWindow(window);
-
-        glfwTerminate();
+    
 }
