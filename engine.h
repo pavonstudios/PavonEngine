@@ -5,12 +5,15 @@
 
 #ifndef _OpenGL_Renderer_
 #include "renderer.h"
+#define GLFW_INCLUDE_VULKAN
 #endif
 
 #ifdef _OpenGL_Renderer_
 #include "opengl_renderer.h"
 #endif
 #include <chrono>
+
+#include <GLFW/glfw3.h>
 
 /* Engine class who controll 
 threads executions */
@@ -24,6 +27,16 @@ class Engine {
         RendererGL app;
 #endif
         pthread_t thread[2];
+
+        void InitWindow();
+        GLFWwindow* window;
+        void update_window_size();
+
+        GLFWwindow* get_window_pointer()
+        {
+            return window;
+        }
+
         float get_time(){
             static auto startTime = std::chrono::high_resolution_clock::now();
 
@@ -37,10 +50,19 @@ class Engine {
             
             //pthread_create(&thread[1],NULL, ExecuteInputHanler, this);
           
+            InitWindow();
             Render();
             
             }
     private:
+         static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+        
+        static void framebufferResizeCallback(GLFWwindow* window, int width, int height) {
+            auto app = reinterpret_cast<Renderer*>(glfwGetWindowUserPointer(window));
+            app->framebufferResized = true;
+        }
+
+	
         static void* ExecuteInputHanler(void* This){
             return ((Engine *)This)->InputHanled();
         }
@@ -84,12 +106,13 @@ class Engine {
 
         void *Render(){
             std::cout << "Rendering" << std::endl;
-
+            app.engine = this;
             app.run();
-
+            main_loop();
             
             //pthread_exit(NULL);
         }
+        void main_loop();
 
 };
 #endif
