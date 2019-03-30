@@ -69,6 +69,7 @@ namespace std {
 
 class Mesh : public GameObject{
 public:
+    
     std::vector<Vertex> vertices;
     std::vector<uint32_t> indices;
     std::vector< glm::vec3 > simple_vertices;
@@ -90,6 +91,7 @@ public:
     std::vector<VkBuffer> uniformBuffers;
     std::vector<VkDeviceMemory> uniformBuffersMemory;
     std::vector<VkDescriptorSet> descriptorSets;
+    VkDescriptorPool descriptorPool;
 #endif
 #ifdef _OpenGL_Renderer_
     GLuint vertexbuffer;

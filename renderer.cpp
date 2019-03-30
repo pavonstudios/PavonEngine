@@ -11,12 +11,16 @@ void Renderer::run() {
         bIsRunnning = true;
         my_3d_model.load_model("models/car01.obj");
         my_secodonde_3d_model.load_model("models/character.obj");
+        
+        
 
         main_camera.SetLocation(2.f,3.f,2.f);
         initWindow();
         initVulkan();
-        my_3d_model.SetLocation(-1,0,0);
-        my_secodonde_3d_model.SetLocation(1,0,0);
+        meshes.push_back(my_3d_model);
+        meshes.push_back(my_secodonde_3d_model);
+        //my_3d_model.SetLocation(-1,0,0);
+        //my_secodonde_3d_model.SetLocation(1,0,0);
         mainLoop();
         cleanup();
 }
@@ -39,9 +43,10 @@ void Renderer::VulkanConfig(){
         createIndexBuffer(&my_secodonde_3d_model);
         createUniformBuffers(&my_3d_model);
         createUniformBuffers(&my_secodonde_3d_model);
-        createDescriptorPool();
+        createDescriptorPool(&my_secodonde_3d_model);
+        createDescriptorPool(&my_3d_model);
         createDescriptorSets(&my_3d_model);
-        //createDescriptorSets(&my_secodonde_3d_model);
+        createDescriptorSets(&my_secodonde_3d_model);
         createCommandBuffers();
 }
 void Renderer::createIndexBuffer(Mesh * mesh) {
@@ -137,7 +142,8 @@ void Renderer::createCommandBuffers() {
 
                 vkCmdBindIndexBuffer(commandBuffers[i], my_3d_model.indexBuffer, 0, VK_INDEX_TYPE_UINT32);
 
-                vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &my_3d_model.descriptorSets[i], 0, nullptr);
+                vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, 
+                                            &my_3d_model.descriptorSets[i], 0, nullptr);
 
                 vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(my_3d_model.indices.size()), 1, 0, 0, 0);
                 
@@ -148,7 +154,8 @@ void Renderer::createCommandBuffers() {
 
                 vkCmdBindIndexBuffer(commandBuffers[i], my_secodonde_3d_model.indexBuffer, 0, VK_INDEX_TYPE_UINT32);
 
-                vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &my_3d_model.descriptorSets[i], 0, nullptr);
+                vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, 
+                                                    &my_secodonde_3d_model.descriptorSets[i], 0, nullptr);
 
                 vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(my_secodonde_3d_model.indices.size()), 1, 0, 0, 0);
 
@@ -204,56 +211,69 @@ void Renderer::createCommandBuffers() {
         }
     }
 
-void Renderer::cleanup() {
-        cleanupSwapChain();
 
-        vkDestroySampler(device, textureSampler, nullptr);
-        vkDestroyImageView(device, textureImageView, nullptr);
+ void Renderer::createDescriptorPool(Mesh *mesh) {
+        std::array<VkDescriptorPoolSize, 2> poolSizes = {};
+        poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+        poolSizes[0].descriptorCount = static_cast<uint32_t>(swapChainImages.size());
+        poolSizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+        poolSizes[1].descriptorCount = static_cast<uint32_t>(swapChainImages.size());
 
-        vkDestroyImage(device, textureImage, nullptr);
-        vkFreeMemory(device, textureImageMemory, nullptr);
+        VkDescriptorPoolCreateInfo poolInfo = {};
+        poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+        poolInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());
+        poolInfo.pPoolSizes = poolSizes.data();
+        poolInfo.maxSets = static_cast<uint32_t>(swapChainImages.size());
 
-        vkDestroyDescriptorPool(device, descriptorPool, nullptr);
+        if (vkCreateDescriptorPool(device, &poolInfo, nullptr, &mesh->descriptorPool) != VK_SUCCESS) {
+            throw std::runtime_error("failed to create descriptor pool!");
+        }
+    }
 
-        vkDestroyDescriptorSetLayout(device, descriptorSetLayout, nullptr);
+void Renderer::createDescriptorSets(Mesh *mesh) {
+        std::vector<VkDescriptorSetLayout> layouts(static_cast<uint32_t>(swapChainImages.size()), descriptorSetLayout);
+        VkDescriptorSetAllocateInfo allocInfo = {};
+        allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+        allocInfo.descriptorPool = mesh->descriptorPool;
+        allocInfo.descriptorSetCount = static_cast<uint32_t>(swapChainImages.size());
+        allocInfo.pSetLayouts = layouts.data();
+
+        mesh->descriptorSets.resize(swapChainImages.size());
+        if (vkAllocateDescriptorSets(device, &allocInfo, mesh->descriptorSets.data()) != VK_SUCCESS) {
+            throw std::runtime_error("failed to allocate descriptor sets!");
+        }
 
         for (size_t i = 0; i < swapChainImages.size(); i++) {
-            vkDestroyBuffer(device, my_3d_model.uniformBuffers[i], nullptr);
-            vkFreeMemory(device, my_3d_model.uniformBuffersMemory[i], nullptr);
-            vkDestroyBuffer(device, my_secodonde_3d_model.uniformBuffers[i], nullptr);
-            vkFreeMemory(device, my_secodonde_3d_model.uniformBuffersMemory[i], nullptr);
+            VkDescriptorBufferInfo bufferInfo = {};
+            bufferInfo.buffer = mesh->uniformBuffers[i];
+            bufferInfo.offset = 0;
+            bufferInfo.range = sizeof(UniformBufferObject);
+
+            VkDescriptorImageInfo imageInfo = {};
+            imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+            imageInfo.imageView = textureImageView;
+            imageInfo.sampler = textureSampler;
+
+            std::array<VkWriteDescriptorSet, 2> descriptorWrites = {};
+
+            descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+            descriptorWrites[0].dstSet = mesh->descriptorSets[i];
+            descriptorWrites[0].dstBinding = 0;
+            descriptorWrites[0].dstArrayElement = 0;
+            descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+            descriptorWrites[0].descriptorCount = 1;
+            descriptorWrites[0].pBufferInfo = &bufferInfo;
+
+            descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+            descriptorWrites[1].dstSet = mesh->descriptorSets[i];
+            descriptorWrites[1].dstBinding = 1;
+            descriptorWrites[1].dstArrayElement = 0;
+            descriptorWrites[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+            descriptorWrites[1].descriptorCount = 1;
+            descriptorWrites[1].pImageInfo = &imageInfo;
+
+            vkUpdateDescriptorSets(device, static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
         }
-
-        vkDestroyBuffer(device, my_3d_model.indexBuffer, nullptr);
-        vkDestroyBuffer(device, my_secodonde_3d_model.indexBuffer, nullptr);
-        vkFreeMemory(device, indexBufferMemory, nullptr);
-
-        //mesh vertices buffers
-        vkDestroyBuffer(device, my_3d_model.vertices_buffer, nullptr);
-        vkDestroyBuffer(device, my_secodonde_3d_model.vertices_buffer, nullptr);
-
-        vkFreeMemory(device, vertexBufferMemory, nullptr);
-
-        for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
-            vkDestroySemaphore(device, renderFinishedSemaphores[i], nullptr);
-            vkDestroySemaphore(device, imageAvailableSemaphores[i], nullptr);
-            vkDestroyFence(device, inFlightFences[i], nullptr);
-        }
-
-        vkDestroyCommandPool(device, commandPool, nullptr);
-
-        vkDestroyDevice(device, nullptr);
-
-        if (enableValidationLayers) {
-            DestroyDebugUtilsMessengerEXT(instance, debugMessenger, nullptr);
-        }
-
-        vkDestroySurfaceKHR(instance, surface, nullptr);
-        vkDestroyInstance(instance, nullptr);
-
-        glfwDestroyWindow(window);
-
-        glfwTerminate();
     }
 
 void Renderer::updateUniformBuffer(uint32_t currentImage) {
@@ -263,7 +283,7 @@ void Renderer::updateUniformBuffer(uint32_t currentImage) {
         my_3d_model.model_matrix = glm::rotate(glm::mat4(1), engine->get_time() * glm::radians(45.0f), glm::vec3(0.0f, 0.0f, 1.0f));
         my_3d_model.SetLocation(-1,0,0);
 
-        my_secodonde_3d_model.SetLocation(1,0,0);
+        
         ubo.model = my_3d_model.model_matrix;
        
         ubo.view = main_camera.View;
@@ -275,6 +295,19 @@ void Renderer::updateUniformBuffer(uint32_t currentImage) {
         vkMapMemory(device, my_3d_model.uniformBuffersMemory[currentImage], 0, sizeof(ubo), 0, &data);
             memcpy(data, &ubo, sizeof(ubo));
         vkUnmapMemory(device, my_3d_model.uniformBuffersMemory[currentImage]);
+
+        UniformBufferObject ubo_2 = {};
+        my_secodonde_3d_model.model_matrix = glm::rotate(glm::mat4(1), engine->get_time() * glm::radians(45.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+ 
+        //my_secodonde_3d_model.SetLocation(1,0,0);
+        ubo_2.model = my_secodonde_3d_model.model_matrix;
+        ubo_2.view = main_camera.View;
+        ubo_2.proj = main_camera.Projection;
+
+         void* data2;
+        vkMapMemory(device, my_secodonde_3d_model.uniformBuffersMemory[currentImage], 0, sizeof(ubo_2), 0, &data2);
+            memcpy(data2, &ubo_2, sizeof(ubo_2));
+        vkUnmapMemory(device, my_secodonde_3d_model.uniformBuffersMemory[currentImage]);
 
     }
 
@@ -426,3 +459,68 @@ void Renderer::recreateSwapChain() {
         vkDestroyShaderModule(device, fragShaderModule, nullptr);
         vkDestroyShaderModule(device, vertShaderModule, nullptr);
     }
+void Renderer::cleanup() {
+      
+        cleanupSwapChain();
+
+        vkDestroySampler(device, textureSampler, nullptr);
+        vkDestroyImageView(device, textureImageView, nullptr);
+
+        vkDestroyImage(device, textureImage, nullptr);
+        vkFreeMemory(device, textureImageMemory, nullptr);
+        for(int i = 0; i < meshes.size(); i++){
+           
+            //vkDestroyPipelineLayout(device, meshes[i]., nullptr);
+            vkDestroyDescriptorPool(device, meshes[i].descriptorPool, nullptr);
+           // vkDestroyDescriptorSetLayout(device, meshes[i].descriptorSets, nullptr);
+            //vkDestroyDescriptorSe
+        }
+      
+       
+       
+
+        vkDestroyDescriptorSetLayout(device, descriptorSetLayout, nullptr);
+
+         for(int i = 0; i < meshes.size(); i++){
+             for (size_t o = 0; o < swapChainImages.size(); o++) {
+                 vkDestroyBuffer(device, meshes[i].uniformBuffers[o], nullptr);
+                vkFreeMemory(device, meshes[i].uniformBuffersMemory[o], nullptr);
+             }
+         }
+     
+        for(int i = 0; i < meshes.size(); i++){
+            vkDestroyBuffer(device, meshes[i].indexBuffer, nullptr);
+        }
+                
+        vkFreeMemory(device, indexBufferMemory, nullptr);
+
+        //mesh vertices buffers
+        for(int i = 0; i < meshes.size(); i++){
+             vkDestroyBuffer(device, meshes[i].vertices_buffer, nullptr);
+        }
+       
+       
+
+        vkFreeMemory(device, vertexBufferMemory, nullptr);
+
+        for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
+            vkDestroySemaphore(device, renderFinishedSemaphores[i], nullptr);
+            vkDestroySemaphore(device, imageAvailableSemaphores[i], nullptr);
+            vkDestroyFence(device, inFlightFences[i], nullptr);
+        }
+
+        vkDestroyCommandPool(device, commandPool, nullptr);
+
+        vkDestroyDevice(device, nullptr);
+
+        if (enableValidationLayers) {
+            DestroyDebugUtilsMessengerEXT(instance, debugMessenger, nullptr);
+        }
+
+        vkDestroySurfaceKHR(instance, surface, nullptr);
+        vkDestroyInstance(instance, nullptr);
+
+        glfwDestroyWindow(window);
+
+        glfwTerminate();
+}
