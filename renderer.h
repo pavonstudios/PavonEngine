@@ -96,7 +96,7 @@ public:
     std::vector<Mesh> meshes;
     bool framebufferResized = false;
     
-    void mainLoop();
+    void main_loop();
     void finish();
     class Engine* engine;
 

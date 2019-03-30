@@ -27,6 +27,7 @@ class Engine {
         RendererGL app;
 #endif
         pthread_t thread[2];
+        float move_y = 0;
 
         void InitWindow();
         GLFWwindow* window;
@@ -56,12 +57,12 @@ class Engine {
             }
     private:
          static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
-        
+#ifndef _OpenGL_Renderer_
         static void framebufferResizeCallback(GLFWwindow* window, int width, int height) {
             auto app = reinterpret_cast<Renderer*>(glfwGetWindowUserPointer(window));
             app->framebufferResized = true;
         }
-
+#endif
 	
         static void* ExecuteInputHanler(void* This){
             return ((Engine *)This)->InputHanled();
@@ -114,5 +115,6 @@ class Engine {
         }
         void main_loop();
 
+    
 };
 #endif

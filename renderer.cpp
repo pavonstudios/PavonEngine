@@ -47,7 +47,7 @@ void Renderer::createSurface() {
         throw std::runtime_error("failed to create window surface!");
     }
 }
-void Renderer::mainLoop(){
+void Renderer::main_loop(){
             bIsRunnning = true;            
             drawFrame();
 }
