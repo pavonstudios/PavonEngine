@@ -39,8 +39,7 @@ private:
 
 	
 	
-	GLuint vertexbuffer;
-	GLuint VertexArrayID;
+	std::vector<Mesh> meshes;
 	GLuint shadersID;
 	GLuint MatrixID;
 	glm::mat4 mvp;
@@ -50,6 +49,7 @@ private:
 
 	Camera main_camera;
 
+	Mesh *mesh_to_draw;
 
 };
 #endif

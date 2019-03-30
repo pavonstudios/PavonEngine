@@ -14,7 +14,9 @@
 #ifndef _OpenGL_Renderer_
 #include <vulkan/vulkan.h>
 #endif
-
+#ifdef _OpenGL_Renderer_
+#include <GL/gl.h>
+#endif
 #include "game_object.h"
 
 struct Vertex {
@@ -88,6 +90,10 @@ public:
     std::vector<VkBuffer> uniformBuffers;
     std::vector<VkDeviceMemory> uniformBuffersMemory;
     std::vector<VkDescriptorSet> descriptorSets;
+#endif
+#ifdef _OpenGL_Renderer_
+    GLuint vertexbuffer;
+	GLuint VertexArrayID;
 #endif
 
 		
