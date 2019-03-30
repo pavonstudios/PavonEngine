@@ -58,11 +58,12 @@ void RendererGL::update_matrix(){
 	
 	
 
-	glm::mat4 Model = glm::rotate(glm::mat4(1.0f), engine->get_time() * glm::radians(90.f), glm::vec3(0.0f, 0.0f, 1.0f));
-
+	mesh_to_draw->model_matrix = glm::rotate(glm::mat4(1.0f), engine->get_time() * glm::radians(90.f), glm::vec3(0.0f, 0.0f, 1.0f));
+	cube.SetLocation(-1,0,0);
+	my_model.SetLocation(2,0,0);
 	//glm::mat4 Model = glm::mat4(1.0f);
 	// Our ModelViewProjection : multiplication of our 3 matrices
-	mvp = main_camera.Projection * main_camera.View * Model; // Remember, matrix multiplication is the other way around
+	mvp = main_camera.Projection * main_camera.View * mesh_to_draw->model_matrix;
 
 	glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &mvp[0][0]);
 
@@ -85,6 +86,9 @@ void RendererGL::run(){
 		cube.simple_vertices.push_back(vertex);
 
 	}
+	meshes.push_back(cube);
+	meshes.push_back(my_model);
+
 	init_ogl();	
 	generate_mvp_matrix();
 	main_loop();
@@ -124,15 +128,37 @@ void RendererGL::init_window(){
 
 void RendererGL::draw_trigangle(){
 
-
-	Mesh mesh_to_draw = cube;
-	//glBufferData(GL_ARRAY_BUFFER, sizeof(cube_vertex_data), cube_vertex_data, GL_STATIC_DRAW);
-	glBufferData(GL_ARRAY_BUFFER, mesh_to_draw.simple_vertices.size() * sizeof(glm::vec3),
-					 &mesh_to_draw.simple_vertices[0], GL_STATIC_DRAW);
-
-
 	glEnableVertexAttribArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, mesh_to_draw->vertexbuffer);
+	
+									//count of triangles
+	glDrawArrays(GL_TRIANGLES, 0, mesh_to_draw->simple_vertices.size()); 
+
+	//glBindVertexArray(vertexbuffer);
+	//glDrawElements(GL_TRIANGLES, mesh_to_draw->simple_vertices.size(), GL_UNSIGNED_SHORT, 0); 
+
+	glDisableVertexAttribArray(0);
+}
+
+void RendererGL::init_ogl(){
+	mesh_to_draw = &cube;
+	init_window();
+	shadersID = LoadShaders("shaders/simple_vert_mvp.vert","shaders/simple_frag.frag");
+	
+	//generate vertex buffers for any mesh to load in real time
+	{
+		for(int i = 0; i < meshes.size(); i++){
+			glGenVertexArrays(1, &meshes[i].VertexArrayID);
+			glBindVertexArray(meshes[i].VertexArrayID);
+		}
+		glGenBuffers(1, &mesh_to_draw->vertexbuffer);
+	}	
+
+	glBindBuffer(GL_ARRAY_BUFFER, mesh_to_draw->vertexbuffer);	
+	
+	glBufferData(GL_ARRAY_BUFFER, mesh_to_draw->simple_vertices.size() * sizeof(glm::vec3),
+					 &mesh_to_draw->simple_vertices[0], GL_STATIC_DRAW);
+
 	glVertexAttribPointer(
 		0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
 		3,                  // size
@@ -141,22 +167,6 @@ void RendererGL::draw_trigangle(){
 		0,                  // stride
 		(void*)0            // array buffer offset
 	);
-									//count of triangles
-	glDrawArrays(GL_TRIANGLES, 0, mesh_to_draw.simple_vertices.size()); 
-	glDisableVertexAttribArray(0);
-}
-
-void RendererGL::init_ogl(){
-	init_window();
-	
-	glGenVertexArrays(1, &VertexArrayID);
-	glBindVertexArray(VertexArrayID);
-
-	glGenBuffers(1, &vertexbuffer);
-
-	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-
-	shadersID = LoadShaders("shaders/simple_vert_mvp.vert","shaders/simple_frag.frag");
 }
 
 void RendererGL::main_loop(){
