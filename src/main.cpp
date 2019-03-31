@@ -1,9 +1,4 @@
 
-#ifdef ANDROID
-#include "android_renderer.h"
-
-#endif
-
 #ifndef ANDROID
 #include "engine.h"
 int main() {
@@ -26,16 +21,24 @@ int main() {
 #endif
 
 #ifdef ANDROID
-#include "engine.h"
+//#include "engine.h"
+#include "android_renderer.h"
 extern "C" {
 void handle_cmd(android_app *pApp, int32_t cmd) {
     switch (cmd) {
         case APP_CMD_INIT_WINDOW:
-            pApp->userData = new Renderer(pApp);
-            break;
+
+                //pApp->userData = new Engine();
+                pApp->userData = new Renderer(pApp);
+                //Renderer renderer = Renderer(pApp);
+                break;
+
+
+
 
         case APP_CMD_TERM_WINDOW:
             if (pApp->userData) {
+               // auto *pRenderer = reinterpret_cast<Engine *>(pApp->userData);
                 auto *pRenderer = reinterpret_cast<Renderer *>(pApp->userData);
                 pApp->userData = nullptr;
                 delete pRenderer;
@@ -56,6 +59,7 @@ void android_main(struct android_app *pApp) {
             }
         }
         if (pApp->userData) {
+            //auto *pRenderer = reinterpret_cast<Engine *>(pApp->userData);
             auto *pRenderer = reinterpret_cast<Renderer *>(pApp->userData);
             pRenderer->render();
         }

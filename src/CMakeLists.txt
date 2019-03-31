@@ -18,7 +18,11 @@ set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -u ANativeActivity_o
 add_library(maincode
     SHARED
 
-    main.cpp)
+    main.cpp
+    #opengl_renderer.cpp
+    #3D_objects.cpp
+    
+    )
 
 
 add_subdirectory(glm)

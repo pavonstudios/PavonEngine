@@ -18,6 +18,7 @@
 #include <GLFW/glfw3.h>
 #else
 #include "opengl_renderer.h"
+
 #endif
 
 #include <chrono>
@@ -34,6 +35,7 @@ class Engine {
 
 #ifdef _OpenGL_Renderer_
         RendererGL app;
+       // class Renderer renderer;
 #endif
 #ifndef ANDROID
 #ifndef _OpenGL_Renderer_
@@ -122,11 +124,7 @@ private:
 
 #endif
 public:
-        float move_y = 0;
-
-     
-
-    
+        float move_y = 0;      
 
         float get_time(){
             static auto startTime = std::chrono::high_resolution_clock::now();
@@ -135,7 +133,7 @@ public:
             float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
             return time;
         }
-
+        Engine(){init();};
         void init(){app.engine = this;};
 
     
