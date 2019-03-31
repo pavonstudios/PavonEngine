@@ -5,14 +5,7 @@ void Engine::main_loop(){
 	 
 	 while (!glfwWindowShouldClose(window)) {
 		 	 glfwPollEvents();
-			  if(input.bIsKeyS_pressed){
-				move_y += 0.001f;
-                app.main_camera.SetLocation(0,move_y,0);
-			  }
-			  if(input.bIsKeyW_pressed){
-				move_y -= 0.001f;
-                app.main_camera.SetLocation(0,move_y,0);
-			  }
+			 update_input();
 			   
 			 app.main_loop();
 			glfwSwapBuffers(window);
@@ -86,7 +79,22 @@ void Engine::key_callback(GLFWwindow* window, int key, int scancode, int action,
 	  auto app = reinterpret_cast<RendererGL*>(glfwGetWindowUserPointer(window));
 #endif
           
-
+			if(key == GLFW_KEY_D){
+				if(action == GLFW_PRESS){
+					app->engine->input.D.bIsPressed = true;
+				}
+				if(action == GLFW_RELEASE){
+					app->engine->input.D.bIsPressed = false;
+				}
+			}
+			if(key == GLFW_KEY_A){
+				if(action == GLFW_PRESS){
+					app->engine->input.A.bIsPressed = true;
+				}
+				if(action == GLFW_RELEASE){
+					app->engine->input.A.bIsPressed = false;
+				}
+			}
            
              if (key == GLFW_KEY_W && action == GLFW_PRESS) {
 				app->engine->input.bIsKeyW_pressed = true;
@@ -111,4 +119,23 @@ void Engine::key_callback(GLFWwindow* window, int key, int scancode, int action,
                 //app->loadModel("models/chalet.obj");
                 //app->recreateSwapChain();
             }
+}
+
+void Engine::update_input(){
+	if(input.bIsKeyS_pressed){
+		move_y += 0.001f;
+		app.main_camera.SetLocation(0,move_y,0);
+	}
+	if(input.bIsKeyW_pressed){
+		move_y -= 0.001f;
+		app.main_camera.SetLocation(0,move_y,0);
+	}
+	if(input.A.bIsPressed){
+		move_y += 0.001f;
+		app.main_camera.SetLocation(move_y,0,0);
+	}
+	if(input.D.bIsPressed){
+		move_y -= 0.001f;
+		app.main_camera.SetLocation(move_y,0,0);
+	}
 }
