@@ -4,3 +4,9 @@ renderer
 *.o
 *.spv
 *.out
+android/.gradle/4.10.1/fileChanges/last-build.bin
+android/.gradle/
+android/build
+android/.idea
+android/app/.externalNativeBuild/
+

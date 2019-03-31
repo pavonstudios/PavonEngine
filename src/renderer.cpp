@@ -9,8 +9,8 @@
 
 void Renderer::run() {
         bIsRunnning = true;
-        my_3d_model.load_model("models/car01.obj");
-        my_secodonde_3d_model.load_model("models/character.obj");
+        my_3d_model.load_model("../models/car01.obj");
+        my_secodonde_3d_model.load_model("../models/character.obj");
         
         
 
@@ -62,11 +62,11 @@ void Renderer::VulkanConfig(){
         createRenderPass();
         createDescriptorSetLayout();
         createGraphicsPipeline(FRAGMENT_SHADER_PATH,&red_graphicsPipeline);
-         createGraphicsPipeline("shaders/frag.spv",&graphicsPipeline);
+         createGraphicsPipeline("../shaders/frag.spv",&graphicsPipeline);
         createCommandPool();
         createDepthResources();
         createFramebuffers();
-        createTextureImage("textures/car01.jpg");
+        createTextureImage("../textures/car01.jpg");
         //createTextureImage("textures/character.jpg");
         createTextureImageView();
         createTextureSampler();
