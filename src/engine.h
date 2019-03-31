@@ -22,7 +22,7 @@
 #endif
 
 #include <chrono>
-
+#include "input_controller.h"
 
 
 
@@ -124,6 +124,7 @@ private:
 
 #endif
 public:
+        class Input input;
         float move_y = 0;      
 
         float get_time(){

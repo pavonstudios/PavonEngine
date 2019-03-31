@@ -1,8 +1,19 @@
 #include "engine.h"
+#include "input_controller.h"
 
 void Engine::main_loop(){
+	 
 	 while (!glfwWindowShouldClose(window)) {
 		 	 glfwPollEvents();
+			  if(input.bIsKeyS_pressed){
+				move_y += 0.001f;
+                app.main_camera.SetLocation(0,move_y,0);
+			  }
+			  if(input.bIsKeyW_pressed){
+				move_y -= 0.001f;
+                app.main_camera.SetLocation(0,move_y,0);
+			  }
+			   
 			 app.main_loop();
 			glfwSwapBuffers(window);
     }
@@ -76,17 +87,25 @@ void Engine::key_callback(GLFWwindow* window, int key, int scancode, int action,
 #endif
           
 
-            if (key == GLFW_KEY_W && action == GLFW_REPEAT){
-               	
-				app->engine->move_y += 1;
-                app->main_camera.SetLocation(0,app->engine->move_y,0);
+           
+             if (key == GLFW_KEY_W && action == GLFW_PRESS) {
+				app->engine->input.bIsKeyW_pressed = true;
+              
             }
-            
+			else if (key == GLFW_KEY_W && action == GLFW_RELEASE)
+			{
+				app->engine->input.bIsKeyW_pressed = false;
+			}
                 
-            if (key == GLFW_KEY_S && action == GLFW_REPEAT){
-                app->engine->move_y -= 1;
-                app->main_camera.SetLocation(0,app->engine->move_y,0);
+            if (key == GLFW_KEY_S && action == GLFW_PRESS) {
+				app->engine->input.bIsKeyS_pressed = true;
+              
             }
+			else if (key == GLFW_KEY_S && action == GLFW_RELEASE)
+			{
+				app->engine->input.bIsKeyS_pressed = false;
+			}
+			
                 
             if (key == GLFW_KEY_M && action == GLFW_REPEAT){
                 //app->loadModel("models/chalet.obj");

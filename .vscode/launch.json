@@ -48,7 +48,7 @@
 			"name": "Compile & Launch",
 			"type": "cppdbg",
 			"request": "launch",
-			"program": "${workspaceFolder}/bin/renderer",
+			"program": "${workspaceFolder}/renderer",
 			"args": [],
 			"stopAtEntry": false,
 			"cwd": "${workspaceFolder}",
