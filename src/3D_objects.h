@@ -19,6 +19,8 @@
 #ifdef _OpenGL_Renderer_
 #include <GL/gl.h>
 #endif
+#else
+#include <GLES2/gl2.h>
 #endif
 
 #include "game_object.h"

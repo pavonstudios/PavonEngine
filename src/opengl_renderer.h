@@ -12,6 +12,8 @@
 
 #ifndef  ANDROID
 #include <GL/glew.h>
+#else
+#include "android_renderer.h"
 #endif
 
 
@@ -24,6 +26,7 @@
 #include "camera.h"
 
 
+
 class RendererGL{
 public:
 	void run();
@@ -32,6 +35,7 @@ public:
 	void main_loop();
 	void finish(){return;}
 	Camera main_camera;
+	
 	
 private:
 	class GLFWwindow* window; 

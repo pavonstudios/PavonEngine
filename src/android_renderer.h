@@ -10,7 +10,7 @@
 #include <cassert>
 
 #include <EGL/egl.h>
-#include <GLES/gl.h>
+#include <GLES2/gl2.h>
 
 //#include <android/sensor.h>
 #include <android/log.h>
@@ -18,6 +18,8 @@
 
 #define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, "native-activity", __VA_ARGS__))
 #define LOGW(...) ((void)__android_log_print(ANDROID_LOG_WARN, "native-activity", __VA_ARGS__))
+
+
 
 extern NativeWindowType createNativeWindow(void);
 static EGLint const attribute_list[] = {
@@ -34,15 +36,24 @@ public:
     Renderer(android_app *pApp){
         app = pApp;
         init();
-        //init(&engine);
+
         LOGW("Hello android");
 
     };
     void render(){
         //LOGW("rendering");
-        glClearColor(1.0, 1.0, 0.0, 1.0);
+        glViewport(0,0,800,600);
+
+        glClearColor(1.0, 0.0, 0.0, 1.0);
         glClear(GL_COLOR_BUFFER_BIT);
-        glFlush();
+        //glFlush();
+
+        GLfloat vVertices[] = {0.0f, 0.5f, 0.0f,
+                               -0.5f, -0.5f, 0.0f,
+                               0.5f, -0.5f, 0.0f};
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, vVertices);
+        glEnableVertexAttribArray(0);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
 
         eglSwapBuffers(display, surface);
     };
@@ -77,6 +88,7 @@ private:
 
         /* connect the context to the surface */
         eglMakeCurrent(display, surface, surface, context);
+
 
 
     };

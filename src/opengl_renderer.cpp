@@ -121,6 +121,7 @@ void RendererGL::init_ogl(){
 	{
 		for(int i = 0; i < meshes.size(); i++){
 			glGenVertexArrays(1, &meshes[i].VertexArrayID);
+
 			glBindVertexArray(meshes[i].VertexArrayID);
 			glGenBuffers(1, &meshes[i].vertexbuffer);
 			glBindBuffer(GL_ARRAY_BUFFER, meshes[i].vertexbuffer);	
