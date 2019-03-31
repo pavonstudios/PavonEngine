@@ -123,9 +123,11 @@ private:
         }
 
 #endif
+    void update_input();
 public:
         class Input input;
         float move_y = 0;      
+
 
         float get_time(){
             static auto startTime = std::chrono::high_resolution_clock::now();
