@@ -32,10 +32,10 @@
 const int WIDTH = 800;
 const int HEIGHT = 600;
 
-const std::string MODEL_PATH = "models/character.obj";
-const std::string TEXTURE_PATH = "textures/character.jpg";
+const std::string MODEL_PATH = "../models/character.obj";
+const std::string TEXTURE_PATH = "../textures/character.jpg";
 
-const std::string FRAGMENT_SHADER_PATH = "shaders/red.spv";
+const std::string FRAGMENT_SHADER_PATH = "../shaders/red.spv";
 
 const int MAX_FRAMES_IN_FLIGHT = 2;
 

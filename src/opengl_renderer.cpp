@@ -70,7 +70,7 @@ void RendererGL::update_matrix(){
 }
 void RendererGL::run(){
 	main_camera.SetLocation(2.f,3.f,2.f);
-	if(!my_model.load_model2("models/character.obj")){
+	if(!my_model.load_model2("../models/character.obj")){
 		fprintf( stderr, "Failed to load 3d mesh\n" );
 		return;
 	}
