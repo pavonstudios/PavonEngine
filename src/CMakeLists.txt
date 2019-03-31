@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 3.6.0)
 
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_REQUIRED_FLAGS -std=c++17)
+ add_definitions(-D_OpenGL_Renderer_)
+
 add_library(native_app_glue STATIC
         ${ANDROID_NDK}/sources/android/native_app_glue/android_native_app_glue.c)
 target_include_directories(native_app_glue PUBLIC
@@ -8,12 +12,16 @@ target_include_directories(native_app_glue PUBLIC
 find_library(log-lib
         log)
 
+
 set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -u ANativeActivity_onCreate")
 
 add_library(maincode
     SHARED
 
-    /home/pavon/rt_renderer/src/main.cpp)
+    main.cpp)
+
+
+add_subdirectory(glm)
 
 target_link_libraries(maincode
         android
@@ -21,4 +29,6 @@ target_link_libraries(maincode
         ${log-lib}
         EGL
         GLESv2
+        
+
         )

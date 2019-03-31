@@ -3,6 +3,9 @@
 
 
 
+
+
+#ifndef ANDROID
 #ifndef _OpenGL_Renderer_
 #include "renderer.h"
 #define GLFW_INCLUDE_VULKAN
@@ -11,13 +14,15 @@
 #ifdef _OpenGL_Renderer_
 #include "opengl_renderer.h"
 #endif
-
-#ifndef ANDROID
 #include <pthread.h>
 #include <GLFW/glfw3.h>
+#else
+#include "opengl_renderer.h"
 #endif
 
 #include <chrono>
+
+
 
 
 
@@ -26,20 +31,46 @@ threads executions */
 
 class Engine {
     public:
-#ifndef _OpenGL_Renderer_
-        Renderer app;
-#endif
+
 #ifdef _OpenGL_Renderer_
         RendererGL app;
 #endif
 #ifndef ANDROID
+#ifndef _OpenGL_Renderer_
+        Renderer app;
+#endif
         pthread_t thread[2];
         GLFWwindow* window;
         GLFWwindow* get_window_pointer()
         {
             return window;
         }
-           private:
+        void InitWindow();
+      
+        void update_window_size();
+         void Execute(){
+
+            //pthread_create(&thread[0],NULL, ExecuteRenderHanler, this);
+
+            //pthread_create(&thread[1],NULL, ExecuteInputHanler, this);
+            init();
+            InitWindow();
+            Render();
+
+            }
+
+
+        void *Render(){
+            std::cout << "Rendering" << std::endl;
+
+            app.run();
+            main_loop();
+
+            //pthread_exit(NULL);
+        }
+        void main_loop();
+        
+private:
          static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 #ifndef _OpenGL_Renderer_
         static void framebufferResizeCallback(GLFWwindow* window, int width, int height) {
@@ -88,13 +119,12 @@ class Engine {
    
             pthread_exit(NULL);
         }
+
 #endif
 public:
         float move_y = 0;
 
-        void InitWindow();
-      
-        void update_window_size();
+     
 
     
 
@@ -105,27 +135,7 @@ public:
             float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
             return time;
         }
-        void Execute(){            
-            
-            //pthread_create(&thread[0],NULL, ExecuteRenderHanler, this);
-            
-            //pthread_create(&thread[1],NULL, ExecuteInputHanler, this);
-            init();
-            InitWindow();
-            Render();
-            
-            }
- 
 
-        void *Render(){
-            std::cout << "Rendering" << std::endl;
-            
-            app.run();
-            main_loop();
-            
-            //pthread_exit(NULL);
-        }
-        void main_loop();
         void init(){app.engine = this;};
 
     

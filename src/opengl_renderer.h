@@ -10,15 +10,16 @@
 #include <stdexcept>
 #include <algorithm>
 
+#ifndef  ANDROID
 #include <GL/glew.h>
-
+#endif
 
 
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #define GLM_ENABLE_EXPERIMENTAL
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
 #include "3D_objects.h"
 #include "camera.h"
 

@@ -1,6 +1,6 @@
 #include "game_object.h"
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
 class Camera : public GameObject{
 public:
 	glm::mat4 Projection = glm::perspective(glm::radians(45.f), 800.f/600.f, 0.1f, 100.f);
