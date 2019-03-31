@@ -1,7 +1,7 @@
 #ifndef _Engine_H_
 #define _Engine_H_
 
-#include <pthread.h>
+
 
 #ifndef _OpenGL_Renderer_
 #include "renderer.h"
@@ -11,9 +11,15 @@
 #ifdef _OpenGL_Renderer_
 #include "opengl_renderer.h"
 #endif
+
+#ifndef ANDROID
+#include <pthread.h>
+#include <GLFW/glfw3.h>
+#endif
+
 #include <chrono>
 
-#include <GLFW/glfw3.h>
+
 
 /* Engine class who controll 
 threads executions */
@@ -26,36 +32,14 @@ class Engine {
 #ifdef _OpenGL_Renderer_
         RendererGL app;
 #endif
+#ifndef ANDROID
         pthread_t thread[2];
-        float move_y = 0;
-
-        void InitWindow();
         GLFWwindow* window;
-        void update_window_size();
-
         GLFWwindow* get_window_pointer()
         {
             return window;
         }
-
-        float get_time(){
-            static auto startTime = std::chrono::high_resolution_clock::now();
-
-            auto currentTime = std::chrono::high_resolution_clock::now();
-            float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
-            return time;
-        }
-        void Execute(){            
-            
-            //pthread_create(&thread[0],NULL, ExecuteRenderHanler, this);
-            
-            //pthread_create(&thread[1],NULL, ExecuteInputHanler, this);
-          
-            InitWindow();
-            Render();
-            
-            }
-    private:
+           private:
          static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 #ifndef _OpenGL_Renderer_
         static void framebufferResizeCallback(GLFWwindow* window, int width, int height) {
@@ -104,16 +88,45 @@ class Engine {
    
             pthread_exit(NULL);
         }
+#endif
+public:
+        float move_y = 0;
+
+        void InitWindow();
+      
+        void update_window_size();
+
+    
+
+        float get_time(){
+            static auto startTime = std::chrono::high_resolution_clock::now();
+
+            auto currentTime = std::chrono::high_resolution_clock::now();
+            float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
+            return time;
+        }
+        void Execute(){            
+            
+            //pthread_create(&thread[0],NULL, ExecuteRenderHanler, this);
+            
+            //pthread_create(&thread[1],NULL, ExecuteInputHanler, this);
+            init();
+            InitWindow();
+            Render();
+            
+            }
+ 
 
         void *Render(){
             std::cout << "Rendering" << std::endl;
-            app.engine = this;
+            
             app.run();
             main_loop();
             
             //pthread_exit(NULL);
         }
         void main_loop();
+        void init(){app.engine = this;};
 
     
 };

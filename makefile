@@ -1,10 +1,10 @@
 CC=g++ -g -std=c++17
-Library=-lvulkan -lglfw -lpthread 
+Library=-lglfw -lpthread 
 
 .ONESHELL:
 main:
 	mkdir -p bin && cd src
-	$(CC) engine.cpp 3D_objects.cpp renderer.cpp main.cpp -o ../bin/renderer $(Library) -I./
+	$(CC) engine.cpp 3D_objects.cpp renderer.cpp main.cpp -o ../bin/renderer $(Library) -I./ -lvulkan 
 
 renderer.o:
 	$(CC) -c renderer.cpp -I./
@@ -12,4 +12,4 @@ renderer.o:
 .ONESHELL:
 gl:
 	mkdir -p bin && cd src
-	$(CC) engine.cpp main.cpp 3D_objects.cpp opengl_renderer.cpp -o renderer $(Library) -lGLEW -lGL -I./ -D_OpenGL_Renderer_
+	$(CC) engine.cpp main.cpp 3D_objects.cpp opengl_renderer.cpp -o ../bin/renderer $(Library) -lGLEW -lGL -I./ -D_OpenGL_Renderer_

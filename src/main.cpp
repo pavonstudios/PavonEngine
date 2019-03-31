@@ -26,6 +26,7 @@ int main() {
 #endif
 
 #ifdef ANDROID
+
 extern "C" {
 void handle_cmd(android_app *pApp, int32_t cmd) {
     switch (cmd) {
