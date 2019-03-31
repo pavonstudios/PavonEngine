@@ -4,7 +4,7 @@ Library=-lglfw -lpthread
 .ONESHELL:
 main:
 	mkdir -p bin && cd src
-	$(CC) engine.cpp 3D_objects.cpp renderer.cpp main.cpp -o ../bin/renderer $(Library) -I./ -lvulkan 
+	$(CC) engine.cpp 3D_objects.cpp renderer.cpp main.cpp -o ../renderer $(Library) -I./ -lvulkan 
 
 renderer.o:
 	$(CC) -c renderer.cpp -I./
