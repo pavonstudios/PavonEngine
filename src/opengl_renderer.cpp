@@ -70,9 +70,9 @@ void RendererGL::update_matrix(){
 }
 void RendererGL::run(){
 	main_camera.SetLocation(2.f,3.f,2.f);
-	if(!my_model.load_model2("../models/character.obj")){
+	if(!my_model.load_model2("/home/pavon/rt_denderer/models/character.obj")){
 		fprintf( stderr, "Failed to load 3d mesh\n" );
-		return;
+		//return;
 	}
 	int size = sizeof(cube_vertex_data)/sizeof(cube_vertex_data[0]);
 	std::cout << "size %i" << size << std::endl;
@@ -87,7 +87,7 @@ void RendererGL::run(){
 
 	}
 	meshes.push_back(cube);
-	meshes.push_back(my_model);
+	//meshes.push_back(my_model);
 
 	init_ogl();	
 	generate_mvp_matrix();
