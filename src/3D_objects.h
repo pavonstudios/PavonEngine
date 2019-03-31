@@ -74,7 +74,7 @@ namespace std {
     };
 }
 #endif
-
+namespace engine{
 class Mesh : public GameObject{
 public:
     
@@ -92,6 +92,8 @@ public:
 
     bool load_model2(const char * path);
 
+    int load_model_gltf(const char* path);
+
 
 #ifndef _OpenGL_Renderer_
     VkBuffer vertices_buffer;
@@ -108,4 +110,6 @@ public:
 
 		
 };
+
+}//namespace
 #endif

@@ -2,6 +2,7 @@
 #include "gl_shader_loader.hpp"
 #include "engine.h"
 
+using namespace engine;
 
 static const GLfloat g_vertex_buffer_data[] = {
    -0.5f, -0.5f, 0.0f,
