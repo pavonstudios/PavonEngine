@@ -18,7 +18,7 @@ android {
     }
     externalNativeBuild {
         cmake {
-            path file('CMakeLists.txt')
+            path file('/home/pavon/rt_renderer/src/CMakeLists.txt')
         }
     }
 }
