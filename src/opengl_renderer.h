@@ -25,6 +25,7 @@
 #include "3D_objects.h"
 #include "camera.h"
 
+using namespace engine;
 
 
 class RendererGL{
