@@ -92,7 +92,7 @@ class Mesh : public GameObject{
 public:
     
     std::vector<Vertex> vertices;
-    std::vector<uint32_t> indices;
+    std::vector<unsigned int> indices;
     std::vector< glm::vec3 > simple_vertices;
 
     void load_model(std::string model_path);
@@ -119,6 +119,7 @@ public:
 #ifdef _OpenGL_Renderer_
     GLuint vertexbuffer;
 	GLuint VertexArrayID;
+    GLuint indices_buffer;
 #endif
 
 		
