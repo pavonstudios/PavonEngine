@@ -11,5 +11,12 @@ public:
 	key_pressed D;
 	key_pressed A;
 
+	float pitch = 0;
+	float yaw = 0;
+
+	bool right_button_pressed = false;
+
+	bool first_mouse = true;
+
 };
 #endif
