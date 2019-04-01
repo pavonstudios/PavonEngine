@@ -22,7 +22,11 @@
 #include "glm/gtx/hash.hpp"
 
 #include "game_object.h"
-
+struct UniformBufferObject {
+    alignas(16) glm::mat4 model;
+    alignas(16) glm::mat4 view;
+    alignas(16) glm::mat4 proj;
+};
 struct Vertex {
     glm::vec3 pos;
     glm::vec3 color;

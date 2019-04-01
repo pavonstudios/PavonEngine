@@ -35,7 +35,7 @@ public:
 	class Engine* engine;
 	void main_loop();
 	void finish(){return;}
-	Camera main_camera;
+	
 	
 	
 private:
@@ -45,21 +45,12 @@ private:
 	
 	void draw();
 	void generate_mvp_matrix();
-	void update_matrix();
-
-
+	void update_matrix();	
 	
-	
-	std::vector<Mesh> meshes;
+
 	GLuint shadersID;
 	GLuint MatrixID;
 	glm::mat4 mvp;
-
-	Mesh my_model;
-	Mesh cube;
-	Mesh cube_gltf;
-
-	
 
 	Mesh *mesh_to_draw;
 
