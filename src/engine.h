@@ -1,10 +1,6 @@
 #ifndef _Engine_H_
 #define _Engine_H_
 
-
-
-
-
 #ifndef ANDROID
 #ifndef _OpenGL_Renderer_
 #include "renderer.h"
@@ -126,6 +122,7 @@ private:
     void update_input();
 public:
         class Input input;
+        AssetManager objects_manager;
         float move_y = 0;      
 
 
