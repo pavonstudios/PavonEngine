@@ -18,7 +18,7 @@ void Engine::main_loop(){
 
 }
 void Engine::InitWindow(){
-	move_y = 2;
+		move_y = 2;
 		if( !glfwInit() )
 		{
 			fprintf( stderr, "Failed to initialize GLFW\n" );
@@ -47,8 +47,9 @@ void Engine::InitWindow(){
 		glfwTerminate();
 		return;
 	}
+	 glfwSetWindowUserPointer(window, this);
 #ifndef _OpenGL_Renderer_
-	    glfwSetWindowUserPointer(window, this);
+	   
         glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
 #endif
         glfwSetInputMode(window, GLFW_STICKY_KEYS, 1);
@@ -56,8 +57,9 @@ void Engine::InitWindow(){
 		glfwSetCursorPosCallback(window, mouse_callback);
 		glfwSetMouseButtonCallback(window,mouse_button_callback);
 #ifdef _OpenGL_Renderer_
-	glfwMakeContextCurrent(window); // Initialize GLEW
-	
+		
+		glfwMakeContextCurrent(window); // Initialize GLEW
+
 
 		if (glewInit() != GLEW_OK) {
 			fprintf(stderr, "Failed to initialize GLEW\n");
@@ -81,8 +83,12 @@ void Engine::update_window_size(){
 	#ifdef _OpenGL_Renderer_
 		auto app = reinterpret_cast<RendererGL*>(glfwGetWindowUserPointer(window));
 	#endif
+
+		if(!app){
+			throw std::runtime_error("no app pointer");
+		}
 	float lastX = 400, lastY = 300;
-			float xoffset = xpos - lastX;
+	float xoffset = xpos - lastX;
 	if(app->engine->input.first_mouse){
 		 lastX = xpos;
     	lastY = ypos;
@@ -182,6 +188,7 @@ void Engine::update_input(){
 		//move_y += 0.001f;
 		//main_camera.SetLocation(0,move_y,0);
 		main_camera.MoveBackward();
+		std::cout << "pressed" << std::endl;
 	}
 	if(input.bIsKeyW_pressed){
 		//move_y -= 0.001f;

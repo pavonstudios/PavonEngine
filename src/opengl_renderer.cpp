@@ -57,24 +57,23 @@ void RendererGL::generate_mvp_matrix(){
 }
 void RendererGL::update_matrix(){
 	
-	
+	UniformBufferObject ubo = {};
+
 
 	mesh_to_draw->model_matrix = glm::rotate(glm::mat4(1.0f), engine->get_time() * glm::radians(90.f), glm::vec3(0.0f, 0.0f, 1.0f));
-	cube.SetLocation(-1,0,0);
-	my_model.SetLocation(0,0,2);
-	//glm::mat4 Model = glm::mat4(1.0f);
-	// Our ModelViewProjection : multiplication of our 3 matrices
-	mvp = main_camera.Projection * main_camera.View * mesh_to_draw->model_matrix;
+
+
+	ubo.view = engine->main_camera.View;
+	ubo.proj = engine->main_camera.Projection;
+	ubo.model = mesh_to_draw->model_matrix;
+
+	mvp = engine->main_camera.Projection * engine->main_camera.View * mesh_to_draw->model_matrix;
 
 	glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &mvp[0][0]);
 
 }
-void RendererGL::run(){
-	main_camera.SetLocation(2.f,3.f,2.f);
-	if(!my_model.load_model2("models/character.obj")){
-		fprintf( stderr, "Failed to load 3d mesh\n" );
-		//return;
-	}
+void RendererGL::run(){	
+	
 	int size = sizeof(cube_vertex_data)/sizeof(cube_vertex_data[0]);
 	std::cout << "size %i" << size << std::endl;
 	int i = 0;
@@ -84,12 +83,10 @@ void RendererGL::run(){
 			vertex = glm::vec3(cube_vertex_data[i],cube_vertex_data[i+1],cube_vertex_data[i+2]);
 		}
 		i = i + 2;
-		cube.simple_vertices.push_back(vertex);
+		//cube.simple_vertices.push_back(vertex);
 
 	}
-	meshes.push_back(cube);
-	//meshes.push_back(my_model);
-	cube_gltf.load_model_gltf("models/Cube.gltf");
+	
 
 	init_ogl();	
 	generate_mvp_matrix();
@@ -99,11 +96,11 @@ void RendererGL::run(){
 
 void RendererGL::draw(){
 
-	for(int i = 0; i < meshes.size(); i++){
-		mesh_to_draw = &meshes[i];
+	for(int i = 0; i < engine->meshes.size(); i++){
+		mesh_to_draw = engine->meshes[i];
 		glEnableVertexAttribArray(0);
-		glBindBuffer(GL_ARRAY_BUFFER, meshes[i].vertexbuffer);								
-		glDrawArrays(GL_TRIANGLES, 0, meshes[i].simple_vertices.size()); 
+		glBindBuffer(GL_ARRAY_BUFFER, engine->meshes[i]->vertexbuffer);								
+		glDrawArrays(GL_TRIANGLES, 0, engine->meshes[i]->vertices.size()); 
 		glDisableVertexAttribArray(0);
 
 	}
@@ -115,21 +112,21 @@ void RendererGL::draw(){
 }
 
 void RendererGL::init_ogl(){
-	mesh_to_draw = &cube;
+	mesh_to_draw = engine->meshes[0];
 	
 	shadersID = LoadShaders("shaders/simple_vert_mvp.vert","shaders/simple_frag.frag");
 	
 	//generate vertex buffers for any mesh to load in real time
 	{
-		for(int i = 0; i < meshes.size(); i++){
-			glGenVertexArrays(1, &meshes[i].VertexArrayID);
+		for(int i = 0; i < engine->meshes.size(); i++){
+			glGenVertexArrays(1, &engine->meshes[i]->VertexArrayID);
 
-			glBindVertexArray(meshes[i].VertexArrayID);
-			glGenBuffers(1, &meshes[i].vertexbuffer);
-			glBindBuffer(GL_ARRAY_BUFFER, meshes[i].vertexbuffer);	
+			glBindVertexArray(engine->meshes[i]->VertexArrayID);
+			glGenBuffers(1, &engine->meshes[i]->vertexbuffer);
+			glBindBuffer(GL_ARRAY_BUFFER, engine->meshes[i]->vertexbuffer);	
 	
-			glBufferData(GL_ARRAY_BUFFER, meshes[i].simple_vertices.size() * sizeof(glm::vec3),
-					 &meshes[i].simple_vertices[0], GL_STATIC_DRAW);
+			glBufferData(GL_ARRAY_BUFFER, engine->meshes[i]->vertices.size() * sizeof(Vertex),
+					 &engine->meshes[i]->vertices[0], GL_STATIC_DRAW);
 		}
 		
 	}	
@@ -141,14 +138,12 @@ void RendererGL::init_ogl(){
 		3,                  // size
 		GL_FLOAT,           // type
 		GL_FALSE,           // normalized?
-		0,                  // stride
+		sizeof(Vertex),                  // stride
 		(void*)0            // array buffer offset
 	);
 }
 
 void RendererGL::main_loop(){
-	//glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
-
 	
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -158,11 +153,6 @@ void RendererGL::main_loop(){
 
 		update_matrix();
 		draw();
-
-	
-		
-	
-	
 
 }
 
