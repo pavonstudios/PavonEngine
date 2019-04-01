@@ -98,10 +98,14 @@ void RendererGL::draw(){
 
 	for(int i = 0; i < engine->meshes.size(); i++){
 		mesh_to_draw = engine->meshes[i];
-		glEnableVertexAttribArray(0);
-		glBindBuffer(GL_ARRAY_BUFFER, engine->meshes[i]->vertexbuffer);								
-		glDrawArrays(GL_TRIANGLES, 0, engine->meshes[i]->vertices.size()); 
-		glDisableVertexAttribArray(0);
+		
+		//glBindVertexArray(engine->meshes[i]->vertexbuffer);
+		//glBindBuffer(GL_ARRAY_BUFFER, engine->meshes[i]->vertexbuffer);	
+			
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, engine->meshes[i]->indices_buffer);							
+		//glDrawArrays(GL_TRIANGLES, 0, engine->meshes[i]->vertices.size());
+		glDrawElements(GL_TRIANGLES, engine->meshes[i]->indices.size(), GL_UNSIGNED_INT,(void*)0);  
+		
 
 	}
 		
@@ -122,17 +126,23 @@ void RendererGL::init_ogl(){
 			glGenVertexArrays(1, &engine->meshes[i]->VertexArrayID);
 
 			glBindVertexArray(engine->meshes[i]->VertexArrayID);
+
 			glGenBuffers(1, &engine->meshes[i]->vertexbuffer);
-			glBindBuffer(GL_ARRAY_BUFFER, engine->meshes[i]->vertexbuffer);	
-	
+			glBindBuffer(GL_ARRAY_BUFFER, engine->meshes[i]->vertexbuffer);		
 			glBufferData(GL_ARRAY_BUFFER, engine->meshes[i]->vertices.size() * sizeof(Vertex),
 					 &engine->meshes[i]->vertices[0], GL_STATIC_DRAW);
+
+			 glGenBuffers(1,&engine->meshes[i]->indices_buffer);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, engine->meshes[i]->indices_buffer);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, engine->meshes[i]->indices.size() * sizeof(unsigned int),
+				&engine->meshes[i]->indices[0], GL_STATIC_DRAW); 
+			
 		}
 		
 	}	
 
 	
-
+	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(
 		0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
 		3,                  // size
@@ -141,6 +151,7 @@ void RendererGL::init_ogl(){
 		sizeof(Vertex),                  // stride
 		(void*)0            // array buffer offset
 	);
+	//glBindVertexArray(0);
 }
 
 void RendererGL::main_loop(){
