@@ -10,3 +10,5 @@ android/build
 android/.idea
 android/app/.externalNativeBuild/
 src/glm
+models/asuncion.obj
+textures/building01.jpg

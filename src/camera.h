@@ -13,7 +13,7 @@ public:
 	glm::vec3 cameraFront = glm::vec3(0.0f, 1.0f, 0.0f);
 	glm::vec3 cameraUp    = glm::vec3(0.0f, 0.0f,  1.0f);
 
-	glm::mat4 Projection = glm::perspective(glm::radians(45.f), 800.f/600.f, 0.1f, 100.f);
+	glm::mat4 Projection = glm::perspective(glm::radians(45.f), 800.f/600.f, 0.1f, 5000.f);
 
 	glm::mat4 View = glm::lookAt(
 		cameraPos,// Camera is at (4,3,3), in World Space

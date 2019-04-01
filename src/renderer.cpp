@@ -60,7 +60,7 @@ void Renderer::VulkanConfig(){
         createCommandPool();
         createDepthResources();
         createFramebuffers();
-        createTextureImage("textures/car01.jpg");
+        createTextureImage("textures/building01.jpg");
         //createTextureImage("textures/character.jpg");
         createTextureImageView();
         createTextureSampler();
