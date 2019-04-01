@@ -54,5 +54,7 @@ private:
 
 	Mesh *mesh_to_draw;
 
+	unsigned int texture;
+
 };
 #endif

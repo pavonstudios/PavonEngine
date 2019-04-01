@@ -82,11 +82,15 @@ struct image_size{
     int heigth;
     void * pPixels;
 };
+/*
+Load textures
+*/
 class AssetManager{
 public:
     void free_image(void * pixels);
     image_size load_and_get_size(std::string texture_path);
 };
+
 namespace engine{
 class Mesh : public GameObject{
 public:

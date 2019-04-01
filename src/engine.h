@@ -129,7 +129,7 @@ public:
         float move_y = 0;
         std::vector<Mesh*> meshes; 
         Mesh model1;
-        Mesh model2;
+        //Mesh model2;
         Camera main_camera;     
 
         void load_models();
