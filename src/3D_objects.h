@@ -3,25 +3,23 @@
 
 
 #define GLM_FORCE_RADIANS
-#define GLM_FORCE_DEPTH_ZERO_TO_ONE
-#define GLM_ENABLE_EXPERIMENTAL
-#include "glm/glm.hpp"
 
 #include <unordered_map>
 #include <vector>
 #include <array>
 
 #ifndef ANDROID
-#include "glm/gtx/hash.hpp"
-#ifndef _OpenGL_Renderer_
-#include <vulkan/vulkan.h>
-#endif
-#ifdef _OpenGL_Renderer_
-#include <GL/gl.h>
-#endif
+    #ifndef _OpenGL_Renderer_
+        #include <vulkan/vulkan.h>
+    #else
+        #include <GL/gl.h>
+    #endif
 #else
-#include <GLES2/gl2.h>
+    #include <GLES2/gl2.h>
+    #include "glm/glm.hpp"
 #endif
+
+#include "glm/gtx/hash.hpp"
 
 #include "game_object.h"
 
@@ -66,6 +64,7 @@ struct Vertex {
 
 };
 #ifndef ANDROID
+
 namespace std {
     template<> struct hash<Vertex> {
         size_t operator()(Vertex const& vertex) const {

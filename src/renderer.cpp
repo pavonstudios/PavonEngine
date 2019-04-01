@@ -11,7 +11,7 @@ void Renderer::run() {
         bIsRunnning = true;      
                
 
-        engine->main_camera.SetLocation(2.f,3.f,2.f);
+        //engine->main_camera.SetLocation(2.f,3.f,2.f);
         
         initVulkan();
       
@@ -316,6 +316,9 @@ void Renderer::updateUniformBuffer(uint32_t currentImage) {
 
         
         ubo.model = engine->meshes[0]->model_matrix;
+        ubo.model = glm::mat4(1.0f);
+        
+        //engine->main_camera.update();
        
         ubo.view = engine->main_camera.View;
         ubo.proj = engine->main_camera.Projection;
@@ -509,20 +512,20 @@ void Renderer::cleanup() {
 
          for(int i = 0; i < engine->meshes.size(); i++){
              for (size_t o = 0; o < swapChainImages.size(); o++) {
-                 vkDestroyBuffer(device, engine->meshes[i]->uniformBuffers[o], nullptr);
-                vkFreeMemory(device, engine->meshes[i]->uniformBuffersMemory[o], nullptr);
+                // vkDestroyBuffer(device, engine->meshes[i]->uniformBuffers[o], nullptr);
+               // vkFreeMemory(device, engine->meshes[i]->uniformBuffersMemory[o], nullptr);
              }
          }
      
         for(int i = 0; i < engine->meshes.size(); i++){
-            vkDestroyBuffer(device, engine->meshes[i]->indexBuffer, nullptr);
+            //vkDestroyBuffer(device, engine->meshes[i]->indexBuffer, nullptr);
         }
                 
         vkFreeMemory(device, indexBufferMemory, nullptr);
 
         //mesh vertices buffers
         for(int i = 0; i < engine->meshes.size(); i++){
-             vkDestroyBuffer(device, engine->meshes[i]->vertices_buffer, nullptr);
+             //vkDestroyBuffer(device, engine->meshes[i]->vertices_buffer, nullptr);
         }
        
        

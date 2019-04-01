@@ -53,6 +53,8 @@ void Engine::InitWindow(){
 #endif
         glfwSetInputMode(window, GLFW_STICKY_KEYS, 1);
 		glfwSetKeyCallback(window, key_callback);
+		glfwSetCursorPosCallback(window, mouse_callback);
+		glfwSetMouseButtonCallback(window,mouse_button_callback);
 #ifdef _OpenGL_Renderer_
 	glfwMakeContextCurrent(window); // Initialize GLEW
 	
@@ -69,6 +71,60 @@ void Engine::update_window_size(){
             glfwGetFramebufferSize(window, &width, &height);
             glfwWaitEvents();
         }
+
+}
+ void Engine::mouse_callback(GLFWwindow* window, double xpos, double ypos)
+ {
+	 #ifndef _OpenGL_Renderer_
+	  auto app = reinterpret_cast<Renderer*>(glfwGetWindowUserPointer(window));
+	#endif
+	#ifdef _OpenGL_Renderer_
+		auto app = reinterpret_cast<RendererGL*>(glfwGetWindowUserPointer(window));
+	#endif
+	float lastX = 400, lastY = 300;
+			float xoffset = xpos - lastX;
+	if(app->engine->input.first_mouse){
+		 lastX = xpos;
+    	lastY = ypos;
+		app->engine->input.first_mouse = false;
+
+	}
+
+	 
+		float yoffset = lastY - ypos; // reversed since y-coordinates range from bottom to top
+		lastX = xpos;
+		lastY = ypos;
+
+		float sensitivity = 0.05f;
+		xoffset *= sensitivity;
+		yoffset *= sensitivity;
+
+		app->engine->input.yaw   += xoffset;
+	app->engine->input.pitch += yoffset;  
+
+	if(app->engine->input.pitch > 89.0f)
+		app->engine->input.pitch =  89.0f;
+	if(app->engine->input.pitch < -89.0f)
+		app->engine->input.pitch = -89.0f;
+
+ }
+void Engine::mouse_button_callback(GLFWwindow* window, int button, int action, int mods){
+#ifndef _OpenGL_Renderer_
+	  auto app = reinterpret_cast<Renderer*>(glfwGetWindowUserPointer(window));
+#endif
+#ifdef _OpenGL_Renderer_
+	  auto app = reinterpret_cast<RendererGL*>(glfwGetWindowUserPointer(window));
+#endif
+
+	if (button == GLFW_MOUSE_BUTTON_RIGHT ){
+		if(action == GLFW_PRESS){
+		app->engine->input.right_button_pressed = true;
+		}
+		if(action == GLFW_RELEASE){
+		app->engine->input.right_button_pressed = false;
+		}
+
+	}
 
 }
 void Engine::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods){
@@ -123,20 +179,27 @@ void Engine::key_callback(GLFWwindow* window, int key, int scancode, int action,
 
 void Engine::update_input(){
 	if(input.bIsKeyS_pressed){
-		move_y += 0.001f;
-		main_camera.SetLocation(0,move_y,0);
+		//move_y += 0.001f;
+		//main_camera.SetLocation(0,move_y,0);
+		main_camera.MoveBackward();
 	}
 	if(input.bIsKeyW_pressed){
-		move_y -= 0.001f;
-		main_camera.SetLocation(0,move_y,0);
+		//move_y -= 0.001f;
+		//main_camera.SetLocation(0,move_y,0);
+		main_camera.MoveForward();
 	}
 	if(input.A.bIsPressed){
-		move_y += 0.001f;
-		main_camera.SetLocation(move_y,0,0);
+		//move_y += 0.001f;
+		//main_camera.SetLocation(move_y,0,0);
+		main_camera.MoveLeft();
 	}
 	if(input.D.bIsPressed){
-		move_y -= 0.001f;
-		main_camera.SetLocation(move_y,0,0);
+		//move_y -= 0.001f;
+		//main_camera.SetLocation(move_y,0,0);
+		main_camera.MoveRight();
+	}
+	if(input.right_button_pressed){
+		main_camera.mouse_control_update(input.yaw, input.pitch);
 	}
 }
 
