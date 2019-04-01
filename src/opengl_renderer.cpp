@@ -101,7 +101,7 @@ void RendererGL::draw(){
 		
 		//glBindVertexArray(engine->meshes[i]->vertexbuffer);
 		//glBindBuffer(GL_ARRAY_BUFFER, engine->meshes[i]->vertexbuffer);	
-			
+		glBindTexture(GL_TEXTURE_2D, texture);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, engine->meshes[i]->indices_buffer);							
 		//glDrawArrays(GL_TRIANGLES, 0, engine->meshes[i]->vertices.size());
 		glDrawElements(GL_TRIANGLES, engine->meshes[i]->indices.size(), GL_UNSIGNED_INT,(void*)0);  
@@ -119,6 +119,10 @@ void RendererGL::init_ogl(){
 	mesh_to_draw = engine->meshes[0];
 	
 	shadersID = LoadShaders("shaders/simple_vert_mvp.vert","shaders/simple_frag.frag");
+	glEnable(GL_DEPTH_TEST);
+// Accept fragment if it closer to the camera than the former one
+	glDepthFunc(GL_LESS);
+
 	
 	//generate vertex buffers for any mesh to load in real time
 	{
@@ -151,7 +155,31 @@ void RendererGL::init_ogl(){
 		sizeof(Vertex),                  // stride
 		(void*)0            // array buffer offset
 	);
+	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(
+		2,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
+		2,                  // size
+		GL_FLOAT,           // type
+		GL_FALSE,           // normalized?
+		sizeof(Vertex),                  // stride
+		(void*)offsetof(Vertex,texCoord)            // array buffer offset
+	);
 	//glBindVertexArray(0);
+
+	image_size size =  engine->objects_manager.load_and_get_size("textures/car01.jpg");
+	
+	glGenTextures(1,&texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D,0,GL_RGB, size.width, size.heigth,0,GL_RGB, GL_UNSIGNED_BYTE, size.pPixels);
+	glGenerateMipmap(GL_TEXTURE_2D);
+	engine->objects_manager.free_image(size.pPixels);
+
+
+
 }
 
 void RendererGL::main_loop(){
