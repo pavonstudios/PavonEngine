@@ -12,4 +12,4 @@ renderer.o:
 .ONESHELL:
 gl:
 	mkdir -p bin && cd src
-	$(CC) engine.cpp main.cpp 3D_objects.cpp opengl_renderer.cpp -o ../bin/renderer $(Library) -lGLEW -lGL -I./ -D_OpenGL_Renderer_
+	$(CC) engine.cpp main.cpp 3D_objects.cpp opengl_renderer.cpp -o ../renderer $(Library) -lGLEW -lGL -I./ -D_OpenGL_Renderer_

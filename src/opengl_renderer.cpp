@@ -2,7 +2,7 @@
 #include "gl_shader_loader.hpp"
 #include "engine.h"
 
-using namespace engine;
+//using namespace engine;
 
 static const GLfloat g_vertex_buffer_data[] = {
    -0.5f, -0.5f, 0.0f,
@@ -71,7 +71,7 @@ void RendererGL::update_matrix(){
 }
 void RendererGL::run(){
 	main_camera.SetLocation(2.f,3.f,2.f);
-	if(!my_model.load_model2("/home/pavon/rt_denderer/models/character.obj")){
+	if(!my_model.load_model2("models/character.obj")){
 		fprintf( stderr, "Failed to load 3d mesh\n" );
 		//return;
 	}
@@ -89,6 +89,7 @@ void RendererGL::run(){
 	}
 	meshes.push_back(cube);
 	//meshes.push_back(my_model);
+	cube_gltf.load_model_gltf("models/Cube.gltf");
 
 	init_ogl();	
 	generate_mvp_matrix();

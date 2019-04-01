@@ -57,6 +57,7 @@ private:
 
 	Mesh my_model;
 	Mesh cube;
+	Mesh cube_gltf;
 
 	
 
