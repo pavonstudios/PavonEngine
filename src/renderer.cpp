@@ -1,11 +1,11 @@
 
 #include "renderer.h"
-#define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h>
 
 #include "debug_utils.h"
 
 #include "engine.h"
+
+
 
 void Renderer::run() {
         bIsRunnning = true;
@@ -199,30 +199,33 @@ void Renderer::createCommandBuffers() {
             }
         }
 }
- void Renderer::createTextureImage(std::string texture_path) {
-        int texWidth, texHeight, texChannels;
-        stbi_uc* pixels = stbi_load(texture_path.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
-        VkDeviceSize imageSize = texWidth * texHeight * 4;
 
-        if (!pixels) {
-            throw std::runtime_error("failed to load texture image!");
-        }
+ void Renderer::createTextureImage(std::string texture_path) {
+       
+        image_size size = engine->objects_manager.load_and_get_size(texture_path);
+        
+        VkDeviceSize imageSize = size.heigth * size.width * 4;
 
         VkBuffer stagingBuffer;
         VkDeviceMemory stagingBufferMemory;
-        createBuffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
+
+        createBuffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+         VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, 
+         stagingBuffer, stagingBufferMemory);
 
         void* data;
         vkMapMemory(device, stagingBufferMemory, 0, imageSize, 0, &data);
-            memcpy(data, pixels, static_cast<size_t>(imageSize));
+            memcpy(data, size.pPixels, static_cast<size_t>(imageSize));
         vkUnmapMemory(device, stagingBufferMemory);
+        
+        engine->objects_manager.free_image(size.pPixels);
 
-        stbi_image_free(pixels);
-
-        createImage(texWidth, texHeight, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, textureImage, textureImageMemory);
+        createImage(size.width, size.heigth, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_TILING_OPTIMAL, 
+        VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, 
+        textureImage, textureImageMemory);
 
         transitionImageLayout(textureImage, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
-            copyBufferToImage(stagingBuffer, textureImage, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight));
+            copyBufferToImage(stagingBuffer, textureImage, static_cast<uint32_t>(size.width), static_cast<uint32_t>(size.heigth));
         transitionImageLayout(textureImage, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 
         vkDestroyBuffer(device, stagingBuffer, nullptr);
