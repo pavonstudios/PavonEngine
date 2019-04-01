@@ -124,18 +124,26 @@ void Engine::key_callback(GLFWwindow* window, int key, int scancode, int action,
 void Engine::update_input(){
 	if(input.bIsKeyS_pressed){
 		move_y += 0.001f;
-		app.main_camera.SetLocation(0,move_y,0);
+		main_camera.SetLocation(0,move_y,0);
 	}
 	if(input.bIsKeyW_pressed){
 		move_y -= 0.001f;
-		app.main_camera.SetLocation(0,move_y,0);
+		main_camera.SetLocation(0,move_y,0);
 	}
 	if(input.A.bIsPressed){
 		move_y += 0.001f;
-		app.main_camera.SetLocation(move_y,0,0);
+		main_camera.SetLocation(move_y,0,0);
 	}
 	if(input.D.bIsPressed){
 		move_y -= 0.001f;
-		app.main_camera.SetLocation(move_y,0,0);
+		main_camera.SetLocation(move_y,0,0);
 	}
+}
+
+
+void Engine::load_models(){
+	model1.load_model("models/car01.obj");
+   // model2.load_model("models/character.obj");
+	meshes.push_back(&model1);
+	//meshes.push_back(&model2);
 }

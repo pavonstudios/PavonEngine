@@ -88,12 +88,9 @@ public:
 
     float RotationValue = 90;
     bool bIsRunnning = false;
-    float move_y = 0;
-    Mesh my_3d_model;
-    Mesh my_secodonde_3d_model;
-    Camera main_camera;
+    float move_y = 0;    
 
-    std::vector<Mesh> meshes;
+    
     bool framebufferResized = false;
     
     void main_loop();

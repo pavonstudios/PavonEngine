@@ -8,19 +8,13 @@
 
 
 void Renderer::run() {
-        bIsRunnning = true;
-        my_3d_model.load_model("models/car01.obj");
-        my_secodonde_3d_model.load_model("models/character.obj");
-        
-        
+        bIsRunnning = true;      
+               
 
-        main_camera.SetLocation(2.f,3.f,2.f);
+        engine->main_camera.SetLocation(2.f,3.f,2.f);
         
         initVulkan();
-        meshes.push_back(my_3d_model);
-        meshes.push_back(my_secodonde_3d_model);
-        //my_3d_model.SetLocation(-1,0,0);
-        //my_secodonde_3d_model.SetLocation(1,0,0);
+      
         
        
 }
@@ -70,16 +64,14 @@ void Renderer::VulkanConfig(){
         //createTextureImage("textures/character.jpg");
         createTextureImageView();
         createTextureSampler();
-        createVertexBuffer(&my_3d_model);
-        createVertexBuffer(&my_secodonde_3d_model);
-        createIndexBuffer(&my_3d_model);
-        createIndexBuffer(&my_secodonde_3d_model);
-        createUniformBuffers(&my_3d_model);
-        createUniformBuffers(&my_secodonde_3d_model);
-        createDescriptorPool(&my_secodonde_3d_model);
-        createDescriptorPool(&my_3d_model);
-        createDescriptorSets(&my_3d_model);
-        createDescriptorSets(&my_secodonde_3d_model);
+        for (int i = 0; i< engine->meshes.size(); i++){
+            createVertexBuffer(engine->meshes[i]);
+            createIndexBuffer(engine->meshes[i]);
+            createUniformBuffers(engine->meshes[i]);
+            createDescriptorPool(engine->meshes[i]);
+            createDescriptorSets(engine->meshes[i]);
+        }       
+      
         createCommandBuffers();
 }
 void Renderer::createIndexBuffer(Mesh * mesh) {
@@ -129,6 +121,9 @@ void Renderer::createIndexBuffer(Mesh * mesh) {
         vkDestroyBuffer(device, stagingBuffer, nullptr);
         vkFreeMemory(device, stagingBufferMemory, nullptr);
 }
+/*
+Main function in charge to create the draw calls
+*/
 void Renderer::createCommandBuffers() {
         commandBuffers.resize(swapChainFramebuffers.size());
 
@@ -159,7 +154,7 @@ void Renderer::createCommandBuffers() {
             renderPassInfo.renderArea.extent = swapChainExtent;
 
             std::array<VkClearValue, 2> clearValues = {};
-            clearValues[0].color = {0.0f, 0.0f, 0.0f, 1.0f};
+            clearValues[0].color = {0.1f, 0.1f, 0.1f, 1.0f};
             clearValues[1].depthStencil = {1.0f, 0};
 
             renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
@@ -169,19 +164,19 @@ void Renderer::createCommandBuffers() {
 
                 vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
 
-                VkBuffer vertexBuffers[] = {my_3d_model.vertices_buffer};
+                //VkBuffer vertexBuffers[] = {my_3d_model.vertices_buffer};
                 VkDeviceSize offsets[] = {0};
-                vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, &my_3d_model.vertices_buffer, offsets);
+                vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, &engine->meshes[0]->vertices_buffer, offsets);
 
-                vkCmdBindIndexBuffer(commandBuffers[i], my_3d_model.indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+                vkCmdBindIndexBuffer(commandBuffers[i], engine->meshes[0]->indexBuffer, 0, VK_INDEX_TYPE_UINT32);
 
                 vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, 
-                                            &my_3d_model.descriptorSets[i], 0, nullptr);
+                                            &engine->meshes[0]->descriptorSets[i], 0, nullptr);
 
-                vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(my_3d_model.indices.size()), 1, 0, 0, 0);
+                vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(engine->meshes[0]->indices.size()), 1, 0, 0, 0);
                 
                 //other objects
-                vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, red_graphicsPipeline);
+/*                 vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, red_graphicsPipeline);
 
                 vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, &my_secodonde_3d_model.vertices_buffer, offsets);
 
@@ -191,7 +186,7 @@ void Renderer::createCommandBuffers() {
                                                     &my_secodonde_3d_model.descriptorSets[i], 0, nullptr);
 
                 vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(my_secodonde_3d_model.indices.size()), 1, 0, 0, 0);
-
+ */
             vkCmdEndRenderPass(commandBuffers[i]);
 
             if (vkEndCommandBuffer(commandBuffers[i]) != VK_SUCCESS) {
@@ -316,23 +311,23 @@ void Renderer::updateUniformBuffer(uint32_t currentImage) {
 
         UniformBufferObject ubo = {};           
         
-        my_3d_model.model_matrix = glm::rotate(glm::mat4(1), engine->get_time() * glm::radians(45.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-        my_3d_model.SetLocation(-1,0,0);
+        engine->meshes[0]->model_matrix = glm::rotate(glm::mat4(1), engine->get_time() * glm::radians(45.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+        engine->meshes[0]->SetLocation(-1,0,0);
 
         
-        ubo.model = my_3d_model.model_matrix;
+        ubo.model = engine->meshes[0]->model_matrix;
        
-        ubo.view = main_camera.View;
-        ubo.proj = main_camera.Projection;
+        ubo.view = engine->main_camera.View;
+        ubo.proj = engine->main_camera.Projection;
         
         ubo.proj[1][1] *= -1;
 
         void* data;
-        vkMapMemory(device, my_3d_model.uniformBuffersMemory[currentImage], 0, sizeof(ubo), 0, &data);
+        vkMapMemory(device, engine->meshes[0]->uniformBuffersMemory[currentImage], 0, sizeof(ubo), 0, &data);
             memcpy(data, &ubo, sizeof(ubo));
-        vkUnmapMemory(device, my_3d_model.uniformBuffersMemory[currentImage]);
+        vkUnmapMemory(device, engine->meshes[0]->uniformBuffersMemory[currentImage]);
 
-        UniformBufferObject ubo_2 = {};
+/*         UniformBufferObject ubo_2 = {};
         my_secodonde_3d_model.model_matrix = glm::rotate(glm::mat4(1), engine->get_time() * glm::radians(45.0f), glm::vec3(0.0f, 0.0f, 1.0f));
  
         //my_secodonde_3d_model.SetLocation(1,0,0);
@@ -344,7 +339,7 @@ void Renderer::updateUniformBuffer(uint32_t currentImage) {
         vkMapMemory(device, my_secodonde_3d_model.uniformBuffersMemory[currentImage], 0, sizeof(ubo_2), 0, &data2);
             memcpy(data2, &ubo_2, sizeof(ubo_2));
         vkUnmapMemory(device, my_secodonde_3d_model.uniformBuffersMemory[currentImage]);
-
+ */
     }
 
 
@@ -499,10 +494,10 @@ void Renderer::cleanup() {
 
         vkDestroyImage(device, textureImage, nullptr);
         vkFreeMemory(device, textureImageMemory, nullptr);
-        for(int i = 0; i < meshes.size(); i++){
+        for(int i = 0; i < engine->meshes.size(); i++){
            
-            //vkDestroyPipelineLayout(device, meshes[i]., nullptr);
-            vkDestroyDescriptorPool(device, meshes[i].descriptorPool, nullptr);
+            //vkDestroyPipelineLayout(device, meshes[i]., nullptr);c
+            vkDestroyDescriptorPool(device, engine->meshes[i]->descriptorPool, nullptr);
            // vkDestroyDescriptorSetLayout(device, meshes[i].descriptorSets, nullptr);
             //vkDestroyDescriptorSe
         }
@@ -512,22 +507,22 @@ void Renderer::cleanup() {
 
         vkDestroyDescriptorSetLayout(device, descriptorSetLayout, nullptr);
 
-         for(int i = 0; i < meshes.size(); i++){
+         for(int i = 0; i < engine->meshes.size(); i++){
              for (size_t o = 0; o < swapChainImages.size(); o++) {
-                 vkDestroyBuffer(device, meshes[i].uniformBuffers[o], nullptr);
-                vkFreeMemory(device, meshes[i].uniformBuffersMemory[o], nullptr);
+                 vkDestroyBuffer(device, engine->meshes[i]->uniformBuffers[o], nullptr);
+                vkFreeMemory(device, engine->meshes[i]->uniformBuffersMemory[o], nullptr);
              }
          }
      
-        for(int i = 0; i < meshes.size(); i++){
-            vkDestroyBuffer(device, meshes[i].indexBuffer, nullptr);
+        for(int i = 0; i < engine->meshes.size(); i++){
+            vkDestroyBuffer(device, engine->meshes[i]->indexBuffer, nullptr);
         }
                 
         vkFreeMemory(device, indexBufferMemory, nullptr);
 
         //mesh vertices buffers
-        for(int i = 0; i < meshes.size(); i++){
-             vkDestroyBuffer(device, meshes[i].vertices_buffer, nullptr);
+        for(int i = 0; i < engine->meshes.size(); i++){
+             vkDestroyBuffer(device, engine->meshes[i]->vertices_buffer, nullptr);
         }
        
        

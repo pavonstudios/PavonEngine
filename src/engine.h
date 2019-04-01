@@ -123,9 +123,13 @@ private:
 public:
         class Input input;
         AssetManager objects_manager;
-        float move_y = 0;      
+        float move_y = 0;
+        std::vector<Mesh*> meshes; 
+        Mesh model1;
+        Mesh model2;
+        Camera main_camera;     
 
-
+        void load_models();
         float get_time(){
             static auto startTime = std::chrono::high_resolution_clock::now();
 
@@ -134,7 +138,7 @@ public:
             return time;
         }
         Engine(){init();};
-        void init(){app.engine = this;};
+        void init(){app.engine = this;load_models();};
 
     
 };
