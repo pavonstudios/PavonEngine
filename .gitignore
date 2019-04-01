@@ -1,5 +1,14 @@
+./bin
 renderer
 .vscode/ipch
 *.o
 *.spv
 *.out
+android/.gradle/4.10.1/fileChanges/last-build.bin
+android/.gradle/
+android/build
+android/.idea
+android/app/.externalNativeBuild/
+src/glm
+models/asuncion.obj
+textures/building01.jpg
