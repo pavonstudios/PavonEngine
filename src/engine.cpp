@@ -48,6 +48,7 @@ void Engine::InitWindow(){
 		return;
 	}
 	 glfwSetWindowUserPointer(window, this);
+	 glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);  
 #ifndef _OpenGL_Renderer_
 	   
         glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
@@ -87,25 +88,25 @@ void Engine::update_window_size(){
 		if(!app){
 			throw std::runtime_error("no app pointer");
 		}
-	float lastX = 400, lastY = 300;
-	float xoffset = xpos - lastX;
+	
+	
+	
 	if(app->engine->input.first_mouse){
-		 lastX = xpos;
-    	lastY = ypos;
+		app->engine->input.lastX = xpos;
+    	app->engine->input.lastY = ypos;
 		app->engine->input.first_mouse = false;
 
 	}
+	float xoffset = xpos - app->engine->input.lastX ;
+	float yoffset = app->engine->input.lastY - ypos; // reversed since y-coordinates range from bottom to top
+	app->engine->input.lastX = xpos;
+	app->engine->input.lastY = ypos;
 
-	 
-		float yoffset = lastY - ypos; // reversed since y-coordinates range from bottom to top
-		lastX = xpos;
-		lastY = ypos;
+	float sensitivity = 0.005f;
+	xoffset *= sensitivity;
+	yoffset *= sensitivity;
 
-		float sensitivity = 0.05f;
-		xoffset *= sensitivity;
-		yoffset *= sensitivity;
-
-		app->engine->input.yaw   += xoffset;
+	app->engine->input.yaw   += xoffset;
 	app->engine->input.pitch += yoffset;  
 
 	if(app->engine->input.pitch > 89.0f)
@@ -157,6 +158,22 @@ void Engine::key_callback(GLFWwindow* window, int key, int scancode, int action,
 					app->engine->input.A.bIsPressed = false;
 				}
 			}
+			if(key == GLFW_KEY_Z){
+				if(action == GLFW_PRESS){
+					app->engine->input.Z.bIsPressed = true;
+				}
+				if(action == GLFW_RELEASE){
+					app->engine->input.Z.bIsPressed = false;
+				}
+			}
+				if(key == GLFW_KEY_X){
+				if(action == GLFW_PRESS){
+					app->engine->input.X.bIsPressed = true;
+				}
+				if(action == GLFW_RELEASE){
+					app->engine->input.X.bIsPressed = false;
+				}
+			}
            
              if (key == GLFW_KEY_W && action == GLFW_PRESS) {
 				app->engine->input.bIsKeyW_pressed = true;
@@ -204,6 +221,14 @@ void Engine::update_input(){
 		//move_y -= 0.001f;
 		//main_camera.SetLocation(move_y,0,0);
 		main_camera.MoveRight();
+	}
+	if(input.Z.bIsPressed){
+		input.yaw += 0.03f;
+		main_camera.mouse_control_update(input.yaw, input.pitch);
+	}
+	if(input.X.bIsPressed){
+		input.yaw += -0.03f;
+		main_camera.mouse_control_update(input.yaw, input.pitch);
 	}
 	if(input.right_button_pressed){
 		main_camera.mouse_control_update(input.yaw, input.pitch);

@@ -18,5 +18,10 @@ public:
 
 	bool first_mouse = true;
 
+	float lastX = 400, lastY = 300;
+
+	key_pressed X;
+	key_pressed Z;
+
 };
 #endif
