@@ -1,6 +1,7 @@
 #include "opengl_renderer.h"
 #include "gl_shader_loader.hpp"
 #include "engine.h"
+#include <glm/gtc/type_ptr.hpp>
 
 //using namespace engine;
 
@@ -50,11 +51,7 @@ static const float cube_vertex_data[] = {
 };
 
 
-void RendererGL::generate_mvp_matrix(){
 
-	MatrixID = glGetUniformLocation(shadersID, "MVP");
-
-}
 void RendererGL::update_matrix(){
 	
 	UniformBufferObject ubo = {};
@@ -68,8 +65,15 @@ void RendererGL::update_matrix(){
 	ubo.model = mesh_to_draw->model_matrix;
 
 	mvp = engine->main_camera.Projection * engine->main_camera.View * mesh_to_draw->model_matrix;
+	int modelLoc = glGetUniformLocation(shadersID, "model");
+	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(mesh_to_draw->model_matrix));
 
-	glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &mvp[0][0]);
+	int viewLoc = glGetUniformLocation(shadersID, "view");
+	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(ubo.view));
+
+	int projlLoc = glGetUniformLocation(shadersID, "projection");
+	glUniformMatrix4fv(projlLoc, 1, GL_FALSE, glm::value_ptr(ubo.proj));
+	//glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &mvp[0][0]);
 
 }
 void RendererGL::run(){	
@@ -89,7 +93,7 @@ void RendererGL::run(){
 	
 
 	init_ogl();	
-	generate_mvp_matrix();
+	
 	
 }
 
@@ -108,7 +112,7 @@ void RendererGL::draw(){
 		
 
 	}
-
+	//draw ten objects
 	for (unsigned int i = 0; i < 10; i++){
 		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::translate(model, engine->objects_positions[i]);
@@ -116,15 +120,10 @@ void RendererGL::draw(){
 		model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 		mvp = engine->main_camera.Projection * engine->main_camera.View * model;
 
-		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &mvp[0][0]);
+		//glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &mvp[0][0]);
 
-		glDrawArrays(GL_TRIANGLES,0,engine->meshes[0]->vertices.size());
-	}
-		
-	//glBindVertexArray(vertexbuffer);
-	//glDrawElements(GL_TRIANGLES, mesh_to_draw->simple_vertices.size(), GL_UNSIGNED_SHORT, 0); 
-
-	
+		//glDrawArrays(GL_TRIANGLES,0,engine->meshes[0]->vertices.size());
+	}	
 }
 
 void RendererGL::init_ogl(){
@@ -200,9 +199,10 @@ void RendererGL::main_loop(){
 
 		glClearColor(0.0f, 1.0f, .0f, 1.0f);
 
+		
 		glUseProgram(shadersID);
-
 		update_matrix();
+		
 		draw();
 
 }

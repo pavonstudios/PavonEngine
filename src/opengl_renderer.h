@@ -44,7 +44,7 @@ private:
 	void init_ogl();
 	
 	void draw();
-	void generate_mvp_matrix();
+	
 	void update_matrix();	
 	
 
