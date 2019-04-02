@@ -118,11 +118,11 @@ void RendererGL::draw(){
 		model = glm::translate(model, engine->objects_positions[i]);
 		float angle = 20.0f * i; 
 		model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-		mvp = engine->main_camera.Projection * engine->main_camera.View * model;
 
-		//glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &mvp[0][0]);
+		int modelLoc = glGetUniformLocation(shadersID, "model");
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 
-		//glDrawArrays(GL_TRIANGLES,0,engine->meshes[0]->vertices.size());
+		glDrawArrays(GL_TRIANGLES,0,engine->meshes[0]->vertices.size());
 	}	
 }
 

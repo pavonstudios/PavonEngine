@@ -9,7 +9,7 @@
 
 class Camera : public GameObject{
 public:
-	glm::vec3 cameraPos   = glm::vec3(0.0f, -3.0f,  0.0f);
+	glm::vec3 cameraPos   = glm::vec3(0.0f, -6.0f,  2.0f);
 	glm::vec3 cameraFront = glm::vec3(0.0f, 1.0f, 0.0f);
 	glm::vec3 cameraUp    = glm::vec3(0.0f, 0.0f,  1.0f);
 
@@ -43,7 +43,7 @@ public:
         view = glm::lookAt(glm::vec3(camX, camZ, 0), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 1.0));   */
 		};
 		
-		float cameraSpeed = 0.0005f; 
+		float cameraSpeed = 0.005f; 
 		void MoveForward();
 		void MoveBackward();
 		void MoveLeft();
