@@ -108,6 +108,18 @@ void RendererGL::draw(){
 		
 
 	}
+
+	for (unsigned int i = 0; i < 10; i++){
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::translate(model, engine->objects_positions[i]);
+		float angle = 20.0f * i; 
+		model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+		mvp = engine->main_camera.Projection * engine->main_camera.View * model;
+
+		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &mvp[0][0]);
+
+		glDrawArrays(GL_TRIANGLES,0,engine->meshes[0]->vertices.size());
+	}
 		
 	//glBindVertexArray(vertexbuffer);
 	//glDrawElements(GL_TRIANGLES, mesh_to_draw->simple_vertices.size(), GL_UNSIGNED_SHORT, 0); 
