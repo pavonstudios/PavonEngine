@@ -56,5 +56,11 @@ private:
 
 	unsigned int texture;
 
+	Mesh rect;
+	 
+
+	void init_ret();
+	void texture_and_attribure();
+
 };
 #endif
