@@ -132,11 +132,11 @@ void RendererGL::init_ret(){
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
 	// set the texture wrapping/filtering options (on the currently bound texture object)
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	image_size size =  engine->objects_manager.load_and_get_size("textures/wall.jpg");
+	image_size size =  engine->objects_manager.load_and_get_size("textures/character.jpg");
 	if(size.pPixels){
 		std::cout << "image loaded" << std::endl;
 	}
@@ -190,6 +190,7 @@ void RendererGL::draw(){
 void RendererGL::init_ogl(){
 	mesh_to_draw = engine->meshes[0];
 	init_ret();
+	texture_and_attribure();
 	
 	shadersID = LoadShaders("shaders/simple_vert_mvp.vert","shaders/simple_frag.frag");
 	glEnable(GL_DEPTH_TEST);
@@ -214,7 +215,7 @@ void RendererGL::init_ogl(){
 			
 		}		
 		
-	//texture_and_attribure();
+	//;
 }
 
 void RendererGL::texture_and_attribure(){
@@ -287,7 +288,7 @@ void RendererGL::main_loop(){
 	
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		glClearColor(0.0f, 1.0f, .0f, 1.0f);		
+		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);		
 		
 		update_matrix();		
 	

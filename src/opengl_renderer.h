@@ -1,8 +1,6 @@
 #ifndef _GL_RENDERER_H_
 #define _GL_RENDERER_H_
 
-
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
@@ -10,10 +8,10 @@
 #include <stdexcept>
 #include <algorithm>
 
-#ifndef  ANDROID
-#include <GL/glew.h>
+#ifndef ANDROID
+	#include <GL/glew.h>
 #else
-#include "android_renderer.h"
+	#include "android_renderer.h"
 #endif
 
 

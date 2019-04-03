@@ -27,9 +27,11 @@ void Camera::MoveRight(){
 void Camera::mouse_control_update(float yaw, float pitch){
 	glm::vec3 front;
     front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-    //front.y = sin(glm::radians(pitch));
-    front.y = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+    front.y = sin(glm::radians(pitch));
+    front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
     cameraFront = glm::normalize(front);
+
+	//cameraPos = glm::normalize(glm::cross(cameraFront, cameraUp));
 
 	View = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 }

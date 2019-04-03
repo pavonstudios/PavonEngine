@@ -89,9 +89,8 @@ void Engine::update_window_size(){
 			throw std::runtime_error("no app pointer");
 		}
 	
-	
-	
-	if(app->engine->input.first_mouse){
+	if(app->engine->input.right_button_pressed){
+				if(app->engine->input.first_mouse){
 		app->engine->input.lastX = xpos;
     	app->engine->input.lastY = ypos;
 		app->engine->input.first_mouse = false;
@@ -112,7 +111,11 @@ void Engine::update_window_size(){
 	if(app->engine->input.pitch > 89.0f)
 		app->engine->input.pitch =  89.0f;
 	if(app->engine->input.pitch < -89.0f)
-		app->engine->input.pitch = -89.0f;
+		app->engine->input.pitch = -89.0f;		
+
+	}//end right click pressed
+	
+	
 
  }
 void Engine::mouse_button_callback(GLFWwindow* window, int button, int action, int mods){
