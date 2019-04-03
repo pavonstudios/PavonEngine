@@ -145,11 +145,19 @@ public:
         };    
 
         void load_models();
+
+        float deltaTime = 0.0f;	// Time between current frame and last frame
+        float lastFrame = 0.0f; // Time of last frame
+
         float get_time(){
             static auto startTime = std::chrono::high_resolution_clock::now();
 
             auto currentTime = std::chrono::high_resolution_clock::now();
             float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
+
+            deltaTime = time - lastFrame;
+            lastFrame = time;
+            
             return time;
         }
         Engine(){init();};

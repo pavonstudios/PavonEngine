@@ -41,6 +41,7 @@ public:
 		};
 		
 		float cameraSpeed = 0.05f; 
+		float velocity = 5.f;
 		void MoveForward();
 		void MoveBackward();
 		void MoveLeft();

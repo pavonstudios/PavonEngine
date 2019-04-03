@@ -4,10 +4,11 @@
 void Engine::main_loop(){
 	 
 	 while (!glfwWindowShouldClose(window)) {
-		 	 glfwPollEvents();
-			 update_input();
-			   
-			 app.main_loop();
+		 	glfwPollEvents();
+			update_input();
+			get_time();
+			main_camera.cameraSpeed = main_camera.velocity * deltaTime;
+			app.main_loop();
 			glfwSwapBuffers(window);
     }
 	app.finish();
