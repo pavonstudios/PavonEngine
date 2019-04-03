@@ -33,3 +33,14 @@ void Camera::mouse_control_update(float yaw, float pitch){
 
 	View = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 }
+
+void Camera::MoveDown(){
+	cameraPos -= cameraSpeed * cameraUp;
+	View = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+
+}
+
+void Camera::MoveUp(){
+	cameraPos += cameraSpeed * cameraUp;
+	View = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+}

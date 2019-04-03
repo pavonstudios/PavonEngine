@@ -166,6 +166,22 @@ void Engine::key_callback(GLFWwindow* window, int key, int scancode, int action,
 					app->engine->input.Z.bIsPressed = false;
 				}
 			}
+			if(key == GLFW_KEY_E){
+				if(action == GLFW_PRESS){
+					app->engine->input.E.bIsPressed = true;
+				}
+				if(action == GLFW_RELEASE){
+					app->engine->input.E.bIsPressed = false;
+				}
+			}
+			if(key == GLFW_KEY_Q){
+				if(action == GLFW_PRESS){
+					app->engine->input.Q.bIsPressed = true;
+				}
+				if(action == GLFW_RELEASE){
+					app->engine->input.Q.bIsPressed = false;
+				}
+			}
 				if(key == GLFW_KEY_X){
 				if(action == GLFW_PRESS){
 					app->engine->input.X.bIsPressed = true;
@@ -232,6 +248,12 @@ void Engine::update_input(){
 	}
 	if(input.right_button_pressed){
 		main_camera.mouse_control_update(input.yaw, input.pitch);
+	}
+	if(input.Q.bIsPressed){
+		main_camera.MoveDown();
+	}
+	if(input.E.bIsPressed){
+		main_camera.MoveUp();
 	}
 }
 

@@ -10,6 +10,10 @@ public:
 
 	key_pressed D;
 	key_pressed A;
+	key_pressed E;
+	key_pressed Q;
+	key_pressed X;
+	key_pressed Z;
 
 	float pitch = 0;
 	float yaw = 0;
@@ -20,8 +24,7 @@ public:
 
 	float lastX = 400, lastY = 300;
 
-	key_pressed X;
-	key_pressed Z;
+	
 
 };
 #endif

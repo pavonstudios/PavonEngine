@@ -43,12 +43,14 @@ public:
         view = glm::lookAt(glm::vec3(camX, camZ, 0), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 1.0));   */
 		};
 		
-		float cameraSpeed = 0.005f; 
+		float cameraSpeed = 0.05f; 
 		void MoveForward();
 		void MoveBackward();
 		void MoveLeft();
 		void MoveRight();
 		void mouse_control_update(float , float);
+		void MoveUp();
+		void MoveDown();
 
 	
 
