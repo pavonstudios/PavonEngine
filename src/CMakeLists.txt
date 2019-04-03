@@ -32,7 +32,7 @@ target_link_libraries(maincode
         native_app_glue
         ${log-lib}
         EGL
-        GLESv2
+        GLESv3
         
 
         )
