@@ -3,11 +3,21 @@
 #define TINYOBJLOADER_IMPLEMENTATION
 #include "tiny_obj_loader.h"
 
-#define TINYGLTF_IMPLEMENTATION
-#define STB_IMAGE_IMPLEMENTATION
-#define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "tiny_gltf.h"
 
+#define STB_IMAGE_IMPLEMENTATION
+
+#ifdef GLTF
+    #define TINYGLTF_IMPLEMENTATION
+    #define STB_IMAGE_WRITE_IMPLEMENTATION
+    #include "tiny_gltf.h"
+#else
+    #include "stb_image.h"
+#endif
+
+
+
+
+#ifdef GLTF
 using namespace engine;
 int Mesh::load_model_gltf(const char* path){
     using namespace tinygltf;
@@ -32,6 +42,8 @@ int Mesh::load_model_gltf(const char* path){
     return -1;
     }
 }
+#endif
+
 using namespace engine;
 bool Mesh::load_model2(const char * path){
 

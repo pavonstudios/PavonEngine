@@ -221,7 +221,7 @@ void Engine::update_input(){
 		//move_y += 0.001f;
 		//main_camera.SetLocation(0,move_y,0);
 		main_camera.MoveBackward();
-		std::cout << "pressed" << std::endl;
+		
 	}
 	if(input.bIsKeyW_pressed){
 		//move_y -= 0.001f;

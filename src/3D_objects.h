@@ -108,9 +108,9 @@ public:
     virtual void SetLocation(float x, float y, float z);
 
     bool load_model2(const char * path);
-
+#ifdef GLTF
     int load_model_gltf(const char* path);
-
+#endif
 
 #ifndef _OpenGL_Renderer_
     VkBuffer vertices_buffer;

@@ -62,8 +62,9 @@ void RendererGL::update_matrix(){
 	
 	UniformBufferObject ubo = {};
 
-
-	mesh_to_draw->model_matrix = glm::rotate(glm::mat4(1.0f), engine->get_time() * glm::radians(90.f), glm::vec3(0.0f, 0.0f, 1.0f));
+	glm::mat4 model = glm::mat4(1.0f);
+	model = glm::translate(model, glm::vec3( 0.0f,  13.0f,  0.0f));
+	mesh_to_draw->model_matrix = glm::rotate(model, engine->get_time() * glm::radians(90.f), glm::vec3(0.0f, 1.0f, 1.0f));
 
 
 	ubo.view = engine->main_camera.View;
@@ -177,7 +178,7 @@ void RendererGL::draw(){
 		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::translate(model, engine->objects_positions[i]);
 		float angle = 20.0f * i; 
-		model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+		model = glm::rotate(model, engine->get_time() *glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 
 		int modelLoc = glGetUniformLocation(shadersID, "model");
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
@@ -192,7 +193,7 @@ void RendererGL::init_ogl(){
 	
 	shadersID = LoadShaders("shaders/simple_vert_mvp.vert","shaders/simple_frag.frag");
 	glEnable(GL_DEPTH_TEST);
-	//glDepthFunc(GL_LESS);	
+	glDepthFunc(GL_LESS);	
 		
 	//generate vertex buffers for any mesh to load in real time
 	
