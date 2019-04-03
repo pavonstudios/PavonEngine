@@ -45,7 +45,7 @@
 			"preLaunchTask": ""
 		},
 		{
-			"name": "Compile & Launch",
+			"name": "VK Compile & Launch",
 			"type": "cppdbg",
 			"request": "launch",
 			"program": "${workspaceFolder}/renderer",

@@ -19,6 +19,7 @@
     #include "glm/glm.hpp"
 #endif
 
+#define GLM_ENABLE_EXPERIMENTAL
 #include "glm/gtx/hash.hpp"
 
 #include "game_object.h"

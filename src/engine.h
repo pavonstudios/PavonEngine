@@ -2,19 +2,18 @@
 #define _Engine_H_
 
 #ifndef ANDROID
-#ifndef _OpenGL_Renderer_
-#include "renderer.h"
-#define GLFW_INCLUDE_VULKAN
-#endif
+    #ifndef _OpenGL_Renderer_
+        #include "renderer.h"
+        #define GLFW_INCLUDE_VULKAN
+    #endif
 
-#ifdef _OpenGL_Renderer_
-#include "opengl_renderer.h"
-#endif
-#include <pthread.h>
-#include <GLFW/glfw3.h>
+    #ifdef _OpenGL_Renderer_
+        #include "opengl_renderer.h"
+    #endif
+    #include <pthread.h>
+    #include <GLFW/glfw3.h>
 #else
 #include "opengl_renderer.h"
-
 #endif
 
 #include <chrono>
@@ -34,9 +33,9 @@ class Engine {
        // class Renderer renderer;
 #endif
 #ifndef ANDROID
-#ifndef _OpenGL_Renderer_
+    #ifndef _OpenGL_Renderer_
         Renderer app;
-#endif
+    #endif
         pthread_t thread[2];
         GLFWwindow* window;
         GLFWwindow* get_window_pointer()
@@ -65,6 +64,7 @@ class Engine {
             main_loop();
 
             //pthread_exit(NULL);
+            return (void *)nullptr;
         }
         void main_loop();
         
@@ -73,12 +73,12 @@ private:
          static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
          static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
          
-#ifndef _OpenGL_Renderer_
+    #ifdef VULKAN
         static void framebufferResizeCallback(GLFWwindow* window, int width, int height) {
             auto app = reinterpret_cast<Renderer*>(glfwGetWindowUserPointer(window));
             app->framebufferResized = true;
         }
-#endif
+    #endif
 	
         static void* ExecuteInputHanler(void* This){
             return ((Engine *)This)->InputHanled();
@@ -157,7 +157,7 @@ public:
 
             deltaTime = time - lastFrame;
             lastFrame = time;
-            
+
             return time;
         }
         Engine(){init();};

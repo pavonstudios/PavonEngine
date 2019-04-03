@@ -26,12 +26,10 @@ void Engine::InitWindow(){
 			return;
 		}
 		
-#ifndef _OpenGL_Renderer_
+#ifdef VULKAN
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-
-        
-
 #endif
+
 #ifdef _OpenGL_Renderer_
 		glfwWindowHint(GLFW_SAMPLES, 4); // 4x antialiasing
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); // We want OpenGL 3.3
@@ -50,8 +48,7 @@ void Engine::InitWindow(){
 	}
 	 glfwSetWindowUserPointer(window, this);
 	 //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);  
-#ifndef _OpenGL_Renderer_
-	   
+#ifdef VULKAN	   
         glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
 #endif
         glfwSetInputMode(window, GLFW_STICKY_KEYS, 1);
@@ -79,7 +76,7 @@ void Engine::update_window_size(){
 }
  void Engine::mouse_callback(GLFWwindow* window, double xpos, double ypos)
  {
-	 #ifndef _OpenGL_Renderer_
+	#ifdef VULKAN
 	  auto app = reinterpret_cast<Renderer*>(glfwGetWindowUserPointer(window));
 	#endif
 	#ifdef _OpenGL_Renderer_
@@ -120,7 +117,7 @@ void Engine::update_window_size(){
 
  }
 void Engine::mouse_button_callback(GLFWwindow* window, int button, int action, int mods){
-#ifndef _OpenGL_Renderer_
+#ifdef VULKAN
 	  auto app = reinterpret_cast<Renderer*>(glfwGetWindowUserPointer(window));
 #endif
 #ifdef _OpenGL_Renderer_
@@ -139,7 +136,7 @@ void Engine::mouse_button_callback(GLFWwindow* window, int button, int action, i
 
 }
 void Engine::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods){
-#ifndef _OpenGL_Renderer_
+#ifdef VULKAN
 	  auto app = reinterpret_cast<Renderer*>(glfwGetWindowUserPointer(window));
 #endif
 #ifdef _OpenGL_Renderer_

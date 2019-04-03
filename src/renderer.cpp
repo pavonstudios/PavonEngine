@@ -8,17 +8,16 @@
 
 
 void Renderer::run() {
-        bIsRunnning = true;      
-               
-
-        //engine->main_camera.SetLocation(2.f,3.f,2.f);
-        
-        initVulkan();
-      
-        
+        bIsRunnning = true;             
+        initVulkan();        
        
 }
- VkExtent2D Renderer::chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities) {
+void Renderer::main_loop(){
+            bIsRunnning = true;            
+            drawFrame();
+}
+
+VkExtent2D Renderer::chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities) {
         if (capabilities.currentExtent.width != std::numeric_limits<uint32_t>::max()) {
             return capabilities.currentExtent;
         } else {
@@ -41,10 +40,7 @@ void Renderer::createSurface() {
         throw std::runtime_error("failed to create window surface!");
     }
 }
-void Renderer::main_loop(){
-            bIsRunnning = true;            
-            drawFrame();
-}
+
 void Renderer::finish(){
     vkDeviceWaitIdle(device);
     bIsRunnning = false;
