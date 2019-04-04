@@ -260,8 +260,8 @@ void Engine::update_input(){
 
 
 void Engine::load_models(){
-	model1.load_model("models/car01.obj");
-   // model2.load_model("models/character.obj");
+	model1.load_model("models/asuncion.obj");
+   	model2.load_model("models/character.obj");
 	meshes.push_back(&model1);
-	//meshes.push_back(&model2);
+	meshes.push_back(&model2);
 }

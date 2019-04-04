@@ -51,8 +51,8 @@ void Renderer::VulkanConfig(){
 	    createImageViews();
         createRenderPass();
         createDescriptorSetLayout();
-        createGraphicsPipeline("shaders/frag.spv",&engine->meshes[0]->graphics_pipeline);
-        // createGraphicsPipeline("shaders/frag.spv",&graphicsPipeline);
+            createGraphicsPipeline("shaders/frag.spv",&engine->meshes[0]->graphics_pipeline);
+            createGraphicsPipeline(FRAGMENT_RED_SHADER_PATH,&engine->meshes[1]->graphics_pipeline);
         createCommandPool();
         createDepthResources();
         createFramebuffers();
@@ -157,35 +157,22 @@ void Renderer::createCommandBuffers() {
             renderPassInfo.pClearValues = clearValues.data();
 
             vkCmdBeginRenderPass(commandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
-                for(int i = 0; i < engine->meshes.size(); i++){
-                     vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, engine->meshes[i]->graphics_pipeline);
+                for(int mesh_id = 0; mesh_id < engine->meshes.size(); mesh_id++){
+
+                    vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, engine->meshes[mesh_id]->graphics_pipeline);
 
                     //VkBuffer vertexBuffers[] = {my_3d_model.vertices_buffer};
                     VkDeviceSize offsets[] = {0};
-                    vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, &engine->meshes[i]->vertices_buffer, offsets);
+                    vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, &engine->meshes[mesh_id]->vertices_buffer, offsets);
 
-                    vkCmdBindIndexBuffer(commandBuffers[i], engine->meshes[i]->indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+                    vkCmdBindIndexBuffer(commandBuffers[i], engine->meshes[mesh_id]->indexBuffer, 0, VK_INDEX_TYPE_UINT32);
 
                     vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, 
-                                                &engine->meshes[i]->descriptorSets[i], 0, nullptr);
+                                                &engine->meshes[mesh_id]->descriptorSets[i], 0, nullptr);
 
-                    vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(engine->meshes[i]->indices.size()), 1, 0, 0, 0);
+                    vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(engine->meshes[mesh_id]->indices.size()), 1, 0, 0, 0);
                 }
 
-               
-                
-                //other objects
-/*                 vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, red_graphicsPipeline);
-
-                vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, &my_secodonde_3d_model.vertices_buffer, offsets);
-
-                vkCmdBindIndexBuffer(commandBuffers[i], my_secodonde_3d_model.indexBuffer, 0, VK_INDEX_TYPE_UINT32);
-
-                vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, 
-                                                    &my_secodonde_3d_model.descriptorSets[i], 0, nullptr);
-
-                vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(my_secodonde_3d_model.indices.size()), 1, 0, 0, 0);
- */
             vkCmdEndRenderPass(commandBuffers[i]);
 
             if (vkEndCommandBuffer(commandBuffers[i]) != VK_SUCCESS) {
@@ -344,7 +331,32 @@ void Renderer::updateUniformBuffer(uint32_t currentImage) {
  */
     }
 
+void Renderer::cleanupSwapChain() {
+        vkDestroyImageView(device, depthImageView, nullptr);
+        vkDestroyImage(device, depthImage, nullptr);
+        vkFreeMemory(device, depthImageMemory, nullptr);
 
+        for (auto framebuffer : swapChainFramebuffers) {
+            vkDestroyFramebuffer(device, framebuffer, nullptr);
+        }
+
+        vkFreeCommandBuffers(device, commandPool, static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
+
+        for(int i = 0; i < engine->meshes.size(); i++){
+            if(engine->meshes[i]->graphics_pipeline != VK_NULL_HANDLE){
+                vkDestroyPipeline(device, engine->meshes[i]->graphics_pipeline, 0);
+            }
+        }
+       
+        vkDestroyPipelineLayout(device, pipelineLayout, nullptr);
+        vkDestroyRenderPass(device, renderPass, nullptr);
+
+        for (auto imageView : swapChainImageViews) {
+            vkDestroyImageView(device, imageView, nullptr);
+        }
+
+        vkDestroySwapchainKHR(device, swapChain, nullptr);
+    }
 void Renderer::recreateSwapChain() {
        engine->update_window_size();
         vkDeviceWaitIdle(device);
@@ -354,8 +366,8 @@ void Renderer::recreateSwapChain() {
         createSwapChain();
         createImageViews();
         createRenderPass();
-        createGraphicsPipeline("shaders/frag.spv", &graphicsPipeline);
-         createGraphicsPipeline(FRAGMENT_SHADER_PATH,&red_graphicsPipeline);
+            createGraphicsPipeline("shaders/frag.spv",&engine->meshes[0]->graphics_pipeline);
+            createGraphicsPipeline(FRAGMENT_RED_SHADER_PATH,&engine->meshes[1]->graphics_pipeline);
         createDepthResources();
         createFramebuffers();
         createCommandBuffers();

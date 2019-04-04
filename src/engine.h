@@ -2,7 +2,7 @@
 #define _Engine_H_
 
 #ifndef ANDROID
-    #ifndef _OpenGL_Renderer_
+    #ifdef VULKAN
         #include "renderer.h"
         #define GLFW_INCLUDE_VULKAN
     #endif
@@ -13,7 +13,7 @@
     #include <pthread.h>
     #include <GLFW/glfw3.h>
 #else
-#include "opengl_renderer.h"
+    #include "opengl_renderer.h"
 #endif
 
 #include <chrono>
@@ -50,7 +50,7 @@ class Engine {
             //pthread_create(&thread[0],NULL, ExecuteRenderHanler, this);
 
             //pthread_create(&thread[1],NULL, ExecuteInputHanler, this);
-            init();
+            //init();
             InitWindow();
             Render();
 
@@ -129,7 +129,7 @@ public:
         float move_y = 0;
         std::vector<Mesh*> meshes; 
         Mesh model1;
-        //Mesh model2;
+        Mesh model2;
         Camera main_camera; 
         glm::vec3 objects_positions[10] = {
         glm::vec3( 0.0f,  0.0f,  0.0f), 

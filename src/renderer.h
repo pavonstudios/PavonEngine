@@ -29,13 +29,14 @@
 #include "3D_objects.h"
 #include "camera.h"
 
+
 const int WIDTH = 800;
 const int HEIGHT = 600;
 
 const std::string MODEL_PATH = "models/character.obj";
 const std::string TEXTURE_PATH = "textures/character.jpg";
 
-const std::string FRAGMENT_SHADER_PATH = "shaders/red.spv";
+const std::string FRAGMENT_RED_SHADER_PATH = "shaders/red.spv";
 
 const int MAX_FRAMES_IN_FLIGHT = 2;
 
@@ -117,9 +118,6 @@ private:
     VkDescriptorSetLayout descriptorSetLayout;
     VkPipelineLayout pipelineLayout;
 
-    VkPipeline graphicsPipeline;
-    VkPipeline red_graphicsPipeline;
-
     VkCommandPool commandPool;
 
     VkImage depthImage;
@@ -132,9 +130,7 @@ private:
     VkSampler textureSampler;
 
    
-    //VkBuffer vertexBuffer;
     VkDeviceMemory vertexBufferMemory;
-    //VkBuffer indexBuffer;
     VkDeviceMemory indexBufferMemory;   
     
 
@@ -158,6 +154,7 @@ private:
     void createDescriptorPool(Mesh *mesh);
     void createDescriptorSets(Mesh *mesh);
     void createSurface();
+    void cleanupSwapChain();
     VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
    
     
@@ -173,28 +170,7 @@ private:
     }    
    
 
-    void cleanupSwapChain() {
-        vkDestroyImageView(device, depthImageView, nullptr);
-        vkDestroyImage(device, depthImage, nullptr);
-        vkFreeMemory(device, depthImageMemory, nullptr);
-
-        for (auto framebuffer : swapChainFramebuffers) {
-            vkDestroyFramebuffer(device, framebuffer, nullptr);
-        }
-
-        vkFreeCommandBuffers(device, commandPool, static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
-
-        vkDestroyPipeline(device, graphicsPipeline, nullptr);
-        vkDestroyPipeline(device, red_graphicsPipeline, nullptr);
-        vkDestroyPipelineLayout(device, pipelineLayout, nullptr);
-        vkDestroyRenderPass(device, renderPass, nullptr);
-
-        for (auto imageView : swapChainImageViews) {
-            vkDestroyImageView(device, imageView, nullptr);
-        }
-
-        vkDestroySwapchainKHR(device, swapChain, nullptr);
-    }
+    
 
   
    
@@ -206,9 +182,9 @@ private:
 
         VkApplicationInfo appInfo = {};
         appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-        appInfo.pApplicationName = "Hello Triangle";
+        appInfo.pApplicationName = "Engine";
         appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
-        appInfo.pEngineName = "No Engine";
+        appInfo.pEngineName = "Engine";
         appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
         appInfo.apiVersion = VK_API_VERSION_1_0;
 
