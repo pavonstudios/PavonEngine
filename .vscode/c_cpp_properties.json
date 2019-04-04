@@ -1,0 +1,15 @@
+{
+    "configurations": [
+        {
+            "name": "Engine",
+            "intelliSenseMode": "gcc-x64",
+            "compilerPath": "/usr/bin/clang",
+            "cStandard": "c11",
+			"cppStandard": "c++17",
+			"defines": [
+				"VULKAN"
+			]
+        }
+    ],
+    "version": 4
+}

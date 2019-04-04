@@ -95,7 +95,7 @@ public:
 namespace engine{
 class Mesh : public GameObject{
 public:
-    
+    ~Mesh();
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
     std::vector< glm::vec3 > simple_vertices;
@@ -113,13 +113,14 @@ public:
     int load_model_gltf(const char* path);
 #endif
 
-#ifndef _OpenGL_Renderer_
+#ifdef VULKAN
     VkBuffer vertices_buffer;
     VkBuffer indexBuffer;
     std::vector<VkBuffer> uniformBuffers;
     std::vector<VkDeviceMemory> uniformBuffersMemory;
     std::vector<VkDescriptorSet> descriptorSets;
     VkDescriptorPool descriptorPool;
+    VkPipeline graphics_pipeline;
 #endif
 #ifdef _OpenGL_Renderer_
     GLuint vertexbuffer;

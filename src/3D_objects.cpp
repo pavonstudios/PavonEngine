@@ -149,6 +149,10 @@ void Mesh::SetLocation(float x, float y, float z){
        model_matrix = glm::translate(model_matrix, glm::vec3(Location.x,Location.y,Location.z));
 }
 
+Mesh::~Mesh(){
+    
+}
+
 void AssetManager::free_image(void * pixels){
     stbi_image_free(pixels);
 }

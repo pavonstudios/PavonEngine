@@ -135,11 +135,7 @@ private:
     //VkBuffer vertexBuffer;
     VkDeviceMemory vertexBufferMemory;
     //VkBuffer indexBuffer;
-    VkDeviceMemory indexBufferMemory;
-
- 
-
-    
+    VkDeviceMemory indexBufferMemory;   
     
 
     std::vector<VkCommandBuffer> commandBuffers;

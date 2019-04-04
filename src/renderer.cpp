@@ -51,8 +51,8 @@ void Renderer::VulkanConfig(){
 	    createImageViews();
         createRenderPass();
         createDescriptorSetLayout();
-        createGraphicsPipeline(FRAGMENT_SHADER_PATH,&red_graphicsPipeline);
-         createGraphicsPipeline("shaders/frag.spv",&graphicsPipeline);
+        createGraphicsPipeline("shaders/frag.spv",&engine->meshes[0]->graphics_pipeline);
+        // createGraphicsPipeline("shaders/frag.spv",&graphicsPipeline);
         createCommandPool();
         createDepthResources();
         createFramebuffers();
@@ -157,19 +157,22 @@ void Renderer::createCommandBuffers() {
             renderPassInfo.pClearValues = clearValues.data();
 
             vkCmdBeginRenderPass(commandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+                for(int i = 0; i < engine->meshes.size(); i++){
+                     vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, engine->meshes[i]->graphics_pipeline);
 
-                vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
+                    //VkBuffer vertexBuffers[] = {my_3d_model.vertices_buffer};
+                    VkDeviceSize offsets[] = {0};
+                    vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, &engine->meshes[i]->vertices_buffer, offsets);
 
-                //VkBuffer vertexBuffers[] = {my_3d_model.vertices_buffer};
-                VkDeviceSize offsets[] = {0};
-                vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, &engine->meshes[0]->vertices_buffer, offsets);
+                    vkCmdBindIndexBuffer(commandBuffers[i], engine->meshes[i]->indexBuffer, 0, VK_INDEX_TYPE_UINT32);
 
-                vkCmdBindIndexBuffer(commandBuffers[i], engine->meshes[0]->indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+                    vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, 
+                                                &engine->meshes[i]->descriptorSets[i], 0, nullptr);
 
-                vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, 
-                                            &engine->meshes[0]->descriptorSets[i], 0, nullptr);
+                    vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(engine->meshes[i]->indices.size()), 1, 0, 0, 0);
+                }
 
-                vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(engine->meshes[0]->indices.size()), 1, 0, 0, 0);
+               
                 
                 //other objects
 /*                 vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, red_graphicsPipeline);
