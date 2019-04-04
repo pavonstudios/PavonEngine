@@ -127,7 +127,7 @@ public:
 	GLuint VertexArrayID;
     GLuint indices_buffer;
 #endif
-
+    UniformBufferObject ubo;
 		
 };
 
