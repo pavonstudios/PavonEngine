@@ -111,6 +111,7 @@ public:
     bool load_model2(const char * path);
 #ifdef GLTF
     int load_model_gltf(const char* path);
+    class Model gltf_model;
 #endif
 
 #ifdef VULKAN
