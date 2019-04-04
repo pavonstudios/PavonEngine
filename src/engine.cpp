@@ -256,9 +256,8 @@ void Engine::update_input(){
 
 
 void Engine::load_models(){
-	load_and_instance_at_location("models/asuncion.obj",glm::vec3(0,0,0));
- 	load_and_instance_at_location("models/character.obj",glm::vec3(0,-5,0));
-	load_and_instance_at_location("models/car01.obj",glm::vec3(10,-5,0));
+	 		
+	load_and_instance_at_location("models/skydome.obj",glm::vec3(0,0,0));
 	
 	for(int i = 0;i <meshes_instance.size();i++){
 		meshes.push_back(&meshes_instance[i]);
@@ -272,5 +271,31 @@ void Engine::load_and_instance_at_location(std::string path, glm::vec3 location)
 	glm::mat4 model_matrix = glm::mat4(1.0f);
 	model_matrix = glm::translate(model_matrix, location);
 	meshes_instance.back().model_matrix = model_matrix;
+
+}
+void Engine::load_map(std::string path){
+	FILE* file = fopen(path.c_str(),"r");
+	if(file == NULL){
+		throw std::runtime_error("failed to load map file");
+
+	}
+	
+	std::vector<std::string> models;
+	while(1){
+		 char lineHeader[128];
+		// read the first word of the line
+		int res = fscanf(file, "%s", lineHeader);
+		if (res == EOF)
+        	break; // EOF = End Of File. Quit the loop.
+
+		if ( strcmp( lineHeader, "m" ) == 0 ){
+			char model_path[256];
+			fscanf(file, "%s\n", model_path);
+			models.push_back(std::string(model_path));
+		}
+	}
+	load_and_instance_at_location(models[0],glm::vec3(0,0,0));
+	load_and_instance_at_location(models[1],glm::vec3(0,0,0));
+	load_and_instance_at_location(models[2],glm::vec3(5,5,0));
 
 }

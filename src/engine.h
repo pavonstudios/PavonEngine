@@ -147,6 +147,7 @@ public:
 
         void load_models();
         void load_and_instance_at_location(std::string path, glm::vec3 location);
+        void load_map(std::string path);
 
         float deltaTime = 0.0f;	// Time between current frame and last frame
         float lastFrame = 0.0f; // Time of last frame
@@ -163,7 +164,11 @@ public:
             return time;
         }
         Engine(){init();};
-        void init(){app.engine = this;load_models();};
+        void init(){
+            app.engine = this;
+            load_map("map01.map");
+            load_models();
+            };
         
     
 };
