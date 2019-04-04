@@ -121,6 +121,8 @@ public:
     std::vector<VkDescriptorSet> descriptorSets;
     VkDescriptorPool descriptorPool;
     VkPipeline graphics_pipeline;
+    VkImage texture_image;
+     VkImageView texture_image_view;
 #endif
 #ifdef _OpenGL_Renderer_
     GLuint vertexbuffer;

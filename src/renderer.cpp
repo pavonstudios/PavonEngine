@@ -52,13 +52,13 @@ void Renderer::VulkanConfig(){
         createRenderPass();
         createDescriptorSetLayout();
             createGraphicsPipeline("shaders/frag.spv",&engine->meshes[0]->graphics_pipeline);
-            createGraphicsPipeline(FRAGMENT_RED_SHADER_PATH,&engine->meshes[1]->graphics_pipeline);
+            createGraphicsPipeline("shaders/frag.spv",&engine->meshes[1]->graphics_pipeline);
         createCommandPool();
         createDepthResources();
         createFramebuffers();
-        createTextureImage("textures/building01.jpg");
-        //createTextureImage("textures/character.jpg");
-        createTextureImageView();
+        createTextureImage("textures/building01.jpg", engine->meshes[0]);
+        createTextureImage("textures/character.jpg",engine->meshes[1]);
+       
         createTextureSampler();
         for (int i = 0; i< engine->meshes.size(); i++){
             createVertexBuffer(engine->meshes[i]);
@@ -181,7 +181,7 @@ void Renderer::createCommandBuffers() {
         }
 }
 
- void Renderer::createTextureImage(std::string texture_path) {
+ void Renderer::createTextureImage(std::string texture_path, Mesh* mesh) {
        
         image_size size = engine->objects_manager.load_and_get_size(texture_path);
         
@@ -203,14 +203,17 @@ void Renderer::createCommandBuffers() {
 
         createImage(size.width, size.heigth, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_TILING_OPTIMAL, 
         VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, 
-        textureImage, textureImageMemory);
+        mesh->texture_image, textureImageMemory);
 
-        transitionImageLayout(textureImage, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
-            copyBufferToImage(stagingBuffer, textureImage, static_cast<uint32_t>(size.width), static_cast<uint32_t>(size.heigth));
-        transitionImageLayout(textureImage, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+        transitionImageLayout( mesh->texture_image, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+            copyBufferToImage(stagingBuffer, mesh->texture_image, static_cast<uint32_t>(size.width), static_cast<uint32_t>(size.heigth));
+        transitionImageLayout(mesh->texture_image, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 
         vkDestroyBuffer(device, stagingBuffer, nullptr);
         vkFreeMemory(device, stagingBufferMemory, nullptr);
+
+        mesh->texture_image_view = createImageView(mesh->texture_image, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_ASPECT_COLOR_BIT);
+
     }
 
 
@@ -268,7 +271,7 @@ void Renderer::createDescriptorSets(Mesh *mesh) {
 
             VkDescriptorImageInfo imageInfo = {};
             imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-            imageInfo.imageView = textureImageView;
+            imageInfo.imageView = mesh->texture_image_view;
             imageInfo.sampler = textureSampler;
 
             std::array<VkWriteDescriptorSet, 2> descriptorWrites = {};
@@ -488,9 +491,13 @@ void Renderer::cleanup() {
         cleanupSwapChain();
 
         vkDestroySampler(device, textureSampler, nullptr);
-        vkDestroyImageView(device, textureImageView, nullptr);
+       
 
-        vkDestroyImage(device, textureImage, nullptr);
+      for(int i = 0; i < engine->meshes.size(); i++){  
+           vkDestroyImageView(device,  engine->meshes[i]->texture_image_view, nullptr); 
+           vkDestroyImage(device, engine->meshes[i]->texture_image, nullptr);
+      }
+       
         vkFreeMemory(device, textureImageMemory, nullptr);
         for(int i = 0; i < engine->meshes.size(); i++){          
             

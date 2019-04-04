@@ -124,9 +124,9 @@ private:
     VkDeviceMemory depthImageMemory;
     VkImageView depthImageView;
 
-    VkImage textureImage;
+   
     VkDeviceMemory textureImageMemory;
-    VkImageView textureImageView;
+   
     VkSampler textureSampler;
 
    
@@ -145,7 +145,7 @@ private:
 
 	void cleanup();
 	void setupDebugMessenger();
-	void createTextureImage(std::string texture_path);
+	void createTextureImage(std::string texture_path, Mesh* mesh);
     void updateUniformBuffer(uint32_t currentImage);
     void createVertexBuffer(Mesh *mesh_to_process);
     void createCommandBuffers();
@@ -498,7 +498,6 @@ private:
    
 
     void createTextureImageView() {
-        textureImageView = createImageView(textureImage, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_ASPECT_COLOR_BIT);
     }
 
     void createTextureSampler() {
