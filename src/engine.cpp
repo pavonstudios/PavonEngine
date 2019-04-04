@@ -257,7 +257,8 @@ void Engine::update_input(){
 
 void Engine::load_models(){
 		
-		
+	Mesh skeletal;
+	skeletal.load_model_gltf("models/character2.gltf");
 	for(int i = 0;i <meshes_instance.size();i++){
 		meshes.push_back(&meshes_instance[i]);
 	}

@@ -41,6 +41,9 @@ int Mesh::load_model_gltf(const char* path){
     printf("Failed to parse glTF\n");
     return -1;
     }
+    if(ret){
+           printf("glb loaded\n");
+    }
 }
 #endif
 

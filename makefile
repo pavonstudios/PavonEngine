@@ -6,7 +6,7 @@ MAIN_OBJS = main.cpp 3D_objects.cpp camera.cpp engine.cpp
 .ONESHELL:
 main:
 	mkdir -p bin && cd src
-	$(CC) $(MAIN_OBJS) renderer.cpp -o ../renderer $(Library) -I./ -lvulkan  -DVULKAN
+	$(CC) $(MAIN_OBJS) renderer.cpp -o ../renderer $(Library) -I./ -lvulkan  -DVULKAN -DGLTF
 
 renderer.o:
 	$(CC) -c renderer.cpp -I./

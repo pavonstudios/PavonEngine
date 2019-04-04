@@ -133,5 +133,10 @@ public:
 		
 };
 
+class SkeletalMesh{
+	public:
+		
+};
+
 }//namespace
 #endif

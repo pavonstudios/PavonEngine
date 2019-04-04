@@ -12,3 +12,6 @@ android/app/.externalNativeBuild/
 src/glm
 models/asuncion.obj
 textures/building01.jpg
+models/character2_skeletal.glb
+textures/character2.png
+models/character2.gltf
