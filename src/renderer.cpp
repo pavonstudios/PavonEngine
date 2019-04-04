@@ -51,18 +51,14 @@ void Renderer::VulkanConfig(){
 	    createImageViews();
         createRenderPass();
         createDescriptorSetLayout();
-            createGraphicsPipeline("shaders/frag.spv",&engine->meshes[0]->graphics_pipeline);
-            createGraphicsPipeline("shaders/frag.spv",&engine->meshes[1]->graphics_pipeline);
-             createGraphicsPipeline("shaders/frag.spv",&engine->meshes[2]->graphics_pipeline);
-              createGraphicsPipeline("shaders/frag.spv",&engine->meshes[3]->graphics_pipeline);
         createCommandPool();
         createDepthResources();
         createFramebuffers();
-        createTextureImage("textures/building01.jpg", engine->meshes[0]);
-        createTextureImage("textures/character.jpg",engine->meshes[1]);
-       createTextureImage("textures/car01.jpg",engine->meshes[2]);
-       createTextureImage("textures/skydome.jpg",engine->meshes[3]);
-
+        
+    for (int i = 0; i< engine->meshes.size(); i++){
+        createGraphicsPipeline("shaders/frag.spv",&engine->meshes[i]->graphics_pipeline);
+        createTextureImage(engine->meshes[i]->texture_path, engine->meshes[i]);
+    }
         createTextureSampler();
         for (int i = 0; i< engine->meshes.size(); i++){
             createVertexBuffer(engine->meshes[i]);
@@ -305,7 +301,7 @@ void Renderer::updateUniformBuffer(uint32_t currentImage) {
         engine->meshes[0]->model_matrix = engine->meshes[0]->model_matrix;
          engine->meshes[0]->model_matrix = glm::mat4(1.0f);        
 
-        engine->meshes[1]->model_matrix = glm::rotate(glm::mat4(1), engine->get_time() * glm::radians(45.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+        engine->meshes[1]->model_matrix =  engine->meshes[1]->model_matrix  * glm::rotate(glm::mat4(1), engine->get_time() * glm::radians(45.0f), glm::vec3(0.0f, 0.0f, 1.0f));
  
           for(int i = 0; i < engine->meshes.size(); i++){
               engine->meshes[i]->ubo.view = engine->main_camera.View;

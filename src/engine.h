@@ -167,7 +167,7 @@ public:
         void init(){
             app.engine = this;
             load_map("map01.map");
-            load_models();
+            
             };
         
     

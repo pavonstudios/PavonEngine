@@ -104,7 +104,7 @@ public:
 
     glm::mat4 model_matrix = glm::rotate(glm::mat4(1.0f), glm::radians(0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
     glm::vec3 location_vector;
-    
+    std::string texture_path;
 
     virtual void SetLocation(float x, float y, float z);
 
@@ -122,7 +122,7 @@ public:
     VkDescriptorPool descriptorPool;
     VkPipeline graphics_pipeline;
     VkImage texture_image;
-     VkImageView texture_image_view;
+    VkImageView texture_image_view;
 #endif
 #ifdef _OpenGL_Renderer_
     GLuint vertexbuffer;

@@ -52,7 +52,9 @@
 			"typeinfo": "cpp",
 			"utility": "cpp",
 			"algorithm": "cpp",
-			"variant": "cpp"
+			"variant": "cpp",
+			"forward_list": "cpp",
+			"valarray": "cpp"
 		}
 	}
 }

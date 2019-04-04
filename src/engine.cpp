@@ -256,9 +256,8 @@ void Engine::update_input(){
 
 
 void Engine::load_models(){
-	 		
-	load_and_instance_at_location("models/skydome.obj",glm::vec3(0,0,0));
-	
+		
+		
 	for(int i = 0;i <meshes_instance.size();i++){
 		meshes.push_back(&meshes_instance[i]);
 	}
@@ -281,21 +280,32 @@ void Engine::load_map(std::string path){
 	}
 	
 	std::vector<std::string> models;
+	std::vector<glm::vec3> locations;
+	std::vector<std::string> textures_paths;
 	while(1){
-		 char lineHeader[128];
-		// read the first word of the line
+		char lineHeader[128];
 		int res = fscanf(file, "%s", lineHeader);
 		if (res == EOF)
-        	break; // EOF = End Of File. Quit the loop.
+        	break; 
 
 		if ( strcmp( lineHeader, "m" ) == 0 ){
 			char model_path[256];
-			fscanf(file, "%s\n", model_path);
+			glm::vec3 location;
+			char texture_path[256];
+			fscanf(file, "%s %f %f %f %s\n", model_path, &location.x, &location.y, &location.z, texture_path);
 			models.push_back(std::string(model_path));
+			locations.push_back(location);
+			textures_paths.push_back(std::string(texture_path));
 		}
 	}
-	load_and_instance_at_location(models[0],glm::vec3(0,0,0));
-	load_and_instance_at_location(models[1],glm::vec3(0,0,0));
-	load_and_instance_at_location(models[2],glm::vec3(5,5,0));
-
+	
+	for(uint i = 0; i < models.size();i++){		
+		load_and_instance_at_location(models[i],locations[i]);
+		
+		
+	}
+	load_models();
+	for(uint i = 0; i < models.size();i++){	
+	meshes[i]->texture_path = textures_paths[i];
+	}
 }
