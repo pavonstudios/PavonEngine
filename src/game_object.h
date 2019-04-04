@@ -21,4 +21,9 @@ public:
 	}
 };
 
+class GameObjectsManager{
+	public:
+		//void load_and_instance_at_location(std::string path, glm::vec3 location);
+};
+
 #endif

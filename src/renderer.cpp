@@ -53,12 +53,14 @@ void Renderer::VulkanConfig(){
         createDescriptorSetLayout();
             createGraphicsPipeline("shaders/frag.spv",&engine->meshes[0]->graphics_pipeline);
             createGraphicsPipeline("shaders/frag.spv",&engine->meshes[1]->graphics_pipeline);
+             createGraphicsPipeline("shaders/frag.spv",&engine->meshes[2]->graphics_pipeline);
         createCommandPool();
         createDepthResources();
         createFramebuffers();
         createTextureImage("textures/building01.jpg", engine->meshes[0]);
         createTextureImage("textures/character.jpg",engine->meshes[1]);
-       
+       createTextureImage("textures/car01.jpg",engine->meshes[2]);
+
         createTextureSampler();
         for (int i = 0; i< engine->meshes.size(); i++){
             createVertexBuffer(engine->meshes[i]);

@@ -5,15 +5,15 @@ struct key_pressed{
 };
 class Input{
 public:
-	bool bIsKeyS_pressed = false;
-	bool bIsKeyW_pressed = false;
-
+	
 	key_pressed D;
 	key_pressed A;
 	key_pressed E;
 	key_pressed Q;
 	key_pressed X;
 	key_pressed Z;
+	key_pressed W;
+	key_pressed S;
 
 	float pitch = 0;
 	float yaw = 0;

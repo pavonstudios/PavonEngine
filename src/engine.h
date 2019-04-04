@@ -127,7 +127,8 @@ public:
         class Input input;
         AssetManager objects_manager;
         float move_y = 0;
-        std::vector<Mesh*> meshes; 
+        std::vector<Mesh*> meshes;
+        std::vector<Mesh> meshes_instance; 
         Mesh model1;
         Mesh model2;
         Camera main_camera; 
@@ -145,6 +146,7 @@ public:
         };    
 
         void load_models();
+        void load_and_instance_at_location(std::string path, glm::vec3 location);
 
         float deltaTime = 0.0f;	// Time between current frame and last frame
         float lastFrame = 0.0f; // Time of last frame

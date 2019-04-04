@@ -1,6 +1,7 @@
 #include "engine.h"
 #include "input_controller.h"
 
+
 void Engine::main_loop(){
 	 
 	 while (!glfwWindowShouldClose(window)) {
@@ -143,6 +144,22 @@ void Engine::key_callback(GLFWwindow* window, int key, int scancode, int action,
 	  auto app = reinterpret_cast<RendererGL*>(glfwGetWindowUserPointer(window));
 #endif
           
+			if(key == GLFW_KEY_S){
+				if(action == GLFW_PRESS){
+					app->engine->input.S.bIsPressed = true;
+				}
+				if(action == GLFW_RELEASE){
+					app->engine->input.S.bIsPressed = false;
+				}
+			}
+			if(key == GLFW_KEY_W){
+				if(action == GLFW_PRESS){
+					app->engine->input.W.bIsPressed = true;
+				}
+				if(action == GLFW_RELEASE){
+					app->engine->input.W.bIsPressed = false;
+				}
+			}
 			if(key == GLFW_KEY_D){
 				if(action == GLFW_PRESS){
 					app->engine->input.D.bIsPressed = true;
@@ -167,6 +184,7 @@ void Engine::key_callback(GLFWwindow* window, int key, int scancode, int action,
 					app->engine->input.Z.bIsPressed = false;
 				}
 			}
+			
 			if(key == GLFW_KEY_E){
 				if(action == GLFW_PRESS){
 					app->engine->input.E.bIsPressed = true;
@@ -183,7 +201,7 @@ void Engine::key_callback(GLFWwindow* window, int key, int scancode, int action,
 					app->engine->input.Q.bIsPressed = false;
 				}
 			}
-				if(key == GLFW_KEY_X){
+			if(key == GLFW_KEY_X){
 				if(action == GLFW_PRESS){
 					app->engine->input.X.bIsPressed = true;
 				}
@@ -192,40 +210,18 @@ void Engine::key_callback(GLFWwindow* window, int key, int scancode, int action,
 				}
 			}
            
-             if (key == GLFW_KEY_W && action == GLFW_PRESS) {
-				app->engine->input.bIsKeyW_pressed = true;
-              
-            }
-			else if (key == GLFW_KEY_W && action == GLFW_RELEASE)
-			{
-				app->engine->input.bIsKeyW_pressed = false;
-			}
-                
-            if (key == GLFW_KEY_S && action == GLFW_PRESS) {
-				app->engine->input.bIsKeyS_pressed = true;
-              
-            }
-			else if (key == GLFW_KEY_S && action == GLFW_RELEASE)
-			{
-				app->engine->input.bIsKeyS_pressed = false;
-			}
-			
-                
-            if (key == GLFW_KEY_M && action == GLFW_REPEAT){
-                //app->loadModel("models/chalet.obj");
-                //app->recreateSwapChain();
-            }
+           
 }
 
 void Engine::update_input(){
-	if(input.bIsKeyS_pressed){
+	if(input.S.bIsPressed){
 		//move_y += 0.001f;
 		//main_camera.SetLocation(0,move_y,0);
 		main_camera.MoveBackward();
 		
 	}
-	if(input.bIsKeyW_pressed){
-		//move_y -= 0.001f;
+	if(input.W.bIsPressed){
+		//moveWy -= 0.001f;
 		//main_camera.SetLocation(0,move_y,0);
 		main_camera.MoveForward();
 	}
@@ -260,8 +256,21 @@ void Engine::update_input(){
 
 
 void Engine::load_models(){
-	model1.load_model("models/asuncion.obj");
-   	model2.load_model("models/character.obj");
-	meshes.push_back(&model1);
-	meshes.push_back(&model2);
+	load_and_instance_at_location("models/asuncion.obj",glm::vec3(0,0,0));
+ 	load_and_instance_at_location("models/character.obj",glm::vec3(0,-5,0));
+	load_and_instance_at_location("models/car01.obj",glm::vec3(10,-5,0));
+	
+	for(int i = 0;i <meshes_instance.size();i++){
+		meshes.push_back(&meshes_instance[i]);
+	}
+
+}
+void Engine::load_and_instance_at_location(std::string path, glm::vec3 location){
+	Mesh model;
+	meshes_instance.push_back(model);
+	meshes_instance.back().load_model(path);
+	glm::mat4 model_matrix = glm::mat4(1.0f);
+	model_matrix = glm::translate(model_matrix, location);
+	meshes_instance.back().model_matrix = model_matrix;
+
 }
