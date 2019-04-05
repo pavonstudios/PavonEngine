@@ -1,5 +1,5 @@
-CC=g++ -g -std=c++17
-Library=-lglfw -lpthread 
+CC=clang++ -g -std=c++17 -stdlib=libc++
+Library=-lglfw -lpthread -lm
 
 MAIN_OBJS = main.cpp camera.cpp engine.cpp gltf.cpp
 DEFINES= -DGLTF -DTINYGLTF_NO_EXTERNAL_IMAGE
