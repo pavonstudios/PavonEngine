@@ -1,18 +1,6 @@
 
 
-#define TINYOBJLOADER_IMPLEMENTATION
-#include "tiny_obj_loader.h"
 
-
-#define STB_IMAGE_IMPLEMENTATION
-
-#ifdef GLTF
-    #define TINYGLTF_IMPLEMENTATION
-    #define STB_IMAGE_WRITE_IMPLEMENTATION
-    #include "tiny_gltf.h"
-#else
-    #include "stb_image.h"
-#endif
 #include "3D_objects.h"
 
 
@@ -21,7 +9,7 @@
 using namespace engine;
 int EMesh::load_model_gltf(const char* path){
     using namespace tinygltf;
-    Model model;
+    
     TinyGLTF loader;
     std::string err;
     std::string warn;

@@ -258,9 +258,9 @@ void Engine::update_input(){
 void Engine::load_models(){
 		
 	EMesh skeletal;
-	//skeletal.load_model_gltf("models/character2.gltf");
-	Loader loader;
-	loader.load_file("models/Cube.gltf");
+	skeletal.load_model_gltf("models/character2.gltf");
+	//Loader loader;
+	//loader.load_file("models/Cube.gltf");
 
 
 	for(int i = 0;i <meshes_instance.size();i++){

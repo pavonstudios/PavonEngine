@@ -25,7 +25,7 @@
 #include "game_object.h"
 
 #include "gltf.h"
-//#include "tiny_class.h"
+#include "tiny_class.h"
 struct UniformBufferObject {
     alignas(16) glm::mat4 model;
     alignas(16) glm::mat4 view;
@@ -102,7 +102,7 @@ public:
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
     std::vector< glm::vec3 > simple_vertices;
-
+    tinygltf::Model model;
     void load_model(std::string model_path);
 
     glm::mat4 model_matrix = glm::rotate(glm::mat4(1.0f), glm::radians(0.0f), glm::vec3(0.0f, 0.0f, 1.0f));

@@ -1,7 +1,7 @@
 CC=g++ -g -std=c++17
 Library=-lglfw -lpthread 
 
-MAIN_OBJS = main.cpp 3D_objects.cpp camera.cpp engine.cpp gltf.cpp
+MAIN_OBJS = main.cpp camera.cpp engine.cpp gltf.cpp
 DEFINES= -DGLTF -DTINYGLTF_NO_EXTERNAL_IMAGE
 
 .ONESHELL:
