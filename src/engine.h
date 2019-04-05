@@ -127,10 +127,10 @@ public:
         class Input input;
         AssetManager objects_manager;
         float move_y = 0;
-        std::vector<Mesh*> meshes;
-        std::vector<Mesh> meshes_instance; 
-        Mesh model1;
-        Mesh model2;
+        std::vector<EMesh*> meshes;
+        std::vector<EMesh> meshes_instance;
+        EMesh model1;
+        EMesh model2;
         Camera main_camera; 
         glm::vec3 objects_positions[10] = {
         glm::vec3( 0.0f,  0.0f,  0.0f), 

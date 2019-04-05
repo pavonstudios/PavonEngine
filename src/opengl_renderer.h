@@ -50,11 +50,11 @@ private:
 	GLuint MatrixID;
 	glm::mat4 mvp;
 
-	Mesh *mesh_to_draw;
+	EMesh *mesh_to_draw;
 
 	unsigned int texture;
 
-	Mesh rect;
+	EMesh rect;
 	 
 
 	void init_ret();

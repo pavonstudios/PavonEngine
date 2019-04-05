@@ -257,7 +257,7 @@ void Engine::update_input(){
 
 void Engine::load_models(){
 		
-	Mesh skeletal;
+	EMesh skeletal;
 	skeletal.load_model_gltf("models/character2.gltf");
 	for(int i = 0;i <meshes_instance.size();i++){
 		meshes.push_back(&meshes_instance[i]);
@@ -265,7 +265,7 @@ void Engine::load_models(){
 
 }
 void Engine::load_and_instance_at_location(std::string path, glm::vec3 location){
-	Mesh model;
+	EMesh model;
 	meshes_instance.push_back(model);
 	meshes_instance.back().load_model(path);
 	glm::mat4 model_matrix = glm::mat4(1.0f);

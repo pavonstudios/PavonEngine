@@ -145,14 +145,14 @@ private:
 
 	void cleanup();
 	void setupDebugMessenger();
-	void createTextureImage(std::string texture_path, Mesh* mesh);
+	void createTextureImage(std::string texture_path, EMesh* mesh);
     void updateUniformBuffer(uint32_t currentImage);
-    void createVertexBuffer(Mesh *mesh_to_process);
+    void createVertexBuffer(EMesh *mesh_to_process);
     void createCommandBuffers();
-    void createIndexBuffer(Mesh *mesh);
+    void createIndexBuffer(EMesh *mesh);
     void createGraphicsPipeline(std::string path_fragment_shader, VkPipeline* out_pipeline);
-    void createDescriptorPool(Mesh *mesh);
-    void createDescriptorSets(Mesh *mesh);
+    void createDescriptorPool(EMesh *mesh);
+    void createDescriptorSets(EMesh *mesh);
     void createSurface();
     void cleanupSwapChain();
     VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
@@ -668,7 +668,7 @@ private:
 
     
 
-    void createUniformBuffers(Mesh *mesh) {
+    void createUniformBuffers(EMesh *mesh) {
         VkDeviceSize bufferSize = sizeof(UniformBufferObject);
 
         mesh->uniformBuffers.resize(swapChainImages.size());

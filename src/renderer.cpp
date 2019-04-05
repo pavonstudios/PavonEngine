@@ -70,7 +70,7 @@ void Renderer::VulkanConfig(){
       
         createCommandBuffers();
 }
-void Renderer::createIndexBuffer(Mesh * mesh) {
+void Renderer::createIndexBuffer(EMesh * mesh) {
         VkDeviceSize bufferSize = sizeof(mesh->indices[0]) * mesh->indices.size();
 
         VkBuffer stagingBuffer;
@@ -93,7 +93,7 @@ void Renderer::createIndexBuffer(Mesh * mesh) {
         vkDestroyBuffer(device, stagingBuffer, nullptr);
         vkFreeMemory(device, stagingBufferMemory, nullptr);
     }
- void Renderer::createVertexBuffer(Mesh *mesh_to_process) {
+ void Renderer::createVertexBuffer(EMesh *mesh_to_process) {
 
         VkDeviceSize bufferSize = sizeof(mesh_to_process->vertices[0]) * mesh_to_process->vertices.size();
 
@@ -181,7 +181,7 @@ void Renderer::createCommandBuffers() {
         }
 }
 
- void Renderer::createTextureImage(std::string texture_path, Mesh* mesh) {
+ void Renderer::createTextureImage(std::string texture_path, EMesh* mesh) {
        
         image_size size = engine->objects_manager.load_and_get_size(texture_path);
         
@@ -232,7 +232,7 @@ void Renderer::createCommandBuffers() {
     }
 
 
- void Renderer::createDescriptorPool(Mesh *mesh) {
+ void Renderer::createDescriptorPool(EMesh *mesh) {
         std::array<VkDescriptorPoolSize, 2> poolSizes = {};
         poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
         poolSizes[0].descriptorCount = static_cast<uint32_t>(swapChainImages.size());
@@ -250,7 +250,7 @@ void Renderer::createCommandBuffers() {
         }
     }
 
-void Renderer::createDescriptorSets(Mesh *mesh) {
+void Renderer::createDescriptorSets(EMesh *mesh) {
         std::vector<VkDescriptorSetLayout> layouts(static_cast<uint32_t>(swapChainImages.size()), descriptorSetLayout);
         VkDescriptorSetAllocateInfo allocInfo = {};
         allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;

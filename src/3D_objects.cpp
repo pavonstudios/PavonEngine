@@ -19,7 +19,7 @@
 
 #ifdef GLTF
 using namespace engine;
-int Mesh::load_model_gltf(const char* path){
+int EMesh::load_model_gltf(const char* path){
     using namespace tinygltf;
     Model model;
     TinyGLTF loader;
@@ -48,7 +48,7 @@ int Mesh::load_model_gltf(const char* path){
 #endif
 
 using namespace engine;
-bool Mesh::load_model2(const char * path){
+bool EMesh::load_model2(const char * path){
 
             std::vector< unsigned int > vertexIndices, uvIndices, normalIndices;
             std::vector< glm::vec3 > temp_vertices;
@@ -101,7 +101,7 @@ bool Mesh::load_model2(const char * path){
             }
             return true;
         }
-void Mesh::load_model(std::string model_path){
+void EMesh::load_model(std::string model_path){
         tinyobj::attrib_t attrib;
         std::vector<tinyobj::shape_t> shapes;
         std::vector<tinyobj::material_t> materials;
@@ -140,7 +140,7 @@ void Mesh::load_model(std::string model_path){
         }
 }
 
-void Mesh::SetLocation(float x, float y, float z){
+void EMesh::SetLocation(float x, float y, float z){
 		Location.x = x;
 		Location.y = y;
 		Location.z = z;
@@ -152,7 +152,7 @@ void Mesh::SetLocation(float x, float y, float z){
        model_matrix = glm::translate(model_matrix, glm::vec3(Location.x,Location.y,Location.z));
 }
 
-Mesh::~Mesh(){
+EMesh::~EMesh(){
     
 }
 
