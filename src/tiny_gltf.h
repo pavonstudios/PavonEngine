@@ -58,10 +58,11 @@
 #endif
 #endif
 
+#include "tiny_class.h"
 namespace tinygltf {
 
 
-#include "tiny_gltf_classes.h"
+
 
 
 ///

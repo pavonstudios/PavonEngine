@@ -6,6 +6,7 @@
 #include <cstring>
 #include <fstream>
 using nlohmann::json;
+using namespace loader;
 void 
 Loader::load_file(const char* path){
 	FILE* file = fopen(path,"r");
@@ -53,6 +54,28 @@ void Loader::load_from_string(loader::gltf gltf, const char* str, unsigned int l
 	if (!parser.is_object()) {
 		throw "error was parsing file";
 	}
+
+	 // 3. Parse Buffer
+  {
+    json::const_iterator rootIt = parser.find("buffers");
+    if ((rootIt != parser.end()) && rootIt.value().is_array()) {
+      const json &root = rootIt.value();
+
+      json::const_iterator it(root.begin());
+      json::const_iterator itEnd(root.end());
+      for (; it != itEnd; it++) {
+        if (!it.value().is_object()) {
+          
+          throw std::runtime_error("`buffers' does not contain an JSON object.");
+          
+        }
+        Buffer buffer;
+       
+
+        
+      }
+    }
+  }
 
 	
 }

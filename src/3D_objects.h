@@ -25,6 +25,7 @@
 #include "game_object.h"
 
 #include "gltf.h"
+//#include "tiny_class.h"
 struct UniformBufferObject {
     alignas(16) glm::mat4 model;
     alignas(16) glm::mat4 view;

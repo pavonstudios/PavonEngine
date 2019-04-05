@@ -1,4 +1,4 @@
-#include "3D_objects.h"
+
 
 #define TINYOBJLOADER_IMPLEMENTATION
 #include "tiny_obj_loader.h"
@@ -13,7 +13,7 @@
 #else
     #include "stb_image.h"
 #endif
-
+#include "3D_objects.h"
 
 
 
