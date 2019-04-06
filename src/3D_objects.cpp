@@ -14,8 +14,10 @@ void EMesh::load_node(engine::Node *parent, const tinygltf::Node &gltf_node){
     new_node->parent = parent;
     new_node->matrix = glm::mat4(1.0f);
     
+    //some nodes do not contain transform information
     if(gltf_node.translation.size() == 3)
         new_node->Translation = glm::make_vec3(gltf_node.translation.data());
+
     if(gltf_node.rotation.size() == 4)
         new_node->Rotation = glm::make_quat(gltf_node.rotation.data());
 
@@ -48,53 +50,74 @@ int EMesh::load_model_gltf(const char* path){
         uint32_t indexCount = 0;
         uint32_t vertexCount = 0;
         const float *bufferPos = nullptr;
+        const uint16_t *bufferJoints = nullptr;
+		const float *bufferWeights = nullptr;
 
         const tinygltf::Accessor &posAccessor = gltf_model.accessors[primitive.attributes.find("POSITION")->second];
         const tinygltf::BufferView &posView = gltf_model.bufferViews[posAccessor.bufferView];
         bufferPos = reinterpret_cast<const float *>(&(gltf_model.buffers[posView.buffer].data[posAccessor.byteOffset + posView.byteOffset]));
         vertexCount = static_cast<uint32_t>(posAccessor.count);
 
+        // Skinning
+        // Joints
+        if (primitive.attributes.find("JOINTS_0") != primitive.attributes.end()) {
+            const tinygltf::Accessor &jointAccessor = gltf_model.accessors[primitive.attributes.find("JOINTS_0")->second];
+            const tinygltf::BufferView &jointView = gltf_model.bufferViews[jointAccessor.bufferView];
+            bufferJoints = reinterpret_cast<const uint16_t *>(&(gltf_model.buffers[jointView.buffer].data[jointAccessor.byteOffset + jointView.byteOffset]));
+        }
+        if (primitive.attributes.find("WEIGHTS_0") != primitive.attributes.end()) {
+            const tinygltf::Accessor &uvAccessor = gltf_model.accessors[primitive.attributes.find("WEIGHTS_0")->second];
+            const tinygltf::BufferView &uvView = gltf_model.bufferViews[uvAccessor.bufferView];
+            bufferWeights = reinterpret_cast<const float *>(&(gltf_model.buffers[uvView.buffer].data[uvAccessor.byteOffset + uvView.byteOffset]));
+        }
+
+        bool has_skin = (bufferJoints && bufferWeights);
         for(size_t c = 0; c < posAccessor.count; c++){
             Vertex vert{};
 			vert.pos = glm::vec4(glm::make_vec3(&bufferPos[c * 3]), 1.0f);
+
+			vert.joint0 = has_skin ? glm::vec4(glm::make_vec4(&bufferJoints[c * 4])) : glm::vec4(0.0f);
+			vert.weight0 = has_skin ? glm::make_vec4(&bufferWeights[c * 4]) : glm::vec4(0.0f);
+
+
             vertices.push_back(vert);
         }
 
-    //indices
+        //indices
 
-    const tinygltf::Accessor &accessor = gltf_model.accessors[primitive.indices > -1 ? primitive.indices : 0];
-    const tinygltf::BufferView &bufferView = gltf_model.bufferViews[accessor.bufferView];
-    const tinygltf::Buffer &buffer = gltf_model.buffers[bufferView.buffer];
+        const tinygltf::Accessor &accessor = gltf_model.accessors[primitive.indices > -1 ? primitive.indices : 0];
+        const tinygltf::BufferView &bufferView = gltf_model.bufferViews[accessor.bufferView];
+        const tinygltf::Buffer &buffer = gltf_model.buffers[bufferView.buffer];
 
-    indexCount = static_cast<uint32_t>(accessor.count);
-    const void *dataPtr = &(buffer.data[accessor.byteOffset + bufferView.byteOffset]);
+        indexCount = static_cast<uint32_t>(accessor.count);
+        const void *dataPtr = &(buffer.data[accessor.byteOffset + bufferView.byteOffset]);
 
-    switch (accessor.componentType) {
-        case TINYGLTF_PARAMETER_TYPE_UNSIGNED_INT: {
-            const uint32_t *buf = static_cast<const uint32_t*>(dataPtr);
-            for (size_t index = 0; index < accessor.count; index++) {
-                indices.push_back(buf[index] + vertexStart);
+        switch (accessor.componentType) {
+            case TINYGLTF_PARAMETER_TYPE_UNSIGNED_INT: {
+                const uint32_t *buf = static_cast<const uint32_t*>(dataPtr);
+                for (size_t index = 0; index < accessor.count; index++) {
+                    indices.push_back(buf[index] + vertexStart);
+                }
+                break;
             }
-            break;
-        }
-        case TINYGLTF_PARAMETER_TYPE_UNSIGNED_SHORT: {
-            const uint16_t *buf = static_cast<const uint16_t*>(dataPtr);
-            for (size_t index = 0; index < accessor.count; index++) {
-                indices.push_back(buf[index] + vertexStart);
+            case TINYGLTF_PARAMETER_TYPE_UNSIGNED_SHORT: {
+                const uint16_t *buf = static_cast<const uint16_t*>(dataPtr);
+                for (size_t index = 0; index < accessor.count; index++) {
+                    indices.push_back(buf[index] + vertexStart);
+                }
+                break;
             }
-            break;
-        }
-        case TINYGLTF_PARAMETER_TYPE_UNSIGNED_BYTE: {
-            const uint8_t *buf = static_cast<const uint8_t*>(dataPtr);
-            for (size_t index = 0; index < accessor.count; index++) {
-                indices.push_back(buf[index] + vertexStart);
+            case TINYGLTF_PARAMETER_TYPE_UNSIGNED_BYTE: {
+                const uint8_t *buf = static_cast<const uint8_t*>(dataPtr);
+                for (size_t index = 0; index < accessor.count; index++) {
+                    indices.push_back(buf[index] + vertexStart);
+                }
+                break;
             }
-            break;
-        }
-        default:
-            std::cerr << "Index component type " << accessor.componentType << " not supported!" << std::endl;
-            return 2;
-        }
+            default:
+                std::cerr << "Index component type " << accessor.componentType << " not supported!" << std::endl;
+                return 2;
+            }
     }
 
     return 1;

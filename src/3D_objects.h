@@ -45,6 +45,8 @@ struct Vertex {
     glm::vec3 pos;
     glm::vec3 color;
     glm::vec2 texCoord;
+    glm::vec4 joint0;
+    glm::vec4 weight0;
 #ifndef _OpenGL_Renderer_
     static VkVertexInputBindingDescription getBindingDescription() {
         VkVertexInputBindingDescription bindingDescription = {};
