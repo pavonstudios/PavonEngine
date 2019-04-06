@@ -9,6 +9,25 @@
 
 #ifdef GLTF
 using namespace engine;
+void EMesh::load_node(engine::Node *parent, const tinygltf::Node &gltf_node){
+    Node *new_node = new Node{};
+    new_node->parent = parent;
+    new_node->matrix = glm::mat4(1.0f);
+    
+    if(gltf_node.translation.size() == 3)
+        new_node->Translation = glm::make_vec3(gltf_node.translation.data());
+    if(gltf_node.rotation.size() == 4)
+        new_node->Rotation = glm::make_quat(gltf_node.rotation.data());
+
+    if(gltf_node.matrix.size() == 16)
+        new_node->matrix = glm::make_mat4x4(gltf_node.matrix.data());
+
+    if(gltf_node.children.size() > 0){
+        for(size_t i = 0;i < gltf_node.children.size();i++){
+            load_node(new_node,gltf_model.nodes[gltf_node.children[i]]);
+        }
+    }
+}
 int EMesh::load_model_gltf(const char* path){
     
     
@@ -18,6 +37,10 @@ int EMesh::load_model_gltf(const char* path){
 
     bool ret = loader.LoadASCIIFromFile(&gltf_model, &err, &warn, path);
     //bool ret = loader.LoadBinaryFromFile(&model, &err, &warn, argv[1]); // for binary glTF(.glb)
+    
+    for(size_t i = 0; i < gltf_model.nodes.size();i++){
+        load_node(nullptr,gltf_model.nodes[i]);
+    }
 
     for(auto primitive : gltf_model.meshes[0].primitives){
         uint32_t indexStart = static_cast<uint32_t>(indices.size());
