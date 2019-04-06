@@ -3,7 +3,9 @@
 
 #include "3D_objects.h"
 #include "iostream"
-
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #ifdef GLTF
 using namespace engine;
@@ -14,12 +16,67 @@ int EMesh::load_model_gltf(const char* path){
     std::string err;
     std::string warn;
 
-    bool ret = loader.LoadASCIIFromFile(&model, &err, &warn, path);
+    bool ret = loader.LoadASCIIFromFile(&gltf_model, &err, &warn, path);
     //bool ret = loader.LoadBinaryFromFile(&model, &err, &warn, argv[1]); // for binary glTF(.glb)
-    
+
+    for(auto primitive : gltf_model.meshes[0].primitives){
+        uint32_t indexStart = static_cast<uint32_t>(indices.size());
+        uint32_t vertexStart = static_cast<uint32_t>(vertices.size());
+        uint32_t indexCount = 0;
+        uint32_t vertexCount = 0;
+        const float *bufferPos = nullptr;
+
+        const tinygltf::Accessor &posAccessor = gltf_model.accessors[primitive.attributes.find("POSITION")->second];
+        const tinygltf::BufferView &posView = gltf_model.bufferViews[posAccessor.bufferView];
+        bufferPos = reinterpret_cast<const float *>(&(gltf_model.buffers[posView.buffer].data[posAccessor.byteOffset + posView.byteOffset]));
+        vertexCount = static_cast<uint32_t>(posAccessor.count);
+
+        for(size_t c = 0; c < posAccessor.count; c++){
+            Vertex vert{};
+			vert.pos = glm::vec4(glm::make_vec3(&bufferPos[c * 3]), 1.0f);
+            vertices.push_back(vert);
+        }
+
+        //indices
+
+    const tinygltf::Accessor &accessor = gltf_model.accessors[primitive.indices > -1 ? primitive.indices : 0];
+						const tinygltf::BufferView &bufferView = gltf_model.bufferViews[accessor.bufferView];
+						const tinygltf::Buffer &buffer = gltf_model.buffers[bufferView.buffer];
+
+						indexCount = static_cast<uint32_t>(accessor.count);
+						const void *dataPtr = &(buffer.data[accessor.byteOffset + bufferView.byteOffset]);
+
+						switch (accessor.componentType) {
+						case TINYGLTF_PARAMETER_TYPE_UNSIGNED_INT: {
+							const uint32_t *buf = static_cast<const uint32_t*>(dataPtr);
+							for (size_t index = 0; index < accessor.count; index++) {
+								indices.push_back(buf[index] + vertexStart);
+							}
+							break;
+						}
+						case TINYGLTF_PARAMETER_TYPE_UNSIGNED_SHORT: {
+							const uint16_t *buf = static_cast<const uint16_t*>(dataPtr);
+							for (size_t index = 0; index < accessor.count; index++) {
+								indices.push_back(buf[index] + vertexStart);
+							}
+							break;
+						}
+						case TINYGLTF_PARAMETER_TYPE_UNSIGNED_BYTE: {
+							const uint8_t *buf = static_cast<const uint8_t*>(dataPtr);
+							for (size_t index = 0; index < accessor.count; index++) {
+								indices.push_back(buf[index] + vertexStart);
+							}
+							break;
+						}
+						default:
+							std::cerr << "Index component type " << accessor.componentType << " not supported!" << std::endl;
+							return 2;
+						}
+    }
 
     return 1;
 }
+
 #endif
 
 using namespace engine;

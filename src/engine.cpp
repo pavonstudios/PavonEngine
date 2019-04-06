@@ -255,17 +255,13 @@ void Engine::update_input(){
 }
 
 
-void Engine::load_models(){
-		
-	EMesh skeletal;
+void Engine::load_models(){	
+	
 	skeletal.load_model_gltf("models/character2.gltf");
-	//Loader loader;
-	//loader.load_file("models/Cube.gltf");
-
-
-	for(int i = 0;i <meshes_instance.size();i++){
-		meshes.push_back(&meshes_instance[i]);
-	}
+	skeletal.texture_path = "textures/character2.jpg";
+	meshes.push_back(&skeletal);
+	
+	
 
 }
 void Engine::load_and_instance_at_location(std::string path, glm::vec3 location){
@@ -309,8 +305,14 @@ void Engine::load_map(std::string path){
 		
 		
 	}
-	load_models();
+	//add to meshes array
+	for(int i = 0;i <meshes_instance.size();i++){
+		meshes.push_back(&meshes_instance[i]);
+	}
+	//add textures
 	for(uint i = 0; i < models.size();i++){	
 	meshes[i]->texture_path = textures_paths[i];
 	}
+	//load gltf
+	load_models();
 }

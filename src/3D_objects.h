@@ -102,7 +102,7 @@ public:
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
     std::vector< glm::vec3 > simple_vertices;
-    tinygltf::Model model;
+    tinygltf::Model gltf_model;
     void load_model(std::string model_path);
 
     glm::mat4 model_matrix = glm::rotate(glm::mat4(1.0f), glm::radians(0.0f), glm::vec3(0.0f, 0.0f, 1.0f));

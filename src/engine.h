@@ -131,6 +131,7 @@ public:
         std::vector<EMesh> meshes_instance;
         EMesh model1;
         EMesh model2;
+        EMesh skeletal;
         Camera main_camera; 
         glm::vec3 objects_positions[10] = {
         glm::vec3( 0.0f,  0.0f,  0.0f), 
