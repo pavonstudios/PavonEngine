@@ -261,7 +261,7 @@ void Engine::load_models(){
 	skeletal.texture_path = "textures/character2.jpg";
 	meshes.push_back(&skeletal);
 	glm::mat4 model_matrix = glm::mat4(1.0f);
-	model_matrix = glm::translate(model_matrix, glm::vec3(5,0,0));
+	model_matrix = glm::translate(model_matrix, glm::vec3(7,0,0));
 	meshes.back()->model_matrix = model_matrix;
 	
 
