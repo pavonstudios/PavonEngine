@@ -37,41 +37,41 @@ int EMesh::load_model_gltf(const char* path){
             vertices.push_back(vert);
         }
 
-        //indices
+    //indices
 
     const tinygltf::Accessor &accessor = gltf_model.accessors[primitive.indices > -1 ? primitive.indices : 0];
-						const tinygltf::BufferView &bufferView = gltf_model.bufferViews[accessor.bufferView];
-						const tinygltf::Buffer &buffer = gltf_model.buffers[bufferView.buffer];
+    const tinygltf::BufferView &bufferView = gltf_model.bufferViews[accessor.bufferView];
+    const tinygltf::Buffer &buffer = gltf_model.buffers[bufferView.buffer];
 
-						indexCount = static_cast<uint32_t>(accessor.count);
-						const void *dataPtr = &(buffer.data[accessor.byteOffset + bufferView.byteOffset]);
+    indexCount = static_cast<uint32_t>(accessor.count);
+    const void *dataPtr = &(buffer.data[accessor.byteOffset + bufferView.byteOffset]);
 
-						switch (accessor.componentType) {
-						case TINYGLTF_PARAMETER_TYPE_UNSIGNED_INT: {
-							const uint32_t *buf = static_cast<const uint32_t*>(dataPtr);
-							for (size_t index = 0; index < accessor.count; index++) {
-								indices.push_back(buf[index] + vertexStart);
-							}
-							break;
-						}
-						case TINYGLTF_PARAMETER_TYPE_UNSIGNED_SHORT: {
-							const uint16_t *buf = static_cast<const uint16_t*>(dataPtr);
-							for (size_t index = 0; index < accessor.count; index++) {
-								indices.push_back(buf[index] + vertexStart);
-							}
-							break;
-						}
-						case TINYGLTF_PARAMETER_TYPE_UNSIGNED_BYTE: {
-							const uint8_t *buf = static_cast<const uint8_t*>(dataPtr);
-							for (size_t index = 0; index < accessor.count; index++) {
-								indices.push_back(buf[index] + vertexStart);
-							}
-							break;
-						}
-						default:
-							std::cerr << "Index component type " << accessor.componentType << " not supported!" << std::endl;
-							return 2;
-						}
+    switch (accessor.componentType) {
+        case TINYGLTF_PARAMETER_TYPE_UNSIGNED_INT: {
+            const uint32_t *buf = static_cast<const uint32_t*>(dataPtr);
+            for (size_t index = 0; index < accessor.count; index++) {
+                indices.push_back(buf[index] + vertexStart);
+            }
+            break;
+        }
+        case TINYGLTF_PARAMETER_TYPE_UNSIGNED_SHORT: {
+            const uint16_t *buf = static_cast<const uint16_t*>(dataPtr);
+            for (size_t index = 0; index < accessor.count; index++) {
+                indices.push_back(buf[index] + vertexStart);
+            }
+            break;
+        }
+        case TINYGLTF_PARAMETER_TYPE_UNSIGNED_BYTE: {
+            const uint8_t *buf = static_cast<const uint8_t*>(dataPtr);
+            for (size_t index = 0; index < accessor.count; index++) {
+                indices.push_back(buf[index] + vertexStart);
+            }
+            break;
+        }
+        default:
+            std::cerr << "Index component type " << accessor.componentType << " not supported!" << std::endl;
+            return 2;
+        }
     }
 
     return 1;
