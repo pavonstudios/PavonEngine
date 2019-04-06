@@ -34,6 +34,15 @@ namespace engine{
         glm::vec3 Translation{};
         glm::quat Rotation{};
         glm::mat4 matrix;
+        std::vector<Node*> children;
+        Skin* skin;
+        int32_t skin_index = -1;
+    };
+
+    struct Skin {
+        Node *skeleton_root = nullptr;
+        std::vector<glm::mat4> inverse_bind_matrix;
+        std::vector<Node*> joints;
     };
 }
 struct UniformBufferObject {
@@ -121,7 +130,14 @@ public:
     glm::vec3 location_vector;
     std::string texture_path;
 
+    std::vector<Node*> nodes;
+    std::vector<Node*> linear_nodes;
+    std::vector<Skin*> skins;
+
     void load_node(engine::Node *parent, const tinygltf::Node &gltf_node);
+    void load_skins();
+    Node* node_from_index(uint32_t index);
+    Node* find_node(Node* parent, uint32_t index);
 
     virtual void SetLocation(float x, float y, float z);
 
