@@ -156,6 +156,7 @@ private:
     void createDescriptorSets(EMesh *mesh);
     void createDescriptorSetLayout();
     void createPipelineLayout();
+    void update_descriptor_set(EMesh* mesh);
     void createSurface();
     void cleanupSwapChain();
     VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);

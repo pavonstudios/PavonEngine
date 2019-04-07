@@ -71,6 +71,7 @@ void Renderer::VulkanConfig(){
             createUniformBuffers(engine->meshes[i]);
             createDescriptorPool(engine->meshes[i]);
             createDescriptorSets(engine->meshes[i]);
+            update_descriptor_set(engine->meshes[i]);
         }       
       
         createCommandBuffers();
@@ -237,25 +238,7 @@ void Renderer::createCommandBuffers() {
     }
 
 
- void Renderer::createDescriptorPool(EMesh *mesh) {
-        std::array<VkDescriptorPoolSize, 3> poolSizes = {};
-        poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-        poolSizes[0].descriptorCount = static_cast<uint32_t>(swapChainImages.size());
-        poolSizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-        poolSizes[1].descriptorCount = static_cast<uint32_t>(swapChainImages.size());
-        poolSizes[2].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-        poolSizes[2].descriptorCount = static_cast<uint32_t>(swapChainImages.size());
 
-        VkDescriptorPoolCreateInfo poolInfo = {};
-        poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-        poolInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());
-        poolInfo.pPoolSizes = poolSizes.data();
-        poolInfo.maxSets = static_cast<uint32_t>(swapChainImages.size());
-
-        if (vkCreateDescriptorPool(device, &poolInfo, nullptr, &mesh->descriptorPool) != VK_SUCCESS) {
-            throw std::runtime_error("failed to create descriptor pool!");
-        }
-    }
 void Renderer::createDescriptorSetLayout() {
         VkDescriptorSetLayoutBinding uboLayoutBinding = {};
         uboLayoutBinding.binding = 0;
@@ -312,20 +295,27 @@ void Renderer::createPipelineLayout(){
         throw std::runtime_error("failed to create pipeline layout!");
     }
 }
-void Renderer::createDescriptorSets(EMesh *mesh) {
-        std::vector<VkDescriptorSetLayout> layouts(static_cast<uint32_t>(swapChainImages.size()), descriptorSetLayout);
-        VkDescriptorSetAllocateInfo allocInfo = {};
-        allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-        allocInfo.descriptorPool = mesh->descriptorPool;
-        allocInfo.descriptorSetCount = static_cast<uint32_t>(swapChainImages.size());
-        allocInfo.pSetLayouts = layouts.data();
+ void Renderer::createDescriptorPool(EMesh *mesh) {
+        std::array<VkDescriptorPoolSize, 2> poolSizes = {};
+        poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+        poolSizes[0].descriptorCount = static_cast<uint32_t>(swapChainImages.size());
+        poolSizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+        poolSizes[1].descriptorCount = static_cast<uint32_t>(swapChainImages.size());
+        //poolSizes[2].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+        //poolSizes[2].descriptorCount = static_cast<uint32_t>(swapChainImages.size());
 
-        mesh->descriptorSets.resize(swapChainImages.size());
-        if (vkAllocateDescriptorSets(device, &allocInfo, mesh->descriptorSets.data()) != VK_SUCCESS) {
-            throw std::runtime_error("failed to allocate descriptor sets!");
+        VkDescriptorPoolCreateInfo poolInfo = {};
+        poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+        poolInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());
+        poolInfo.pPoolSizes = poolSizes.data();
+        poolInfo.maxSets = static_cast<uint32_t>(swapChainImages.size());
+
+        if (vkCreateDescriptorPool(device, &poolInfo, nullptr, &mesh->descriptorPool) != VK_SUCCESS) {
+            throw std::runtime_error("failed to create descriptor pool!");
         }
-
-        for (size_t i = 0; i < swapChainImages.size(); i++) {
+}
+void Renderer::update_descriptor_set(EMesh* mesh){
+    for (size_t i = 0; i < swapChainImages.size(); i++) {
             VkDescriptorBufferInfo bufferInfo = {};
             bufferInfo.buffer = mesh->uniformBuffers[i];
             bufferInfo.offset = 0;
@@ -356,7 +346,26 @@ void Renderer::createDescriptorSets(EMesh *mesh) {
 
             vkUpdateDescriptorSets(device, static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
         }
-    }
+}
+void Renderer::createDescriptorSets(EMesh *mesh) {
+        VkDescriptorSetLayout layauts_with_node [] = {descriptorSetLayout, descript_set_layout_node};
+        std::vector<VkDescriptorSetLayout> layouts;
+        layouts.push_back(descriptorSetLayout);
+        layouts.push_back(descriptorSetLayout);
+        layouts.push_back(descriptorSetLayout);
+        //layouts.push_back(descript_set_layout_node);        
+
+        VkDescriptorSetAllocateInfo allocInfo = {};
+        allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+        allocInfo.descriptorPool = mesh->descriptorPool;
+        allocInfo.descriptorSetCount = static_cast<uint32_t>(swapChainImages.size());
+        allocInfo.pSetLayouts = layouts.data();
+
+        mesh->descriptorSets.resize(swapChainImages.size());
+        if (vkAllocateDescriptorSets(device, &allocInfo, mesh->descriptorSets.data()) != VK_SUCCESS) {
+            throw std::runtime_error("failed to allocate descriptor sets!");
+        }        
+}
 
 void Renderer::updateUniformBuffer(uint32_t currentImage) {
        
