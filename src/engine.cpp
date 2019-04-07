@@ -291,15 +291,18 @@ void Engine::load_map(std::string path){
 		if (res == EOF)
         	break; 
 
-		if ( strcmp( lineHeader, "m" ) == 0 ){
-			char model_path[256];
-			glm::vec3 location;
-			char texture_path[256];
-			fscanf(file, "%s %f %f %f %s\n", model_path, &location.x, &location.y, &location.z, texture_path);
-			models.push_back(std::string(model_path));
-			locations.push_back(location);
-			textures_paths.push_back(std::string(texture_path));
+		if(!(strcmp( lineHeader, "#" ) == 0)){
+			if ( strcmp( lineHeader, "m" ) == 0 ){
+				char model_path[256];
+				glm::vec3 location;
+				char texture_path[256];
+				fscanf(file, "%s %f %f %f %s\n", model_path, &location.x, &location.y, &location.z, texture_path);
+				models.push_back(std::string(model_path));
+				locations.push_back(location);
+				textures_paths.push_back(std::string(texture_path));
+			}
 		}
+		
 	}
 	
 	for(uint i = 0; i < models.size();i++){		

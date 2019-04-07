@@ -62,7 +62,7 @@ void Renderer::VulkanConfig(){
         createGraphicsPipeline("shaders/frag.spv",&engine->meshes[i]->graphics_pipeline);
         createTextureImage(engine->meshes[i]->texture_path, engine->meshes[i]);
     }
-    createGraphicsPipeline("shaders/red.spv",&engine->meshes[4]->graphics_pipeline);
+    createGraphicsPipeline("shaders/red.spv",&engine->meshes.back()->graphics_pipeline);
         
         createTextureSampler();
         for (int i = 0; i< engine->meshes.size(); i++){
