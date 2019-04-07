@@ -54,7 +54,11 @@
 			"algorithm": "cpp",
 			"variant": "cpp",
 			"forward_list": "cpp",
-			"valarray": "cpp"
+			"valarray": "cpp",
+			"bitset": "cpp",
+			"__config": "cpp",
+			"__functional_base": "cpp",
+			"__nullptr": "cpp"
 		}
 	}
 }

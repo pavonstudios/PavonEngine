@@ -388,7 +388,14 @@ void Renderer::updateUniformBuffer(uint32_t currentImage) {
             vkMapMemory(device, engine->meshes[i]->uniformBuffersMemory[currentImage], 0, sizeof(engine->meshes[i]->ubo), 0, &data);
                 memcpy(data, &engine->meshes[i]->ubo, sizeof(engine->meshes[i]->ubo));
             vkUnmapMemory(device, engine->meshes[i]->uniformBuffersMemory[currentImage]);
+            
 
+            //skinned
+/*             void* node_data;
+            vkMapMemory(device, engine->meshes[i]->uniform_node_buffer_memory[currentImage], 0, sizeof(engine->meshes[i]->node_uniform), 0, &node_data);
+                memcpy(node_data, &engine->meshes[i]->node_uniform, sizeof(engine->meshes[i]->node_uniform));
+            vkUnmapMemory(device, engine->meshes[i]->uniform_node_buffer_memory[currentImage]);
+ */
           }
  
     }
@@ -617,4 +624,29 @@ void Renderer::cleanup() {
         vkDestroyInstance(instance, nullptr);
 
     
+}
+void Renderer::createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory) {
+        VkBufferCreateInfo bufferInfo = {};
+        bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+        bufferInfo.size = size;
+        bufferInfo.usage = usage;
+        bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+
+        if (vkCreateBuffer(device, &bufferInfo, nullptr, &buffer) != VK_SUCCESS) {
+            throw std::runtime_error("failed to create buffer!");
+        }
+
+        VkMemoryRequirements memRequirements;
+        vkGetBufferMemoryRequirements(device, buffer, &memRequirements);
+
+        VkMemoryAllocateInfo allocInfo = {};
+        allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+        allocInfo.allocationSize = memRequirements.size;
+        allocInfo.memoryTypeIndex = findMemoryType(memRequirements.memoryTypeBits, properties);
+
+        if (vkAllocateMemory(device, &allocInfo, nullptr, &bufferMemory) != VK_SUCCESS) {
+            throw std::runtime_error("failed to allocate buffer memory!");
+        }
+
+        vkBindBufferMemory(device, buffer, bufferMemory, 0);
 }

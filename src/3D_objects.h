@@ -27,6 +27,8 @@
 #include "gltf.h"
 #include "tiny_class.h"
 
+
+
 namespace engine{
     struct Node;
     struct Skin {
@@ -128,6 +130,7 @@ public:
 #ifdef VULKAN
     VkDevice* pDevice;
     EMesh(VkDevice* pDevice);
+  
 #else
     EMesh();
 #endif
@@ -162,6 +165,7 @@ public:
 #ifdef VULKAN
     VkBuffer vertices_buffer;
     VkBuffer indexBuffer;
+    VkBuffer node_unifrom_buffer;
     std::vector<VkBuffer> uniformBuffers;
     std::vector<VkDeviceMemory> uniformBuffersMemory;
     std::vector<VkDescriptorSet> descriptorSets;
@@ -169,6 +173,9 @@ public:
     VkPipeline graphics_pipeline;
     VkImage texture_image;
     VkImageView texture_image_view;
+
+    std::vector<VkBuffer> uniform_node_buffers;
+    std::vector<VkDeviceMemory> uniform_node_buffer_memory;
 #endif
 #ifdef _OpenGL_Renderer_
     GLuint vertexbuffer;

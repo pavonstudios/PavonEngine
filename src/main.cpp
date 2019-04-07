@@ -12,10 +12,11 @@
 #else
     #include "stb_image.h"
 #endif
-#include "3D_objects.cpp"
+
 
 #ifndef ANDROID
 #include "engine.h"
+#include "3D_objects.cpp"
 int main() {
 
     Engine my_engine;
