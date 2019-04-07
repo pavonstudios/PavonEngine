@@ -44,7 +44,11 @@ namespace engine{
         Skin* skin;
         int32_t skin_index = -1;
     };
-
+    struct NodeUniform{
+        alignas(16) glm::mat4 matrix;
+        alignas(16) glm::mat4 joint_matrix[128];
+        float joint_count {0};
+    };
    
 }
 struct UniformBufferObject {
@@ -166,6 +170,7 @@ public:
     GLuint indices_buffer;
 #endif
     UniformBufferObject ubo;
+    NodeUniform node_uniform;
 		
 };
 

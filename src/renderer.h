@@ -159,6 +159,9 @@ private:
     void update_descriptor_set(EMesh* mesh);
     void createSurface();
     void cleanupSwapChain();
+
+    void update_meshes_model_matrix();
+
     VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
    
     
@@ -783,6 +786,7 @@ private:
             throw std::runtime_error("failed to acquire swap chain image!");
         }
 
+        update_meshes_model_matrix();
         updateUniformBuffer(imageIndex);
 
         VkSubmitInfo submitInfo = {};

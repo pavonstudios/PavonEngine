@@ -320,6 +320,7 @@ void Renderer::update_descriptor_set(EMesh* mesh){
             bufferInfo.buffer = mesh->uniformBuffers[i];
             bufferInfo.offset = 0;
             bufferInfo.range = sizeof(UniformBufferObject);
+            
 
             VkDescriptorImageInfo imageInfo = {};
             imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
@@ -366,13 +367,15 @@ void Renderer::createDescriptorSets(EMesh *mesh) {
             throw std::runtime_error("failed to allocate descriptor sets!");
         }        
 }
+void Renderer::update_meshes_model_matrix(){
+    engine->meshes[0]->model_matrix = engine->meshes[0]->model_matrix;
+    engine->meshes[0]->model_matrix = glm::mat4(1.0f);        
 
+    engine->meshes[1]->model_matrix =  engine->meshes[1]->model_matrix  * glm::rotate(glm::mat4(1), engine->get_time() * glm::radians(45.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+
+}
 void Renderer::updateUniformBuffer(uint32_t currentImage) {
        
-        engine->meshes[0]->model_matrix = engine->meshes[0]->model_matrix;
-         engine->meshes[0]->model_matrix = glm::mat4(1.0f);        
-
-        engine->meshes[1]->model_matrix =  engine->meshes[1]->model_matrix  * glm::rotate(glm::mat4(1), engine->get_time() * glm::radians(45.0f), glm::vec3(0.0f, 0.0f, 1.0f));
  
           for(int i = 0; i < engine->meshes.size(); i++){
               engine->meshes[i]->ubo.view = engine->main_camera.View;
