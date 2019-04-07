@@ -93,6 +93,11 @@ public:
     void finish();
     class Engine* engine;
 
+    void configure_objects(){
+        VulkanConfig();
+        createSyncObjects();
+    }
+
 private:
     
     
@@ -172,8 +177,7 @@ private:
         pickPhysicalDevice();
         createLogicalDevice();
         createSwapChain();
-		VulkanConfig();
-        createSyncObjects();
+	
     }    
    
 

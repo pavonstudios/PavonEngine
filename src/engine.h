@@ -33,8 +33,9 @@ class Engine {
        // class Renderer renderer;
 #endif
 #ifndef ANDROID
-    #ifndef _OpenGL_Renderer_
+    #ifdef VULKAN
         Renderer app;
+        VkDevice* pDevice;
     #endif
         pthread_t thread[2];
         GLFWwindow* window;
@@ -58,9 +59,12 @@ class Engine {
 
 
         void *Render(){
-            std::cout << "Rendering" << std::endl;
+            
 
             app.run();
+            load_map("map01.map");
+            app.configure_objects();
+            std::cout << "Rendering" << std::endl;
             main_loop();
 
             //pthread_exit(NULL);
@@ -128,10 +132,8 @@ public:
         AssetManager objects_manager;
         float move_y = 0;
         std::vector<EMesh*> meshes;
-        std::vector<EMesh> meshes_instance;
-        EMesh model1;
-        EMesh model2;
-        EMesh skeletal;
+        EMesh* skeletal;
+
         Camera main_camera; 
         glm::vec3 objects_positions[10] = {
         glm::vec3( 0.0f,  0.0f,  0.0f), 
@@ -153,6 +155,8 @@ public:
         float deltaTime = 0.0f;	// Time between current frame and last frame
         float lastFrame = 0.0f; // Time of last frame
 
+        
+
         float get_time(){
             static auto startTime = std::chrono::high_resolution_clock::now();
 
@@ -167,7 +171,7 @@ public:
         Engine(){init();};
         void init(){
             app.engine = this;
-            load_map("map01.map");
+            
             
             };
         

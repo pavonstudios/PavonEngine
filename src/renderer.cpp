@@ -10,7 +10,7 @@
 void Renderer::run() {
         bIsRunnning = true;             
         initVulkan();        
-       
+        engine->pDevice = &device;
 }
 void Renderer::main_loop(){
             bIsRunnning = true;            
@@ -371,7 +371,8 @@ void Renderer::update_meshes_model_matrix(){
     engine->meshes[0]->model_matrix = engine->meshes[0]->model_matrix;
     engine->meshes[0]->model_matrix = glm::mat4(1.0f);        
 
-    engine->meshes[1]->model_matrix =  engine->meshes[1]->model_matrix  * glm::rotate(glm::mat4(1), engine->get_time() * glm::radians(45.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+    if(engine->meshes[1])
+        engine->meshes[1]->model_matrix =  engine->meshes[1]->model_matrix  * glm::rotate(glm::mat4(1), engine->get_time() * glm::radians(45.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 
 }
 void Renderer::updateUniformBuffer(uint32_t currentImage) {
@@ -408,6 +409,7 @@ void Renderer::cleanupSwapChain() {
                 vkDestroyPipeline(device, engine->meshes[i]->graphics_pipeline, 0);
             }
         }
+         
        
         vkDestroyPipelineLayout(device, pipelineLayout, nullptr);
         vkDestroyRenderPass(device, renderPass, nullptr);

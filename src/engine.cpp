@@ -256,10 +256,10 @@ void Engine::update_input(){
 
 
 void Engine::load_models(){	
-	
-	skeletal.load_model_gltf("models/simple_bones.gltf");
-	skeletal.texture_path = "textures/character2.jpg";
-	meshes.push_back(&skeletal);
+	skeletal = new EMesh(pDevice);
+	skeletal->load_model_gltf("models/simple_bones.gltf");
+	skeletal->texture_path = "textures/character2.jpg";
+	meshes.push_back(skeletal);
 	glm::mat4 model_matrix = glm::mat4(1.0f);
 	model_matrix = glm::translate(model_matrix, glm::vec3(7,0,0));
 	meshes.back()->model_matrix = model_matrix;
@@ -267,12 +267,13 @@ void Engine::load_models(){
 
 }
 void Engine::load_and_instance_at_location(std::string path, glm::vec3 location){
-	EMesh model;
-	meshes_instance.push_back(model);
-	meshes_instance.back().load_model(path);
+	EMesh *model = new EMesh(pDevice);	
+	model->load_model(path);
 	glm::mat4 model_matrix = glm::mat4(1.0f);
 	model_matrix = glm::translate(model_matrix, location);
-	meshes_instance.back().model_matrix = model_matrix;
+	model->model_matrix = model_matrix;
+	meshes.push_back(model);
+	std::cout << "loading Emesh" << std::endl;
 
 }
 void Engine::load_map(std::string path){
@@ -282,7 +283,7 @@ void Engine::load_map(std::string path){
 
 	}
 	
-	std::vector<std::string> models;
+	std::vector<std::string> models_paths;
 	std::vector<glm::vec3> locations;
 	std::vector<std::string> textures_paths;
 	while(1){
@@ -297,7 +298,7 @@ void Engine::load_map(std::string path){
 				glm::vec3 location;
 				char texture_path[256];
 				fscanf(file, "%s %f %f %f %s\n", model_path, &location.x, &location.y, &location.z, texture_path);
-				models.push_back(std::string(model_path));
+				models_paths.push_back(std::string(model_path));
 				locations.push_back(location);
 				textures_paths.push_back(std::string(texture_path));
 			}
@@ -305,17 +306,13 @@ void Engine::load_map(std::string path){
 		
 	}
 	
-	for(uint i = 0; i < models.size();i++){		
-		load_and_instance_at_location(models[i],locations[i]);
-		
-		
+	for(uint i = 0; i < models_paths.size();i++){		
+		load_and_instance_at_location(models_paths[i],locations[i]);
+				
 	}
-	//add to meshes array
-	for(int i = 0;i <meshes_instance.size();i++){
-		meshes.push_back(&meshes_instance[i]);
-	}
+
 	//add textures
-	for(uint i = 0; i < models.size();i++){	
+	for(uint i = 0; i < models_paths.size();i++){	
 	meshes[i]->texture_path = textures_paths[i];
 	}
 	//load gltf

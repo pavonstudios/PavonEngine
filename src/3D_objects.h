@@ -125,6 +125,12 @@ public:
 namespace engine{
 class EMesh : public GameObject{
 public:
+#ifdef VULKAN
+    VkDevice* pDevice;
+    EMesh(VkDevice* pDevice);
+#else
+    EMesh();
+#endif
     ~EMesh();
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;

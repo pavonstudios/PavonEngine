@@ -186,6 +186,15 @@ int EMesh::load_model_gltf(const char* path){
 #endif
 
 using namespace engine;
+#ifdef VULKAN
+EMesh::EMesh(VkDevice * pDevice){
+    this->pDevice = pDevice;
+}
+#else
+EMesh::EMesh(){
+    
+}
+#endif
 bool EMesh::load_model2(const char * path){
 
             std::vector< unsigned int > vertexIndices, uvIndices, normalIndices;
