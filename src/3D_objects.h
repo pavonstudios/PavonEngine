@@ -28,6 +28,12 @@
 #include "tiny_class.h"
 
 namespace engine{
+    struct Node;
+    struct Skin {
+        Node *skeleton_root = nullptr;
+        std::vector<glm::mat4> inverse_bind_matrix;
+        std::vector<Node*> joints;
+    };
     struct Node{
         Node *parent;
         uint32_t index;
@@ -39,11 +45,7 @@ namespace engine{
         int32_t skin_index = -1;
     };
 
-    struct Skin {
-        Node *skeleton_root = nullptr;
-        std::vector<glm::mat4> inverse_bind_matrix;
-        std::vector<Node*> joints;
-    };
+   
 }
 struct UniformBufferObject {
     alignas(16) glm::mat4 model;
