@@ -1,7 +1,9 @@
+#pragma once
 #ifndef _Engine_H_
 #define _Engine_H_
 
 #ifndef ANDROID
+    #include "asset_manager.h"
     #ifdef VULKAN
         #include "renderer.h"
         #define GLFW_INCLUDE_VULKAN
