@@ -50,7 +50,10 @@ void Renderer::finish(){
 void Renderer::VulkanConfig(){
 	    createImageViews();
         createRenderPass();
+
         createDescriptorSetLayout();
+        createPipelineLayout();
+
         createCommandPool();
         createDepthResources();
         createFramebuffers();
@@ -235,11 +238,13 @@ void Renderer::createCommandBuffers() {
 
 
  void Renderer::createDescriptorPool(EMesh *mesh) {
-        std::array<VkDescriptorPoolSize, 2> poolSizes = {};
+        std::array<VkDescriptorPoolSize, 3> poolSizes = {};
         poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
         poolSizes[0].descriptorCount = static_cast<uint32_t>(swapChainImages.size());
         poolSizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
         poolSizes[1].descriptorCount = static_cast<uint32_t>(swapChainImages.size());
+        poolSizes[2].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+        poolSizes[2].descriptorCount = static_cast<uint32_t>(swapChainImages.size());
 
         VkDescriptorPoolCreateInfo poolInfo = {};
         poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
@@ -281,7 +286,7 @@ void Renderer::createDescriptorSetLayout() {
         uboLayoutBinding.pImmutableSamplers = nullptr;
         uboLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
 
-         std::array<VkDescriptorSetLayoutBinding, 1> bindings_node = {ubo_node};
+        std::array<VkDescriptorSetLayoutBinding, 1> bindings_node = {ubo_node};
         VkDescriptorSetLayoutCreateInfo layout_node_info = {};
         layout_node_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
         layout_node_info.bindingCount = static_cast<uint32_t>(bindings_node.size());
@@ -296,7 +301,17 @@ void Renderer::createDescriptorSetLayout() {
 
 }
 
+void Renderer::createPipelineLayout(){
+    const VkDescriptorSetLayout set_layout[] = {descriptorSetLayout,descript_set_layout_node};
+    VkPipelineLayoutCreateInfo pipelineLayoutInfo = {};
+    pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+    pipelineLayoutInfo.setLayoutCount = 2;
+    pipelineLayoutInfo.pSetLayouts = set_layout;
 
+    if (vkCreatePipelineLayout(device, &pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS) {
+        throw std::runtime_error("failed to create pipeline layout!");
+    }
+}
 void Renderer::createDescriptorSets(EMesh *mesh) {
         std::vector<VkDescriptorSetLayout> layouts(static_cast<uint32_t>(swapChainImages.size()), descriptorSetLayout);
         VkDescriptorSetAllocateInfo allocInfo = {};
@@ -501,14 +516,7 @@ void Renderer::recreateSwapChain() {
         colorBlending.blendConstants[2] = 0.0f;
         colorBlending.blendConstants[3] = 0.0f;
 
-        VkPipelineLayoutCreateInfo pipelineLayoutInfo = {};
-        pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-        pipelineLayoutInfo.setLayoutCount = 1;
-        pipelineLayoutInfo.pSetLayouts = &descriptorSetLayout;
-
-        if (vkCreatePipelineLayout(device, &pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS) {
-            throw std::runtime_error("failed to create pipeline layout!");
-        }
+       
 
         VkGraphicsPipelineCreateInfo pipelineInfo = {};
         pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
