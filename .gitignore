@@ -17,3 +17,4 @@ textures/character2.png
 models/character2.gltf
 models/policia.gltf
 src/vulkan_gltf_example.hpp
+src/.vscode/
