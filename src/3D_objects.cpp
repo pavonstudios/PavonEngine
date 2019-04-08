@@ -198,10 +198,13 @@ EMesh::EMesh(vks::VulkanDevice* vulkan_device){
         uniform_node_buffer_memory.resize(3);
 
         for (size_t i = 0; i < 3; i++) {
-         /*    createBuffer(bufferSize, 
-            VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, 
-            VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, 
-            uniform_node_buffers[i], uniform_node_buffer_memory[i]); */
+            vulkan_device->createBuffer(
+                VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+				sizeof(NodeUniform),
+				&uniform_node_buffers[i],
+				&uniform_node_buffer_memory[i],
+				&node_uniform);               
         }
 }
 #else
@@ -215,7 +218,13 @@ EMesh::~EMesh(){
     for(auto buffer: uniformBuffers){
         vkDestroyBuffer(vulkan_device->logicalDevice,buffer,nullptr);
     }
+    for(auto buffer: uniform_node_buffers){
+        vkDestroyBuffer(vulkan_device->logicalDevice,buffer,nullptr);
+    }
     for(auto uniform_memory : uniformBuffersMemory){
+        vkFreeMemory(vulkan_device->logicalDevice,uniform_memory, nullptr);
+    }
+    for(auto uniform_memory : uniform_node_buffer_memory){
         vkFreeMemory(vulkan_device->logicalDevice,uniform_memory, nullptr);
     }
     vkDestroyBuffer(vulkan_device->logicalDevice,indexBuffer,nullptr);
