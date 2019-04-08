@@ -391,9 +391,11 @@ void Renderer::update_meshes_model_matrix(){
     engine->meshes[0]->model_matrix = engine->meshes[0]->model_matrix;
     engine->meshes[0]->model_matrix = glm::mat4(1.0f);        
 
-    if(engine->meshes[1])
-        engine->meshes[1]->model_matrix =  engine->meshes[1]->model_matrix  * glm::rotate(glm::mat4(1), engine->get_time() * glm::radians(45.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+     if(engine->meshes[1])
+        engine->meshes[1]->node_uniform.matrix =  glm::rotate(engine->meshes[1]->model_matrix, engine->get_time() * glm::radians(45.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 
+
+    
 }
 void Renderer::updateUniformBuffer(uint32_t currentImage) {
        
@@ -461,7 +463,7 @@ void Renderer::recreateSwapChain() {
     }
 
  void Renderer::createGraphicsPipeline(std::string path_fragment_shader, VkPipeline* out_pipeline) {
-        auto vertShaderCode = readFile("shaders/vert.spv");
+        auto vertShaderCode = readFile("shaders/node.spv");
         auto fragShaderCode = readFile(path_fragment_shader);
 
         VkShaderModule vertShaderModule = createShaderModule(vertShaderCode);
