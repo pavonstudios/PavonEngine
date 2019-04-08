@@ -174,8 +174,8 @@ void Renderer::createCommandBuffers() {
 
                     vkCmdBindIndexBuffer(commandBuffers[i], engine->meshes[mesh_id]->indexBuffer, 0, VK_INDEX_TYPE_UINT32);
 
-                    vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, 
-                                                &engine->meshes[mesh_id]->descriptorSets[i], 0, nullptr);
+                    vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 2, 
+                                                engine->meshes[mesh_id]->descriptorSets.data(), 0, nullptr);
 
                     vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(engine->meshes[mesh_id]->indices.size()), 1, 0, 0, 0);
                 }
@@ -242,11 +242,11 @@ void Renderer::setupDebugMessenger() {
  void Renderer::createDescriptorPool(EMesh *mesh) {
         std::array<VkDescriptorPoolSize, 3> poolSizes = {};
         poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-        poolSizes[0].descriptorCount = 1;
+        poolSizes[0].descriptorCount = 3;
         poolSizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-        poolSizes[1].descriptorCount = 1;
+        poolSizes[1].descriptorCount = 3;
         poolSizes[2].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-        poolSizes[2].descriptorCount = 1;
+        poolSizes[2].descriptorCount = 3;
 
         VkDescriptorPoolCreateInfo poolInfo = {};
         poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
@@ -322,7 +322,7 @@ void Renderer::createDescriptorSets(EMesh *mesh) {
         std::vector<VkDescriptorSetLayout> layouts;
         layouts.push_back(descriptorSetLayout);
         layouts.push_back(descript_set_layout_node);
-  
+   
         VkDescriptorSetAllocateInfo allocInfo = {};
         allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
         allocInfo.descriptorPool = mesh->descriptorPool;
@@ -461,7 +461,7 @@ void Renderer::recreateSwapChain() {
     }
 
  void Renderer::createGraphicsPipeline(std::string path_fragment_shader, VkPipeline* out_pipeline) {
-        auto vertShaderCode = readFile("shaders/skinshader.spv");
+        auto vertShaderCode = readFile("shaders/vert.spv");
         auto fragShaderCode = readFile(path_fragment_shader);
 
         VkShaderModule vertShaderModule = createShaderModule(vertShaderCode);
