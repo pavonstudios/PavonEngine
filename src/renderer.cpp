@@ -273,7 +273,7 @@ void Renderer::createDescriptorSetLayout() {
         std::array<VkDescriptorSetLayoutBinding, 1> bindings_node = {ubo_node};
         VkDescriptorSetLayoutCreateInfo layout_node_info = {};
         layout_node_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-        layout_node_info.bindingCount = static_cast<uint32_t>(bindings_node.size());
+        layout_node_info.bindingCount = 2;
         layout_node_info.pBindings = bindings_node.data();
 
         if (vkCreateDescriptorSetLayout(device, &layoutInfo, nullptr, &descriptorSetLayout) != VK_SUCCESS) {
@@ -297,19 +297,19 @@ void Renderer::createPipelineLayout(){
     }
 }
  void Renderer::createDescriptorPool(EMesh *mesh) {
-        std::array<VkDescriptorPoolSize, 2> poolSizes = {};
+        std::array<VkDescriptorPoolSize, 3> poolSizes = {};
         poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
         poolSizes[0].descriptorCount = static_cast<uint32_t>(swapChainImages.size());
         poolSizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
         poolSizes[1].descriptorCount = static_cast<uint32_t>(swapChainImages.size());
-        //poolSizes[2].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-        //poolSizes[2].descriptorCount = static_cast<uint32_t>(swapChainImages.size());
+        poolSizes[2].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+        poolSizes[2].descriptorCount = static_cast<uint32_t>(swapChainImages.size());
 
         VkDescriptorPoolCreateInfo poolInfo = {};
         poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
         poolInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());
         poolInfo.pPoolSizes = poolSizes.data();
-        poolInfo.maxSets = static_cast<uint32_t>(swapChainImages.size());
+        poolInfo.maxSets = static_cast<uint32_t>(3);
 
         if (vkCreateDescriptorPool(device, &poolInfo, nullptr, &mesh->descriptorPool) != VK_SUCCESS) {
             throw std::runtime_error("failed to create descriptor pool!");
@@ -322,13 +322,18 @@ void Renderer::update_descriptor_set(EMesh* mesh){
             bufferInfo.offset = 0;
             bufferInfo.range = sizeof(UniformBufferObject);
             
-
+            
             VkDescriptorImageInfo imageInfo = {};
             imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
             imageInfo.imageView = mesh->texture_image_view;
             imageInfo.sampler = textureSampler;
 
-            std::array<VkWriteDescriptorSet, 2> descriptorWrites = {};
+            VkDescriptorBufferInfo node_buffer_info = {}; 
+            node_buffer_info.buffer = mesh->uniform_node_buffers[i];        
+            node_buffer_info.offset = 0;
+            node_buffer_info.range = sizeof(NodeUniform);
+            
+            std::array<VkWriteDescriptorSet, 3> descriptorWrites = {};
 
             descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
             descriptorWrites[0].dstSet = mesh->descriptorSets[i];
@@ -346,6 +351,14 @@ void Renderer::update_descriptor_set(EMesh* mesh){
             descriptorWrites[1].descriptorCount = 1;
             descriptorWrites[1].pImageInfo = &imageInfo;
 
+            descriptorWrites[2].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+            descriptorWrites[2].dstSet = mesh->descriptorSets[i];
+            descriptorWrites[2].dstBinding = 0;
+            descriptorWrites[2].dstArrayElement = 0;
+            descriptorWrites[2].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+            descriptorWrites[2].descriptorCount = 1;
+            descriptorWrites[2].pBufferInfo = &node_buffer_info;
+
             vkUpdateDescriptorSets(device, static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
         }
 }
@@ -354,13 +367,14 @@ void Renderer::createDescriptorSets(EMesh *mesh) {
         std::vector<VkDescriptorSetLayout> layouts;
         layouts.push_back(descriptorSetLayout);
         layouts.push_back(descriptorSetLayout);
-        layouts.push_back(descriptorSetLayout);
+        layouts.push_back(descript_set_layout_node);
+        //layouts.push_back(descript_set_layout_node);
         //layouts.push_back(descript_set_layout_node);        
 
         VkDescriptorSetAllocateInfo allocInfo = {};
         allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
         allocInfo.descriptorPool = mesh->descriptorPool;
-        allocInfo.descriptorSetCount = static_cast<uint32_t>(swapChainImages.size());
+        allocInfo.descriptorSetCount = 3;
         allocInfo.pSetLayouts = layouts.data();
 
         mesh->descriptorSets.resize(swapChainImages.size());
@@ -392,11 +406,11 @@ void Renderer::updateUniformBuffer(uint32_t currentImage) {
             
 
             //skinned
-/*             void* node_data;
+            void* node_data;
             vkMapMemory(device, engine->meshes[i]->uniform_node_buffer_memory[currentImage], 0, sizeof(engine->meshes[i]->node_uniform), 0, &node_data);
                 memcpy(node_data, &engine->meshes[i]->node_uniform, sizeof(engine->meshes[i]->node_uniform));
             vkUnmapMemory(device, engine->meshes[i]->uniform_node_buffer_memory[currentImage]);
- */
+
           }
  
     }
@@ -442,7 +456,7 @@ void Renderer::recreateSwapChain() {
     }
 
  void Renderer::createGraphicsPipeline(std::string path_fragment_shader, VkPipeline* out_pipeline) {
-        auto vertShaderCode = readFile("shaders/vert.spv");
+        auto vertShaderCode = readFile("shaders/skinshader.spv");
         auto fragShaderCode = readFile(path_fragment_shader);
 
         VkShaderModule vertShaderModule = createShaderModule(vertShaderCode);

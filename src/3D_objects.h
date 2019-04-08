@@ -133,7 +133,9 @@ public:
     GLuint indices_buffer;
 #endif
     UniformBufferObject ubo;
-    NodeUniform node_uniform;
+    NodeUniform node_uniform = {glm::mat4(1.0),
+                                {glm::mat4(1.0),glm::mat4(1.0),glm::mat4(1.0)},
+                                2};
 		
 };
 
