@@ -960,7 +960,9 @@ VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& avai
         std::ifstream file(filename, std::ios::ate | std::ios::binary);
 
         if (!file.is_open()) {
-            throw std::runtime_error("failed to open file!");
+            std::string text = "failed to open file! ";
+            text = text + filename;
+            throw std::runtime_error(text);
         }
 
         size_t fileSize = (size_t) file.tellg();
