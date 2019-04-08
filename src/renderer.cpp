@@ -7,10 +7,11 @@
 
 
 
-void Renderer::run() {
+void Renderer::run(VulkanData* vkdata) {
         bIsRunnning = true;             
-        initVulkan();        
-        engine->pDevice = &device;
+        initVulkan();
+        this->pVkData = vkdata;      
+        
 }
 void Renderer::main_loop(){
             bIsRunnning = true;            
@@ -570,7 +571,7 @@ void Renderer::cleanup() {
        
 
       for(int i = 0; i < engine->meshes.size(); i++){  
-           vkDestroyImageView(device,  engine->meshes[i]->texture_image_view, nullptr); 
+           vkDestroyImageView(device,  engine->meshes[i]->texture_image_view, nullptr);
            vkDestroyImage(device, engine->meshes[i]->texture_image, nullptr);
       }
        

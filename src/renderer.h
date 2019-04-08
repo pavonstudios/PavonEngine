@@ -30,6 +30,9 @@
 #include "camera.h"
 
 
+#include "VulkanData.hpp"
+#include "VulkanDevice.hpp"
+
 const int WIDTH = 800;
 const int HEIGHT = 600;
 
@@ -75,8 +78,9 @@ using namespace engine;
 class Renderer {
 
 public:
-   
-	void run();
+    VulkanData* pVkData;
+    vks::VulkanDevice *vulkan_device;
+	void run(VulkanData* vkdata);
     void recreateSwapChain();
     void VulkanConfig();
 
@@ -111,6 +115,7 @@ private:
 
     VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
     VkDevice device;
+
 
     VkQueue graphicsQueue;
     VkQueue presentQueue;
@@ -284,10 +289,16 @@ private:
         } else {
             createInfo.enabledLayerCount = 0;
         }
-
-        if (vkCreateDevice(physicalDevice, &createInfo, nullptr, &device) != VK_SUCCESS) {
-            throw std::runtime_error("failed to create logical device!");
-        }
+        
+        vulkan_device = new vks::VulkanDevice(physicalDevice);
+        VkPhysicalDeviceFeatures enabledFeatures{};
+        std::vector<const char*> enabledExtensions{};
+	    VkResult res = vulkan_device->createLogicalDevice(enabledFeatures, enabledExtensions);
+              if (res != VK_SUCCESS) {
+               throw std::runtime_error("failed to create logical device!");
+                
+            }
+        device = vulkan_device->logicalDevice;
 
         vkGetDeviceQueue(device, indices.graphicsFamily.value(), 0, &graphicsQueue);
         vkGetDeviceQueue(device, indices.presentFamily.value(), 0, &presentQueue);

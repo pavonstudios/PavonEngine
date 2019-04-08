@@ -2,15 +2,13 @@
 #define ASSET_MANAGER_H
 #include "string"
 
+
 struct image_size{
     int width;
     int heigth;
     void * pPixels;
 };
 
-/*
-Load textures
-*/
 class AssetManager{
 public:
     void free_image(void * pixels);
@@ -18,4 +16,5 @@ public:
 	int load_model_gltf(const char* path);
 	
 };
+
 #endif

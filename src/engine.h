@@ -21,7 +21,7 @@
 #include <chrono>
 #include "input_controller.h"
 
-
+#include "VulkanData.hpp"
 
 
 /* Engine class who controll 
@@ -37,7 +37,8 @@ class Engine {
 #ifndef ANDROID
     #ifdef VULKAN
         Renderer app;
-        VkDevice* pDevice;
+        VulkanData vkdata = {VK_NULL_HANDLE};
+        VkDevice * pDevice;
     #endif
         pthread_t thread[2];
         GLFWwindow* window;
@@ -46,33 +47,26 @@ class Engine {
             return window;
         }
         void InitWindow();
-      
+        void main_loop();
         void update_window_size();
-         void Execute(){
-
+        void Execute(){
             //pthread_create(&thread[0],NULL, ExecuteRenderHanler, this);
-
             //pthread_create(&thread[1],NULL, ExecuteInputHanler, this);
-            //init();
             InitWindow();
             Render();
-
             }
 
 
-        void *Render(){
-            
-
-            app.run();
+        void *Render(){          
+            app.run(&vkdata);
             load_map("map01.map");
             app.configure_objects();
             std::cout << "Rendering" << std::endl;
             main_loop();
-
             //pthread_exit(NULL);
             return (void *)nullptr;
         }
-        void main_loop();
+        
         
 private:
          static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
