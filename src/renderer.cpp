@@ -615,7 +615,8 @@ void Renderer::cleanup() {
 
         vkDestroyCommandPool(device, commandPool, nullptr);
 
-        vkDestroyDevice(device, nullptr);
+        delete engine->vulkan_device;
+        //vkDestroyDevice(device, nullptr);
 
         if (enableValidationLayers) {
             DestroyDebugUtilsMessengerEXT(instance, debugMessenger, nullptr);

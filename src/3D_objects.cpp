@@ -188,8 +188,8 @@ int EMesh::load_model_gltf(const char* path){
 
 using namespace engine;
 #ifdef VULKAN
-EMesh::EMesh(VkDevice * pDevice){
-    this->pDevice = pDevice;
+EMesh::EMesh(vks::VulkanDevice* vulkan_device){
+    this->vulkan_device = vulkan_device;
     this->node_uniform.matrix = glm::mat4(1.0);
 
     VkDeviceSize bufferSize = sizeof(NodeUniform);
@@ -209,6 +209,10 @@ EMesh::EMesh(){
     
 }
 #endif
+EMesh::~EMesh(){
+    vkDestroyPipeline(vulkan_device->logicalDevice,graphics_pipeline,nullptr);
+}
+
 bool EMesh::load_model2(const char * path){
 
             std::vector< unsigned int > vertexIndices, uvIndices, normalIndices;
@@ -313,7 +317,4 @@ void EMesh::SetLocation(float x, float y, float z){
        model_matrix = glm::translate(model_matrix, glm::vec3(Location.x,Location.y,Location.z));
 }
 
-EMesh::~EMesh(){
-    
-}
 

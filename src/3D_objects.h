@@ -28,6 +28,8 @@
 #include "tiny_class.h"
 #include "vertex.h"
 
+#include "VulkanDevice.hpp"
+
 
 
 namespace engine{
@@ -77,8 +79,8 @@ class EMesh : public GameObject{
 public:
 #ifdef VULKAN
     VkDevice* pDevice;
-    EMesh(VkDevice* pDevice);
-    
+    EMesh(vks::VulkanDevice* vulkan_device);
+    vks::VulkanDevice* vulkan_device;
 #else
     EMesh();
 #endif

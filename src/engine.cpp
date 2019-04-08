@@ -256,7 +256,7 @@ void Engine::update_input(){
 
 
 void Engine::load_models(){	
-	skeletal = new EMesh(pDevice);
+	skeletal = new EMesh(vulkan_device);
 	skeletal->load_model_gltf("models/simple_bones.gltf");
 	skeletal->texture_path = "textures/character2.jpg";
 	meshes.push_back(skeletal);
@@ -267,7 +267,7 @@ void Engine::load_models(){
 
 }
 void Engine::load_and_instance_at_location(std::string path, glm::vec3 location){
-	EMesh *model = new EMesh(pDevice);	
+	EMesh *model = new EMesh(vulkan_device);	
 	model->load_model(path);
 	glm::mat4 model_matrix = glm::mat4(1.0f);
 	model_matrix = glm::translate(model_matrix, location);
