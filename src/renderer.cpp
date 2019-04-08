@@ -224,22 +224,40 @@ void Renderer::createCommandBuffers() {
     }
 
 
-	 void Renderer::setupDebugMessenger() {
-        if (!enableValidationLayers) return;
+void Renderer::setupDebugMessenger() {
+    if (!enableValidationLayers) return;
 
-        VkDebugUtilsMessengerCreateInfoEXT createInfo = {};
-        createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
-        createInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
-        createInfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
-        createInfo.pfnUserCallback = debugCallback;
+    VkDebugUtilsMessengerCreateInfoEXT createInfo = {};
+    createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
+    createInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
+    createInfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
+    createInfo.pfnUserCallback = debugCallback;
 
-        if (CreateDebugUtilsMessengerEXT(instance, &createInfo, nullptr, &debugMessenger) != VK_SUCCESS) {
-            throw std::runtime_error("failed to set up debug messenger!");
-        }
+    if (CreateDebugUtilsMessengerEXT(instance, &createInfo, nullptr, &debugMessenger) != VK_SUCCESS) {
+        throw std::runtime_error("failed to set up debug messenger!");
     }
+}
 
 
+ void Renderer::createDescriptorPool(EMesh *mesh) {
+        std::array<VkDescriptorPoolSize, 3> poolSizes = {};
+        poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+        poolSizes[0].descriptorCount = 1;
+        poolSizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+        poolSizes[1].descriptorCount = 1;
+        poolSizes[2].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+        poolSizes[2].descriptorCount = 1;
 
+        VkDescriptorPoolCreateInfo poolInfo = {};
+        poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+        poolInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());
+        poolInfo.pPoolSizes = poolSizes.data();
+        poolInfo.maxSets = static_cast<uint32_t>(8);
+
+        if (vkCreateDescriptorPool(device, &poolInfo, nullptr, &mesh->descriptorPool) != VK_SUCCESS) {
+            throw std::runtime_error("failed to create descriptor pool!");
+        }
+}
 void Renderer::createDescriptorSetLayout() {
         VkDescriptorSetLayoutBinding uboLayoutBinding = {};
         uboLayoutBinding.binding = 0;
@@ -248,12 +266,21 @@ void Renderer::createDescriptorSetLayout() {
         uboLayoutBinding.pImmutableSamplers = nullptr;
         uboLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
 
+        VkDescriptorSetLayoutBinding ubo_node = {};
+        ubo_node.binding = 0;
+        ubo_node.descriptorCount = 1;
+        ubo_node.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+        ubo_node.pImmutableSamplers = nullptr;
+        ubo_node.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+
         VkDescriptorSetLayoutBinding samplerLayoutBinding = {};
         samplerLayoutBinding.binding = 1;
         samplerLayoutBinding.descriptorCount = 1;
         samplerLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
         samplerLayoutBinding.pImmutableSamplers = nullptr;
         samplerLayoutBinding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+
+
 
         std::array<VkDescriptorSetLayoutBinding, 2> bindings = {uboLayoutBinding, samplerLayoutBinding};
         VkDescriptorSetLayoutCreateInfo layoutInfo = {};
@@ -263,17 +290,12 @@ void Renderer::createDescriptorSetLayout() {
 
        
 
-        VkDescriptorSetLayoutBinding ubo_node = {};
-        uboLayoutBinding.binding = 0;
-        uboLayoutBinding.descriptorCount = 1;
-        uboLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-        uboLayoutBinding.pImmutableSamplers = nullptr;
-        uboLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+        
 
         std::array<VkDescriptorSetLayoutBinding, 1> bindings_node = {ubo_node};
         VkDescriptorSetLayoutCreateInfo layout_node_info = {};
         layout_node_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-        layout_node_info.bindingCount = 2;
+        layout_node_info.bindingCount = 1;
         layout_node_info.pBindings = bindings_node.data();
 
         if (vkCreateDescriptorSetLayout(device, &layoutInfo, nullptr, &descriptorSetLayout) != VK_SUCCESS) {
@@ -296,29 +318,26 @@ void Renderer::createPipelineLayout(){
         throw std::runtime_error("failed to create pipeline layout!");
     }
 }
- void Renderer::createDescriptorPool(EMesh *mesh) {
-        std::array<VkDescriptorPoolSize, 3> poolSizes = {};
-        poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-        poolSizes[0].descriptorCount = static_cast<uint32_t>(swapChainImages.size());
-        poolSizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-        poolSizes[1].descriptorCount = static_cast<uint32_t>(swapChainImages.size());
-        poolSizes[2].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-        poolSizes[2].descriptorCount = static_cast<uint32_t>(swapChainImages.size());
+void Renderer::createDescriptorSets(EMesh *mesh) {
+        std::vector<VkDescriptorSetLayout> layouts;
+        layouts.push_back(descriptorSetLayout);
+        layouts.push_back(descript_set_layout_node);
+  
+        VkDescriptorSetAllocateInfo allocInfo = {};
+        allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+        allocInfo.descriptorPool = mesh->descriptorPool;
+        allocInfo.descriptorSetCount = 2;
+        allocInfo.pSetLayouts = layouts.data();
 
-        VkDescriptorPoolCreateInfo poolInfo = {};
-        poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-        poolInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());
-        poolInfo.pPoolSizes = poolSizes.data();
-        poolInfo.maxSets = static_cast<uint32_t>(3);
-
-        if (vkCreateDescriptorPool(device, &poolInfo, nullptr, &mesh->descriptorPool) != VK_SUCCESS) {
-            throw std::runtime_error("failed to create descriptor pool!");
-        }
+        mesh->descriptorSets.resize(2);
+        if (vkAllocateDescriptorSets(device, &allocInfo, mesh->descriptorSets.data()) != VK_SUCCESS) {
+            throw std::runtime_error("failed to allocate descriptor sets!");
+        }        
 }
 void Renderer::update_descriptor_set(EMesh* mesh){
-    for (size_t i = 0; i < swapChainImages.size(); i++) {
+    
             VkDescriptorBufferInfo bufferInfo = {};
-            bufferInfo.buffer = mesh->uniformBuffers[i];
+            bufferInfo.buffer = mesh->uniformBuffers[0];
             bufferInfo.offset = 0;
             bufferInfo.range = sizeof(UniformBufferObject);
             
@@ -329,22 +348,24 @@ void Renderer::update_descriptor_set(EMesh* mesh){
             imageInfo.sampler = textureSampler;
 
             VkDescriptorBufferInfo node_buffer_info = {}; 
-            node_buffer_info.buffer = mesh->uniform_node_buffers[i];        
+            node_buffer_info.buffer = mesh->uniform_node_buffers[0];        
             node_buffer_info.offset = 0;
             node_buffer_info.range = sizeof(NodeUniform);
             
             std::array<VkWriteDescriptorSet, 3> descriptorWrites = {};
 
             descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-            descriptorWrites[0].dstSet = mesh->descriptorSets[i];
+            descriptorWrites[0].dstSet = mesh->descriptorSets[0];
             descriptorWrites[0].dstBinding = 0;
             descriptorWrites[0].dstArrayElement = 0;
             descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
             descriptorWrites[0].descriptorCount = 1;
             descriptorWrites[0].pBufferInfo = &bufferInfo;
 
+            
+
             descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-            descriptorWrites[1].dstSet = mesh->descriptorSets[i];
+            descriptorWrites[1].dstSet = mesh->descriptorSets[0];
             descriptorWrites[1].dstBinding = 1;
             descriptorWrites[1].dstArrayElement = 0;
             descriptorWrites[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
@@ -352,36 +373,20 @@ void Renderer::update_descriptor_set(EMesh* mesh){
             descriptorWrites[1].pImageInfo = &imageInfo;
 
             descriptorWrites[2].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-            descriptorWrites[2].dstSet = mesh->descriptorSets[i];
+            descriptorWrites[2].dstSet = mesh->descriptorSets[1];
             descriptorWrites[2].dstBinding = 0;
             descriptorWrites[2].dstArrayElement = 0;
             descriptorWrites[2].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
             descriptorWrites[2].descriptorCount = 1;
             descriptorWrites[2].pBufferInfo = &node_buffer_info;
 
+            
+
             vkUpdateDescriptorSets(device, static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
-        }
+       
+        //and them call vkCmdBindDescriptorSets
 }
-void Renderer::createDescriptorSets(EMesh *mesh) {
-        VkDescriptorSetLayout layauts_with_node [] = {descriptorSetLayout, descript_set_layout_node};
-        std::vector<VkDescriptorSetLayout> layouts;
-        layouts.push_back(descriptorSetLayout);
-        layouts.push_back(descriptorSetLayout);
-        layouts.push_back(descript_set_layout_node);
-        //layouts.push_back(descript_set_layout_node);
-        //layouts.push_back(descript_set_layout_node);        
 
-        VkDescriptorSetAllocateInfo allocInfo = {};
-        allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-        allocInfo.descriptorPool = mesh->descriptorPool;
-        allocInfo.descriptorSetCount = 3;
-        allocInfo.pSetLayouts = layouts.data();
-
-        mesh->descriptorSets.resize(swapChainImages.size());
-        if (vkAllocateDescriptorSets(device, &allocInfo, mesh->descriptorSets.data()) != VK_SUCCESS) {
-            throw std::runtime_error("failed to allocate descriptor sets!");
-        }        
-}
 void Renderer::update_meshes_model_matrix(){
     engine->meshes[0]->model_matrix = engine->meshes[0]->model_matrix;
     engine->meshes[0]->model_matrix = glm::mat4(1.0f);        
