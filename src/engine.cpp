@@ -318,3 +318,9 @@ void Engine::load_map(std::string path){
 	//load gltf
 	load_models();
 }
+
+void Engine::delete_meshes(){
+	for(auto mesh : meshes){
+		delete mesh;
+	}
+}

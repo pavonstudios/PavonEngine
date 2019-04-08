@@ -50,6 +50,7 @@ class Engine {
         void InitWindow();
         void main_loop();
         void update_window_size();
+        void delete_meshes();
         void Execute(){
             //pthread_create(&thread[0],NULL, ExecuteRenderHanler, this);
             //pthread_create(&thread[1],NULL, ExecuteInputHanler, this);

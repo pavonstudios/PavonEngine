@@ -412,11 +412,8 @@ void Renderer::cleanupSwapChain() {
 
         vkFreeCommandBuffers(device, commandPool, static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
 
-        for(int i = 0; i < engine->meshes.size(); i++){
-            if(engine->meshes[i]->graphics_pipeline != VK_NULL_HANDLE){
-                vkDestroyPipeline(device, engine->meshes[i]->graphics_pipeline, 0);
-            }
-        }
+        
+        engine->delete_meshes();
          
        
         vkDestroyPipelineLayout(device, pipelineLayout, nullptr);
@@ -585,24 +582,10 @@ void Renderer::cleanup() {
         vkDestroyDescriptorSetLayout(device, descriptorSetLayout, nullptr);
         vkDestroyDescriptorSetLayout(device, descript_set_layout_node, nullptr);
 
-         for(int i = 0; i < engine->meshes.size(); i++){
-             for (size_t o = 0; o < swapChainImages.size(); o++) {
-               vkDestroyBuffer(device, engine->meshes[i]->uniformBuffers[o], nullptr);
-               vkFreeMemory(device, engine->meshes[i]->uniformBuffersMemory[o], nullptr);
-             }
-         }
-     
-        for(int i = 0; i < engine->meshes.size(); i++){
-            vkDestroyBuffer(device, engine->meshes[i]->indexBuffer, nullptr);
-        }
-                
+        
         vkFreeMemory(device, indexBufferMemory, nullptr);
 
-        //mesh vertices buffers
-        for(int i = 0; i < engine->meshes.size(); i++){
-             vkDestroyBuffer(device, engine->meshes[i]->vertices_buffer, nullptr);
-        }
-       
+      
        
 
         vkFreeMemory(device, vertexBufferMemory, nullptr);
