@@ -75,8 +75,7 @@ void Engine::update_window_size(){
         }
 
 }
- void Engine::mouse_callback(GLFWwindow* window, double xpos, double ypos)
- {
+ void Engine::mouse_callback(GLFWwindow* window, double xpos, double ypos){
 	#ifdef VULKAN
 	  auto app = reinterpret_cast<Renderer*>(glfwGetWindowUserPointer(window));
 	#endif
@@ -88,61 +87,71 @@ void Engine::update_window_size(){
 			throw std::runtime_error("no app pointer");
 		}
 	
-	if(app->engine->input.right_button_pressed){
-				if(app->engine->input.first_mouse){
+	//if(app->engine->input.right_button_pressed){
+		if(app->engine->input.first_mouse){
+			app->engine->input.lastX = xpos;
+			app->engine->input.lastY = ypos;
+			app->engine->input.first_mouse = false;
+		}
+
+		float xoffset = xpos - app->engine->input.lastX ;
+		float yoffset = app->engine->input.lastY - ypos; // reversed since y-coordinates range from bottom to top
 		app->engine->input.lastX = xpos;
-    	app->engine->input.lastY = ypos;
-		app->engine->input.first_mouse = false;
+		app->engine->input.lastY = ypos;
 
-	}
-	float xoffset = xpos - app->engine->input.lastX ;
-	float yoffset = app->engine->input.lastY - ypos; // reversed since y-coordinates range from bottom to top
-	app->engine->input.lastX = xpos;
-	app->engine->input.lastY = ypos;
+		float sensitivity = 0.05f;
+		xoffset *= sensitivity;
+		yoffset *= sensitivity;
 
-	float sensitivity = 0.005f;
-	xoffset *= sensitivity;
-	yoffset *= sensitivity;
+		app->engine->input.yaw   += xoffset;
+		app->engine->input.pitch += yoffset;  
 
-	app->engine->input.yaw   += xoffset;
-	app->engine->input.pitch += yoffset;  
+		if(app->engine->input.pitch > 89.0f)
+			app->engine->input.pitch =  89.0f;
+		if(app->engine->input.pitch < -89.0f)
+			app->engine->input.pitch = -89.0f;		
 
-	if(app->engine->input.pitch > 89.0f)
-		app->engine->input.pitch =  89.0f;
-	if(app->engine->input.pitch < -89.0f)
-		app->engine->input.pitch = -89.0f;		
-
-	}//end right click pressed
+	//}//end right click pressed
 	
 	
 
- }
+}
 void Engine::mouse_button_callback(GLFWwindow* window, int button, int action, int mods){
-#ifdef VULKAN
-	  auto app = reinterpret_cast<Renderer*>(glfwGetWindowUserPointer(window));
-#endif
-#ifdef _OpenGL_Renderer_
-	  auto app = reinterpret_cast<RendererGL*>(glfwGetWindowUserPointer(window));
-#endif
+	#ifdef VULKAN
+		auto app = reinterpret_cast<Renderer*>(glfwGetWindowUserPointer(window));
+	#endif
+	#ifdef _OpenGL_Renderer_
+		auto app = reinterpret_cast<RendererGL*>(glfwGetWindowUserPointer(window));
+	#endif
 
-	if (button == GLFW_MOUSE_BUTTON_RIGHT ){
-		if(action == GLFW_PRESS){
-		app->engine->input.right_button_pressed = true;
-		}
-		if(action == GLFW_RELEASE){
-		app->engine->input.right_button_pressed = false;
-		}
+		if (button == GLFW_MOUSE_BUTTON_RIGHT ){
+			if(action == GLFW_PRESS){
+				app->engine->input.right_button_pressed = true;
+				glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);  
+			}
+			if(action == GLFW_RELEASE){
+				app->engine->input.right_button_pressed = false;
+			}
 
-	}
+		}
+		if (button == GLFW_MOUSE_BUTTON_LEFT ){
+			if(action == GLFW_PRESS){
+				glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);  
+			}
+			if(action == GLFW_RELEASE){
+				//app->engine->input.right_button_pressed = false;
+			}
+
+		}
 
 }
 void Engine::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods){
-#ifdef VULKAN
-	  auto app = reinterpret_cast<Renderer*>(glfwGetWindowUserPointer(window));
-#endif
-#ifdef _OpenGL_Renderer_
-	  auto app = reinterpret_cast<RendererGL*>(glfwGetWindowUserPointer(window));
-#endif
+	#ifdef VULKAN
+		auto app = reinterpret_cast<Renderer*>(glfwGetWindowUserPointer(window));
+	#endif
+	#ifdef _OpenGL_Renderer_
+		auto app = reinterpret_cast<RendererGL*>(glfwGetWindowUserPointer(window));
+	#endif
           
 			if(key == GLFW_KEY_S){
 				if(action == GLFW_PRESS){
@@ -239,6 +248,7 @@ void Engine::update_input(){
 	if(input.right_button_pressed){
 		main_camera.mouse_control_update(input.yaw, input.pitch);
 	}
+	main_camera.mouse_control_update(input.yaw, input.pitch);
 	if(input.Q.bIsPressed){
 		main_camera.MoveDown();
 	}

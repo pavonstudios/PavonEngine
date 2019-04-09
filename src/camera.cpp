@@ -27,9 +27,9 @@ void Camera::MoveRight(){
 void Camera::mouse_control_update(float yaw, float pitch){
 	glm::vec3 front;
 #ifdef VULKAN
-    front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+    front.x = cos(glm::radians(-yaw)) * cos(glm::radians(pitch));
     front.z = sin(glm::radians(pitch));
-    front.y = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+    front.y = sin(glm::radians(-yaw)) * cos(glm::radians(pitch));
     
 #else
 	front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
