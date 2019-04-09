@@ -1,7 +1,7 @@
 #ifndef INPUT_CONTROLLER
 #define INPUT_CONTROLLER
 struct key_pressed{
-	bool bIsPressed;
+	bool bIsPressed = false;
 };
 class Input{
 public:

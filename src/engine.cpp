@@ -225,15 +225,12 @@ void Engine::update_input(){
 		//main_camera.SetLocation(0,move_y,0);
 		main_camera.MoveForward();
 	}
-	if(input.A.bIsPressed){
-		//move_y += 0.001f;
-		//main_camera.SetLocation(move_y,0,0);
-		main_camera.MoveLeft();
+	if(input.A.bIsPressed){		
+		//main_camera.MoveLeft();
 	}
-	if(input.D.bIsPressed){
-		//move_y -= 0.001f;
-		//main_camera.SetLocation(move_y,0,0);
-		main_camera.MoveRight();
+	if(input.D.bIsPressed){		
+		//main_camera.MoveRight();
+		meshes[1]->nodes[2]->rotate();
 	}
 	if(input.Z.bIsPressed){
 		input.yaw += 0.03f;
