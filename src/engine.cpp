@@ -225,8 +225,8 @@ void Engine::update_input(){
 		main_camera.MoveLeft();
 	}
 	if(input.D.bIsPressed){		
-		//main_camera.MoveRight();
-		meshes[1]->nodes[3]->rotate();
+		main_camera.MoveRight();
+		//meshes[1]->nodes[3]->rotate();
 	}
 	if(input.Z.bIsPressed){
 		input.yaw += 0.03f;

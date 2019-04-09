@@ -190,7 +190,7 @@ void Renderer::createCommandBuffers() {
         }
 }
 
- void Renderer::createTextureImage(std::string texture_path, EMesh* mesh) {
+void Renderer::createTextureImage(std::string texture_path, EMesh* mesh) {
        
         image_size size = engine->objects_manager.load_and_get_size(texture_path);
         
@@ -223,7 +223,7 @@ void Renderer::createCommandBuffers() {
 
         mesh->texture_image_view = createImageView(mesh->texture_image, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_ASPECT_COLOR_BIT);
 
-    }
+}
 
 
 void Renderer::setupDebugMessenger() {
