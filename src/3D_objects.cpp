@@ -10,6 +10,9 @@
 
 #ifdef GLTF
 using namespace engine;
+void EMesh::load_joints_matrix(){
+    
+}
 Node* EMesh::find_node(Node* parent, uint32_t index){
     Node* node_found = nullptr;
     if(parent->index == index)
@@ -44,10 +47,16 @@ void EMesh::load_skins(){
         }
         if(source_skin.inverseBindMatrices > -1){
             const tinygltf::Accessor &accessor = gltf_model.accessors[source_skin.inverseBindMatrices];
+
             const tinygltf::BufferView &bufferView = gltf_model.bufferViews[accessor.bufferView];
+            
             const tinygltf::Buffer &buffer = gltf_model.buffers[bufferView.buffer];
+            
             new_skin->inverse_bind_matrix.resize(accessor.count);
-            memcpy(new_skin->inverse_bind_matrix.data(), &buffer.data[accessor.byteOffset + bufferView.byteOffset], accessor.count * sizeof(glm::mat4));
+            
+            memcpy(new_skin->inverse_bind_matrix.data(),
+                     &buffer.data[accessor.byteOffset + bufferView.byteOffset],
+                     accessor.count * sizeof(glm::mat4));
 
         }
 

@@ -39,16 +39,7 @@ namespace engine{
         std::vector<glm::mat4> inverse_bind_matrix;
         std::vector<Node*> joints;
     };
-    struct Node{
-        Node *parent;
-        uint32_t index;
-        glm::vec3 Translation{};
-        glm::quat Rotation{};
-        glm::mat4 matrix;
-        std::vector<Node*> children;
-        Skin* skin;
-        int32_t skin_index = -1;
-    };
+    
     struct NodeUniform{
         alignas(16) glm::mat4 matrix;
         alignas(16) glm::mat4 joint_matrix[128];
@@ -99,6 +90,8 @@ public:
     std::vector<Node*> linear_nodes;
     std::vector<Skin*> skins;
 
+    //skeletal
+    void load_joints_matrix();
     void load_node(engine::Node *parent, const tinygltf::Node &gltf_node);
     void load_skins();
     Node* node_from_index(uint32_t index);
@@ -138,11 +131,33 @@ public:
                                 2};
 		
 };
+struct Node{
+        Node *parent;
+        uint32_t index;
+        glm::vec3 Translation{};
+        glm::quat Rotation{};
+        glm::mat4 matrix;
+        std::vector<Node*> children;
+        EMesh* mesh;
+        Skin* skin;
+        int32_t skin_index = -1;
+        void update(){
+            if(mesh){
+                if(skin){
+                    size_t joints_number = skin->joints.size();
+                    mesh->node_uniform.joint_count = (float)joints_number;
 
+                    for(Node* joint : skin->joints){
+                        
+                    }
+                }
+            }
+        }
+};
 class SkeletalMesh{
 	public:
 		
 };
 
-}//namespace
+}//namespace engine
 #endif
