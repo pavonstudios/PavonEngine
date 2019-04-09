@@ -189,8 +189,8 @@ int EMesh::load_model_gltf(const char* path){
     for(auto node : linear_nodes){
         if(node->skin_index > -1)
             node->skin = skins[node->skin_index];
-        if(node->mesh){
-            node->update();
+        if(node->mesh && !node->parent){
+           node->update();
         }
     }   
 

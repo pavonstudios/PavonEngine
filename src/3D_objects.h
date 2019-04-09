@@ -43,7 +43,7 @@ namespace engine{
     struct NodeUniform{
         alignas(16) glm::mat4 matrix;
         alignas(16) glm::mat4 joint_matrix[128];
-        float joint_count {0};
+        float joint_count;;
     };
    
 }
@@ -145,7 +145,7 @@ struct Node{
             update();
         }
         glm::mat4 get_local_matrix(){
-            return glm::translate(glm::mat4(1.0f),Translation) * matrix;
+            return glm::translate(glm::mat4(1.0f),Translation) * glm::mat4(Rotation);
         }
         glm::mat4 get_matrix(){
                 glm::mat4 local_matrix = get_local_matrix();
