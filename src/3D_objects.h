@@ -24,9 +24,16 @@
 
 #include "VulkanDevice.hpp"
 
-
+#define MESH_TYPE_STATIC 0
+#define MESH_TYPE_SKINNED 1
 
 namespace engine{
+    struct pipeline_data{
+        std::string vertex_shader_path;
+        std::string fragment_shader_path;
+        VkPrimitiveTopology draw_type;
+        int mesh_type;
+    };
     struct Node;
     struct Skin {
         Node *skeleton_root = nullptr;

@@ -5,7 +5,7 @@
 
 #include "engine.h"
 
-
+#include <array>
 void Renderer::run(VulkanData* vkdata) {
         bIsRunnning = true;             
         initVulkan();
@@ -58,12 +58,7 @@ void Renderer::VulkanConfig(){
         createDepthResources();
         createFramebuffers();
         
-    for (int i = 0; i< engine->meshes.size(); i++){
-        createGraphicsPipeline("shaders/frag.spv","shaders/vert.spv",&engine->meshes[i]->graphics_pipeline);
-        createTextureImage(engine->meshes[i]->texture_path, engine->meshes[i]);
-    }
-    vkDestroyPipeline(device,engine->meshes.back()->graphics_pipeline,nullptr);//before change the pipeline, it must be destroyed
-    createGraphicsPipeline("shaders/red.spv","shaders/skin.spv",&engine->meshes.back()->graphics_pipeline);//meshes basck() is gltf skinned model
+        create_meshes_graphics_pipeline();
         
         createTextureSampler();
         for (int i = 0; i< engine->meshes.size(); i++){
@@ -453,19 +448,37 @@ void Renderer::recreateSwapChain() {
         createSwapChain();
         createImageViews();
         createRenderPass();
-            createGraphicsPipeline("shaders/frag.spv", "shaders/vert.spv",&engine->meshes[0]->graphics_pipeline);
-            createGraphicsPipeline(FRAGMENT_RED_SHADER_PATH, "shaders/node.spv",&engine->meshes[1]->graphics_pipeline);
+        create_meshes_graphics_pipeline();
         createDepthResources();
         createFramebuffers();
         createCommandBuffers();
     }
+void Renderer::create_meshes_graphics_pipeline(){
+    pipeline_data data_static_mesh = {};
+    data_static_mesh.draw_type = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+    data_static_mesh.mesh_type = MESH_TYPE_STATIC;
+    data_static_mesh.fragment_shader_path = "shaders/frag.spv";
+    data_static_mesh.vertex_shader_path = "shaders/vert.spv";
 
- void Renderer::createGraphicsPipeline( const std::string path_fragment_shader, 
-                                        const std::string path_vertex_shader, 
-                                        VkPipeline* out_pipeline) {
+    pipeline_data data_static_skinned_mesh = {};
+    data_static_skinned_mesh.draw_type = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+    data_static_skinned_mesh.mesh_type = MESH_TYPE_SKINNED;
+    data_static_skinned_mesh.fragment_shader_path = "shaders/red.spv";
+    data_static_skinned_mesh.vertex_shader_path = "shaders/skin.spv";
+
+    for (int i = 0; i< engine->meshes.size(); i++){
+        createGraphicsPipeline(&data_static_mesh,&engine->meshes[i]->graphics_pipeline);
+        createTextureImage(engine->meshes[i]->texture_path, engine->meshes[i]);
+    }
+    vkDestroyPipeline(device,engine->meshes.back()->graphics_pipeline,nullptr);//before change the pipeline, it must be destroyed
+    
+    createGraphicsPipeline(&data_static_skinned_mesh, &engine->meshes.back()->graphics_pipeline);//meshes basck() is gltf skinned model
+
+}
+void Renderer::createGraphicsPipeline( const struct pipeline_data * data, VkPipeline* out_pipeline ) {
                                             
-        auto vertShaderCode = readFile(path_vertex_shader);
-        auto fragShaderCode = readFile(path_fragment_shader);
+        auto vertShaderCode = readFile(data->vertex_shader_path);
+        auto fragShaderCode = readFile(data->fragment_shader_path);
 
         VkShaderModule vertShaderModule = createShaderModule(vertShaderCode);
         VkShaderModule fragShaderModule = createShaderModule(fragShaderCode);
@@ -484,20 +497,12 @@ void Renderer::recreateSwapChain() {
 
         VkPipelineShaderStageCreateInfo shaderStages[] = {vertShaderStageInfo, fragShaderStageInfo};
 
-        VkPipelineVertexInputStateCreateInfo vertexInputInfo = {};
-        vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-
-        auto bindingDescription = Vertex::getBindingDescription();
-        auto attributeDescriptions = Vertex::getAttributeDescriptions();
-
-        vertexInputInfo.vertexBindingDescriptionCount = 1;
-        vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(attributeDescriptions.size());
-        vertexInputInfo.pVertexBindingDescriptions = &bindingDescription;
-        vertexInputInfo.pVertexAttributeDescriptions = attributeDescriptions.data();
+       
+        
 
         VkPipelineInputAssemblyStateCreateInfo inputAssembly = {};
         inputAssembly.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
-        inputAssembly.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+        inputAssembly.topology = data->draw_type;
         inputAssembly.primitiveRestartEnable = VK_FALSE;
 
         VkViewport viewport = {};
@@ -557,7 +562,25 @@ void Renderer::recreateSwapChain() {
         colorBlending.blendConstants[2] = 0.0f;
         colorBlending.blendConstants[3] = 0.0f;
 
-       
+        VkPipelineVertexInputStateCreateInfo vertexInputInfo = {};
+        vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
+
+        auto bindingDescription = Vertex::getBindingDescription();
+        
+        if(data->mesh_type == MESH_TYPE_STATIC){
+            auto attributes_description = Vertex::getAttributeDescriptions();
+            vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(attributes_description.size());
+            vertexInputInfo.pVertexAttributeDescriptions = attributes_description.data();
+        }
+        else if (data->mesh_type == MESH_TYPE_SKINNED){
+            auto attributes_description =  Vertex::get_attribute_descriptions_skeletal_mesh();
+            vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(attributes_description.size());
+            vertexInputInfo.pVertexAttributeDescriptions = attributes_description.data();
+        }       
+
+        vertexInputInfo.vertexBindingDescriptionCount = 1;
+        
+        vertexInputInfo.pVertexBindingDescriptions = &bindingDescription;
 
         VkGraphicsPipelineCreateInfo pipelineInfo = {};
         pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;

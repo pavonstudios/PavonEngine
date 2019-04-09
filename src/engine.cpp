@@ -19,6 +19,7 @@ void Engine::main_loop(){
 
 
 }
+
 void Engine::InitWindow(){
 		move_y = 2;
 		if( !glfwInit() )
@@ -67,6 +68,7 @@ void Engine::InitWindow(){
 			}
 	#endif
 }
+
 void Engine::update_window_size(){
 	 int width = 0, height = 0;
         while (width == 0 || height == 0) {
@@ -75,6 +77,7 @@ void Engine::update_window_size(){
         }
 
 }
+
  void Engine::mouse_callback(GLFWwindow* window, double xpos, double ypos){
 	#ifdef VULKAN
 	  auto app = reinterpret_cast<Renderer*>(glfwGetWindowUserPointer(window));
@@ -116,6 +119,7 @@ void Engine::update_window_size(){
 	
 
 }
+
 void Engine::mouse_button_callback(GLFWwindow* window, int button, int action, int mods){
 	#ifdef VULKAN
 		auto app = reinterpret_cast<Renderer*>(glfwGetWindowUserPointer(window));
@@ -145,6 +149,7 @@ void Engine::mouse_button_callback(GLFWwindow* window, int button, int action, i
 		}
 
 }
+
 void Engine::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods){
 	#ifdef VULKAN
 		auto app = reinterpret_cast<Renderer*>(glfwGetWindowUserPointer(window));
@@ -257,7 +262,6 @@ void Engine::update_input(){
 	}
 }
 
-
 void Engine::load_models(){	
 	//load gltf skinned mesh
 	skeletal = new EMesh(vulkan_device);
@@ -270,6 +274,7 @@ void Engine::load_models(){
 	
 
 }
+
 void Engine::load_and_instance_at_location(std::string path, glm::vec3 location){
 	EMesh *model = new EMesh(vulkan_device);	
 	model->load_model(path);
@@ -280,6 +285,7 @@ void Engine::load_and_instance_at_location(std::string path, glm::vec3 location)
 	std::cout << "loading Emesh" << std::endl;
 
 }
+
 void Engine::load_map(std::string path){
 	FILE* file = fopen(path.c_str(),"r");
 	if(file == NULL){
