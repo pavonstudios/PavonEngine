@@ -144,8 +144,7 @@ private:
     VkSampler textureSampler;
 
    
-    VkDeviceMemory vertexBufferMemory;
-    VkDeviceMemory indexBufferMemory;   
+ 
     
 
     std::vector<VkCommandBuffer> commandBuffers;

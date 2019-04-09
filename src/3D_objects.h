@@ -103,6 +103,10 @@ public:
 
     std::vector<VkBuffer> uniform_node_buffers;
     std::vector<VkDeviceMemory> uniform_node_buffer_memory;
+    
+
+    VkDeviceMemory vertexBufferMemory;
+    VkDeviceMemory indexBufferMemory;   
 #endif
 #ifdef _OpenGL_Renderer_
     GLuint vertexbuffer;

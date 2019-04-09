@@ -6,7 +6,6 @@
 #include "engine.h"
 
 
-
 void Renderer::run(VulkanData* vkdata) {
         bIsRunnning = true;             
         initVulkan();
@@ -94,14 +93,15 @@ void Renderer::createIndexBuffer(EMesh * mesh) {
 
         createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | 
         VK_BUFFER_USAGE_INDEX_BUFFER_BIT,
-         VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, mesh->indexBuffer, indexBufferMemory);
+         VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, mesh->indexBuffer, mesh->indexBufferMemory);
 
         copyBuffer(stagingBuffer, mesh->indexBuffer, bufferSize);
 
         vkDestroyBuffer(device, stagingBuffer, nullptr);
         vkFreeMemory(device, stagingBufferMemory, nullptr);
-    }
- void Renderer::createVertexBuffer(EMesh *mesh_to_process) {
+}
+
+void Renderer::createVertexBuffer(EMesh *mesh_to_process) {
 
         VkDeviceSize bufferSize = sizeof(mesh_to_process->vertices[0]) * mesh_to_process->vertices.size();
 
@@ -118,13 +118,14 @@ void Renderer::createIndexBuffer(EMesh * mesh) {
 
         createBuffer(bufferSize, 
         VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, 
-        VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, mesh_to_process->vertices_buffer, vertexBufferMemory);
+        VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, mesh_to_process->vertices_buffer, mesh_to_process->vertexBufferMemory);
 
         copyBuffer(stagingBuffer, mesh_to_process->vertices_buffer, bufferSize);
 
         vkDestroyBuffer(device, stagingBuffer, nullptr);
         vkFreeMemory(device, stagingBufferMemory, nullptr);
 }
+
 /*
 Main function in charge to create the draw calls
 */
@@ -585,57 +586,11 @@ void Renderer::recreateSwapChain() {
         vkDestroyShaderModule(device, fragShaderModule, nullptr);
         vkDestroyShaderModule(device, vertShaderModule, nullptr);
     }
-void Renderer::cleanup() {
-      
-        cleanupSwapChain();
 
-        vkDestroySampler(device, textureSampler, nullptr);
-       
+void Renderer::createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, 
+                            VkMemoryPropertyFlags properties, VkBuffer& buffer, 
+                            VkDeviceMemory& bufferMemory) {
 
-      for(int i = 0; i < engine->meshes.size(); i++){  
-           vkDestroyImageView(device,  engine->meshes[i]->texture_image_view, nullptr);
-           vkDestroyImage(device, engine->meshes[i]->texture_image, nullptr);
-      }
-       
-        vkFreeMemory(device, textureImageMemory, nullptr);
-        for(int i = 0; i < engine->meshes.size(); i++){          
-            
-            vkDestroyDescriptorPool(device, engine->meshes[i]->descriptorPool, nullptr);
-          
-        }          
-
-        vkDestroyDescriptorSetLayout(device, descriptorSetLayout, nullptr);
-        vkDestroyDescriptorSetLayout(device, descript_set_layout_node, nullptr);
-
-        
-        vkFreeMemory(device, indexBufferMemory, nullptr);
-
-      
-       
-
-        vkFreeMemory(device, vertexBufferMemory, nullptr);
-
-        for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
-            vkDestroySemaphore(device, renderFinishedSemaphores[i], nullptr);
-            vkDestroySemaphore(device, imageAvailableSemaphores[i], nullptr);
-            vkDestroyFence(device, inFlightFences[i], nullptr);
-        }
-
-        vkDestroyCommandPool(device, commandPool, nullptr);
-
-        delete engine->vulkan_device;
-        //vkDestroyDevice(device, nullptr);
-
-        if (enableValidationLayers) {
-            DestroyDebugUtilsMessengerEXT(instance, debugMessenger, nullptr);
-        }
-
-        vkDestroySurfaceKHR(instance, surface, nullptr);
-        vkDestroyInstance(instance, nullptr);
-
-    
-}
-void Renderer::createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory) {
         VkBufferCreateInfo bufferInfo = {};
         bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
         bufferInfo.size = size;
@@ -699,7 +654,7 @@ void Renderer::createLogicalDevice() {
         }
         
         engine->vulkan_device = new vks::VulkanDevice(physicalDevice);
-        
+
         VkPhysicalDeviceFeatures enabledFeatures{};
         enabledFeatures.samplerAnisotropy = VK_TRUE;
 
@@ -714,3 +669,47 @@ void Renderer::createLogicalDevice() {
         vkGetDeviceQueue(device, indices.graphicsFamily.value(), 0, &graphicsQueue);
         vkGetDeviceQueue(device, indices.presentFamily.value(), 0, &presentQueue);
     }
+
+void Renderer::cleanup() {
+      
+        cleanupSwapChain();
+
+        vkDestroySampler(device, textureSampler, nullptr);
+       
+
+      for(int i = 0; i < engine->meshes.size(); i++){  
+           vkDestroyImageView(device,  engine->meshes[i]->texture_image_view, nullptr);
+           vkDestroyImage(device, engine->meshes[i]->texture_image, nullptr);
+      }
+       
+        vkFreeMemory(device, textureImageMemory, nullptr);
+        for(int i = 0; i < engine->meshes.size(); i++){          
+            
+            vkDestroyDescriptorPool(device, engine->meshes[i]->descriptorPool, nullptr);
+          
+        }          
+
+        vkDestroyDescriptorSetLayout(device, descriptorSetLayout, nullptr);
+        vkDestroyDescriptorSetLayout(device, descript_set_layout_node, nullptr);
+        
+        
+        for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
+            vkDestroySemaphore(device, renderFinishedSemaphores[i], nullptr);
+            vkDestroySemaphore(device, imageAvailableSemaphores[i], nullptr);
+            vkDestroyFence(device, inFlightFences[i], nullptr);
+        }
+
+        vkDestroyCommandPool(device, commandPool, nullptr);
+
+        delete engine->vulkan_device;
+        //vkDestroyDevice(device, nullptr);
+
+        if (enableValidationLayers) {
+            DestroyDebugUtilsMessengerEXT(instance, debugMessenger, nullptr);
+        }
+
+        vkDestroySurfaceKHR(instance, surface, nullptr);
+        vkDestroyInstance(instance, nullptr);
+
+    
+}
