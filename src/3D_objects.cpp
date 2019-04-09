@@ -226,6 +226,7 @@ EMesh::EMesh(){
 }
 #endif
 EMesh::~EMesh(){
+#ifdef VULKAN
     if(graphics_pipeline != VK_NULL_HANDLE)
         vkDestroyPipeline(vulkan_device->logicalDevice,graphics_pipeline,nullptr);
     for(auto buffer: uniformBuffers){
@@ -242,7 +243,7 @@ EMesh::~EMesh(){
     }
     vkDestroyBuffer(vulkan_device->logicalDevice,indexBuffer,nullptr);
     vkDestroyBuffer(vulkan_device->logicalDevice,vertices_buffer,nullptr);
-    
+#endif
 }
 
 bool EMesh::load_model2(const char * path){
