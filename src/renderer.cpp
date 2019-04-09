@@ -699,7 +699,10 @@ void Renderer::createLogicalDevice() {
         }
         
         engine->vulkan_device = new vks::VulkanDevice(physicalDevice);
+        
         VkPhysicalDeviceFeatures enabledFeatures{};
+        enabledFeatures.samplerAnisotropy = VK_TRUE;
+
         std::vector<const char*> enabledExtensions{};
 	    VkResult res = engine->vulkan_device->createLogicalDevice(enabledFeatures, enabledExtensions);
               if (res != VK_SUCCESS) {
