@@ -32,20 +32,3 @@
 }
 #endif
 
-#define GET_INSTANCE_PROC_ADDR(inst, entrypoint)                        \
-{                                                                       \
-	fp##entrypoint = reinterpret_cast<PFN_vk##entrypoint>(vkGetInstanceProcAddr(inst, "vk"#entrypoint)); \
-	if (fp##entrypoint == NULL)                                         \
-	{																    \
-		exit(1);                                                        \
-	}                                                                   \
-}
-
-#define GET_DEVICE_PROC_ADDR(dev, entrypoint)                           \
-{                                                                       \
-	fp##entrypoint = reinterpret_cast<PFN_vk##entrypoint>(vkGetDeviceProcAddr(dev, "vk"#entrypoint));   \
-	if (fp##entrypoint == NULL)                                         \
-	{																    \
-		exit(1);                                                        \
-	}                                                                   \
-}
