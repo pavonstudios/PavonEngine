@@ -60,10 +60,10 @@ void Renderer::VulkanConfig(){
         createFramebuffers();
         
     for (int i = 0; i< engine->meshes.size(); i++){
-        createGraphicsPipeline("shaders/frag.spv",&engine->meshes[i]->graphics_pipeline);
+        createGraphicsPipeline("shaders/frag.spv","shaders/vert.spv",&engine->meshes[i]->graphics_pipeline);
         createTextureImage(engine->meshes[i]->texture_path, engine->meshes[i]);
     }
-    createGraphicsPipeline("shaders/red.spv",&engine->meshes.back()->graphics_pipeline);
+    createGraphicsPipeline("shaders/red.spv","shaders/node.spv",&engine->meshes.back()->graphics_pipeline);
         
         createTextureSampler();
         for (int i = 0; i< engine->meshes.size(); i++){
@@ -455,15 +455,15 @@ void Renderer::recreateSwapChain() {
         createSwapChain();
         createImageViews();
         createRenderPass();
-            createGraphicsPipeline("shaders/frag.spv",&engine->meshes[0]->graphics_pipeline);
-            createGraphicsPipeline(FRAGMENT_RED_SHADER_PATH,&engine->meshes[1]->graphics_pipeline);
+            createGraphicsPipeline("shaders/frag.spv", "shaders/vert.spv",&engine->meshes[0]->graphics_pipeline);
+            createGraphicsPipeline(FRAGMENT_RED_SHADER_PATH, "shaders/node.spv",&engine->meshes[1]->graphics_pipeline);
         createDepthResources();
         createFramebuffers();
         createCommandBuffers();
     }
 
- void Renderer::createGraphicsPipeline(std::string path_fragment_shader, VkPipeline* out_pipeline) {
-        auto vertShaderCode = readFile("shaders/node.spv");
+ void Renderer::createGraphicsPipeline(const std::string path_fragment_shader, const std::string path_vertex_shader, VkPipeline* out_pipeline) {
+        auto vertShaderCode = readFile(path_vertex_shader);
         auto fragShaderCode = readFile(path_fragment_shader);
 
         VkShaderModule vertShaderModule = createShaderModule(vertShaderCode);

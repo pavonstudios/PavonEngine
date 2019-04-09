@@ -164,7 +164,7 @@ private:
     void createVertexBuffer(EMesh *mesh_to_process);
     void createCommandBuffers();
     void createIndexBuffer(EMesh *mesh);
-    void createGraphicsPipeline(std::string path_fragment_shader, VkPipeline* out_pipeline);
+    void createGraphicsPipeline(const std::string path_fragment_shader, const std::string path_vertex_shader, VkPipeline* out_pipeline);
     void createDescriptorPool(EMesh *mesh);
     void createDescriptorSets(EMesh *mesh);
     void createDescriptorSetLayout();
