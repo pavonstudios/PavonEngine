@@ -172,7 +172,7 @@ int EMesh::load_model_gltf(const char* path){
                 std::cerr << "Index component type " << accessor.componentType << " not supported!" << std::endl;
                 return 2;
             }
-    }
+    }//end loop primitives
 
     load_skins();
     for(auto node : linear_nodes){
