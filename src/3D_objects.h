@@ -141,16 +141,38 @@ struct Node{
         EMesh* mesh;
         Skin* skin;
         int32_t skin_index = -1;
+        glm::mat4 get_local_matrix(){
+            return glm::translate(glm::mat4(1.0f),Translation) * glm::mat4(Rotation) * matrix;
+        }
+        glm::mat4 get_matrix(){
+                glm::mat4 local_matrix = get_local_matrix();
+                Node* parent = this->parent;
+                while(parent){
+                    local_matrix = parent->get_local_matrix() * local_matrix;
+                    parent = parent->parent;
+                }
+                return local_matrix;
+        }
         void update(){
             if(mesh){
+                glm::mat4 matrix = get_matrix();
                 if(skin){
+                    mesh->node_uniform.matrix = matrix;
+
+                    glm::mat4 inverse_transform = glm::inverse(matrix);
                     size_t joints_number = skin->joints.size();
                     mesh->node_uniform.joint_count = (float)joints_number;
 
-                    for(Node* joint : skin->joints){
-                        
+                    for(size_t i = 0; i< skin->joints.size();i++){
+                        Node* joint_node = skin->joints[i];
+                        glm::mat4 joint_mat = joint_node->get_matrix() * skin->inverse_bind_matrix[i];
+                        joint_mat = inverse_transform * joint_mat;
+                        mesh->node_uniform.joint_matrix[i] = joint_mat;
                     }
                 }
+            }
+            for(auto& child : children){
+                child->update();
             }
         }
 };

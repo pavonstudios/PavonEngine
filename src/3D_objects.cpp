@@ -69,6 +69,7 @@ void EMesh::load_node(engine::Node *parent, const tinygltf::Node &gltf_node){
     Node *new_node = new Node{};
     new_node->parent = parent;
     new_node->matrix = glm::mat4(1.0f);
+    new_node->skin_index = gltf_node.skin;
     
     //some nodes do not contain transform information
     if(gltf_node.translation.size() == 3)
@@ -87,6 +88,7 @@ void EMesh::load_node(engine::Node *parent, const tinygltf::Node &gltf_node){
     }
 
     if(!parent){
+        new_node->mesh = this;
         nodes.push_back(new_node);
     }else{
         parent->children.push_back(new_node);
@@ -187,7 +189,9 @@ int EMesh::load_model_gltf(const char* path){
     for(auto node : linear_nodes){
         if(node->skin_index > -1)
             node->skin = skins[node->skin_index];
-        
+        if(node->mesh){
+            node->update();
+        }
     }   
 
     return 1;
