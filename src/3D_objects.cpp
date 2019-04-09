@@ -1,6 +1,4 @@
 
-
-
 #include "3D_objects.h"
 #include "iostream"
 #include <glm/glm.hpp>
@@ -190,9 +188,10 @@ int EMesh::load_model_gltf(const char* path){
         if(node->skin_index > -1)
             node->skin = skins[node->skin_index];
         if(node->mesh && !node->parent){
-           node->update();
+           //node->update(); //for some reason this not work, produce issues in vertices transformation
         }
     }   
+
 
     return 1;
 }
@@ -204,21 +203,22 @@ using namespace engine;
 EMesh::EMesh(vks::VulkanDevice* vulkan_device){
     this->vulkan_device = vulkan_device;
     this->node_uniform.matrix = glm::mat4(1.0);
+        
 
     VkDeviceSize bufferSize = sizeof(NodeUniform);
 
-        uniform_node_buffers.resize(3);
-        uniform_node_buffer_memory.resize(3);
+    uniform_node_buffers.resize(3);
+    uniform_node_buffer_memory.resize(3);
 
-        for (size_t i = 0; i < 3; i++) {
-            vulkan_device->createBuffer(
-                VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
-				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-				sizeof(NodeUniform),
-				&uniform_node_buffers[i],
-				&uniform_node_buffer_memory[i],
-				&node_uniform);               
-        }
+    for (size_t i = 0; i < 3; i++) {
+        vulkan_device->createBuffer(
+            VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+            VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+            sizeof(NodeUniform),
+            &uniform_node_buffers[i],
+            &uniform_node_buffer_memory[i],
+            &node_uniform);               
+    }
 }
 #else
 EMesh::EMesh(){
@@ -226,7 +226,7 @@ EMesh::EMesh(){
 }
 #endif
 EMesh::~EMesh(){
-#ifdef VULKAN
+    #ifdef VULKAN
     if(graphics_pipeline != VK_NULL_HANDLE)
         vkDestroyPipeline(vulkan_device->logicalDevice,graphics_pipeline,nullptr);
     for(auto buffer: uniformBuffers){
@@ -247,7 +247,7 @@ EMesh::~EMesh(){
     vkFreeMemory(vulkan_device->logicalDevice, indexBufferMemory, nullptr);    
     vkFreeMemory(vulkan_device->logicalDevice, vertexBufferMemory, nullptr);
 
-#endif
+    #endif
 }
 
 bool EMesh::load_model2(const char * path){

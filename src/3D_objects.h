@@ -86,7 +86,10 @@ public:
     std::vector<Node*> linear_nodes;
     std::vector<Skin*> skins;
     tinygltf::Model gltf_model;
-    NodeUniform node_uniform = {};
+ /*    NodeUniform node_uniform = {glm::mat4(1.0),
+                                {glm::mat4(1.0),glm::mat4(1.0),glm::mat4(1.0),glm::mat4(1.0),glm::mat4(1.0),glm::mat4(1.0)}
+                                ,4}; */
+    struct NodeUniform node_uniform;             
 #endif
 
 #ifdef VULKAN
@@ -133,7 +136,7 @@ struct Node{
             update();
         }
         glm::mat4 get_local_matrix(){
-            return glm::translate(glm::mat4(1.0f),Translation) * glm::mat4(Rotation);
+            return glm::translate(glm::mat4(1.0f),Translation) * glm::mat4(Rotation) * matrix;
         }
         glm::mat4 get_matrix(){
                 glm::mat4 local_matrix = get_local_matrix();

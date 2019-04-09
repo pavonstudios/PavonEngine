@@ -362,9 +362,7 @@ void Renderer::update_descriptor_set(EMesh* mesh){
             descriptorWrites[0].dstArrayElement = 0;
             descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
             descriptorWrites[0].descriptorCount = 1;
-            descriptorWrites[0].pBufferInfo = &bufferInfo;
-
-            
+            descriptorWrites[0].pBufferInfo = &bufferInfo;            
 
             descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
             descriptorWrites[1].dstSet = mesh->descriptorSets[0];
@@ -380,9 +378,7 @@ void Renderer::update_descriptor_set(EMesh* mesh){
             descriptorWrites[2].dstArrayElement = 0;
             descriptorWrites[2].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
             descriptorWrites[2].descriptorCount = 1;
-            descriptorWrites[2].pBufferInfo = &node_buffer_info;
-
-            
+            descriptorWrites[2].pBufferInfo = &node_buffer_info;            
 
             vkUpdateDescriptorSets(device, static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
        
@@ -393,9 +389,9 @@ void Renderer::update_meshes_model_matrix(){
     //engine->meshes[0]->model_matrix = engine->meshes[0]->model_matrix;
     //engine->meshes[0]->model_matrix = glm::mat4(1.0f);        
 
-/*      if(engine->meshes[1])
-        engine->meshes[1]->node_uniform.matrix =  glm::rotate(engine->meshes[1]->model_matrix, engine->get_time() * glm::radians(45.0f), glm::vec3(0.0f, 0.0f, 1.0f));
- */
+    /*      if(engine->meshes[1])
+            engine->meshes[1]->node_uniform.matrix =  glm::rotate(engine->meshes[1]->model_matrix, engine->get_time() * glm::radians(45.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+    */
 
     
 }

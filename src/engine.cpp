@@ -27,45 +27,45 @@ void Engine::InitWindow(){
 			return;
 		}
 		
-#ifdef VULKAN
-        glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-#endif
+	#ifdef VULKAN
+			glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+	#endif
 
-#ifdef _OpenGL_Renderer_
-		glfwWindowHint(GLFW_SAMPLES, 4); // 4x antialiasing
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); // We want OpenGL 3.3
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
-		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // We don't want the old OpenGL 
+	#ifdef _OpenGL_Renderer_
+			glfwWindowHint(GLFW_SAMPLES, 4); // 4x antialiasing
+			glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); // We want OpenGL 3.3
+			glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+			glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
+			glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // We don't want the old OpenGL 
+			
+	#endif
+
 		
-#endif
-
-	
-	window = glfwCreateWindow(800, 600, "Engine", nullptr, nullptr);
-	if( window == NULL ){
-		fprintf( stderr, "Failed to open GLFW window\n" );
-		glfwTerminate();
-		return;
-	}
-	 glfwSetWindowUserPointer(window, this);
-	 //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);  
-#ifdef VULKAN	   
-        glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
-#endif
-        glfwSetInputMode(window, GLFW_STICKY_KEYS, 1);
-		glfwSetKeyCallback(window, key_callback);
-		glfwSetCursorPosCallback(window, mouse_callback);
-		glfwSetMouseButtonCallback(window,mouse_button_callback);
-#ifdef _OpenGL_Renderer_
-		
-		glfwMakeContextCurrent(window); // Initialize GLEW
-
-
-		if (glewInit() != GLEW_OK) {
-			fprintf(stderr, "Failed to initialize GLEW\n");
+		window = glfwCreateWindow(800, 600, "Engine", nullptr, nullptr);
+		if( window == NULL ){
+			fprintf( stderr, "Failed to open GLFW window\n" );
+			glfwTerminate();
 			return;
 		}
-#endif
+		glfwSetWindowUserPointer(window, this);
+		//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);  
+	#ifdef VULKAN	   
+			glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
+	#endif
+			glfwSetInputMode(window, GLFW_STICKY_KEYS, 1);
+			glfwSetKeyCallback(window, key_callback);
+			glfwSetCursorPosCallback(window, mouse_callback);
+			glfwSetMouseButtonCallback(window,mouse_button_callback);
+	#ifdef _OpenGL_Renderer_
+			
+			glfwMakeContextCurrent(window); // Initialize GLEW
+
+
+			if (glewInit() != GLEW_OK) {
+				fprintf(stderr, "Failed to initialize GLEW\n");
+				return;
+			}
+	#endif
 }
 void Engine::update_window_size(){
 	 int width = 0, height = 0;
@@ -225,8 +225,8 @@ void Engine::update_input(){
 		main_camera.MoveLeft();
 	}
 	if(input.D.bIsPressed){		
-		main_camera.MoveRight();
-		//meshes[1]->nodes[2]->rotate();
+		//main_camera.MoveRight();
+		meshes[1]->nodes[3]->rotate();
 	}
 	if(input.Z.bIsPressed){
 		input.yaw += 0.03f;
@@ -249,12 +249,13 @@ void Engine::update_input(){
 
 
 void Engine::load_models(){	
+	//load gltf skinned mesh
 	skeletal = new EMesh(vulkan_device);
-	skeletal->load_model_gltf("models/simple_bones.gltf");
+	skeletal->load_model_gltf("models/cube2.gltf");
 	skeletal->texture_path = "textures/character2.jpg";
 	meshes.push_back(skeletal);
 	glm::mat4 model_matrix = glm::mat4(1.0f);
-	model_matrix = glm::translate(model_matrix, glm::vec3(7,0,0));
+	//model_matrix = glm::translate(model_matrix, glm::vec3(7,0,0));
 	meshes.back()->model_matrix = model_matrix;
 	
 
