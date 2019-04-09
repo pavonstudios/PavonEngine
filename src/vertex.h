@@ -24,7 +24,7 @@ struct Vertex {
     glm::vec2 texCoord;
     glm::vec4 joint0;
     glm::vec4 weight0;
-#ifndef _OpenGL_Renderer_
+#ifdef VULKAN
     static VkVertexInputBindingDescription getBindingDescription() {
         VkVertexInputBindingDescription bindingDescription = {};
         bindingDescription.binding = 0;
@@ -64,10 +64,11 @@ struct Vertex {
 
         return attributeDescriptions;
     }
-#endif
-    bool operator==(const Vertex& other) const {
+     bool operator==(const Vertex& other) const {
         return pos == other.pos && color == other.color && texCoord == other.texCoord;
     }
+#endif //VULKAN include
+   
 
 };
 #endif

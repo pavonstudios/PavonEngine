@@ -126,9 +126,7 @@ public:
     GLuint indices_buffer;
 #endif
     UniformBufferObject ubo;
-    NodeUniform node_uniform = {glm::mat4(1.0),
-                                {glm::mat4(1.0),glm::mat4(1.0),glm::mat4(1.0)},
-                                2};
+    NodeUniform node_uniform = {};
 		
 };
 struct Node{
@@ -147,14 +145,14 @@ struct Node{
             update();
         }
         glm::mat4 get_local_matrix(){
-            return glm::translate(glm::mat4(1.0f),Translation) * glm::mat4(Rotation) * matrix;
+            return glm::translate(glm::mat4(1.0f),Translation) * matrix;
         }
         glm::mat4 get_matrix(){
                 glm::mat4 local_matrix = get_local_matrix();
-                Node* parent = this->parent;
-                while(parent){
-                    local_matrix = parent->get_local_matrix() * local_matrix;
-                    parent = parent->parent;
+                Node* node_parent = this->parent;
+                while(node_parent){
+                    local_matrix = node_parent->get_local_matrix() * local_matrix;
+                    node_parent = node_parent->parent;
                 }
                 return local_matrix;
         }

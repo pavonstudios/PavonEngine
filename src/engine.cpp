@@ -215,22 +215,18 @@ void Engine::key_callback(GLFWwindow* window, int key, int scancode, int action,
 
 void Engine::update_input(){
 	if(input.S.bIsPressed){
-		//move_y += 0.001f;
-		//main_camera.SetLocation(0,move_y,0);
 		main_camera.MoveBackward();
 		
 	}
 	if(input.W.bIsPressed){
-		//moveWy -= 0.001f;
-		//main_camera.SetLocation(0,move_y,0);
 		main_camera.MoveForward();
 	}
 	if(input.A.bIsPressed){		
-		//main_camera.MoveLeft();
+		main_camera.MoveLeft();
 	}
 	if(input.D.bIsPressed){		
-		//main_camera.MoveRight();
-		meshes[1]->nodes[2]->rotate();
+		main_camera.MoveRight();
+		//meshes[1]->nodes[2]->rotate();
 	}
 	if(input.Z.bIsPressed){
 		input.yaw += 0.03f;
@@ -308,11 +304,11 @@ void Engine::load_map(std::string path){
 				
 	}
 
-	//add textures
+	//add textures path
 	for(uint i = 0; i < models_paths.size();i++){	
 	meshes[i]->texture_path = textures_paths[i];
 	}
-	//load gltf
+	//load gltf model
 	load_models();
 }
 
