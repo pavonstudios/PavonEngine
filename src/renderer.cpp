@@ -63,8 +63,8 @@ void Renderer::VulkanConfig(){
         createGraphicsPipeline("shaders/frag.spv","shaders/vert.spv",&engine->meshes[i]->graphics_pipeline);
         createTextureImage(engine->meshes[i]->texture_path, engine->meshes[i]);
     }
-    vkDestroyPipeline(device,engine->meshes.back()->graphics_pipeline,nullptr);
-    createGraphicsPipeline("shaders/red.spv","shaders/skin.spv",&engine->meshes.back()->graphics_pipeline);
+    vkDestroyPipeline(device,engine->meshes.back()->graphics_pipeline,nullptr);//before change the pipeline, it must be destroyed
+    createGraphicsPipeline("shaders/red.spv","shaders/skin.spv",&engine->meshes.back()->graphics_pipeline);//meshes basck() is gltf skinned model
         
         createTextureSampler();
         for (int i = 0; i< engine->meshes.size(); i++){
