@@ -244,6 +244,7 @@ EMesh::~EMesh(){
     vkDestroyBuffer(vulkan_device->logicalDevice,indexBuffer,nullptr);
     vkDestroyBuffer(vulkan_device->logicalDevice,vertices_buffer,nullptr);
 
+    vkFreeMemory(vulkan_device->logicalDevice, textureImageMemory, nullptr);
     vkFreeMemory(vulkan_device->logicalDevice, indexBufferMemory, nullptr);    
     vkFreeMemory(vulkan_device->logicalDevice, vertexBufferMemory, nullptr);
 

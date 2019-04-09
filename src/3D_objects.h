@@ -109,7 +109,8 @@ public:
     
 
     VkDeviceMemory vertexBufferMemory;
-    VkDeviceMemory indexBufferMemory;   
+    VkDeviceMemory indexBufferMemory;
+    VkDeviceMemory textureImageMemory;   
 #endif
 #ifdef _OpenGL_Renderer_
     GLuint vertexbuffer;

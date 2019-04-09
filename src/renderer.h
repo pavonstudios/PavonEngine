@@ -138,15 +138,8 @@ private:
     VkDeviceMemory depthImageMemory;
     VkImageView depthImageView;
 
-   
-    VkDeviceMemory textureImageMemory;
-   
-    VkSampler textureSampler;
-
-   
- 
+    VkSampler textureSampler; 
     
-
     std::vector<VkCommandBuffer> commandBuffers;
 
     std::vector<VkSemaphore> imageAvailableSemaphores;
