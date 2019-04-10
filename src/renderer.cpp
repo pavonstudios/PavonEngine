@@ -426,11 +426,8 @@ void Renderer::cleanupSwapChain() {
 
         vkFreeCommandBuffers(device, commandPool, static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
 
-        
-       
-         
-       
         vkDestroyPipelineLayout(device, pipelineLayout, nullptr);
+        
         vkDestroyRenderPass(device, renderPass, nullptr);
 
         for (auto imageView : swapChainImageViews) {
@@ -444,7 +441,9 @@ void Renderer::recreateSwapChain() {
         vkDeviceWaitIdle(device);
 
         cleanupSwapChain();
-
+        for(auto object : engine->meshes){
+            object->clean_object();
+        }
         createPipelineLayout();
         createSwapChain();
         createImageViews();
@@ -694,7 +693,7 @@ void Renderer::cleanup() {
       
         cleanupSwapChain();
          engine->delete_meshes();
-         
+
         vkDestroySampler(device, textureSampler, nullptr);
        
 

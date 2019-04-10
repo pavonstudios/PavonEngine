@@ -225,31 +225,34 @@ EMesh::EMesh(){
     
 }
 #endif
-EMesh::~EMesh(){
+void EMesh::clean_object(){
     #ifdef VULKAN
-    if(graphics_pipeline != VK_NULL_HANDLE)
-        vkDestroyPipeline(vulkan_device->logicalDevice,graphics_pipeline,nullptr);
-    for(auto buffer: uniformBuffers){
-        vkDestroyBuffer(vulkan_device->logicalDevice,buffer,nullptr);
-    }
-    for(auto buffer: uniform_node_buffers){
-        vkDestroyBuffer(vulkan_device->logicalDevice,buffer,nullptr);
-    }
-    for(auto uniform_memory : uniformBuffersMemory){
-        vkFreeMemory(vulkan_device->logicalDevice,uniform_memory, nullptr);
-    }
-    for(auto uniform_memory : uniform_node_buffer_memory){
-        vkFreeMemory(vulkan_device->logicalDevice,uniform_memory, nullptr);
-    }
-    vkDestroyBuffer(vulkan_device->logicalDevice,indexBuffer,nullptr);
-    vkDestroyBuffer(vulkan_device->logicalDevice,vertices_buffer,nullptr);
-
-    vkFreeMemory(vulkan_device->logicalDevice, textureImageMemory, nullptr);
-    vkFreeMemory(vulkan_device->logicalDevice, indexBufferMemory, nullptr);    
-    vkFreeMemory(vulkan_device->logicalDevice, vertexBufferMemory, nullptr);
-
+        if(graphics_pipeline != VK_NULL_HANDLE)
+            vkDestroyPipeline(vulkan_device->logicalDevice,graphics_pipeline,nullptr);  
+       
     #endif
 }
+EMesh::~EMesh(){
+    clean_object();
+        for(auto buffer: uniformBuffers){
+            vkDestroyBuffer(vulkan_device->logicalDevice,buffer,nullptr);
+        }
+        for(auto buffer: uniform_node_buffers){
+            vkDestroyBuffer(vulkan_device->logicalDevice,buffer,nullptr);
+        }   
+          vkDestroyBuffer(vulkan_device->logicalDevice,indexBuffer,nullptr);
+        vkDestroyBuffer(vulkan_device->logicalDevice,vertices_buffer,nullptr);
+         for(auto uniform_memory : uniformBuffersMemory){
+            vkFreeMemory(vulkan_device->logicalDevice,uniform_memory, nullptr);
+        }
+        for(auto uniform_memory : uniform_node_buffer_memory){
+            vkFreeMemory(vulkan_device->logicalDevice,uniform_memory, nullptr);
+        } 
+         vkFreeMemory(vulkan_device->logicalDevice, textureImageMemory, nullptr);
+        vkFreeMemory(vulkan_device->logicalDevice, indexBufferMemory, nullptr);    
+        vkFreeMemory(vulkan_device->logicalDevice, vertexBufferMemory, nullptr);
+}
+
 
 bool EMesh::load_model2(const char * path){
 

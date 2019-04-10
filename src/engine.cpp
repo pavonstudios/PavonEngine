@@ -75,7 +75,9 @@ void Engine::update_window_size(){
             glfwGetFramebufferSize(window, &width, &height);
             glfwWaitEvents();
         }
-
+	main_camera.screen_width = width;
+	main_camera.screen_height = height;
+	main_camera.update_projection_matrix();
 }
 
  void Engine::mouse_callback(GLFWwindow* window, double xpos, double ypos){

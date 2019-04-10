@@ -66,6 +66,7 @@ public:
     EMesh();
 #endif
     ~EMesh();
+    void clean_object();
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
     std::vector< glm::vec3 > simple_vertices;

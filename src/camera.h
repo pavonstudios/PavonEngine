@@ -9,11 +9,13 @@
 
 class Camera : public GameObject{
 public:
+	float screen_height = 600;
+	float screen_width = 800;
 	glm::vec3 cameraPos   = glm::vec3(0.0f, -25.0f,  0.0f);
 	glm::vec3 cameraFront = glm::vec3(0.0f, 1.0f, 0.0f);
 	glm::vec3 cameraUp    = glm::vec3(0.0f, 0.0f,  1.0f);
 
-	glm::mat4 Projection = glm::perspective(glm::radians(45.f), 800.f/600.f, 0.01f, 5000.f);
+	glm::mat4 Projection = glm::perspective(glm::radians(45.f), screen_width/screen_height, 0.01f, 5000.f);
 
 	glm::mat4 View = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 
@@ -28,7 +30,9 @@ public:
 			);
 		
 		}
-
+	void update_projection_matrix(){
+		Projection = glm::perspective(glm::radians(45.f), screen_width/screen_height, 0.01f, 5000.f);
+	}
 	void update(){
 			View = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 		};
