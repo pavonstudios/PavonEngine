@@ -21,7 +21,7 @@
 #include "gltf.h"
 #include "tiny_class.h"
 #include "vertex.h"
-
+#include <iostream>
 #include "VulkanDevice.hpp"
 
 #define MESH_TYPE_STATIC 0

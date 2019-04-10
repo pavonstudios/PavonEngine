@@ -6,9 +6,14 @@ MAIN_OBJS = camera.cpp engine.cpp gltf.cpp
 DEFINES= -DGLTF -DTINYGLTF_NO_EXTERNAL_IMAGE
 
 .ONESHELL:
-main: main.o renderer.o engine.o camera.o
+renderer: renderer.o engine.o camera.o
 	mkdir -p bin && cd src
-	$(CC) -o ../renderer main.o renderer.o engine.o camera.o $(Library) -I./ -lvulkan  -DVULKAN $(DEFINES)
+	$(CC) -o ../renderer main.o renderer.o engine.o camera.o asset_manager.o $(Library) -I./ -lvulkan  -DVULKAN $(DEFINES)
+
+.ONESHELL:
+full: main.o renderer.o engine.o camera.o asset_manager.o
+	mkdir -p bin && cd src
+	$(CC) -o ../renderer main.o renderer.o engine.o camera.o asset_manager.o $(Library) -I./ -lvulkan  -DVULKAN $(DEFINES)
 
 .ONESHELL:
 main.o:
@@ -19,6 +24,11 @@ main.o:
 renderer.o:
 	cd src
 	$(CC) -c renderer.cpp -I./ -DGLTF -DVULKAN
+
+.ONESHELL:
+asset_manager.o:
+	cd src
+	$(CC) -c asset_manager.cpp -I./ -DGLTF -DVULKAN
 
 .ONESHELL:
 engine.o: 

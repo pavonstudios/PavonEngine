@@ -13,7 +13,7 @@ class AssetManager{
 public:
     void free_image(void * pixels);
     image_size load_and_get_size(std::string texture_path);
-	int load_model_gltf(const char* path);
+	//int load_model_gltf(const char* path);
 	
 };
 

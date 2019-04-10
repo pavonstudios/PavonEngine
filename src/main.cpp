@@ -3,16 +3,19 @@
 #include "tiny_obj_loader.h"
 
 
-#define STB_IMAGE_IMPLEMENTATION
+
 
 #ifdef GLTF
     #define TINYGLTF_IMPLEMENTATION
-    #define STB_IMAGE_WRITE_IMPLEMENTATION
+    //#define STB_IMAGE_WRITE_IMPLEMENTATION
+    #define TINYGLTF_NO_STB_IMAGE
+    #define TINYGLTF_NO_STB_IMAGE_WRITE
+    #define TINYGLTF_NO_EXTERNAL_IMAGE
     #include "tiny_gltf.h"
 #else
     #include "stb_image.h"
 #endif
-#include "asset_manager.hpp"
+
 #include "3D_objects.cpp"
 #ifndef ANDROID
 #include "engine.h"

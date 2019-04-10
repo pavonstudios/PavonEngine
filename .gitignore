@@ -18,3 +18,4 @@ models/character2.gltf
 models/policia.gltf
 src/vulkan_gltf_example.hpp
 src/.vscode/
+src/asset_manager.hpp.gch
