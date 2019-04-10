@@ -8,12 +8,17 @@ DEFINES= -DGLTF -DTINYGLTF_NO_EXTERNAL_IMAGE
 .ONESHELL:
 renderer: renderer.o engine.o camera.o
 	mkdir -p bin && cd src
-	$(CC) -o ../renderer main.o renderer.o engine.o camera.o asset_manager.o $(Library) -I./ -lvulkan  -DVULKAN $(DEFINES)
+	$(CC) -o ../renderer main.o renderer.o engine.o camera.o asset_manager.o 3D_objects.o $(Library) -I./ -lvulkan  -DVULKAN $(DEFINES)
 
 .ONESHELL:
-full: main.o renderer.o engine.o camera.o asset_manager.o
+3D_objects.o:
+	cd src
+	$(CC) -c 3D_objects.cpp -DGLTF -DVULKAN
+
+.ONESHELL:
+full: main.o renderer.o engine.o camera.o asset_manager.o 3D_objects.o
 	mkdir -p bin && cd src
-	$(CC) -o ../renderer main.o renderer.o engine.o camera.o asset_manager.o $(Library) -I./ -lvulkan  -DVULKAN $(DEFINES)
+	$(CC) -o ../renderer main.o renderer.o engine.o camera.o asset_manager.o 3D_objects.o $(Library) -I./ -lvulkan  -DVULKAN $(DEFINES)
 
 .ONESHELL:
 main.o:
