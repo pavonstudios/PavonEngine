@@ -3,27 +3,27 @@ CC=g++ -g -std=c++17
 Library=-lglfw -lpthread -lm
 
 MAIN_OBJS = camera.cpp engine.cpp gltf.cpp
-DEFINES= -DGLTF -DTINYGLTF_NO_EXTERNAL_IMAGE
+DEFINES= -DGLTF
 
 .ONESHELL:
-renderer: renderer.o engine.o camera.o
+renderer: renderer.o engine.o camera.o 3D_objects.o
 	mkdir -p bin && cd src
-	$(CC) -o ../renderer main.o renderer.o engine.o camera.o asset_manager.o 3D_objects.o $(Library) -I./ -lvulkan  -DVULKAN $(DEFINES)
+	$(CC) -o ../renderer main.o renderer.o engine.o camera.o asset_manager.o 3D_objects.o model_loader.o $(Library) -I./ -lvulkan  -DVULKAN $(DEFINES)
 
 .ONESHELL:
 3D_objects.o:
 	cd src
-	$(CC) -c 3D_objects.cpp -DGLTF -DVULKAN
+	$(CC) -c 3D_objects.cpp -DGLTF -DVULKAN 
 
 .ONESHELL:
 full: main.o renderer.o engine.o camera.o asset_manager.o 3D_objects.o
 	mkdir -p bin && cd src
-	$(CC) -o ../renderer main.o renderer.o engine.o camera.o asset_manager.o 3D_objects.o $(Library) -I./ -lvulkan  -DVULKAN $(DEFINES)
+	$(CC) -o ../renderer main.o renderer.o engine.o camera.o asset_manager.o 3D_objects.o model_loader.o $(Library) -I./ -lvulkan  -DVULKAN $(DEFINES)
 
 .ONESHELL:
 main.o:
 	cd src
-	$(CC) -c main.cpp -DGLTF -DVULKAN -DTINYGLTF_NO_EXTERNAL_IMAGE
+	$(CC) -c main.cpp -DGLTF -DVULKAN 
 
 .ONESHELL:
 renderer.o:
