@@ -4,10 +4,10 @@
       "type": "shell",
       "label": "make opengl",
       "command": "make",
-      "args": ["gl"],
-      "options": {
-        //"cwd": "/usr/bin"
-      },
+      "args": [
+        "gl"
+      ],
+      "options": {},
       "group": {
         "kind": "build",
         "isDefault": true
@@ -17,10 +17,10 @@
       "type": "shell",
       "label": "make",
       "command": "make",
-      "args": ["-j8"],
-      "options": {
-        
-      },
+      "args": [
+        "-j8"
+      ],
+      "options": {},
       "group": {
         "kind": "build",
         "isDefault": true
@@ -30,16 +30,19 @@
       "type": "shell",
       "label": "make full",
       "command": "make",
-      "args": ["full","-j8"],
-      "options": {
-        
-      },
+      "args": [
+        "full",
+        "-j8"
+      ],
+      "options": {},
       "group": {
         "kind": "build",
         "isDefault": true
-      }
+      },
+      "problemMatcher": [
+        "$gcc"
+      ]
     }
-    
   ],
   "version": "2.0.0"
 }

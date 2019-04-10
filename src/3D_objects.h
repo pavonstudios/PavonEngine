@@ -90,6 +90,7 @@ public:
 
 #ifdef GLTF
     int load_model_gltf(const char* path);
+    void load_primitives_data();
     std::vector<Node*> nodes;
     std::vector<Node*> linear_nodes;
     std::vector<Skin*> skins;
