@@ -463,7 +463,7 @@ void Renderer::create_meshes_graphics_pipeline(){
     pipeline_data data_static_skinned_mesh = {};
     data_static_skinned_mesh.draw_type = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
     data_static_skinned_mesh.mesh_type = MESH_TYPE_SKINNED;
-    data_static_skinned_mesh.fragment_shader_path = "shaders/red.spv";
+    data_static_skinned_mesh.fragment_shader_path = "shaders/frag.spv";
     data_static_skinned_mesh.vertex_shader_path = "shaders/skin.spv";
 
     for (int i = 0; i< engine->meshes.size(); i++){

@@ -118,12 +118,18 @@ int EMesh::load_model_gltf(const char* path){
         const float *bufferPos = nullptr;
         const uint16_t *bufferJoints = nullptr;
 		const float *bufferWeights = nullptr;
+        const float *bufferTexCoordSet0 = nullptr;
 
         const tinygltf::Accessor &posAccessor = gltf_model.accessors[primitive.attributes.find("POSITION")->second];
         const tinygltf::BufferView &posView = gltf_model.bufferViews[posAccessor.bufferView];
         bufferPos = reinterpret_cast<const float *>(&(gltf_model.buffers[posView.buffer].data[posAccessor.byteOffset + posView.byteOffset]));
         vertexCount = static_cast<uint32_t>(posAccessor.count);
 
+        if (primitive.attributes.find("TEXCOORD_0") != primitive.attributes.end()) {
+            const tinygltf::Accessor &uvAccessor = gltf_model.accessors[primitive.attributes.find("TEXCOORD_0")->second];
+            const tinygltf::BufferView &uvView = gltf_model.bufferViews[uvAccessor.bufferView];
+            bufferTexCoordSet0 = reinterpret_cast<const float *>(&(gltf_model.buffers[uvView.buffer].data[uvAccessor.byteOffset + uvView.byteOffset]));
+        }
         // Skinning
         // Joints
         if (primitive.attributes.find("JOINTS_0") != primitive.attributes.end()) {
@@ -141,7 +147,7 @@ int EMesh::load_model_gltf(const char* path){
         for(size_t c = 0; c < posAccessor.count; c++){
             Vertex vert{};
 			vert.pos = glm::vec4(glm::make_vec3(&bufferPos[c * 3]), 1.0f);
-
+            vert.texCoord = bufferTexCoordSet0 ? glm::make_vec2(&bufferTexCoordSet0[c * 2]) : glm::vec3(0.0f);
 			vert.joint0 = has_skin ? glm::vec4(glm::make_vec4(&bufferJoints[c * 4])) : glm::vec4(0.0f);
 			vert.weight0 = has_skin ? glm::make_vec4(&bufferWeights[c * 4]) : glm::vec4(0.0f);
 
@@ -200,7 +206,7 @@ int EMesh::load_model_gltf(const char* path){
         }
     }   
     linear_nodes[4]->skin = skins[0];
-    linear_nodes[4]->update();
+    //linear_nodes[4]->update();
 
 
     return 1;

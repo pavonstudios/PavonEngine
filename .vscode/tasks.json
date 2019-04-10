@@ -19,13 +19,27 @@
       "command": "make",
       "args": ["-j8"],
       "options": {
-        //"cwd": "/usr/bin"
+        
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "type": "shell",
+      "label": "make full",
+      "command": "make",
+      "args": ["full","-j8"],
+      "options": {
+        
       },
       "group": {
         "kind": "build",
         "isDefault": true
       }
     }
+    
   ],
   "version": "2.0.0"
 }

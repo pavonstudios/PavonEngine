@@ -268,7 +268,7 @@ void Engine::update_input(){
 void Engine::load_models(){	
 	//load gltf skinned mesh
 	skeletal = new EMesh(vulkan_device);
-	skeletal->load_model_gltf("models/cube2.gltf");
+	skeletal->load_model_gltf("models/character2.gltf");
 	skeletal->texture_path = "textures/character2.jpg";
 	meshes.push_back(skeletal);
 	glm::mat4 model_matrix = glm::mat4(1.0f);
