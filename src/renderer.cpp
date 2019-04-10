@@ -427,7 +427,7 @@ void Renderer::cleanupSwapChain() {
         vkFreeCommandBuffers(device, commandPool, static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
 
         
-        engine->delete_meshes();
+       
          
        
         vkDestroyPipelineLayout(device, pipelineLayout, nullptr);
@@ -445,6 +445,7 @@ void Renderer::recreateSwapChain() {
 
         cleanupSwapChain();
 
+        createPipelineLayout();
         createSwapChain();
         createImageViews();
         createRenderPass();
@@ -692,7 +693,8 @@ void Renderer::createLogicalDevice() {
 void Renderer::cleanup() {
       
         cleanupSwapChain();
-
+         engine->delete_meshes();
+         
         vkDestroySampler(device, textureSampler, nullptr);
        
 

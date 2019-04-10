@@ -282,7 +282,7 @@ void Engine::load_and_instance_at_location(std::string path, glm::vec3 location)
 	model_matrix = glm::translate(model_matrix, location);
 	model->model_matrix = model_matrix;
 	meshes.push_back(model);
-	std::cout << "loading Emesh" << std::endl;
+	//std::cout << "loading Emesh" << std::endl;
 
 }
 
