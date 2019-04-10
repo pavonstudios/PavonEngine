@@ -113,5 +113,5 @@ class Model {
   Value extras;
 };
 
-}
+}//end namespace tinygltf
 #endif
