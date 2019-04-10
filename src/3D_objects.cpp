@@ -80,20 +80,22 @@ void EMesh::load_node(engine::Node *parent, uint32_t index, const tinygltf::Node
     if(gltf_node.matrix.size() == 16)
         new_node->matrix = glm::make_mat4x4(gltf_node.matrix.data());
 
-    if(gltf_node.children.size() > 0){
-        for(size_t i = 0;i < gltf_node.children.size();i++){
+    int children_count = gltf_node.children.size();
+
+    if( children_count > 0){
+        for(size_t i = 0;i < children_count ;i++){
             load_node(new_node,gltf_node.children[i],gltf_model.nodes[gltf_node.children[i]]);
         }
     }
     if(gltf_node.mesh > -1){
         new_node->mesh = this;
     }
-    if(!parent){
-        
-        nodes.push_back(new_node);
+    if(parent){
+        parent->children.push_back(new_node);       
     }else{
-        parent->children.push_back(new_node);
+         nodes.push_back(new_node);
     }
+
     linear_nodes.push_back(new_node);
 }
 int EMesh::load_model_gltf(const char* path){
@@ -183,7 +185,8 @@ int EMesh::load_model_gltf(const char* path){
                 return 2;
             }
     }//end loop primitives
-    for(size_t i = 0; i < gltf_model.nodes.size();i++){
+    int node_count = gltf_model.nodes.size();
+    for(size_t i = 0; i < node_count;i++){
         load_node(nullptr,i,gltf_model.nodes[i]);
     }
 
@@ -192,10 +195,12 @@ int EMesh::load_model_gltf(const char* path){
        // if(node->skin_index > -1)
          //   node->skin = skins[node->skin_index];
         if(node->mesh){
-            node->skin = skins[0];
-           node->update(); //for some reason this not work, produce issues in vertices transformation
+            //node->skin = skins[0];
+           //node->update(); //for some reason this not work, produce issues in vertices transformation
         }
     }   
+    linear_nodes[4]->skin = skins[0];
+    linear_nodes[4]->update();
 
 
     return 1;

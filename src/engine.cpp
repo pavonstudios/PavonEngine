@@ -242,15 +242,16 @@ void Engine::update_input(){
 	}
 	if(input.D.bIsPressed){		
 		main_camera.MoveRight();
-		//meshes[1]->nodes[3]->rotate();
+		
 	}
 	if(input.Z.bIsPressed){
 		input.yaw += 0.03f;
 		main_camera.mouse_control_update(input.yaw, input.pitch);
 	}
 	if(input.X.bIsPressed){
-		input.yaw += -0.03f;
-		main_camera.mouse_control_update(input.yaw, input.pitch);
+		//input.yaw += -0.03f;
+		//main_camera.mouse_control_update(input.yaw, input.pitch);
+		meshes[1]->nodes[1]->rotate();
 	}
 	if(input.right_button_pressed){
 		main_camera.mouse_control_update(input.yaw, input.pitch);
