@@ -2,16 +2,33 @@ CLANG=clang++ -g -std=c++17 -stdlib=libc++
 CC=g++ -g -std=c++17
 Library=-lglfw -lpthread -lm
 
-MAIN_OBJS = main.cpp camera.cpp engine.cpp gltf.cpp
+MAIN_OBJS = camera.cpp engine.cpp gltf.cpp
 DEFINES= -DGLTF -DTINYGLTF_NO_EXTERNAL_IMAGE
 
 .ONESHELL:
-main:
+main: main.o renderer.o engine.o camera.o
 	mkdir -p bin && cd src
-	$(CC) $(MAIN_OBJS) renderer.cpp -o ../renderer $(Library) -I./ -lvulkan  -DVULKAN $(DEFINES)
+	$(CC) -o ../renderer main.o renderer.o engine.o camera.o $(Library) -I./ -lvulkan  -DVULKAN $(DEFINES)
 
+.ONESHELL:
+main.o:
+	cd src
+	$(CC) -c main.cpp -DGLTF -DVULKAN -DTINYGLTF_NO_EXTERNAL_IMAGE
+
+.ONESHELL:
 renderer.o:
-	$(CC) -c renderer.cpp -I./
+	cd src
+	$(CC) -c renderer.cpp -I./ -DGLTF -DVULKAN
+
+.ONESHELL:
+engine.o: 
+	cd src
+	$(CC) -c engine.cpp -I./ -DGLTF -DVULKAN
+	
+.ONESHELL:
+camera.o:
+	cd src
+	$(CC) -c camera.cpp gltf.cpp -I./ -DGLTF -DVULKAN
 
 .ONESHELL:
 gl:
