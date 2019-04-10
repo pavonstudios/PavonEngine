@@ -17,7 +17,7 @@
       "type": "shell",
       "label": "make",
       "command": "make",
-      "args": [],
+      "args": ["-j8"],
       "options": {
         //"cwd": "/usr/bin"
       },
