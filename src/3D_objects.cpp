@@ -63,11 +63,12 @@ void EMesh::load_skins(){
     
 }
 
-void EMesh::load_node(engine::Node *parent, const tinygltf::Node &gltf_node){
+void EMesh::load_node(engine::Node *parent, uint32_t index, const tinygltf::Node &gltf_node){
     Node *new_node = new Node{};
     new_node->parent = parent;
     new_node->matrix = glm::mat4(1.0f);
     new_node->skin_index = gltf_node.skin;
+    new_node->index = index;
     
     //some nodes do not contain transform information
     if(gltf_node.translation.size() == 3)
@@ -81,12 +82,14 @@ void EMesh::load_node(engine::Node *parent, const tinygltf::Node &gltf_node){
 
     if(gltf_node.children.size() > 0){
         for(size_t i = 0;i < gltf_node.children.size();i++){
-            load_node(new_node,gltf_model.nodes[gltf_node.children[i]]);
+            load_node(new_node,gltf_node.children[i],gltf_model.nodes[gltf_node.children[i]]);
         }
     }
-
-    if(!parent){
+    if(gltf_node.mesh > -1){
         new_node->mesh = this;
+    }
+    if(!parent){
+        
         nodes.push_back(new_node);
     }else{
         parent->children.push_back(new_node);
@@ -103,9 +106,7 @@ int EMesh::load_model_gltf(const char* path){
     bool ret = loader.LoadASCIIFromFile(&gltf_model, &err, &warn, path);
     //bool ret = loader.LoadBinaryFromFile(&model, &err, &warn, argv[1]); // for binary glTF(.glb)
     
-    for(size_t i = 0; i < gltf_model.nodes.size();i++){
-        load_node(nullptr,gltf_model.nodes[i]);
-    }
+    
 
     for(auto primitive : gltf_model.meshes[0].primitives){
         uint32_t indexStart = static_cast<uint32_t>(indices.size());
@@ -182,13 +183,17 @@ int EMesh::load_model_gltf(const char* path){
                 return 2;
             }
     }//end loop primitives
+    for(size_t i = 0; i < gltf_model.nodes.size();i++){
+        load_node(nullptr,i,gltf_model.nodes[i]);
+    }
 
     load_skins();
     for(auto node : linear_nodes){
-        if(node->skin_index > -1)
-            node->skin = skins[node->skin_index];
-        if(node->mesh && !node->parent){
-           //node->update(); //for some reason this not work, produce issues in vertices transformation
+       // if(node->skin_index > -1)
+         //   node->skin = skins[node->skin_index];
+        if(node->mesh){
+            node->skin = skins[0];
+           node->update(); //for some reason this not work, produce issues in vertices transformation
         }
     }   
 

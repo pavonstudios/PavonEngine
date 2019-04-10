@@ -79,7 +79,7 @@ public:
 
     //skeletal
     void load_joints_matrix();
-    void load_node(engine::Node *parent, const tinygltf::Node &gltf_node);
+    void load_node(engine::Node *parent, uint32_t index, const tinygltf::Node &gltf_node);
     void load_skins();
     Node* node_from_index(uint32_t index);
     Node* find_node(Node* parent, uint32_t index);
