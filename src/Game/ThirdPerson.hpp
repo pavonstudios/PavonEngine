@@ -7,7 +7,6 @@ class ThirdPerson{
 		Engine* engine;
 		EMesh* mesh;
 		void move_forward();
-		Input input;
 		void update();
 
 };

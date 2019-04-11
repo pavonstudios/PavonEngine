@@ -7,7 +7,7 @@ void ThirdPerson::move_forward(){
 }
 void ThirdPerson::update(){
 	
-	if(input.W.bIsPressed){
+	if(engine->input.W.bIsPressed){
 		move_forward();
 		engine->print_debug("moving around",10,0);
 	}
