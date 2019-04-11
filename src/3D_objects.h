@@ -149,15 +149,27 @@ struct Node{
                 mesh->node_uniform.matrix = glm::mat4(1.0);
                 size_t joints_number = skin->joints.size();
                 mesh->node_uniform.joint_count = (float)joints_number;
-                Node* joint_node = skin->joints[1];
-                glm::mat4 joint_mat = get_local_matrix();
-                mesh->node_uniform.joint_matrix[1] = glm::mat4(1.0);
-                mesh->node_uniform.joint_matrix[0] = joint_mat;
+                skin->joints[1]->Translation = this->Translation;
+                mesh->node_uniform.joint_matrix[1] = skin->joints[1]->get_local_matrix() * skin->joints[0]->get_local_matrix() * skin->inverse_bind_matrix[1];
+                mesh->node_uniform.joint_matrix[0] = skin->joints[0]->get_local_matrix() * skin->inverse_bind_matrix[0];
+            }
+            
+        }
+        void move_root(){
+            glm::vec3 movement = glm::vec3(0,0.0001,0);
+            //update();
+            if(skin){
+                mesh->node_uniform.matrix = glm::mat4(1.0);
+                size_t joints_number = skin->joints.size();
+                mesh->node_uniform.joint_count = (float)joints_number;
+                skin->joints[0]->Translation += movement;
+                mesh->node_uniform.joint_matrix[1] = skin->joints[1]->get_local_matrix() * skin->joints[0]->get_local_matrix() * skin->inverse_bind_matrix[1];
+                mesh->node_uniform.joint_matrix[0] = skin->joints[0]->get_local_matrix() * skin->inverse_bind_matrix[0];
             }
             
         }
         glm::mat4 get_local_matrix(){
-            return glm::translate(glm::mat4(1.0f),Translation) * glm::mat4(Rotation) * matrix;
+            return glm::translate(glm::mat4(1.0f),Translation);
         }
         glm::mat4 get_matrix(){
                 glm::mat4 local_matrix = get_local_matrix();
