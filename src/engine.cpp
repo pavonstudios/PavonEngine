@@ -57,7 +57,7 @@ void Engine::InitWindow(){
 			glfwSetKeyCallback(window, key_callback);
 			glfwSetCursorPosCallback(window, mouse_callback);
 			glfwSetMouseButtonCallback(window,mouse_button_callback);
-			//glfwSetScrollCallback(window,input.scroll_callback);
+			glfwSetScrollCallback(window,input.scroll_callback);
 
 	#ifdef _OpenGL_Renderer_
 			

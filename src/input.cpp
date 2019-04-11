@@ -7,7 +7,7 @@ void Input::scroll_callback(GLFWwindow* window, double xoffset, double yoffset){
 			#ifdef VULKAN
 	  			auto engine = reinterpret_cast<Engine*>(glfwGetWindowUserPointer(window));
 			#endif
-			if(engine)
+			if(engine){
 				engine->main_camera.velocity += yoffset;
-
+			}
 }
