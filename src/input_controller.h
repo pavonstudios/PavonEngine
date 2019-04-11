@@ -17,6 +17,7 @@ public:
 	key_pressed Z;
 	key_pressed W;
 	key_pressed S;
+	key_pressed TAB;
 
 	float pitch = 0;
 	float yaw = 0;
@@ -30,6 +31,7 @@ public:
 	bool move_camera = false;
 
 	static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
+	static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 	
 
 };

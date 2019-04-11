@@ -79,7 +79,7 @@ void Engine::InitWindow(){
 			glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
 	#endif
 			glfwSetInputMode(window, GLFW_STICKY_KEYS, 1);
-			glfwSetKeyCallback(window, key_callback);
+			glfwSetKeyCallback(window, input.key_callback);
 			glfwSetCursorPosCallback(window, mouse_callback);
 			glfwSetMouseButtonCallback(window,mouse_button_callback);
 			glfwSetScrollCallback(window,input.scroll_callback);
@@ -181,82 +181,6 @@ void Engine::mouse_button_callback(GLFWwindow* window, int button, int action, i
 
 }
 
-void Engine::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods){
-	#ifdef VULKAN
-		auto app = reinterpret_cast<Renderer*>(glfwGetWindowUserPointer(window));
-	#endif
-	#ifdef _OpenGL_Renderer_
-		auto app = reinterpret_cast<RendererGL*>(glfwGetWindowUserPointer(window));
-	#endif
-          
-			if(key == GLFW_KEY_S){
-				if(action == GLFW_PRESS){
-					app->engine->input.S.bIsPressed = true;
-				}
-				if(action == GLFW_RELEASE){
-					app->engine->input.S.bIsPressed = false;
-				}
-			}
-			if(key == GLFW_KEY_W){
-				if(action == GLFW_PRESS){
-					app->engine->input.W.bIsPressed = true;
-				}
-				if(action == GLFW_RELEASE){
-					app->engine->input.W.bIsPressed = false;
-				}
-			}
-			if(key == GLFW_KEY_D){
-				if(action == GLFW_PRESS){
-					app->engine->input.D.bIsPressed = true;
-				}
-				if(action == GLFW_RELEASE){
-					app->engine->input.D.bIsPressed = false;
-				}
-			}
-			if(key == GLFW_KEY_A){
-				if(action == GLFW_PRESS){
-					app->engine->input.A.bIsPressed = true;
-				}
-				if(action == GLFW_RELEASE){
-					app->engine->input.A.bIsPressed = false;
-				}
-			}
-			if(key == GLFW_KEY_Z){
-				if(action == GLFW_PRESS){
-					app->engine->input.Z.bIsPressed = true;
-				}
-				if(action == GLFW_RELEASE){
-					app->engine->input.Z.bIsPressed = false;
-				}
-			}
-			
-			if(key == GLFW_KEY_E){
-				if(action == GLFW_PRESS){
-					app->engine->input.E.bIsPressed = true;
-				}
-				if(action == GLFW_RELEASE){
-					app->engine->input.E.bIsPressed = false;
-				}
-			}
-			if(key == GLFW_KEY_Q){
-				if(action == GLFW_PRESS){
-					app->engine->input.Q.bIsPressed = true;
-				}
-				if(action == GLFW_RELEASE){
-					app->engine->input.Q.bIsPressed = false;
-				}
-			}
-			if(key == GLFW_KEY_X){
-				if(action == GLFW_PRESS){
-					app->engine->input.X.bIsPressed = true;
-				}
-				if(action == GLFW_RELEASE){
-					app->engine->input.X.bIsPressed = false;
-				}
-			}
-           
-           
-}
 
 void Engine::update_input(){
 	if(input.S.bIsPressed){
