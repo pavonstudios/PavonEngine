@@ -183,36 +183,40 @@ void Engine::mouse_button_callback(GLFWwindow* window, int button, int action, i
 
 
 void Engine::update_input(){
-	if(input.S.bIsPressed){
-		main_camera.MoveBackward();
-		
-	}
-	if(input.W.bIsPressed){
-		main_camera.MoveForward();
-	}
-	if(input.A.bIsPressed){		
-		main_camera.MoveLeft();
-	}
-	if(input.D.bIsPressed){		
-		main_camera.MoveRight();
-		
-	}
-	if(input.Z.bIsPressed){
-		meshes[1]->nodes[2]->move_root();
-	}
-	if(input.X.bIsPressed){	
-		meshes[1]->nodes[2]->rotate();
-	}
+	
+	if(edit_mode){
+			if(input.S.bIsPressed){
+				main_camera.MoveBackward();
+				
+			}
+			if(input.W.bIsPressed){
+				main_camera.MoveForward();
+			}
+			if(input.A.bIsPressed){		
+				main_camera.MoveLeft();
+			}
+			if(input.D.bIsPressed){		
+				main_camera.MoveRight();
+				
+			}
+			if(input.Z.bIsPressed){
+				meshes[1]->nodes[2]->move_root();
+			}
+			if(input.X.bIsPressed){	
+				meshes[1]->nodes[2]->rotate();
+			}
 
-	if(input.Q.bIsPressed){
-		main_camera.MoveDown();
-	}
-	if(input.E.bIsPressed){
-		main_camera.MoveUp();
-	}
+			if(input.Q.bIsPressed){
+				main_camera.MoveDown();
+			}
+			if(input.E.bIsPressed){
+				main_camera.MoveUp();
+			}
 
-	if(input.move_camera){
-		main_camera.mouse_control_update(input.yaw, input.pitch);
+			if(input.move_camera){
+				main_camera.mouse_control_update(input.yaw, input.pitch);
+
+			}
 
 	}
 }

@@ -16,7 +16,21 @@ void Input::key_callback(GLFWwindow* window, int key, int scancode, int action, 
 	#ifdef VULKAN
 		auto engine = reinterpret_cast<Engine*>(glfwGetWindowUserPointer(window));
 	#endif
-          
+			if(key == GLFW_KEY_TAB){
+				if(action == GLFW_PRESS){
+					engine->input.TAB.bIsPressed = true;
+				}
+				if(action == GLFW_RELEASE){
+					engine->input.TAB.bIsPressed = false;
+					if(!engine->edit_mode)
+						engine->edit_mode = true;
+					else
+					{
+						engine->edit_mode = false;
+					}
+					
+				}
+			}
 			if(key == GLFW_KEY_S){
 				if(action == GLFW_PRESS){
 					engine->input.S.bIsPressed = true;

@@ -46,6 +46,7 @@ class Engine {
         std::vector<EMesh*> meshes;
         EMesh* skeletal;
         Camera main_camera;
+        bool edit_mode = false;
 
         float deltaTime = 0.0f;	// Time between current frame and last frame
         float lastFrame = 0.0f; // Time of last frame  
