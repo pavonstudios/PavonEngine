@@ -123,11 +123,11 @@ int EMesh::load_model_gltf(const char* path){
        // if(node->skin_index > -1)
          //   node->skin = skins[node->skin_index];
         if(node->mesh){
-            //node->skin = skins[0];
+            node->skin = skins[0];
            //node->update(); //for some reason this not work, produce issues in vertices transformation
         }
     }   
-    linear_nodes[4]->skin = skins[0];
+    //linear_nodes[4]->skin = skins[0];
     //linear_nodes[4]->update();
 
 

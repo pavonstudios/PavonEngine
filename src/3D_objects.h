@@ -143,7 +143,13 @@ struct Node{
         
         void rotate(){
             Translation += glm::vec3(0,0.0001,0);
-            update();
+            //update();
+            if(skin){
+                 Node* joint_node = skin->joints[14];
+            glm::mat4 joint_mat = joint_node->get_matrix() * skin->inverse_bind_matrix[14];
+            mesh->node_uniform.joint_matrix[14] = joint_mat;
+            }
+            
         }
         glm::mat4 get_local_matrix(){
             return glm::translate(glm::mat4(1.0f),Translation) * glm::mat4(Rotation) * matrix;
