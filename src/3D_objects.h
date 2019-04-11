@@ -69,10 +69,7 @@ public:
     void clean_object();
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
-    std::vector< glm::vec3 > simple_vertices;
     
-    void load_model(std::string model_path);
-
     glm::mat4 model_matrix = glm::rotate(glm::mat4(1.0f), glm::radians(0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
     glm::vec3 location_vector;
     std::string texture_path;   
@@ -84,9 +81,7 @@ public:
     Node* node_from_index(uint32_t index);
     Node* find_node(Node* parent, uint32_t index);
 
-    virtual void SetLocation(float x, float y, float z);
-
-    bool load_model2(const char * path);
+    virtual void SetLocation(float x, float y, float z);    
 
 #ifdef GLTF
     int load_model_gltf(const char* path);
