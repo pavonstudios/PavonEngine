@@ -111,6 +111,10 @@ int EMesh::load_model_gltf(const char* path){
 
     bool ret = loader.LoadASCIIFromFile(&gltf_model, &err, &warn, path);
     //bool ret = loader.LoadBinaryFromFile(&model, &err, &warn, argv[1]); // for binary glTF(.glb)
+    if(!ret){
+        std::string error = "Failed to open " + std::string(path);
+        throw std::runtime_error(error);
+    }
     
     load_primitives_data();
 

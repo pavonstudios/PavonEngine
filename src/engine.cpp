@@ -331,7 +331,7 @@ void Engine::load_map(std::string path){
 	meshes[i]->texture_path = textures_paths[i];
 	}
 	//load gltf model
-	load_models();
+	//load_models();
 }
 
 void Engine::delete_meshes(){
