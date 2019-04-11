@@ -6,8 +6,9 @@ void ThirdPerson::move_forward(){
 	
 }
 void ThirdPerson::update(){
+	engine->print_debug("moving around",10,0);
 	if(input.W.bIsPressed){
 		move_forward();
-		std::cout << "move character" << std::endl;
+		
 	}
 }

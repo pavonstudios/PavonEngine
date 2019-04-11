@@ -73,6 +73,7 @@ class Engine {
         float get_time();
         #ifdef DEVELOPMENT
         void print_debug(const std::string text, int8_t posx, int8_t posy);
+        void print_fps();
         #endif
         
 

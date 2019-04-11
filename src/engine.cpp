@@ -9,7 +9,7 @@ void Engine::main_loop(){
 	 player.engine = this;
 		player.mesh = meshes.back();
 	 while (!glfwWindowShouldClose(window)) {
-		 	print_debug("asdf", 4 ,4);
+		 	print_fps();
 		 	glfwPollEvents();
 			update_input();
 			player.update();			
@@ -422,14 +422,16 @@ void * Engine::InputHanled(){
 }
 
 #ifdef DEVELOPMENT
-    void Engine::print_debug(const std::string text, int8_t posx, int8_t posy){
-		
-		printf("%c[0;15H",0x1B);
+    void Engine::print_debug(const std::string text, int8_t posx, int8_t posy){		
+		printf("%c[%i;%iH",0x1B,posx,posy);
+		printf(text.c_str());		
+	}
+	void Engine::print_fps(){
+		print_debug("",0,15);
 		printf("FPS: ");
 		printf("%i",last_fps);
 		printf(" Frames: %i",frames);
 		printf(" Frame time: %f",frame_time);
-
 	}
 
 #endif

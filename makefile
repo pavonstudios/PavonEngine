@@ -9,11 +9,17 @@ OBJs= main.o renderer.o engine.o camera.o asset_manager.o 3D_objects.o input.o
 
 GAME= game
 
-COMPILE= $(CC) -c -DGLTF -DVULKAN
+COMPILE= $(CC) -c -DGLTF -DVULKAN -DDEVELOPMENT
 
-GAMEOBJs := $(wildcard /home/pavon/rt_renderer/src/Game/*.o)
+GAMEOBJs = $(wildcard /home/pavon/rt_renderer/src/Game/*.o)
+
 .ONESHELL:
-renderer: $(OBJs) $(game)
+full: $(OBJs) game $(game)
+	mkdir -p bin && cd src
+	$(CC) -o ../renderer $(OBJs) model_loader.o $(GAMEOBJs) $(Library) -I./ -lvulkan  -DVULKAN $(DEFINES)
+
+.ONESHELL:
+renderer: $(OBJs) game $(game)
 	mkdir -p bin && cd src
 	$(CC) -o ../renderer $(OBJs) model_loader.o $(GAMEOBJs) $(Library) -I./ -lvulkan  -DVULKAN $(DEFINES)
 
@@ -33,10 +39,7 @@ game:
 	$(foreach chori,*.cpp,$(COMPILE) $(chori))
 
 
-.ONESHELL:
-full: $(OBJs) $(game)
-	mkdir -p bin && cd src
-	$(CC) -o ../renderer $(OBJs) model_loader.o $(GAMEOBJs) $(Library) -I./ -lvulkan  -DVULKAN $(DEFINES)
+
 
 .ONESHELL:
 main.o:
