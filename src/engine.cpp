@@ -281,7 +281,7 @@ void Engine::load_models(){
 
 void Engine::load_and_instance_at_location(std::string path, glm::vec3 location){
 	EMesh *model = new EMesh(vulkan_device);	
-	model->load_model(path);
+	model->load_model_gltf(path.c_str());
 	glm::mat4 model_matrix = glm::mat4(1.0f);
 	model_matrix = glm::translate(model_matrix, location);
 	model->model_matrix = model_matrix;
@@ -316,6 +316,7 @@ void Engine::load_map(std::string path){
 				locations.push_back(location);
 				textures_paths.push_back(std::string(texture_path));
 			}
+			
 		}
 		
 	}
