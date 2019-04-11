@@ -25,7 +25,7 @@ input.o:
 .ONESHELL:
 full: $(OBJs)
 	mkdir -p bin && cd src
-	$(CC) -o ../renderer main.o renderer.o engine.o camera.o asset_manager.o 3D_objects.o model_loader.o $(Library) -I./ -lvulkan  -DVULKAN $(DEFINES)
+	$(CC) -o ../renderer $(OBJs) model_loader.o $(Library) -I./ -lvulkan  -DVULKAN $(DEFINES)
 
 .ONESHELL:
 main.o:

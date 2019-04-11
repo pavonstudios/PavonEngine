@@ -291,7 +291,23 @@ void Engine::load_and_instance_at_location(std::string path, glm::vec3 location)
 	//std::cout << "loading Emesh" << std::endl;
 
 }
+void Engine::Execute(){
+			//pthread_create(&thread[0],NULL, ExecuteRenderHanler, this);
+            //pthread_create(&thread[1],NULL, ExecuteInputHanler, this);
+            InitWindow();
+            Render();
+}
 
+void * Engine::Render(){
+	        app.run(&vkdata);
+			glfwSetScrollCallback(window,input.scroll_callback);
+            load_map("map01.map");
+            app.configure_objects();
+            std::cout << "Rendering" << std::endl;
+            main_loop();
+            //pthread_exit(NULL);
+            return (void *)nullptr;
+}
 void Engine::load_map(std::string path){
 	FILE* file = fopen(path.c_str(),"r");
 	if(file == NULL){
@@ -340,4 +356,52 @@ void Engine::delete_meshes(){
 	for(auto mesh : meshes){
 		delete mesh;
 	}
+}
+float Engine::get_time(){
+            static auto startTime = std::chrono::high_resolution_clock::now();
+
+            auto currentTime = std::chrono::high_resolution_clock::now();
+            float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
+
+            deltaTime = time - lastFrame;
+            lastFrame = time;
+
+            return time;
+}
+void Engine::framebufferResizeCallback(GLFWwindow* window, int width, int height) {
+  auto app = reinterpret_cast<Renderer*>(glfwGetWindowUserPointer(window));
+            app->framebufferResized = true;
+}
+void * Engine::InputHanled(){
+	std::cout << "Input thread created" << std::endl;
+            char character;
+            bool repeat = true;
+            while(repeat){
+                if(!app.bIsRunnning){
+                    std::cout << "Exiting from input console";
+                    break;
+                }
+                std::cin >> character;
+                if(character == 's'){
+                    std::cout << "Letter S pressed";
+                }
+                if(character == 'f'){
+                    repeat = false;
+                }
+                if(character == 'x'){
+                    std::cout << "Rotation value changed to 45";
+                    //app.RotationValue = 45;
+                }
+                if(character == 'z'){
+                    std::cout << "LRotation Value changed to 90";
+                     //app.RotationValue = 90;
+                }
+                if(character == 'm'){
+                    std::cout << "Loading other model";
+                    //app.loadModel("models/chalet.obj");
+                }
+                
+            }
+   
+            pthread_exit(NULL);
 }

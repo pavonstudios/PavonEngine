@@ -24,11 +24,6 @@
 #include <vector>
 #include "VulkanData.hpp"
 
-
-
-/* Engine class who controll 
-threads executions */
-
 class Engine {
     public:
 
@@ -53,36 +48,15 @@ class Engine {
         void main_loop();
         void update_window_size();
         void delete_meshes();
-        void Execute(){
-            //pthread_create(&thread[0],NULL, ExecuteRenderHanler, this);
-            //pthread_create(&thread[1],NULL, ExecuteInputHanler, this);
-            InitWindow();
-            Render();
-            }
-
-
-        void *Render(){          
-            app.run(&vkdata);
-			glfwSetScrollCallback(window,input.scroll_callback);
-            load_map("map01.map");
-            app.configure_objects();
-            std::cout << "Rendering" << std::endl;
-            main_loop();
-            //pthread_exit(NULL);
-            return (void *)nullptr;
-        }
-        
-        
+        void Execute();
+        void *Render();
 private:
          static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
          static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
          static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
          
     #ifdef VULKAN
-        static void framebufferResizeCallback(GLFWwindow* window, int width, int height) {
-            auto app = reinterpret_cast<Renderer*>(glfwGetWindowUserPointer(window));
-            app->framebufferResized = true;
-        }
+        static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
     #endif
 	
         static void* ExecuteInputHanler(void* This){
@@ -91,42 +65,9 @@ private:
         static void* ExecuteRenderHanler(void * This){
             return ((Engine *)This)->Render();
         }
-        void *InputHanled(){
-    
-            std::cout << "Input thread created" << std::endl;
-            char character;
-            bool repeat = true;
-            while(repeat){
-                if(!app.bIsRunnning){
-                    std::cout << "Exiting from input console";
-                    break;
-                }
-                std::cin >> character;
-                if(character == 's'){
-                    std::cout << "Letter S pressed";
-                }
-                if(character == 'f'){
-                    repeat = false;
-                }
-                if(character == 'x'){
-                    std::cout << "Rotation value changed to 45";
-                    //app.RotationValue = 45;
-                }
-                if(character == 'z'){
-                    std::cout << "LRotation Value changed to 90";
-                     //app.RotationValue = 90;
-                }
-                if(character == 'm'){
-                    std::cout << "Loading other model";
-                    //app.loadModel("models/chalet.obj");
-                }
-                
-            }
-   
-            pthread_exit(NULL);
-        }
+        void *InputHanled();
 
-#endif
+    #endif//end no define android
     void update_input();
 public:
         class Input input;
@@ -154,25 +95,12 @@ public:
         void load_map(std::string path);
 
         float deltaTime = 0.0f;	// Time between current frame and last frame
-        float lastFrame = 0.0f; // Time of last frame
+        float lastFrame = 0.0f; // Time of last frame       
 
-        
-
-        float get_time(){
-            static auto startTime = std::chrono::high_resolution_clock::now();
-
-            auto currentTime = std::chrono::high_resolution_clock::now();
-            float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
-
-            deltaTime = time - lastFrame;
-            lastFrame = time;
-
-            return time;
-        }
+        float get_time();
         Engine(){init();};
         void init(){
-            app.engine = this;
-            
+            app.engine = this;          
             
             };
         
