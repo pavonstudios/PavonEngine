@@ -23,6 +23,8 @@
 #include "vertex.h"
 #include <iostream>
 #include "VulkanDevice.hpp"
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/quaternion.hpp>
 
 #define MESH_TYPE_STATIC 0
 #define MESH_TYPE_SKINNED 1
@@ -70,7 +72,7 @@ public:
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
     
-    glm::mat4 model_matrix = glm::rotate(glm::mat4(1.0f), glm::radians(0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+    glm::mat4 model_matrix = glm::mat4(1.0);
     glm::vec3 location_vector;
     std::string texture_path;   
 

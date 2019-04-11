@@ -15,8 +15,10 @@
     #include "glm/glm.hpp"
 #endif
 
-#define GLM_ENABLE_EXPERIMENTAL
+/* #define GLM_ENABLE_EXPERIMENTAL
 #include "glm/gtx/hash.hpp"
+ */
+#include <glm/glm.hpp>
 
 struct Vertex {
     glm::vec3 pos;
@@ -91,11 +93,11 @@ struct Vertex {
 };//end vertx struct 
 
 
-namespace std {
+/* namespace std {
     template<> struct hash<Vertex> {
         size_t operator()(Vertex const& vertex) const {
             return ((hash<glm::vec3>()(vertex.pos) ^ (hash<glm::vec3>()(vertex.color) << 1)) >> 1) ^ (hash<glm::vec2>()(vertex.texCoord) << 1);
         }
     };
-};
+}; */
 #endif
