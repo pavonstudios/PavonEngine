@@ -3,7 +3,7 @@ CC=g++ -g -std=c++17
 Library=-lglfw -lpthread -lm
 
 MAIN_OBJS = camera.cpp engine.cpp gltf.cpp
-DEFINES= -DGLTF
+DEFINES= -DGLTF -DDEVELOPMENT
 
 OBJs= main.o renderer.o engine.o camera.o asset_manager.o 3D_objects.o input.o
 
@@ -45,7 +45,7 @@ asset_manager.o:
 .ONESHELL:
 engine.o: 
 	cd src
-	$(CC) -c engine.cpp -I./ -DGLTF -DVULKAN
+	$(CC) -c engine.cpp -I./ -DGLTF -DVULKAN -DDEVELOPMENT
 	
 .ONESHELL:
 camera.o:

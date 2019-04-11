@@ -1,15 +1,31 @@
 #include "engine.h"
 #include "input_controller.h"
 
-
+#include <sstream>
 void Engine::main_loop(){
 	 
 	 while (!glfwWindowShouldClose(window)) {
+		 	print_debug("asdf", 4 ,4);
 		 	glfwPollEvents();
 			update_input();
 			get_time();
 			main_camera.cameraSpeed = main_camera.velocity * deltaTime;
+
+			auto tStart = std::chrono::high_resolution_clock::now();
 			app.main_loop();
+			frames++;
+
+			auto tEnd = std::chrono::high_resolution_clock::now();
+			auto tDiff = std::chrono::duration<double, std::milli>(tEnd - tStart).count();
+			frame_time = (float)tDiff/1000.0f;
+
+			fps += (float)tDiff;
+			if(fps > 1000.0f){
+				last_fps = static_cast<uint32_t>((float)frames * (1000.0f / fps));
+				fps = 0;
+				frames = 0;
+			}
+
 			glfwSwapBuffers(window);
     }
 	app.finish();
@@ -357,17 +373,7 @@ void Engine::delete_meshes(){
 		delete mesh;
 	}
 }
-float Engine::get_time(){
-            static auto startTime = std::chrono::high_resolution_clock::now();
 
-            auto currentTime = std::chrono::high_resolution_clock::now();
-            float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
-
-            deltaTime = time - lastFrame;
-            lastFrame = time;
-
-            return time;
-}
 void Engine::framebufferResizeCallback(GLFWwindow* window, int width, int height) {
   auto app = reinterpret_cast<Renderer*>(glfwGetWindowUserPointer(window));
             app->framebufferResized = true;
@@ -404,4 +410,30 @@ void * Engine::InputHanled(){
             }
    
             pthread_exit(NULL);
+}
+
+#ifdef DEVELOPMENT
+    void Engine::print_debug(const std::string text, int8_t posx, int8_t posy){
+		
+		printf("%c[0;15H",0x1B);
+		printf("FPS: ");
+		printf("%i",last_fps);
+		printf(" Frames: %i",frames);
+		printf(" Frame time: %f",frame_time);
+
+	}
+
+#endif
+float Engine::get_time(){
+            static auto startTime = std::chrono::high_resolution_clock::now();
+
+            auto currentTime = std::chrono::high_resolution_clock::now();
+            float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
+
+            deltaTime = time - lastFrame;
+            lastFrame = time;
+
+
+			
+            return time;
 }

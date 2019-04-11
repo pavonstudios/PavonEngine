@@ -8,7 +8,8 @@
 			"cppStandard": "c++17",
 			"defines": [
                 "VULKAN",
-                "GLTF"
+                "GLTF",
+                "DEVELOPMENT"
 			]
         }
     ],

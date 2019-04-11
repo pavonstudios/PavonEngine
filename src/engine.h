@@ -40,6 +40,23 @@ class Engine {
     #endif
         pthread_t thread[2];
         GLFWwindow* window;
+        class Input input;
+        AssetManager objects_manager;
+        float move_y = 0;
+        std::vector<EMesh*> meshes;
+        EMesh* skeletal;
+        Camera main_camera;
+
+        float deltaTime = 0.0f;	// Time between current frame and last frame
+        float lastFrame = 0.0f; // Time of last frame  
+
+        int frames = 0;
+        float fps = 0;  
+        int last_fps = 0;   
+        float frame_time = 0;
+      
+
+ 
         GLFWwindow* get_window_pointer()
         {
             return window;
@@ -50,6 +67,21 @@ class Engine {
         void delete_meshes();
         void Execute();
         void *Render();
+        void load_models();
+        void load_and_instance_at_location(std::string path, glm::vec3 location);
+        void load_map(std::string path);
+        float get_time();
+        #ifdef DEVELOPMENT
+        void print_debug(const std::string text, int8_t posx, int8_t posy);
+        #endif
+        
+
+
+        Engine(){init();};
+        void init(){
+            app.engine = this;          
+            
+            };
 private:
          static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
          static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -70,13 +102,8 @@ private:
     #endif//end no define android
     void update_input();
 public:
-        class Input input;
-        AssetManager objects_manager;
-        float move_y = 0;
-        std::vector<EMesh*> meshes;
-        EMesh* skeletal;
-
-        Camera main_camera; 
+       
+        
         glm::vec3 objects_positions[10] = {
             glm::vec3( 0.0f,  0.0f,  0.0f), 
             glm::vec3( 2.0f,  5.0f, -15.0f), 
@@ -90,19 +117,7 @@ public:
             glm::vec3(-1.3f,  1.0f, -1.5f)  
         };    
 
-        void load_models();
-        void load_and_instance_at_location(std::string path, glm::vec3 location);
-        void load_map(std::string path);
-
-        float deltaTime = 0.0f;	// Time between current frame and last frame
-        float lastFrame = 0.0f; // Time of last frame       
-
-        float get_time();
-        Engine(){init();};
-        void init(){
-            app.engine = this;          
-            
-            };
+       
         
     
 };
