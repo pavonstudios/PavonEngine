@@ -24,6 +24,7 @@ public:
 
 	float lastX = 400, lastY = 300;
 
+	bool move_camera = false;
 	
 
 };

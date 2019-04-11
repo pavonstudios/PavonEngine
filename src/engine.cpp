@@ -92,7 +92,7 @@ void Engine::update_window_size(){
 			throw std::runtime_error("no app pointer");
 		}
 	
-	//if(app->engine->input.right_button_pressed){
+	if(app->engine->input.move_camera){
 		if(app->engine->input.first_mouse){
 			app->engine->input.lastX = xpos;
 			app->engine->input.lastY = ypos;
@@ -116,7 +116,7 @@ void Engine::update_window_size(){
 		if(app->engine->input.pitch < -89.0f)
 			app->engine->input.pitch = -89.0f;		
 
-	//}//end right click pressed
+	}//end right click pressed
 	
 	
 
@@ -134,6 +134,7 @@ void Engine::mouse_button_callback(GLFWwindow* window, int button, int action, i
 			if(action == GLFW_PRESS){
 				app->engine->input.right_button_pressed = true;
 				glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);  
+				app->engine->input.move_camera = false;
 			}
 			if(action == GLFW_RELEASE){
 				app->engine->input.right_button_pressed = false;
@@ -142,7 +143,8 @@ void Engine::mouse_button_callback(GLFWwindow* window, int button, int action, i
 		}
 		if (button == GLFW_MOUSE_BUTTON_LEFT ){
 			if(action == GLFW_PRESS){
-				glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);  
+				glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); 
+				app->engine->input.move_camera = true; 
 			}
 			if(action == GLFW_RELEASE){
 				//app->engine->input.right_button_pressed = false;
@@ -245,23 +247,22 @@ void Engine::update_input(){
 		
 	}
 	if(input.Z.bIsPressed){
-		input.yaw += 0.03f;
-		main_camera.mouse_control_update(input.yaw, input.pitch);
+	
 	}
-	if(input.X.bIsPressed){
-		//input.yaw += -0.03f;
-		//main_camera.mouse_control_update(input.yaw, input.pitch);
+	if(input.X.bIsPressed){	
 		meshes[1]->nodes[1]->rotate();
 	}
-	if(input.right_button_pressed){
-		main_camera.mouse_control_update(input.yaw, input.pitch);
-	}
-	main_camera.mouse_control_update(input.yaw, input.pitch);
+
 	if(input.Q.bIsPressed){
 		main_camera.MoveDown();
 	}
 	if(input.E.bIsPressed){
 		main_camera.MoveUp();
+	}
+
+	if(input.move_camera){
+		main_camera.mouse_control_update(input.yaw, input.pitch);
+
 	}
 }
 
