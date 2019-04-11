@@ -140,14 +140,19 @@ struct Node{
         EMesh* mesh;
         Skin* skin;
         int32_t skin_index = -1;
+        std::string name;
         
         void rotate(){
             Translation += glm::vec3(0,0.0001,0);
             //update();
             if(skin){
-                 Node* joint_node = skin->joints[14];
-            glm::mat4 joint_mat = joint_node->get_matrix() * skin->inverse_bind_matrix[14];
-            mesh->node_uniform.joint_matrix[14] = joint_mat;
+                mesh->node_uniform.matrix = glm::mat4(1.0);
+                size_t joints_number = skin->joints.size();
+                mesh->node_uniform.joint_count = (float)joints_number;
+                Node* joint_node = skin->joints[1];
+                glm::mat4 joint_mat = get_local_matrix();
+                mesh->node_uniform.joint_matrix[1] = glm::mat4(1.0);
+                mesh->node_uniform.joint_matrix[0] = joint_mat;
             }
             
         }

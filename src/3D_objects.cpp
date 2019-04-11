@@ -72,6 +72,7 @@ void EMesh::load_node(engine::Node *parent, uint32_t index, const tinygltf::Node
     new_node->matrix = glm::mat4(1.0f);
     new_node->skin_index = gltf_node.skin;
     new_node->index = index;
+    new_node->name = gltf_node.name;
     
     //some nodes do not contain transform information
     if(gltf_node.translation.size() == 3)
