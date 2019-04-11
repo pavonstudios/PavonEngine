@@ -12,7 +12,8 @@ void Engine::main_loop(){
 		 	print_fps();
 		 	glfwPollEvents();
 			update_input();
-			player.update();			
+			if(!edit_mode)
+				player.update();			
 			get_time();
 			main_camera.cameraSpeed = main_camera.velocity * deltaTime;
 
