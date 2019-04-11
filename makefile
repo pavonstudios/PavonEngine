@@ -7,10 +7,15 @@ DEFINES= -DGLTF -DDEVELOPMENT
 
 OBJs= main.o renderer.o engine.o camera.o asset_manager.o 3D_objects.o input.o
 
+GAME= game
+
+COMPILE= $(CC) -c -DGLTF -DVULKAN
+
+GAMEOBJs := $(wildcard /home/pavon/rt_renderer/src/Game/*.o)
 .ONESHELL:
-renderer: renderer.o engine.o camera.o 3D_objects.o input.o
+renderer: $(OBJs) $(game)
 	mkdir -p bin && cd src
-	$(CC) -o ../renderer $(OBJs) model_loader.o $(Library) -I./ -lvulkan  -DVULKAN $(DEFINES)
+	$(CC) -o ../renderer $(OBJs) model_loader.o $(GAMEOBJs) $(Library) -I./ -lvulkan  -DVULKAN $(DEFINES)
 
 .ONESHELL:
 input.o: 
@@ -23,9 +28,15 @@ input.o:
 	$(CC) -c 3D_objects.cpp -DGLTF -DVULKAN 
 
 .ONESHELL:
-full: $(OBJs)
+game:
+	cd src/Game
+	$(foreach chori,*.cpp,$(COMPILE) $(chori))
+
+
+.ONESHELL:
+full: $(OBJs) $(game)
 	mkdir -p bin && cd src
-	$(CC) -o ../renderer $(OBJs) model_loader.o $(Library) -I./ -lvulkan  -DVULKAN $(DEFINES)
+	$(CC) -o ../renderer $(OBJs) model_loader.o $(GAMEOBJs) $(Library) -I./ -lvulkan  -DVULKAN $(DEFINES)
 
 .ONESHELL:
 main.o:

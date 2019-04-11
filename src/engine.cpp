@@ -2,29 +2,38 @@
 #include "input_controller.h"
 
 #include <sstream>
+
+#include "Game/ThirdPerson.hpp"
 void Engine::main_loop(){
-	 
+	 ThirdPerson player;
+	 player.engine = this;
+		player.mesh = meshes.back();
 	 while (!glfwWindowShouldClose(window)) {
 		 	print_debug("asdf", 4 ,4);
 		 	glfwPollEvents();
 			update_input();
+			player.update();			
 			get_time();
 			main_camera.cameraSpeed = main_camera.velocity * deltaTime;
 
-			auto tStart = std::chrono::high_resolution_clock::now();
-			app.main_loop();
-			frames++;
+			
+				auto tStart = std::chrono::high_resolution_clock::now();
+				app.main_loop();//draw frame
+				frames++;
 
-			auto tEnd = std::chrono::high_resolution_clock::now();
-			auto tDiff = std::chrono::duration<double, std::milli>(tEnd - tStart).count();
-			frame_time = (float)tDiff/1000.0f;
+				auto tEnd = std::chrono::high_resolution_clock::now();
+				auto tDiff = std::chrono::duration<double, std::milli>(tEnd - tStart).count();
+				frame_time = (float)tDiff/1000.0f;
 
-			fps += (float)tDiff;
-			if(fps > 1000.0f){
-				last_fps = static_cast<uint32_t>((float)frames * (1000.0f / fps));
-				fps = 0;
-				frames = 0;
-			}
+				fps += (float)tDiff;
+				if(fps > 1000.0f){
+					last_fps = static_cast<uint32_t>((float)frames * (1000.0f / fps));
+					fps = 0;
+					frames = 0;
+				}
+			
+		
+			
 
 			glfwSwapBuffers(window);
     }
@@ -287,7 +296,7 @@ void Engine::update_input(){
 void Engine::load_models(){	
 	//load gltf skinned mesh
 	skeletal = new EMesh(vulkan_device);
-	skeletal->load_model_gltf("models/cube2.gltf");
+	skeletal->load_model_gltf("models/character2.gltf");
 	skeletal->texture_path = "textures/character2.jpg";
 	meshes.push_back(skeletal);
 	glm::mat4 model_matrix = glm::mat4(1.0f);
