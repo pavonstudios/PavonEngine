@@ -21,7 +21,9 @@
 #include <chrono>
 #include "input_controller.h"
 
+#include <vector>
 #include "VulkanData.hpp"
+
 
 
 /* Engine class who controll 
@@ -61,6 +63,7 @@ class Engine {
 
         void *Render(){          
             app.run(&vkdata);
+			glfwSetScrollCallback(window,input.scroll_callback);
             load_map("map01.map");
             app.configure_objects();
             std::cout << "Rendering" << std::endl;

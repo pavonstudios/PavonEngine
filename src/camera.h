@@ -1,3 +1,6 @@
+#ifndef CAMERA_H
+#define CAMERA_H
+
 #include "game_object.h"
 #ifndef ANDROID
 	#include <glm/glm.hpp>
@@ -55,3 +58,5 @@ public:
 		void MoveDown();	
 
 };
+
+#endif

@@ -5,10 +5,17 @@ Library=-lglfw -lpthread -lm
 MAIN_OBJS = camera.cpp engine.cpp gltf.cpp
 DEFINES= -DGLTF
 
+OBJs= main.o renderer.o engine.o camera.o asset_manager.o 3D_objects.o input.o
+
 .ONESHELL:
-renderer: renderer.o engine.o camera.o 3D_objects.o
+renderer: renderer.o engine.o camera.o 3D_objects.o input.o
 	mkdir -p bin && cd src
-	$(CC) -o ../renderer main.o renderer.o engine.o camera.o asset_manager.o 3D_objects.o model_loader.o $(Library) -I./ -lvulkan  -DVULKAN $(DEFINES)
+	$(CC) -o ../renderer $(OBJs) model_loader.o $(Library) -I./ -lvulkan  -DVULKAN $(DEFINES)
+
+.ONESHELL:
+input.o: 
+	cd src
+	$(CC) -c input.cpp -DGLTF -DVULKAN 
 
 .ONESHELL:
 3D_objects.o:
@@ -16,7 +23,7 @@ renderer: renderer.o engine.o camera.o 3D_objects.o
 	$(CC) -c 3D_objects.cpp -DGLTF -DVULKAN 
 
 .ONESHELL:
-full: main.o renderer.o engine.o camera.o asset_manager.o 3D_objects.o
+full: $(OBJs)
 	mkdir -p bin && cd src
 	$(CC) -o ../renderer main.o renderer.o engine.o camera.o asset_manager.o 3D_objects.o model_loader.o $(Library) -I./ -lvulkan  -DVULKAN $(DEFINES)
 

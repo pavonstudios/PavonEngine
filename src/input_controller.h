@@ -1,5 +1,8 @@
 #ifndef INPUT_CONTROLLER
 #define INPUT_CONTROLLER
+#include <GLFW/glfw3.h>
+#include <iostream>
+
 struct key_pressed{
 	bool bIsPressed = false;
 };
@@ -25,6 +28,8 @@ public:
 	float lastX = 400, lastY = 300;
 
 	bool move_camera = false;
+
+	static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 	
 
 };

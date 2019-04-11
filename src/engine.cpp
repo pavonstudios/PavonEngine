@@ -48,8 +48,8 @@ void Engine::InitWindow(){
 			glfwTerminate();
 			return;
 		}
-		glfwSetWindowUserPointer(window, this);
-		//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);  
+			glfwSetWindowUserPointer(window, this);
+
 	#ifdef VULKAN	   
 			glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
 	#endif
@@ -57,6 +57,8 @@ void Engine::InitWindow(){
 			glfwSetKeyCallback(window, key_callback);
 			glfwSetCursorPosCallback(window, mouse_callback);
 			glfwSetMouseButtonCallback(window,mouse_button_callback);
+			//glfwSetScrollCallback(window,input.scroll_callback);
+
 	#ifdef _OpenGL_Renderer_
 			
 			glfwMakeContextCurrent(window); // Initialize GLEW

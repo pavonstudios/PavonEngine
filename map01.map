@@ -3,4 +3,4 @@
 #m models/car01.obj 5 5 2 textures/car01.jpg
 m models/skydome.gltf 0 0 0 textures/skydome.jpg
 m models/pavon_the_game/terrain.gltf 0 0 0 /home/pavon/Textures/grass_texture/grass03.png
-m models/pavon/pavon_the_game/building_front.gltf 0 0 0 textures/building01.jpg
+m models/pavon_the_game/building_front.gltf 0 0 0 textures/building01.jpg
