@@ -21,7 +21,8 @@ DEFINES_OPENGL = D_OpenGL_Renderer_
 DEFINES :=
 
 .ONESHELL:
-full: $(OBJs) game $(game) DEFINES=-DVULKAN
+full: DEFINES := -DVULKAN
+full: $(OBJs) game $(game)
 	mkdir -p bin && cd src
 	$(CC) -o ../renderer renderer.o $(OBJs) model_loader.o $(GAME) $(Library) -I./ -lvulkan  -DVULKAN $(DEFINES)
 

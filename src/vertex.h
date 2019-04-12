@@ -10,6 +10,7 @@
     #else
         #include <GL/gl.h>
     #endif
+    #include <glm/glm.hpp>
 #else
     #include <GLES2/gl2.h>
     #include "glm/glm.hpp"
@@ -18,7 +19,7 @@
 /* #define GLM_ENABLE_EXPERIMENTAL
 #include "glm/gtx/hash.hpp"
  */
-#include <glm/glm.hpp>
+
 
 struct Vertex {
     glm::vec3 pos;

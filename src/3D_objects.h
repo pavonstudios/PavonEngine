@@ -4,26 +4,29 @@
 #include <unordered_map>
 #include <vector>
 #include <array>
+#include <iostream>
+#include <cstring>
 
 #ifndef ANDROID
     #ifdef VULKAN
         #include <vulkan/vulkan.h>
+        #include "VulkanDevice.hpp"
     #else
         #include <GL/gl.h>
     #endif
+    #include <glm/gtc/quaternion.hpp>
 #else
     #include <GLES2/gl2.h>
     #include "glm/glm.hpp"
+    #include "glm/gtc/quaternion.hpp>"  
 #endif
 
 #include "game_object.h"
 
 #include "tiny_class.h"
 #include "vertex.h"
-#include <iostream>
-#include "VulkanDevice.hpp"
-#include <glm/gtc/quaternion.hpp>
-#include <glm/gtx/quaternion.hpp>
+
+
 
 #define MESH_TYPE_STATIC 0
 #define MESH_TYPE_SKINNED 1

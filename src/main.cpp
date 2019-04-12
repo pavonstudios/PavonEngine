@@ -25,7 +25,7 @@
 #endif
 
 #ifdef ANDROID
-    //#include "engine.h"
+    #include "engine.h"
     #include "android_renderer.h"
     extern "C" {
     void handle_cmd(android_app *pApp, int32_t cmd) {
