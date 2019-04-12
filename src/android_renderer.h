@@ -21,14 +21,98 @@
 #define LOGW(...) ((void)__android_log_print(ANDROID_LOG_WARN, "native-activity", __VA_ARGS__))
 
 
+const char vertex_src [] =
+"                                        \
+   attribute vec4        position;       \
+   varying mediump vec2  pos;            \
+   uniform vec4          offset;         \
+                                         \
+   void main()                           \
+   {                                     \
+      gl_Position = position + offset;   \
+      pos = position.xy;                 \
+   }                                     \
+";
+ 
+ 
+const char fragment_src [] =
+"                                                      \
+   varying mediump vec2    pos;                        \
+   uniform mediump float   phase;                      \
+                                                       \
+   void  main()                                        \
+   {                                                   \
+      gl_FragColor  =  vec4( 1., 0.9, 0.7, 1.0 ) *     \
+        cos( 30.*sqrt(pos.x*pos.x + 1.5*pos.y*pos.y)   \
+             + atan(pos.y,pos.x) - phase );            \
+   }                                                   \
+";
 
+void
+print_shader_info_log (
+   GLuint  shader      // handle to the shader
+)
+{
+   GLint  length;
+ 
+   glGetShaderiv ( shader , GL_INFO_LOG_LENGTH , &length );
+ 
+   if ( length ) {
+      char* buffer  =  new char [ length ];
+      glGetShaderInfoLog ( shader , length , NULL , buffer );
+      LOGW("shader info");
+      //cout << "shader info: " <<  buffer << flush;
+      delete [] buffer;
+ 
+      GLint success;
+      glGetShaderiv( shader, GL_COMPILE_STATUS, &success );
+      if ( success != GL_TRUE )   exit ( 1 );
+   }
+}
+
+GLuint
+load_shader (
+   const char  *shader_source,
+   GLenum       type
+)
+{
+   GLuint  shader = glCreateShader( type );
+ 
+   glShaderSource  ( shader , 1 , &shader_source , NULL );
+   glCompileShader ( shader );
+ 
+    print_shader_info_log ( shader );
+ 
+   return shader;
+}
+
+const float vertexArray[] = {
+   0.0,  0.5,  0.0,
+  -0.5,  0.0,  0.0,
+   0.0, -0.5,  0.0,
+   0.5,  0.0,  0.0,
+   0.0,  0.5,  0.0 
+};
+ 
+ 
 extern NativeWindowType createNativeWindow(void);
 static EGLint const attribute_list[] = {
-        EGL_RED_SIZE, 1,
-        EGL_GREEN_SIZE, 1,
-        EGL_BLUE_SIZE, 1,
-        EGL_NONE
+      EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
+      EGL_BLUE_SIZE, 8,
+      EGL_GREEN_SIZE, 8,
+      EGL_RED_SIZE, 8,
+      EGL_CONFORMANT, EGL_OPENGL_ES2_BIT,
+      EGL_NONE
 };
+static const EGLint GiveMeGLES2[] = {
+      EGL_CONTEXT_CLIENT_VERSION, 2,
+      EGL_NONE
+    };
+
+GLint
+   phase_loc,
+   offset_loc,
+   position_loc;
 
 class Renderer{
 public:
@@ -36,9 +120,10 @@ public:
 
     Renderer(android_app *pApp){
         app = pApp;
+        LOGW("Initialiazing");
         init();
 
-        LOGW("Hello android");
+        
 
     };
     void render(){
@@ -50,7 +135,9 @@ public:
         glFlush();
 
       
-
+         glVertexAttribPointer ( position_loc, 3, GL_FLOAT, false, 0, vertexArray );
+            glEnableVertexAttribArray ( position_loc );
+            glDrawArrays ( GL_TRIANGLE_STRIP, 0, 5 );
         
         eglSwapBuffers(display, surface);
     };
@@ -72,25 +159,45 @@ private:
                                
     void init(){
 
-        /* get an EGL display connection */
+        
         display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
 
-        /* initialize the EGL display connection */
+        
         eglInitialize(display, NULL, NULL);
 
         /* get an appropriate EGL frame buffer configuration */
         eglChooseConfig(display, attribute_list, &config, 1, &num_config);
 
-        /* create an EGL rendering context */
-        context = eglCreateContext(display, config, EGL_NO_CONTEXT, NULL);       
+       
+        context = eglCreateContext(display, config, EGL_NO_CONTEXT, GiveMeGLES2);       
 
-        /* create an EGL window surface */
+        
         surface = eglCreateWindowSurface(display, config, app->window, NULL);
 
-        /* connect the context to the surface */
-        eglMakeCurrent(display, surface, surface, context);
+     
+        eglMakeCurrent(display, surface, surface, context);  
 
-  
+
+
+        LOGW("Loading shaders........................");
+
+       
+
+        GLuint vertexShader   = load_shader ( vertex_src , GL_VERTEX_SHADER  );     // load vertex shader
+        GLuint fragmentShader = load_shader ( fragment_src , GL_FRAGMENT_SHADER );  // load fragment shader
+        
+         LOGW("Shaders loaded");
+        GLuint shaderProgram  = glCreateProgram ();                 // create program object
+        glAttachShader ( shaderProgram, vertexShader );             // and attach both...
+        glAttachShader ( shaderProgram, fragmentShader );           // ... shaders to it
+        
+        glLinkProgram ( shaderProgram );    // link the program
+        glUseProgram  ( shaderProgram );    // and select it for usage
+        
+        //// now get the locations (kind of handle) of the shaders variables
+        position_loc  = glGetAttribLocation  ( shaderProgram , "position" );
+        phase_loc     = glGetUniformLocation ( shaderProgram , "phase"    );
+        offset_loc    = glGetUniformLocation ( shaderProgram , "offset"   ); 
 
     };
 
