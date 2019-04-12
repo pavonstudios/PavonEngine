@@ -7,6 +7,7 @@
     #ifdef VULKAN
         #include "renderer.h"
         #define GLFW_INCLUDE_VULKAN
+        #include "VulkanData.hpp"
     #endif
 
     #ifdef _OpenGL_Renderer_
@@ -22,7 +23,7 @@
 #include "input_controller.h"
 
 #include <vector>
-#include "VulkanData.hpp"
+
 #include "3D_objects.h"
 class Engine {
     public:

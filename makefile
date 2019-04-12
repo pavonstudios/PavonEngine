@@ -5,7 +5,7 @@ Library=-lglfw -lpthread -lm
 MAIN_OBJS = camera.cpp engine.cpp
 DEFINES= -DGLTF -DDEVELOPMENT
 
-OBJs= main.o renderer.o engine.o camera.o asset_manager.o 3D_objects.o input.o
+OBJs= main.o engine.o camera.o asset_manager.o 3D_objects.o input.o
 
 
 COMPILE= $(CC) -c -DGLTF -DVULKAN -DDEVELOPMENT
@@ -14,15 +14,22 @@ GAMEOBJs = $(wildcard /home/pavon/rt_renderer/src/Game/*.o)
 
 GAME = Game/*.o
 
-.ONESHELL:
-full: $(OBJs) game $(game)
-	mkdir -p bin && cd src
-	$(CC) -o ../renderer $(OBJs) model_loader.o $(GAME) $(Library) -I./ -lvulkan  -DVULKAN $(DEFINES)
+INCLUDE_OPENGL = -lGLEW -lGL
+
+DEFINES_OPENGL = D_OpenGL_Renderer_
+
+DEFINES :=
 
 .ONESHELL:
-renderer: $(OBJs) game $(game)
+full: $(OBJs) game $(game) DEFINES=-DVULKAN
 	mkdir -p bin && cd src
-	$(CC) -o ../renderer $(OBJs) model_loader.o $(GAME) $(Library) -I./ -lvulkan  -DVULKAN $(DEFINES)
+	$(CC) -o ../renderer renderer.o $(OBJs) model_loader.o $(GAME) $(Library) -I./ -lvulkan  -DVULKAN $(DEFINES)
+
+.ONESHELL:
+gl: DEFINES=-Dch 
+gl: main.o 
+	mkdir -p bin && cd src
+	$(CC) -o ../renderer main.o
 
 .ONESHELL:
 input.o: 
@@ -50,7 +57,7 @@ game:
 .ONESHELL:
 main.o:
 	cd src
-	$(CC) -c main.cpp -DGLTF -DVULKAN 
+	$(CC) -c main.cpp -DGLTF $(DEFINES)
 
 .ONESHELL:
 renderer.o:
@@ -72,10 +79,6 @@ camera.o:
 	cd src
 	$(CC) -c camera.cpp -I./ -DGLTF -DVULKAN
 
-.ONESHELL:
-gl:
-	mkdir -p bin && cd src
-	$(CC) $(MAIN_OBJS) opengl_renderer.cpp -o ../renderer $(Library) -lGLEW -lGL -I./ -D_OpenGL_Renderer_
 
 .ONESHELL:
 clang:
