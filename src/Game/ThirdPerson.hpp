@@ -7,6 +7,7 @@ class ThirdPerson{
 		Engine* engine;
 		EMesh* mesh;
 		void move_forward();
+		void monse_control(float yaw, float pitch);
 		void update();
 
 };

@@ -7,7 +7,7 @@
 void Engine::main_loop(){
 	 ThirdPerson player;
 	 player.engine = this;
-		player.mesh = meshes[meshes.size()-2];
+		player.mesh = meshes[3];
 	 while (!glfwWindowShouldClose(window)) {
 		 	print_fps();
 		 	glfwPollEvents();

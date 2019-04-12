@@ -7,3 +7,4 @@ m models/pavon_the_game/building_front.gltf 0 0 0 textures/building01.jpg
 m models/pavon_the_game/police.gltf 0 0 0 textures/character2.jpg
 m models/pavon_the_game/police_patrol.gltf 5 5 0 textures/car01.jpg
 m models/pavon_the_game/police_patrol.gltf 3 -6 0 textures/car01.jpg
+m models/pavon_the_game/road_plus_border_coast.gltf 0 0 0 /home/pavon/Textures/coust/modules_coust.png
