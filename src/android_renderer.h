@@ -16,6 +16,9 @@
 //#include <android/sensor.h>
 #include <android/log.h>
 #include <android_native_app_glue.h>
+#include <android/asset_manager.h>
+#include <android/asset_manager_jni.h>
+
 
 #define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, "native-activity", __VA_ARGS__))
 #define LOGW(...) ((void)__android_log_print(ANDROID_LOG_WARN, "native-activity", __VA_ARGS__))
@@ -122,10 +125,11 @@ GLint
 using namespace glm;
 class Renderer{
 public:
-
+    AAssetManager* asset_manager;
 
     Renderer(android_app *pApp){
         app = pApp;
+        asset_manager = pApp->activity->assetManager;
         LOGW("Initialiazing");
         init();
 
@@ -154,8 +158,6 @@ public:
         mat4 mvp = Projection * view * model;
 
         glUniformMatrix4fv(mvp_loc,1,GL_FALSE,&mvp[0][0]);
-
-
 
 
 
@@ -225,6 +227,20 @@ private:
         offset_loc    = glGetUniformLocation ( shaderProgram , "offset"   ); 
         mvp_loc         = glGetUniformLocation( shaderProgram , "MVP");
 
+
+      LOGW("Loading shaders........................");
+
+
+        AAsset* file = AAssetManager_open(asset_manager,"openme.txt", AASSET_MODE_BUFFER);
+
+        size_t file_length = AAsset_getLength(file);
+        char* fileContent = new char[file_length+1];
+
+        AAsset_read(file, fileContent,file_length);
+
+        __android_log_print(ANDROID_LOG_WARN,"native-activity","%s",fileContent);
+
+      
     };
 
 };
