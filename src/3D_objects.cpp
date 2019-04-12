@@ -116,8 +116,10 @@ int EMesh::load_mode_gltf_android(const char* path, AAssetManager* assetManager)
     bool ret = loader.LoadASCIIFromFileAndroid(&gltf_model, &err, &warn, path,0,assetManager);
     //bool ret = loader.LoadBinaryFromFile(&model, &err, &warn, argv[1]); // for binary glTF(.glb)
     if(ret){
+        load_primitives_data();
         return 1;
     }
+    
     return -1;
 }
 #endif//android gltf loader

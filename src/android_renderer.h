@@ -8,6 +8,7 @@
 #include <jni.h>
 #include <errno.h>
 #include <cassert>
+#include <vector>
 
 #include <EGL/egl.h>
 #include <GLES2/gl2.h>
@@ -123,7 +124,7 @@ using  namespace engine;
 using namespace glm;
 class Renderer{
 public:
-
+   std::vector<EMesh*> meshes;
    Engine engine;
     Renderer(android_app *pApp){
         app = pApp;
@@ -158,10 +159,14 @@ public:
 
 
 
-      
+
          glVertexAttribPointer ( position_loc, 3, GL_FLOAT, false, 0, vertexArray );
             glEnableVertexAttribArray ( position_loc );
             glDrawArrays ( GL_TRIANGLE_STRIP, 0, 5 );
+
+        glVertexAttribPointer ( position_loc, 3, GL_FLOAT, false, sizeof(Vertex), (void*)0 );
+        glEnableVertexAttribArray ( position_loc );
+        glDrawArrays ( GL_TRIANGLE_STRIP, 0, meshes[0]->vertices.size() );
         
         eglSwapBuffers(display, surface);
     };
@@ -176,6 +181,9 @@ private:
 
     GLuint vertexbuffer;
     GLuint VertexArrayID;
+
+    GLuint vertex_array_id;
+    GLuint vertex_buffer;
 
      GLfloat vVertices[9] = {0.0f, 0.5f, 0.0f,
                                -0.5f, -0.5f, 0.0f,
@@ -247,13 +255,24 @@ private:
 
 
       EMesh* mesh = new EMesh();
-      if(mesh->load_mode_gltf_android("skydome.gltf",app->activity->assetManager) == -1){
+      if(mesh->load_mode_gltf_android("police_patrol.gltf",app->activity->assetManager) == -1){
 
           __android_log_print(ANDROID_LOG_WARN,"native-activity","%s","error loading model");
 
       }else{
           __android_log_print(ANDROID_LOG_WARN,"native-activity","%s","OK GLTF object loaded");
       }
+        meshes.push_back(mesh);
+      LOGW("Generating vertex buffer");
+
+
+
+      glGenBuffers(1,&vertex_buffer);
+      glBindBuffer(GL_ARRAY_BUFFER,vertex_buffer);
+      glBufferData(GL_ARRAY_BUFFER,mesh->vertices.size() * sizeof(Vertex),mesh->vertices.data(),GL_STATIC_DRAW);
+
+        LOGW("Vertex data generated");
+
       
     };
 
