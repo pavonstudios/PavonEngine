@@ -25,7 +25,7 @@ add_library(maincode
     )
 
 
-#add_subdirectory(glm)
+add_subdirectory(glm)
 
 target_link_libraries(maincode
         android

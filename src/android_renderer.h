@@ -20,16 +20,20 @@
 #define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, "native-activity", __VA_ARGS__))
 #define LOGW(...) ((void)__android_log_print(ANDROID_LOG_WARN, "native-activity", __VA_ARGS__))
 
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+#include <chrono>
 
 const char vertex_src [] =
 "                                        \
-   attribute vec4        position;       \
+   attribute vec3        position;       \
    varying mediump vec2  pos;            \
    uniform vec4          offset;         \
+   uniform mat4          MVP;            \
                                          \
    void main()                           \
    {                                     \
-      gl_Position = position + offset;   \
+      gl_Position = MVP * vec4(position,1.0);   \
       pos = position.xy;                 \
    }                                     \
 ";
@@ -112,8 +116,10 @@ static const EGLint GiveMeGLES2[] = {
 GLint
    phase_loc,
    offset_loc,
-   position_loc;
+   position_loc,
+   mvp_loc;
 
+using namespace glm;
 class Renderer{
 public:
 
@@ -133,6 +139,25 @@ public:
         glClearColor(1.0, 0.0, 0.0, 1.0);
         glClear(GL_COLOR_BUFFER_BIT);
         glFlush();
+
+      static auto startTime = std::chrono::high_resolution_clock::now();
+
+    auto currentTime = std::chrono::high_resolution_clock::now();
+    float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
+
+        glm::mat4 model = glm::mat4(1.0);
+        glm::mat4 Projection = glm::perspective(glm::radians(45.f), 768.f/1280.f, 0.01f, 1000.f);
+        glm::mat4 view = glm::lookAt(vec3(0,15,0),vec3(0,0,0),vec3(0,0,1));
+
+      model = glm::rotate(model, time * glm::radians(12.f), glm::vec3(0.0f, 1.0f, 1.0f));
+
+        mat4 mvp = Projection * view * model;
+
+        glUniformMatrix4fv(mvp_loc,1,GL_FALSE,&mvp[0][0]);
+
+
+
+
 
       
          glVertexAttribPointer ( position_loc, 3, GL_FLOAT, false, 0, vertexArray );
@@ -198,6 +223,7 @@ private:
         position_loc  = glGetAttribLocation  ( shaderProgram , "position" );
         phase_loc     = glGetUniformLocation ( shaderProgram , "phase"    );
         offset_loc    = glGetUniformLocation ( shaderProgram , "offset"   ); 
+        mvp_loc         = glGetUniformLocation( shaderProgram , "MVP");
 
     };
 
