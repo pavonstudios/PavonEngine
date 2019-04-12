@@ -47,9 +47,8 @@ const char fragment_src [] =
                                                        \
    void  main()                                        \
    {                                                   \
-      gl_FragColor  =  vec4( 1., 0.9, 0.7, 1.0 ) *     \
-        cos( 30.*sqrt(pos.x*pos.x + 1.5*pos.y*pos.y)   \
-             + atan(pos.y,pos.x) - phase );            \
+      gl_FragColor  =  vec4(0,1,1,1);                   \
+                                                        \
    }                                                   \
 ";
 
@@ -139,8 +138,8 @@ public:
         //glViewport(0,0,800,600);
 
         glClearColor(1.0, 0.0, 0.0, 1.0);
-        glClear(GL_COLOR_BUFFER_BIT);
-        glFlush();
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        //glFlush();
 
       static auto startTime = std::chrono::high_resolution_clock::now();
 
@@ -160,13 +159,13 @@ public:
 
 
 
-         glVertexAttribPointer ( position_loc, 3, GL_FLOAT, false, 0, vertexArray );
+       /*  glVertexAttribPointer ( position_loc, 3, GL_FLOAT, false, 0, vertexArray );
             glEnableVertexAttribArray ( position_loc );
-            glDrawArrays ( GL_TRIANGLE_STRIP, 0, 5 );
+            glDrawArrays ( GL_TRIANGLE_STRIP, 0, 5 );*/
 
         glVertexAttribPointer ( position_loc, 3, GL_FLOAT, false, sizeof(Vertex), (void*)0 );
         glEnableVertexAttribArray ( position_loc );
-        glDrawArrays ( GL_TRIANGLE_STRIP, 0, meshes[0]->vertices.size() );
+        glDrawElements(GL_TRIANGLES,meshes[0]->indices.size(),GL_UNSIGNED_INT,(void*)0);
         
         eglSwapBuffers(display, surface);
     };
@@ -183,7 +182,9 @@ private:
     GLuint VertexArrayID;
 
     GLuint vertex_array_id;
+
     GLuint vertex_buffer;
+    GLuint indices;
 
      GLfloat vVertices[9] = {0.0f, 0.5f, 0.0f,
                                -0.5f, -0.5f, 0.0f,
@@ -207,8 +208,10 @@ private:
         surface = eglCreateWindowSurface(display, config, app->window, NULL);
 
      
-        eglMakeCurrent(display, surface, surface, context);  
+        eglMakeCurrent(display, surface, surface, context);
 
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LESS);
 
 
         LOGW("Loading shaders........................");
@@ -267,11 +270,22 @@ private:
 
 
 
-      glGenBuffers(1,&vertex_buffer);
+
+
+        glGenBuffers(1,&vertex_buffer);
       glBindBuffer(GL_ARRAY_BUFFER,vertex_buffer);
       glBufferData(GL_ARRAY_BUFFER,mesh->vertices.size() * sizeof(Vertex),mesh->vertices.data(),GL_STATIC_DRAW);
+        LOGW("OK Vertex data generated");
 
-        LOGW("Vertex data generated");
+      LOGW("Generating index buffer");
+
+
+        glGenBuffers(1,&indices);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,indices);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER,mesh->indices.size() * sizeof(unsigned int),mesh->indices.data(), GL_STATIC_DRAW);
+
+
+
 
       
     };
