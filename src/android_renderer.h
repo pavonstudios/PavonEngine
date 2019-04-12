@@ -10,8 +10,8 @@
 #include <cassert>
 
 #include <EGL/egl.h>
-#include <GLES3/gl3.h>
-#include <GLES3/gl3ext.h>
+#include <GLES2/gl2.h>
+//#include <GLES3/gl3ext.h>
 
 //#include <android/sensor.h>
 #include <android/log.h>
@@ -47,23 +47,9 @@ public:
 
         glClearColor(1.0, 0.0, 0.0, 1.0);
         glClear(GL_COLOR_BUFFER_BIT);
-        //glFlush();
+        glFlush();
 
-        glEnableVertexAttribArray(0);
-        glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-        glVertexAttribPointer(
-        0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
-        3,                  // size
-        GL_FLOAT,           // type
-        GL_FALSE,           // normalized?
-        0,                  // stride
-        (void*)0            // array buffer offset
-        );
-       
-       // glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, vVertices);
-       // glEnableVertexAttribArray(0);
-       
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+      
 
         
         eglSwapBuffers(display, surface);
@@ -104,14 +90,7 @@ private:
         /* connect the context to the surface */
         eglMakeCurrent(display, surface, surface, context);
 
-        glGenVertexArrays(1, &VertexArrayID);
-        glBindVertexArray(VertexArrayID);
-
-        glGenBuffers(1, &vertexbuffer);
-
-        glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-
-        glBufferData(GL_ARRAY_BUFFER, sizeof(vVertices), vVertices, GL_STATIC_DRAW);
+  
 
     };
 

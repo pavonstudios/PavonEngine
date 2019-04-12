@@ -25,14 +25,14 @@ add_library(maincode
     )
 
 
-add_subdirectory(glm)
+#add_subdirectory(glm)
 
 target_link_libraries(maincode
         android
         native_app_glue
         ${log-lib}
         EGL
-        GLESv3
+        GLESv2
         
 
         )
