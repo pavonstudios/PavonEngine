@@ -18,7 +18,8 @@
 #else
     #include <GLES2/gl2.h>
     #include "glm/glm.hpp"
-    #include "glm/gtc/quaternion.hpp"  
+    #include "glm/gtc/quaternion.hpp"
+    #include <android/asset_manager.h>
 #endif
 
 #include "game_object.h"
@@ -91,6 +92,7 @@ public:
 
 #ifdef GLTF
     int load_model_gltf(const char* path);
+    int load_mode_gltf_android(const char* path, AAssetManager* pAssetManager);
     void load_primitives_data();
     std::vector<Node*> nodes;
     std::vector<Node*> linear_nodes;

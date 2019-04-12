@@ -7,7 +7,7 @@
 #define TINYGLTF_NO_STB_IMAGE_WRITE
 #define TINYGLTF_NO_EXTERNAL_IMAGE
 
-
+ #include <android/asset_manager.h>
 #include "tiny_gltf_classes.h"
 namespace tinygltf {
 class Node {
@@ -209,6 +209,9 @@ class TinyGLTF {
                          const std::string &filename,
                          unsigned int check_sections = REQUIRE_ALL);
 
+  bool LoadASCIIFromFileAndroid(Model *model, std::string *err,
+                                 std::string *warn, const std::string &filename,
+                                 unsigned int check_sections, AAssetManager* assetManager);
   ///
   /// Loads glTF ASCII asset from string(memory).
   /// `length` = strlen(str);
@@ -228,6 +231,7 @@ class TinyGLTF {
   bool LoadBinaryFromFile(Model *model, std::string *err, std::string *warn,
                           const std::string &filename,
                           unsigned int check_sections = REQUIRE_ALL);
+
 
   ///
   /// Loads glTF binary asset from memory.

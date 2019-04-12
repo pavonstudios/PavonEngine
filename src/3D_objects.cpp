@@ -9,7 +9,7 @@
 #else
     #include <glm/glm.hpp>
     #include <glm/gtc/matrix_transform.hpp>
-    #include <glm/gtc/type_ptr.hpp>
+    #include <glm/gtc/type_ptr.hpp>    
 #endif
 
 #ifdef GLTF
@@ -105,6 +105,20 @@ void EMesh::load_node(engine::Node *parent, uint32_t index, const tinygltf::Node
 
     linear_nodes.push_back(new_node);
 }
+int EMesh::load_mode_gltf_android(const char* path, AAssetManager* assetManager){
+    
+    
+    tinygltf::TinyGLTF loader;
+    std::string err;
+    std::string warn;
+
+    bool ret = loader.LoadASCIIFromFileAndroid(&gltf_model, &err, &warn, path,0,assetManager);
+    //bool ret = loader.LoadBinaryFromFile(&model, &err, &warn, argv[1]); // for binary glTF(.glb)
+    if(ret){
+        return 1;
+    }
+    return -1;
+}
 int EMesh::load_model_gltf(const char* path){
     
     
@@ -116,7 +130,13 @@ int EMesh::load_model_gltf(const char* path){
     //bool ret = loader.LoadBinaryFromFile(&model, &err, &warn, argv[1]); // for binary glTF(.glb)
     if(!ret){
         std::string error = "Failed to open " + std::string(path);
+        #ifndef ANDROID
         throw std::runtime_error(error);
+        #else
+        std::cout << "error inlcoad file " << std::endl;
+        return -1;
+        #endif
+
     }
     
     load_primitives_data();

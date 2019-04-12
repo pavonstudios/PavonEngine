@@ -6,6 +6,7 @@
 #include <cassert>
 #include <map>
 
+
 #define TINYGLTF_MODE_POINTS (0)
 #define TINYGLTF_MODE_LINE (1)
 #define TINYGLTF_MODE_LINE_LOOP (2)
@@ -97,11 +98,7 @@
 #define TINYGLTF_DOUBLE_EPS (1.e-12)
 #define TINYGLTF_DOUBLE_EQUAL(a, b) (std::fabs((b) - (a)) < TINYGLTF_DOUBLE_EPS)
 
-#ifdef __ANDROID__
-#ifdef TINYGLTF_ANDROID_LOAD_FROM_ASSETS
-AAssetManager *asset_manager = nullptr;
-#endif
-#endif
+
 namespace tinygltf {
 typedef enum {
   NULL_TYPE = 0,

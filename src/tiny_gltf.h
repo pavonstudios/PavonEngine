@@ -58,6 +58,13 @@
 #endif
 #endif
 
+namespace tinygltf {
+#ifdef __ANDROID__
+#ifdef TINYGLTF_ANDROID_LOAD_FROM_ASSETS
+AAssetManager *asset_manager = nullptr;
+#endif
+#endif
+}
 #include "tiny_class.h"
 namespace tinygltf {
 
@@ -3335,6 +3342,49 @@ bool TinyGLTF::LoadASCIIFromString(Model *model, std::string *err,
 bool TinyGLTF::LoadASCIIFromFile(Model *model, std::string *err,
                                  std::string *warn, const std::string &filename,
                                  unsigned int check_sections) {
+  std::stringstream ss;
+
+  if (fs.ReadWholeFile == nullptr) {
+    // Programmer error, assert() ?
+    ss << "Failed to read file: " << filename
+       << ": one or more FS callback not set" << std::endl;
+    if (err) {
+      (*err) = ss.str();
+    }
+    return false;
+  }
+
+  std::vector<unsigned char> data;
+  std::string fileerr;
+  bool fileread = fs.ReadWholeFile(&data, &fileerr, filename, fs.user_data);
+  if (!fileread) {
+    ss << "Failed to read file: " << filename << ": " << fileerr << std::endl;
+    if (err) {
+      (*err) = ss.str();
+    }
+    return false;
+  }
+
+  size_t sz = data.size();
+  if (sz == 0) {
+    if (err) {
+      (*err) = "Empty file.";
+    }
+    return false;
+  }
+
+  std::string basedir = GetBaseDir(filename);
+
+  bool ret = LoadASCIIFromString(
+      model, err, warn, reinterpret_cast<const char *>(&data.at(0)),
+      static_cast<unsigned int>(data.size()), basedir, check_sections);
+
+  return ret;
+}
+bool TinyGLTF::LoadASCIIFromFileAndroid(Model *model, std::string *err,
+                                 std::string *warn, const std::string &filename,
+                                 unsigned int check_sections, AAssetManager* assetManager) {
+  tinygltf::asset_manager = assetManager;
   std::stringstream ss;
 
   if (fs.ReadWholeFile == nullptr) {

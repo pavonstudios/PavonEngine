@@ -11,13 +11,10 @@
 
 #include <EGL/egl.h>
 #include <GLES2/gl2.h>
-//#include <GLES3/gl3ext.h>
 
-//#include <android/sensor.h>
 #include <android/log.h>
 #include <android_native_app_glue.h>
-#include <android/asset_manager.h>
-#include <android/asset_manager_jni.h>
+#include "3D_objects.h"
 
 
 #define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, "native-activity", __VA_ARGS__))
@@ -121,16 +118,15 @@ GLint
    offset_loc,
    position_loc,
    mvp_loc;
-#include "engine.h"
+//#include "engine.h"
 using  namespace engine;
 using namespace glm;
 class Renderer{
 public:
-    AAssetManager* asset_manager;
+
    Engine engine;
     Renderer(android_app *pApp){
         app = pApp;
-        asset_manager = pApp->activity->assetManager;
         LOGW("Initialiazing");
         init();
 
@@ -232,7 +228,7 @@ private:
       LOGW("Loading shaders........................");
 
 
-        AAsset* file = AAssetManager_open(asset_manager,"openme.txt", AASSET_MODE_BUFFER);
+/*         AAsset* file = AAssetManager_open(super_asset_manager,"openme.txt", AASSET_MODE_BUFFER);
 
         size_t file_length = AAsset_getLength(file);
         char* fileContent = new char[file_length+1];
@@ -241,8 +237,23 @@ private:
 
         __android_log_print(ANDROID_LOG_WARN,"native-activity","%s",fileContent);
 
-            EMesh mesh;
+            EMesh * mesh = new EMesh();
+            if(mesh->load_model_gltf("skydome.gltf") == -1 ){
+                      __android_log_print(ANDROID_LOG_WARN,"native-activity","%s","error loading model");
 
+            }else{
+               __android_log_print(ANDROID_LOG_WARN,"native-activity","%s","OK GLTF object loaded");
+            } */
+
+
+      EMesh* mesh = new EMesh();
+      if(mesh->load_mode_gltf_android("skydome.gltf",app->activity->assetManager) == -1){
+
+          __android_log_print(ANDROID_LOG_WARN,"native-activity","%s","error loading model");
+
+      }else{
+          __android_log_print(ANDROID_LOG_WARN,"native-activity","%s","OK GLTF object loaded");
+      }
       
     };
 
