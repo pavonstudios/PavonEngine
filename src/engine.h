@@ -15,13 +15,12 @@
     #endif
     #include <pthread.h>
     #include <GLFW/glfw3.h>
+    #include "input_controller.h"
 #else
     #include "opengl_renderer.h"
 #endif
 
 #include <chrono>
-#include "input_controller.h"
-
 #include <vector>
 
 #include "3D_objects.h"

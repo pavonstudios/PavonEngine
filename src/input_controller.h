@@ -1,5 +1,6 @@
 #ifndef INPUT_CONTROLLER
 #define INPUT_CONTROLLER
+
 #include <GLFW/glfw3.h>
 #include <iostream>
 

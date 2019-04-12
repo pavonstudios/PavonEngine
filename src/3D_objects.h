@@ -18,7 +18,7 @@
 #else
     #include <GLES2/gl2.h>
     #include "glm/glm.hpp"
-    #include "glm/gtc/quaternion.hpp>"  
+    #include "glm/gtc/quaternion.hpp"  
 #endif
 
 #include "game_object.h"
@@ -32,12 +32,14 @@
 #define MESH_TYPE_SKINNED 1
 
 namespace engine{
+    #ifdef VULKAN
     struct pipeline_data{
         std::string vertex_shader_path;
         std::string fragment_shader_path;
         VkPrimitiveTopology draw_type;
         int mesh_type;
     };
+    #endif
     struct Node;
     struct Skin {
         Node *skeleton_root = nullptr;
