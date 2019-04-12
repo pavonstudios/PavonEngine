@@ -18,7 +18,6 @@
 
 #include "game_object.h"
 
-#include "gltf.h"
 #include "tiny_class.h"
 #include "vertex.h"
 #include <iostream>

@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <cstring>
 #include <cassert>
+#include <map>
 
 #define TINYGLTF_MODE_POINTS (0)
 #define TINYGLTF_MODE_LINE (1)

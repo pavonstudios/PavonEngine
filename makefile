@@ -2,31 +2,37 @@ CLANG=clang++ -g -std=c++17 -stdlib=libc++
 CC=g++ -g -std=c++17
 Library=-lglfw -lpthread -lm
 
-MAIN_OBJS = camera.cpp engine.cpp gltf.cpp
+MAIN_OBJS = camera.cpp engine.cpp
 DEFINES= -DGLTF -DDEVELOPMENT
 
 OBJs= main.o renderer.o engine.o camera.o asset_manager.o 3D_objects.o input.o
 
-GAME= game
 
 COMPILE= $(CC) -c -DGLTF -DVULKAN -DDEVELOPMENT
 
 GAMEOBJs = $(wildcard /home/pavon/rt_renderer/src/Game/*.o)
 
+GAME = Game/*.o
+
 .ONESHELL:
 full: $(OBJs) game $(game)
 	mkdir -p bin && cd src
-	$(CC) -o ../renderer $(OBJs) model_loader.o $(GAMEOBJs) $(Library) -I./ -lvulkan  -DVULKAN $(DEFINES)
+	$(CC) -o ../renderer $(OBJs) model_loader.o $(GAME) $(Library) -I./ -lvulkan  -DVULKAN $(DEFINES)
 
 .ONESHELL:
 renderer: $(OBJs) game $(game)
 	mkdir -p bin && cd src
-	$(CC) -o ../renderer $(OBJs) model_loader.o $(GAMEOBJs) $(Library) -I./ -lvulkan  -DVULKAN $(DEFINES)
+	$(CC) -o ../renderer $(OBJs) model_loader.o $(GAME) $(Library) -I./ -lvulkan  -DVULKAN $(DEFINES)
 
 .ONESHELL:
 input.o: 
 	cd src
 	$(CC) -c input.cpp -DGLTF -DVULKAN 
+
+.ONESHELL:
+model_loader.o: 
+	cd src
+	$(CC) -c model_loader.cpp -DGLTF -DVULKAN 
 
 .ONESHELL:
 3D_objects.o:
@@ -64,7 +70,7 @@ engine.o:
 .ONESHELL:
 camera.o:
 	cd src
-	$(CC) -c camera.cpp gltf.cpp -I./ -DGLTF -DVULKAN
+	$(CC) -c camera.cpp -I./ -DGLTF -DVULKAN
 
 .ONESHELL:
 gl:
