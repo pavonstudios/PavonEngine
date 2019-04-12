@@ -7,7 +7,10 @@
 #define TINYGLTF_NO_STB_IMAGE_WRITE
 #define TINYGLTF_NO_EXTERNAL_IMAGE
 
+#ifdef TINYGLTF_ANDROID_LOAD_FROM_ASSETS
  #include <android/asset_manager.h>
+#endif
+
 #include "tiny_gltf_classes.h"
 namespace tinygltf {
 class Node {
@@ -208,10 +211,11 @@ class TinyGLTF {
   bool LoadASCIIFromFile(Model *model, std::string *err, std::string *warn,
                          const std::string &filename,
                          unsigned int check_sections = REQUIRE_ALL);
-
+#ifdef TINYGLTF_ANDROID_LOAD_FROM_ASSETS
   bool LoadASCIIFromFileAndroid(Model *model, std::string *err,
                                  std::string *warn, const std::string &filename,
                                  unsigned int check_sections, AAssetManager* assetManager);
+#endif 
   ///
   /// Loads glTF ASCII asset from string(memory).
   /// `length` = strlen(str);

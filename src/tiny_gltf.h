@@ -3381,6 +3381,7 @@ bool TinyGLTF::LoadASCIIFromFile(Model *model, std::string *err,
 
   return ret;
 }
+#ifdef TINYGLTF_ANDROID_LOAD_FROM_ASSETS
 bool TinyGLTF::LoadASCIIFromFileAndroid(Model *model, std::string *err,
                                  std::string *warn, const std::string &filename,
                                  unsigned int check_sections, AAssetManager* assetManager) {
@@ -3424,6 +3425,7 @@ bool TinyGLTF::LoadASCIIFromFileAndroid(Model *model, std::string *err,
 
   return ret;
 }
+#endif //android loader
 
 bool TinyGLTF::LoadBinaryFromMemory(Model *model, std::string *err,
                                     std::string *warn,

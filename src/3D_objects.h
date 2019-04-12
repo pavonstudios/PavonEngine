@@ -92,7 +92,9 @@ public:
 
 #ifdef GLTF
     int load_model_gltf(const char* path);
+    #ifdef ANDROID
     int load_mode_gltf_android(const char* path, AAssetManager* pAssetManager);
+    #endif
     void load_primitives_data();
     std::vector<Node*> nodes;
     std::vector<Node*> linear_nodes;

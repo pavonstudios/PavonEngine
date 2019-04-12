@@ -105,6 +105,7 @@ void EMesh::load_node(engine::Node *parent, uint32_t index, const tinygltf::Node
 
     linear_nodes.push_back(new_node);
 }
+#ifdef ANDROID
 int EMesh::load_mode_gltf_android(const char* path, AAssetManager* assetManager){
     
     
@@ -119,6 +120,7 @@ int EMesh::load_mode_gltf_android(const char* path, AAssetManager* assetManager)
     }
     return -1;
 }
+#endif//android gltf loader
 int EMesh::load_model_gltf(const char* path){
     
     
