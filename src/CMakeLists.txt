@@ -24,6 +24,7 @@ add_library(maincode
     #opengl_renderer.cpp
     3D_objects.cpp
         model_loader.cpp
+        asset_manager.cpp
     
     )
 

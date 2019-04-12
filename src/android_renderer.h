@@ -28,29 +28,34 @@
 const char vertex_src [] =
 "                                        \
    attribute vec3        position;       \
+    attribute vec2          coord;         \
    varying mediump vec2  pos;            \
    uniform vec4          offset;         \
-   uniform mat4          MVP;            \
+   uniform mat4          MVP;  \
+    varying vec2 texcoordOut;          \
                                          \
    void main()                           \
    {                                     \
       gl_Position = MVP * vec4(position,1.0);   \
-      pos = position.xy;                 \
+      pos = position.xy;   \
+        texcoordOut = coord;              \
    }                                     \
 ";
  
  
 const char fragment_src [] =
-"                                                      \
-   varying mediump vec2    pos;                        \
-   uniform mediump float   phase;                      \
+"     \
+    precision mediump float;                                                 \
+    uniform sampler2D texture_sampler;                  \
+    varying vec2 UV;                                         \
                                                        \
    void  main()                                        \
-   {                                                   \
+   {                                                            \
       gl_FragColor  =  vec4(0,1,1,1);                   \
-                                                        \
+                                                             \
    }                                                   \
 ";
+
 
 void
 print_shader_info_log (
@@ -64,7 +69,7 @@ print_shader_info_log (
    if ( length ) {
       char* buffer  =  new char [ length ];
       glGetShaderInfoLog ( shader , length , NULL , buffer );
-      LOGW("shader info");
+      LOGW("shader info %s",buffer);
       //cout << "shader info: " <<  buffer << flush;
       delete [] buffer;
  
@@ -117,8 +122,12 @@ GLint
    phase_loc,
    offset_loc,
    position_loc,
+   sampler,
+   uvposition,
    mvp_loc;
 //#include "engine.h"
+#include "asset_manager.h"
+
 using  namespace engine;
 using namespace glm;
 class Renderer{
@@ -163,8 +172,24 @@ public:
             glEnableVertexAttribArray ( position_loc );
             glDrawArrays ( GL_TRIANGLE_STRIP, 0, 5 );*/
 
+
+
+
         glVertexAttribPointer ( position_loc, 3, GL_FLOAT, false, sizeof(Vertex), (void*)0 );
+        glVertexAttribPointer(
+                2,
+                2,                  // size
+                GL_FLOAT,           // type
+                GL_FALSE,           // normalized?
+                sizeof(Vertex),                  // stride
+                (void*)offsetof(Vertex,texCoord)            // array buffer offset
+        );
+
+
         glEnableVertexAttribArray ( position_loc );
+        glEnableVertexAttribArray ( 2 );
+
+        glUniform1f(textureid,1);
         glDrawElements(GL_TRIANGLES,meshes[0]->indices.size(),GL_UNSIGNED_INT,(void*)0);
         
         eglSwapBuffers(display, surface);
@@ -185,6 +210,8 @@ private:
 
     GLuint vertex_buffer;
     GLuint indices;
+
+    GLint textureid;
 
      GLfloat vVertices[9] = {0.0f, 0.5f, 0.0f,
                                -0.5f, -0.5f, 0.0f,
@@ -231,9 +258,14 @@ private:
         
         //// now get the locations (kind of handle) of the shaders variables
         position_loc  = glGetAttribLocation  ( shaderProgram , "position" );
+        uvposition         = glGetAttribLocation( shaderProgram , "coord" );
+
+
         phase_loc     = glGetUniformLocation ( shaderProgram , "phase"    );
         offset_loc    = glGetUniformLocation ( shaderProgram , "offset"   ); 
         mvp_loc         = glGetUniformLocation( shaderProgram , "MVP");
+
+         sampler         = glGetUniformLocation( shaderProgram , "texture_sampler");
 
 
       LOGW("Loading shaders........................");
@@ -255,7 +287,6 @@ private:
             }else{
                __android_log_print(ANDROID_LOG_WARN,"native-activity","%s","OK GLTF object loaded");
             } */
-
 
       EMesh* mesh = new EMesh();
       if(mesh->load_mode_gltf_android("police_patrol.gltf",app->activity->assetManager) == -1){
@@ -285,9 +316,14 @@ private:
         glBufferData(GL_ELEMENT_ARRAY_BUFFER,mesh->indices.size() * sizeof(unsigned int),mesh->indices.data(), GL_STATIC_DRAW);
 
 
+        LOGW("Generating image buffer");
+        AssetManager assets;
+        textureid = assets.load_bmp("patrol.bmp",app->activity->assetManager);
+
+       glActiveTexture(GL_TEXTURE0);
 
 
-      
+
     };
 
 };
