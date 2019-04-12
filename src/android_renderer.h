@@ -177,7 +177,7 @@ public:
 
         glVertexAttribPointer ( position_loc, 3, GL_FLOAT, false, sizeof(Vertex), (void*)0 );
         glVertexAttribPointer(
-                2,
+                sampler,
                 2,                  // size
                 GL_FLOAT,           // type
                 GL_FALSE,           // normalized?
@@ -187,9 +187,9 @@ public:
 
 
         glEnableVertexAttribArray ( position_loc );
-        glEnableVertexAttribArray ( 2 );
+        glEnableVertexAttribArray ( sampler );
 
-        glUniform1f(textureid,1);
+        //glUniform1f(textureid,sampler);
         glDrawElements(GL_TRIANGLES,meshes[0]->indices.size(),GL_UNSIGNED_INT,(void*)0);
         
         eglSwapBuffers(display, surface);
@@ -321,7 +321,7 @@ private:
         textureid = assets.load_bmp("patrol.bmp",app->activity->assetManager);
 
        glActiveTexture(GL_TEXTURE0);
-
+        glBindTexture(GL_TEXTURE_2D,textureid);
 
 
     };
