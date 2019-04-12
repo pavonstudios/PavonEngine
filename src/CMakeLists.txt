@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.6.0)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_REQUIRED_FLAGS -std=c++17)
-add_definitions(-D_OpenGL_Renderer_)
+#add_definitions(-D_OpenGL_Renderer_)
 add_definitions(-DGLTF)
 
 add_library(native_app_glue STATIC
@@ -21,7 +21,8 @@ add_library(maincode
 
     main.cpp
     #opengl_renderer.cpp
-    #3D_objects.cpp
+    3D_objects.cpp
+        model_loader.cpp
     
     )
 

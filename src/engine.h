@@ -17,7 +17,7 @@
     #include <GLFW/glfw3.h>
     #include "input_controller.h"
 #else
-    #include "opengl_renderer.h"
+   // #include "opengl_renderer.h"
 #endif
 
 #include <chrono>

@@ -121,12 +121,13 @@ GLint
    offset_loc,
    position_loc,
    mvp_loc;
-
+#include "engine.h"
+using  namespace engine;
 using namespace glm;
 class Renderer{
 public:
     AAssetManager* asset_manager;
-
+   Engine engine;
     Renderer(android_app *pApp){
         app = pApp;
         asset_manager = pApp->activity->assetManager;
@@ -239,6 +240,8 @@ private:
         AAsset_read(file, fileContent,file_length);
 
         __android_log_print(ANDROID_LOG_WARN,"native-activity","%s",fileContent);
+
+            EMesh mesh;
 
       
     };

@@ -1,9 +1,16 @@
 
 #include "3D_objects.h"
 #include "iostream"
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+
+#ifdef ANDROID
+    #include "glm/glm.hpp"
+    #include "glm/gtc/matrix_transform.hpp"
+    #include "glm/gtc/type_ptr.hpp"
+#else
+    #include <glm/glm.hpp>
+    #include <glm/gtc/matrix_transform.hpp>
+    #include <glm/gtc/type_ptr.hpp>
+#endif
 
 #ifdef GLTF
 using namespace engine;
@@ -247,9 +254,32 @@ EMesh::EMesh(vks::VulkanDevice* vulkan_device){
             &node_uniform);               
     }
 }
+EMesh::~EMesh(){
+    clean_object();
+        for(auto buffer: uniformBuffers){
+            vkDestroyBuffer(vulkan_device->logicalDevice,buffer,nullptr);
+        }
+        for(auto buffer: uniform_node_buffers){
+            vkDestroyBuffer(vulkan_device->logicalDevice,buffer,nullptr);
+        }
+          vkDestroyBuffer(vulkan_device->logicalDevice,indexBuffer,nullptr);
+        vkDestroyBuffer(vulkan_device->logicalDevice,vertices_buffer,nullptr);
+         for(auto uniform_memory : uniformBuffersMemory){
+            vkFreeMemory(vulkan_device->logicalDevice,uniform_memory, nullptr);
+        }
+        for(auto uniform_memory : uniform_node_buffer_memory){
+            vkFreeMemory(vulkan_device->logicalDevice,uniform_memory, nullptr);
+        }
+         vkFreeMemory(vulkan_device->logicalDevice, textureImageMemory, nullptr);
+        vkFreeMemory(vulkan_device->logicalDevice, indexBufferMemory, nullptr);
+        vkFreeMemory(vulkan_device->logicalDevice, vertexBufferMemory, nullptr);
+}
 #else
 EMesh::EMesh(){
     
+}
+EMesh::~EMesh(){
+
 }
 #endif
 void EMesh::clean_object(){
@@ -259,26 +289,7 @@ void EMesh::clean_object(){
        
     #endif
 }
-EMesh::~EMesh(){
-    clean_object();
-        for(auto buffer: uniformBuffers){
-            vkDestroyBuffer(vulkan_device->logicalDevice,buffer,nullptr);
-        }
-        for(auto buffer: uniform_node_buffers){
-            vkDestroyBuffer(vulkan_device->logicalDevice,buffer,nullptr);
-        }   
-          vkDestroyBuffer(vulkan_device->logicalDevice,indexBuffer,nullptr);
-        vkDestroyBuffer(vulkan_device->logicalDevice,vertices_buffer,nullptr);
-         for(auto uniform_memory : uniformBuffersMemory){
-            vkFreeMemory(vulkan_device->logicalDevice,uniform_memory, nullptr);
-        }
-        for(auto uniform_memory : uniform_node_buffer_memory){
-            vkFreeMemory(vulkan_device->logicalDevice,uniform_memory, nullptr);
-        } 
-         vkFreeMemory(vulkan_device->logicalDevice, textureImageMemory, nullptr);
-        vkFreeMemory(vulkan_device->logicalDevice, indexBufferMemory, nullptr);    
-        vkFreeMemory(vulkan_device->logicalDevice, vertexBufferMemory, nullptr);
-}
+
 
 void EMesh::SetLocation(float x, float y, float z){
 		Location.x = x;
