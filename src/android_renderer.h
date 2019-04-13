@@ -80,20 +80,16 @@ public:
     Renderer(android_app *pApp){
         app = pApp;
         LOGW("Initialiazing");
-        init();
-        //engine.create_window(pApp);
+       // init();
+        engine.create_window(pApp);
+
         init_gl();
         
 
     };
    
 private:
-    EGLDisplay display;
-    EGLConfig config;
-    EGLContext context;
-    EGLSurface surface;
-    NativeWindowType native_window;
-    EGLint num_config;
+
     struct android_app * app;
 
     GLuint vertexbuffer;
@@ -118,30 +114,7 @@ private:
                                -0.5f, -0.5f, 0.0f,
                                0.5f, -0.5f, 0.0f};
                                
-    void init(){
 
-        
-        display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
-
-        
-        eglInitialize(display, NULL, NULL);
-
-        /* get an appropriate EGL frame buffer configuration */
-        eglChooseConfig(display, attribute_list, &config, 1, &num_config);
-
-       
-        context = eglCreateContext(display, config, EGL_NO_CONTEXT, GiveMeGLES2);       
-
-        
-        surface = eglCreateWindowSurface(display, config, app->window, NULL);
-
-     
-        eglMakeCurrent(display, surface, surface, context);
-
-        init_gl();
-
-
-    };
     void init_gl(){
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LESS);
@@ -281,7 +254,7 @@ private:
         //glUniform1f(textureid,sampler);
         glDrawElements(GL_TRIANGLES,meshes[0]->indices.size(),GL_UNSIGNED_INT,(void*)0);
         
-        eglSwapBuffers(display, surface);
+        eglSwapBuffers(engine.display, engine.surface);
     };
 
 };

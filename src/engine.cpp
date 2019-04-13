@@ -402,7 +402,7 @@ float Engine::get_time(){
 
 		surface = eglCreateWindowSurface(display, config, pApp->window, NULL);
 
+        eglMakeCurrent(display, surface, surface, context);
 
-		eglMakeCurrent(display, surface, surface, context);
 	}
 #endif
