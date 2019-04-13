@@ -8,7 +8,7 @@
     #ifndef _OpenGL_Renderer_
         #include <vulkan/vulkan.h>
     #else
-        #include <GL/gl.h>
+       // #include <GL/gl.h>
     #endif
     #include <glm/glm.hpp>
 #else

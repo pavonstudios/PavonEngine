@@ -16,6 +16,7 @@
     #include <pthread.h>
     #include <GLFW/glfw3.h>
     #include "input_controller.h"
+    #include "camera.h"
 #else
    // #include "opengl_renderer.h"
    #include <EGL/egl.h>
@@ -27,6 +28,7 @@
 #include <vector>
 
 #include "3D_objects.h"
+using namespace engine;
 class Engine {
 public:
 
@@ -88,6 +90,7 @@ public:
 
         Engine(){init();};
         void init(){
+           
             app.engine = this;          
             
             };

@@ -1,26 +1,26 @@
 
 
 #ifndef ANDROID
-    #ifdef VULKAN
-        #include "engine.h"
-    #endif
+    #include "engine.h"
+    
     int main() {
-        #ifdef VULKAN
-            Engine my_engine;
+        
+        Engine my_engine;
 
-            try {
+        try {
 
-                my_engine.Execute();
+            my_engine.Execute();
 
-            } catch (const std::exception& e) {
+        } catch (const std::exception& e) {
 
-                std::cerr << e.what() << std::endl;
-                
-                return EXIT_FAILURE;
-            }
-            //pthread_exit(NULL);
-            return EXIT_SUCCESS;
-        #endif
+            std::cerr << e.what() << std::endl;
+            
+            return EXIT_FAILURE;
+        }
+        //pthread_exit(NULL);
+        return EXIT_SUCCESS;
+        
+
     }
 #endif
 

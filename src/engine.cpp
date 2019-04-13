@@ -3,8 +3,8 @@
 
 #include <sstream>
 #ifndef ANDROID
-#include "Game/ThirdPerson.hpp"
-#include "input_controller.h"
+	#include "Game/ThirdPerson.hpp"
+	#include "input_controller.h"
 #endif
 
 #ifndef ANDROID
@@ -227,20 +227,16 @@ void Engine::update_input(){
 }
 
 void Engine::load_models(){	
-	//load gltf skinned mesh
-	skeletal = new EMesh(vulkan_device);
-	skeletal->load_model_gltf("models/character2.gltf");
-	skeletal->texture_path = "textures/character2.jpg";
-	meshes.push_back(skeletal);
-	glm::mat4 model_matrix = glm::mat4(1.0f);
-	//model_matrix = glm::translate(model_matrix, glm::vec3(7,0,0));
-	meshes.back()->model_matrix = model_matrix;
 	
 
 }
 
 void Engine::load_and_instance_at_location(std::string path, glm::vec3 location){
+	#ifdef VULKAN
 	EMesh *model = new EMesh(vulkan_device);	
+	#else
+	EMesh *model = new EMesh();
+	#endif
 	model->load_model_gltf(path.c_str());
 	glm::mat4 model_matrix = glm::mat4(1.0f);
 	model_matrix = glm::translate(model_matrix, location);
@@ -257,13 +253,16 @@ void Engine::Execute(){
 }
 
 void * Engine::Render(){
+			#ifdef VULKAN
 	        app.run(&vkdata);
+			
 			glfwSetScrollCallback(window,input.scroll_callback);
             load_map("map01.map");
             app.configure_objects();
             std::cout << "Rendering" << std::endl;
             main_loop();
             //pthread_exit(NULL);
+			#endif
             return (void *)nullptr;
 }
 void Engine::load_map(std::string path){
@@ -315,11 +314,12 @@ void Engine::delete_meshes(){
 		delete mesh;
 	}
 }
-
+#ifdef VULKAN
 void Engine::framebufferResizeCallback(GLFWwindow* window, int width, int height) {
   auto app = reinterpret_cast<Renderer*>(glfwGetWindowUserPointer(window));
             app->framebufferResized = true;
 }
+#endif
 void * Engine::InputHanled(){
 	std::cout << "Input thread created" << std::endl;
             char character;

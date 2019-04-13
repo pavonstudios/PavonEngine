@@ -176,7 +176,7 @@ void RendererGL::draw(){
 	//draw ten objects
 	for (unsigned int i = 0; i < 10; i++){
 		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, engine->objects_positions[i]);
+		//model = glm::translate(model, engine->objects_positions[i]);
 		float angle = 20.0f * i; 
 		model = glm::rotate(model, engine->get_time() *glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 
