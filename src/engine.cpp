@@ -1,9 +1,13 @@
 #include "engine.h"
-#include "input_controller.h"
+
 
 #include <sstream>
-
+#ifndef ANDROID
 #include "Game/ThirdPerson.hpp"
+#include "input_controller.h"
+#endif
+
+#ifndef ANDROID
 void Engine::main_loop(){
 	 ThirdPerson player;
 	 player.engine = this;
@@ -377,3 +381,28 @@ float Engine::get_time(){
 			
             return time;
 }
+#endif
+
+
+#ifdef ANDROID
+#include <android/log.h>
+#include "android_helper.h"
+	void Engine::create_window(android_app *pApp) {
+		display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
+
+
+		eglInitialize(display, NULL, NULL);
+
+		/* get an appropriate EGL frame buffer configuration */
+		eglChooseConfig(display, attribute_list, &config, 1, &num_config);
+
+
+		context = eglCreateContext(display, config, EGL_NO_CONTEXT, GiveMeGLES2);
+
+
+		surface = eglCreateWindowSurface(display, config, pApp->window, NULL);
+
+
+		eglMakeCurrent(display, surface, surface, context);
+	}
+#endif

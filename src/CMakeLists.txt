@@ -25,6 +25,7 @@ add_library(maincode
     3D_objects.cpp
         model_loader.cpp
         asset_manager.cpp
+        engine.cpp
     
     )
 

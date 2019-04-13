@@ -18,6 +18,9 @@
     #include "input_controller.h"
 #else
    // #include "opengl_renderer.h"
+   #include <EGL/egl.h>
+   #include <android_native_app_glue.h>
+
 #endif
 
 #include <chrono>
@@ -107,7 +110,14 @@ public:
 
 #endif//end no define android
      
-        
+#ifdef ANDROID
+    EGLDisplay display;
+    EGLConfig config;
+    EGLContext context;
+    EGLSurface surface;
+    EGLint num_config;
+    void create_window(android_app *pApp);
+#endif
     
 };
 #endif

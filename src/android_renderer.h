@@ -18,8 +18,6 @@
 #include "3D_objects.h"
 
 
-#define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, "native-activity", __VA_ARGS__))
-#define LOGW(...) ((void)__android_log_print(ANDROID_LOG_WARN, "native-activity", __VA_ARGS__))
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -29,7 +27,48 @@
 
 extern NativeWindowType createNativeWindow(void);
 
-//#include "engine.h"
+void
+print_shader_info_log (
+        GLuint  shader      // handle to the shader
+)
+{
+    GLint  length;
+
+    glGetShaderiv ( shader , GL_INFO_LOG_LENGTH , &length );
+
+    if ( length ) {
+        char* buffer  =  new char [ length ];
+        glGetShaderInfoLog ( shader , length , NULL , buffer );
+        LOGW("shader info %s",buffer);
+        //cout << "shader info: " <<  buffer << flush;
+        delete [] buffer;
+
+        GLint success;
+        glGetShaderiv( shader, GL_COMPILE_STATUS, &success );
+        if ( success != GL_TRUE )   exit ( 1 );
+    }
+}
+
+GLuint
+load_shader (
+        const char  *shader_source,
+        GLenum       type
+)
+{
+    GLuint  shader = glCreateShader( type );
+
+    glShaderSource  ( shader , 1 , &shader_source , NULL );
+    glCompileShader ( shader );
+
+    print_shader_info_log ( shader );
+
+    return shader;
+}
+
+
+
+
+#include "engine.h"
 #include "asset_manager.h"
 
 using  namespace engine;
@@ -42,7 +81,8 @@ public:
         app = pApp;
         LOGW("Initialiazing");
         init();
-
+        //engine.create_window(pApp);
+        init_gl();
         
 
     };
@@ -65,6 +105,14 @@ private:
     GLuint indices;
 
     GLint textureid;
+
+    GLint
+            phase_loc,
+            offset_loc,
+            position_loc,
+            sampler,
+            uvposition,
+            mvp_loc;
 
      GLfloat vVertices[9] = {0.0f, 0.5f, 0.0f,
                                -0.5f, -0.5f, 0.0f,
@@ -90,38 +138,43 @@ private:
      
         eglMakeCurrent(display, surface, surface, context);
 
+        init_gl();
+
+
+    };
+    void init_gl(){
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LESS);
 
 
         LOGW("Loading shaders........................");
 
-       
+
 
         GLuint vertexShader   = load_shader ( vertex_src , GL_VERTEX_SHADER  );     // load vertex shader
         GLuint fragmentShader = load_shader ( fragment_src , GL_FRAGMENT_SHADER );  // load fragment shader
-        
-         LOGW("Shaders loaded");
+
+        LOGW("Shaders loaded");
         GLuint shaderProgram  = glCreateProgram ();                 // create program object
         glAttachShader ( shaderProgram, vertexShader );             // and attach both...
         glAttachShader ( shaderProgram, fragmentShader );           // ... shaders to it
-        
+
         glLinkProgram ( shaderProgram );    // link the program
         glUseProgram  ( shaderProgram );    // and select it for usage
-        
+
         //// now get the locations (kind of handle) of the shaders variables
         position_loc  = glGetAttribLocation  ( shaderProgram , "position" );
         uvposition         = glGetAttribLocation( shaderProgram , "coord" );
 
 
         phase_loc     = glGetUniformLocation ( shaderProgram , "phase"    );
-        offset_loc    = glGetUniformLocation ( shaderProgram , "offset"   ); 
+        offset_loc    = glGetUniformLocation ( shaderProgram , "offset"   );
         mvp_loc         = glGetUniformLocation( shaderProgram , "MVP");
 
-         sampler         = glGetUniformLocation( shaderProgram , "texture_sampler");
+        sampler         = glGetUniformLocation( shaderProgram , "texture_sampler");
 
 
-      LOGW("Loading shaders........................");
+        LOGW("Loading shaders........................");
 
 
 /*         AAsset* file = AAssetManager_open(super_asset_manager,"openme.txt", AASSET_MODE_BUFFER);
@@ -141,27 +194,27 @@ private:
                __android_log_print(ANDROID_LOG_WARN,"native-activity","%s","OK GLTF object loaded");
             } */
 
-      EMesh* mesh = new EMesh();
-      if(mesh->load_mode_gltf_android("police_patrol.gltf",app->activity->assetManager) == -1){
+        EMesh* mesh = new EMesh();
+        if(mesh->load_mode_gltf_android("police_patrol.gltf",app->activity->assetManager) == -1){
 
-          __android_log_print(ANDROID_LOG_WARN,"native-activity","%s","error loading model");
+            __android_log_print(ANDROID_LOG_WARN,"native-activity","%s","error loading model");
 
-      }else{
-          __android_log_print(ANDROID_LOG_WARN,"native-activity","%s","OK GLTF object loaded");
-      }
+        }else{
+            __android_log_print(ANDROID_LOG_WARN,"native-activity","%s","OK GLTF object loaded");
+        }
         meshes.push_back(mesh);
-      LOGW("Generating vertex buffer");
+        LOGW("Generating vertex buffer");
 
 
 
 
 
         glGenBuffers(1,&vertex_buffer);
-      glBindBuffer(GL_ARRAY_BUFFER,vertex_buffer);
-      glBufferData(GL_ARRAY_BUFFER,mesh->vertices.size() * sizeof(Vertex),mesh->vertices.data(),GL_STATIC_DRAW);
+        glBindBuffer(GL_ARRAY_BUFFER,vertex_buffer);
+        glBufferData(GL_ARRAY_BUFFER,mesh->vertices.size() * sizeof(Vertex),mesh->vertices.data(),GL_STATIC_DRAW);
         LOGW("OK Vertex data generated");
 
-      LOGW("Generating index buffer");
+        LOGW("Generating index buffer");
 
 
         glGenBuffers(1,&indices);
@@ -173,11 +226,9 @@ private:
         AssetManager assets;
         textureid = assets.load_bmp("patrol.bmp",app->activity->assetManager);
 
-       glActiveTexture(GL_TEXTURE0);
+        glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D,textureid);
-
-
-    };
+    }
 
    public:
        void render(){

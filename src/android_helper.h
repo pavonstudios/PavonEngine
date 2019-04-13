@@ -1,3 +1,9 @@
+#ifndef ANDROID_HELPER
+#define  ANDROID_HELPER
+
+#define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, "native-activity", __VA_ARGS__))
+#define LOGW(...) ((void)__android_log_print(ANDROID_LOG_WARN, "native-activity", __VA_ARGS__))
+
 const char vertex_src [] =
 "                                        \
    attribute vec3        position;       \
@@ -30,43 +36,6 @@ const char fragment_src [] =
 ";
 
 
-void
-print_shader_info_log (
-   GLuint  shader      // handle to the shader
-)
-{
-   GLint  length;
- 
-   glGetShaderiv ( shader , GL_INFO_LOG_LENGTH , &length );
- 
-   if ( length ) {
-      char* buffer  =  new char [ length ];
-      glGetShaderInfoLog ( shader , length , NULL , buffer );
-      LOGW("shader info %s",buffer);
-      //cout << "shader info: " <<  buffer << flush;
-      delete [] buffer;
- 
-      GLint success;
-      glGetShaderiv( shader, GL_COMPILE_STATUS, &success );
-      if ( success != GL_TRUE )   exit ( 1 );
-   }
-}
-
-GLuint
-load_shader (
-   const char  *shader_source,
-   GLenum       type
-)
-{
-   GLuint  shader = glCreateShader( type );
- 
-   glShaderSource  ( shader , 1 , &shader_source , NULL );
-   glCompileShader ( shader );
- 
-    print_shader_info_log ( shader );
- 
-   return shader;
-}
 
 const float vertexArray[] = {
    0.0,  0.5,  0.0,
@@ -89,12 +58,6 @@ static const EGLint GiveMeGLES2[] = {
         EGL_NONE
 };
 
-GLint
-        phase_loc,
-        offset_loc,
-        position_loc,
-        sampler,
-        uvposition,
-        mvp_loc;
- 
- 
+
+
+#endif
