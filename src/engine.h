@@ -25,13 +25,15 @@
 
 #include "3D_objects.h"
 class Engine {
-    public:
+public:
 
-#ifdef _OpenGL_Renderer_
+
+
+#ifndef ANDROID
+    #ifdef _OpenGL_Renderer_
         RendererGL app;
        // class Renderer renderer;
-#endif
-#ifndef ANDROID
+    #endif
     #ifdef VULKAN
         Renderer app;
         VulkanData vkdata = {VK_NULL_HANDLE};
@@ -72,6 +74,8 @@ class Engine {
         void load_and_instance_at_location(std::string path, glm::vec3 location);
         void load_map(std::string path);
         float get_time();
+        void update_input();
+
         #ifdef DEVELOPMENT
         void print_debug(const std::string text, int8_t posx, int8_t posy);
         void print_fps();
@@ -84,13 +88,14 @@ class Engine {
             app.engine = this;          
             
             };
-private:
-         static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
-         static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
+    private:
+       
          
     #ifdef VULKAN
         static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
     #endif
+        static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+        static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 	
         static void* ExecuteInputHanler(void* This){
             return ((Engine *)This)->InputHanled();
@@ -100,25 +105,8 @@ private:
         }
         void *InputHanled();
 
-    #endif//end no define android
-    void update_input();
-public:
-       
-        
-        glm::vec3 objects_positions[10] = {
-            glm::vec3( 0.0f,  0.0f,  0.0f), 
-            glm::vec3( 2.0f,  5.0f, -15.0f), 
-            glm::vec3(-1.5f, -2.2f, -2.5f),  
-            glm::vec3(-3.8f, -2.0f, -12.3f),  
-            glm::vec3( 2.4f, -0.4f, -3.5f),  
-            glm::vec3(-1.7f,  3.0f, -7.5f),  
-            glm::vec3( 1.3f, -2.0f, -2.5f),  
-            glm::vec3( 1.5f,  2.0f, -2.5f), 
-            glm::vec3( 1.5f,  0.2f, -1.5f), 
-            glm::vec3(-1.3f,  1.0f, -1.5f)  
-        };    
-
-       
+#endif//end no define android
+     
         
     
 };
