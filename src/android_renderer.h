@@ -25,106 +25,10 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include <chrono>
 
-const char vertex_src [] =
-"                                        \
-   attribute vec3        position;       \
-    attribute vec2          coord;         \
-   varying mediump vec2  pos;            \
-   uniform vec4          offset;         \
-   uniform mat4          MVP;  \
-    varying vec2 texcoordOut;          \
-                                         \
-   void main()                           \
-   {                                     \
-      gl_Position = MVP * vec4(position,1.0);   \
-      pos = position.xy;   \
-        texcoordOut = coord;              \
-   }                                     \
-";
- 
- 
-const char fragment_src [] =
-"     \
-    precision mediump float;                                                 \
-    uniform sampler2D texture_sampler;                  \
-    varying vec2 UV;                                         \
-                                                       \
-   void  main()                                        \
-   {                                                            \
-      gl_FragColor  =  vec4(0,1,1,1);                   \
-                                                             \
-   }                                                   \
-";
+#include "android_helper.h"
 
-
-void
-print_shader_info_log (
-   GLuint  shader      // handle to the shader
-)
-{
-   GLint  length;
- 
-   glGetShaderiv ( shader , GL_INFO_LOG_LENGTH , &length );
- 
-   if ( length ) {
-      char* buffer  =  new char [ length ];
-      glGetShaderInfoLog ( shader , length , NULL , buffer );
-      LOGW("shader info %s",buffer);
-      //cout << "shader info: " <<  buffer << flush;
-      delete [] buffer;
- 
-      GLint success;
-      glGetShaderiv( shader, GL_COMPILE_STATUS, &success );
-      if ( success != GL_TRUE )   exit ( 1 );
-   }
-}
-
-GLuint
-load_shader (
-   const char  *shader_source,
-   GLenum       type
-)
-{
-   GLuint  shader = glCreateShader( type );
- 
-   glShaderSource  ( shader , 1 , &shader_source , NULL );
-   glCompileShader ( shader );
- 
-    print_shader_info_log ( shader );
- 
-   return shader;
-}
-
-const float vertexArray[] = {
-   0.0,  0.5,  0.0,
-  -0.5,  0.0,  0.0,
-   0.0, -0.5,  0.0,
-   0.5,  0.0,  0.0,
-   0.0,  0.5,  0.0 
-};
- 
- 
 extern NativeWindowType createNativeWindow(void);
-static EGLint const attribute_list[] = {
-      EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
-      EGL_BLUE_SIZE, 8,
-      EGL_GREEN_SIZE, 8,
-      EGL_RED_SIZE, 8,
-      EGL_CONFORMANT, EGL_OPENGL_ES2_BIT,
-      EGL_NONE
-};
-static const EGLint GiveMeGLES2[] = {
-      EGL_CONTEXT_CLIENT_VERSION, 2,
-      EGL_NONE
-    };
 
-GLint
-   phase_loc,
-   offset_loc,
-   position_loc,
-   sampler,
-   uvposition,
-   mvp_loc;
 //#include "engine.h"
 #include "asset_manager.h"
 
@@ -142,58 +46,7 @@ public:
         
 
     };
-    void render(){
-        //LOGW("rendering");
-        //glViewport(0,0,800,600);
-
-        glClearColor(1.0, 0.0, 0.0, 1.0);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        //glFlush();
-
-      static auto startTime = std::chrono::high_resolution_clock::now();
-
-    auto currentTime = std::chrono::high_resolution_clock::now();
-    float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
-
-        glm::mat4 model = glm::mat4(1.0);
-        glm::mat4 Projection = glm::perspective(glm::radians(45.f), 768.f/1280.f, 0.01f, 1000.f);
-        glm::mat4 view = glm::lookAt(vec3(0,15,0),vec3(0,0,0),vec3(0,0,1));
-
-      model = glm::rotate(model, time * glm::radians(12.f), glm::vec3(0.0f, 1.0f, 1.0f));
-
-        mat4 mvp = Projection * view * model;
-
-        glUniformMatrix4fv(mvp_loc,1,GL_FALSE,&mvp[0][0]);
-
-
-
-
-       /*  glVertexAttribPointer ( position_loc, 3, GL_FLOAT, false, 0, vertexArray );
-            glEnableVertexAttribArray ( position_loc );
-            glDrawArrays ( GL_TRIANGLE_STRIP, 0, 5 );*/
-
-
-
-
-        glVertexAttribPointer ( position_loc, 3, GL_FLOAT, false, sizeof(Vertex), (void*)0 );
-        glVertexAttribPointer(
-                sampler,
-                2,                  // size
-                GL_FLOAT,           // type
-                GL_FALSE,           // normalized?
-                sizeof(Vertex),                  // stride
-                (void*)offsetof(Vertex,texCoord)            // array buffer offset
-        );
-
-
-        glEnableVertexAttribArray ( position_loc );
-        glEnableVertexAttribArray ( sampler );
-
-        //glUniform1f(textureid,sampler);
-        glDrawElements(GL_TRIANGLES,meshes[0]->indices.size(),GL_UNSIGNED_INT,(void*)0);
-        
-        eglSwapBuffers(display, surface);
-    };
+   
 private:
     EGLDisplay display;
     EGLConfig config;
@@ -324,6 +177,60 @@ private:
         glBindTexture(GL_TEXTURE_2D,textureid);
 
 
+    };
+
+   public:
+       void render(){
+        //LOGW("rendering");
+        //glViewport(0,0,800,600);
+
+        glClearColor(1.0, 0.0, 0.0, 1.0);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        //glFlush();
+
+      static auto startTime = std::chrono::high_resolution_clock::now();
+
+    auto currentTime = std::chrono::high_resolution_clock::now();
+    float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
+
+        glm::mat4 model = glm::mat4(1.0);
+        glm::mat4 Projection = glm::perspective(glm::radians(45.f), 768.f/1280.f, 0.01f, 1000.f);
+        glm::mat4 view = glm::lookAt(vec3(0,15,0),vec3(0,0,0),vec3(0,0,1));
+
+      model = glm::rotate(model, time * glm::radians(12.f), glm::vec3(0.0f, 1.0f, 1.0f));
+
+        mat4 mvp = Projection * view * model;
+
+        glUniformMatrix4fv(mvp_loc,1,GL_FALSE,&mvp[0][0]);
+
+
+
+
+       /*  glVertexAttribPointer ( position_loc, 3, GL_FLOAT, false, 0, vertexArray );
+            glEnableVertexAttribArray ( position_loc );
+            glDrawArrays ( GL_TRIANGLE_STRIP, 0, 5 );*/
+
+
+
+
+        glVertexAttribPointer ( position_loc, 3, GL_FLOAT, false, sizeof(Vertex), (void*)0 );
+        glVertexAttribPointer(
+                sampler,
+                2,                  // size
+                GL_FLOAT,           // type
+                GL_FALSE,           // normalized?
+                sizeof(Vertex),                  // stride
+                (void*)offsetof(Vertex,texCoord)            // array buffer offset
+        );
+
+
+        glEnableVertexAttribArray ( position_loc );
+        glEnableVertexAttribArray ( sampler );
+
+        //glUniform1f(textureid,sampler);
+        glDrawElements(GL_TRIANGLES,meshes[0]->indices.size(),GL_UNSIGNED_INT,(void*)0);
+        
+        eglSwapBuffers(display, surface);
     };
 
 };
