@@ -21,4 +21,4 @@ src/.vscode/
 src/asset_manager.hpp.gch
 models/pavon_the_game/*
 textures/pavon_the_game/*
-src/egl_example.cpp
+
