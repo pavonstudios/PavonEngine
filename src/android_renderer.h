@@ -110,10 +110,28 @@ private:
             uvposition,
             mvp_loc;
 
-     GLfloat vVertices[9] = {0.0f, 0.5f, 0.0f,
-                               -0.5f, -0.5f, 0.0f,
-                               0.5f, -0.5f, 0.0f};
-                               
+    GLuint shaderProgram;
+
+    void load_shader_from_file(){
+        AAsset* file = AAssetManager_open(app->activity->assetManager,"vert.glsl", AASSET_MODE_BUFFER);
+
+        size_t file_length = AAsset_getLength(file);
+        char* fileContent = new char[file_length+1];
+
+        AAsset_read(file, fileContent,file_length);
+
+
+        GLuint vertexShader   = load_shader ( fileContent , GL_VERTEX_SHADER  );     // load vertex shader
+        GLuint fragmentShader = load_shader ( fragment_src , GL_FRAGMENT_SHADER );  // load fragment shader
+
+        LOGW("Shaders loaded");
+        shaderProgram = glCreateProgram ();                 // create program object
+        glAttachShader ( shaderProgram, vertexShader );             // and attach both...
+        glAttachShader ( shaderProgram, fragmentShader );           // ... shaders to it
+
+        glLinkProgram ( shaderProgram );    // link the program
+        glUseProgram  ( shaderProgram );    // and select it for usage
+    }
 
     void init_gl(){
         glEnable(GL_DEPTH_TEST);
@@ -122,29 +140,11 @@ private:
 
         LOGW("Loading shaders........................");
 
+        load_shader_from_file();
 
 
-        GLuint vertexShader   = load_shader ( vertex_src , GL_VERTEX_SHADER  );     // load vertex shader
-        GLuint fragmentShader = load_shader ( fragment_src , GL_FRAGMENT_SHADER );  // load fragment shader
-
-        LOGW("Shaders loaded");
-        GLuint shaderProgram  = glCreateProgram ();                 // create program object
-        glAttachShader ( shaderProgram, vertexShader );             // and attach both...
-        glAttachShader ( shaderProgram, fragmentShader );           // ... shaders to it
-
-        glLinkProgram ( shaderProgram );    // link the program
-        glUseProgram  ( shaderProgram );    // and select it for usage
-
-        //// now get the locations (kind of handle) of the shaders variables
-        position_loc  = glGetAttribLocation  ( shaderProgram , "position" );
-        uvposition         = glGetAttribLocation( shaderProgram , "coord" );
 
 
-        phase_loc     = glGetUniformLocation ( shaderProgram , "phase"    );
-        offset_loc    = glGetUniformLocation ( shaderProgram , "offset"   );
-        mvp_loc         = glGetUniformLocation( shaderProgram , "MVP");
-
-        sampler         = glGetUniformLocation( shaderProgram , "texture_sampler");
 
 
         LOGW("Loading shaders........................");
@@ -201,6 +201,15 @@ private:
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D,textureid);
+
+        //// now get the locations (kind of handle) of the shaders variables
+        position_loc  = glGetAttribLocation  ( shaderProgram , "position" );
+        uvposition         = glGetAttribLocation( shaderProgram , "UV" );
+
+        mvp_loc         = glGetUniformLocation( shaderProgram , "MVP");
+        sampler         = glGetUniformLocation( shaderProgram , "texture_sampler");
+
+        LOGW("GGetting shader attribute location");
     }
 
    public:
@@ -229,29 +238,15 @@ private:
 
 
 
-
-       /*  glVertexAttribPointer ( position_loc, 3, GL_FLOAT, false, 0, vertexArray );
-            glEnableVertexAttribArray ( position_loc );
-            glDrawArrays ( GL_TRIANGLE_STRIP, 0, 5 );*/
-
-
-
-
         glVertexAttribPointer ( position_loc, 3, GL_FLOAT, false, sizeof(Vertex), (void*)0 );
-        glVertexAttribPointer(
-                sampler,
-                2,                  // size
-                GL_FLOAT,           // type
-                GL_FALSE,           // normalized?
-                sizeof(Vertex),                  // stride
-                (void*)offsetof(Vertex,texCoord)            // array buffer offset
-        );
+        glVertexAttribPointer ( uvposition, 2, GL_FLOAT, false, sizeof(Vertex), (void*)offsetof(Vertex,texCoord) );
 
 
         glEnableVertexAttribArray ( position_loc );
         glEnableVertexAttribArray ( sampler );
 
-        //glUniform1f(textureid,sampler);
+      //  glUniform3()f(textureid,sampler);
+        glBindTexture(GL_TEXTURE_2D,textureid);
         glDrawElements(GL_TRIANGLES,meshes[0]->indices.size(),GL_UNSIGNED_INT,(void*)0);
         
         eglSwapBuffers(engine.display, engine.surface);

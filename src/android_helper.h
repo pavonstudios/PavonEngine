@@ -6,18 +6,15 @@
 
 const char vertex_src [] =
 "                                        \
-   attribute vec3        position;       \
-    attribute vec2          coord;         \
-   varying mediump vec2  pos;            \
-   uniform vec4          offset;         \
-   uniform mat4          MVP;  \
-    varying vec2 texcoordOut;          \
+    attribute vec3        position;       \
+    attribute vec2          inUV;         \
+    uniform mat4          MVP;              \
+    varying vec2 UV;                   \
                                          \
    void main()                           \
    {                                     \
       gl_Position = MVP * vec4(position,1.0);   \
-      pos = position.xy;   \
-        texcoordOut = coord;              \
+      UV = inUV;              \
    }                                     \
 ";
  
@@ -30,7 +27,7 @@ const char fragment_src [] =
                                                        \
    void  main()                                        \
    {                                                            \
-      gl_FragColor  =  vec4(0,1,1,1);                   \
+      gl_FragColor = texture2D(texture_sampler,UV);                   \
                                                              \
    }                                                   \
 ";
