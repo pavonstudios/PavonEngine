@@ -122,7 +122,7 @@ private:
         AAsset_close(file);
         return fileContent;
     }
-    void load_shader_from_file(){
+    void load_shaders(){
 
 
         char* vertex_shader_src = load_shader_file("vert.glsl");
@@ -148,14 +148,8 @@ private:
 
         LOGW("Loading shaders........................");
 
-        load_shader_from_file();
+        load_shaders();
 
-
-
-
-
-
-        LOGW("Loading shaders........................");
 
 
 /*         AAsset* file = AAssetManager_open(super_asset_manager,"openme.txt", AASSET_MODE_BUFFER);
@@ -188,8 +182,6 @@ private:
 
 
 
-
-
         glGenBuffers(1,&vertex_buffer);
         glBindBuffer(GL_ARRAY_BUFFER,vertex_buffer);
         glBufferData(GL_ARRAY_BUFFER,mesh->vertices.size() * sizeof(Vertex),mesh->vertices.data(),GL_STATIC_DRAW);
@@ -207,8 +199,8 @@ private:
         AssetManager assets;
         textureid = assets.load_bmp("patrol.bmp",app->activity->assetManager);
 
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D,textureid);
+      //  glActiveTexture(GL_TEXTURE0);
+        //glBindTexture(GL_TEXTURE_2D,textureid);
 
         //// now get the locations (kind of handle) of the shaders variables
         position_loc  = glGetAttribLocation  ( shaderProgram , "position" );
@@ -247,11 +239,11 @@ private:
 
 
         glVertexAttribPointer ( position_loc, 3, GL_FLOAT, false, sizeof(Vertex), (void*)0 );
-        glVertexAttribPointer ( uvposition, 2, GL_FLOAT, false, sizeof(Vertex), (void*)offsetof(Vertex,texCoord) );
+        glVertexAttribPointer ( 1, 2, GL_FLOAT, false, sizeof(Vertex), (void*)offsetof(Vertex,texCoord) );
 
 
         glEnableVertexAttribArray ( position_loc );
-        glEnableVertexAttribArray ( uvposition );
+        glEnableVertexAttribArray ( 1 );
 
       //  glUniform3()f(textureid,sampler);
         glBindTexture(GL_TEXTURE_2D,textureid);
