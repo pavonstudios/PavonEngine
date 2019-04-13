@@ -112,17 +112,25 @@ private:
 
     GLuint shaderProgram;
 
-    void load_shader_from_file(){
-        AAsset* file = AAssetManager_open(app->activity->assetManager,"vert.glsl", AASSET_MODE_BUFFER);
+    char* load_shader_file(const char* path){
+        AAsset* file = AAssetManager_open(app->activity->assetManager,path, AASSET_MODE_BUFFER);
 
         size_t file_length = AAsset_getLength(file);
         char* fileContent = new char[file_length+1];
 
         AAsset_read(file, fileContent,file_length);
+        AAsset_close(file);
+        return fileContent;
+    }
+    void load_shader_from_file(){
 
 
-        GLuint vertexShader   = load_shader ( fileContent , GL_VERTEX_SHADER  );     // load vertex shader
-        GLuint fragmentShader = load_shader ( fragment_src , GL_FRAGMENT_SHADER );  // load fragment shader
+        char* vertex_shader_src = load_shader_file("vert.glsl");
+        char* fragment_shader_src = load_shader_file("frag.glsl");
+
+
+        GLuint vertexShader   = load_shader ( vertex_shader_src , GL_VERTEX_SHADER  );     // load vertex shader
+        GLuint fragmentShader = load_shader ( fragment_shader_src , GL_FRAGMENT_SHADER );  // load fragment shader
 
         LOGW("Shaders loaded");
         shaderProgram = glCreateProgram ();                 // create program object
@@ -243,7 +251,7 @@ private:
 
 
         glEnableVertexAttribArray ( position_loc );
-        glEnableVertexAttribArray ( sampler );
+        glEnableVertexAttribArray ( uvposition );
 
       //  glUniform3()f(textureid,sampler);
         glBindTexture(GL_TEXTURE_2D,textureid);
