@@ -136,6 +136,7 @@ int EMesh::load_model_gltf(const char* path){
         std::string error = "Failed to open " + std::string(path);
         #ifndef ANDROID
         throw std::runtime_error(error);
+        return 0;
         #else
         std::cout << "error inlcoad file " << std::endl;
         return -1;

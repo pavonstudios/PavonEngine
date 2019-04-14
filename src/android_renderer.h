@@ -5,6 +5,8 @@
 #include <memory>
 #include <cstdlib>
 #include <cstring>
+#include <string>
+#include <fstream>
 
 #include <errno.h>
 #include <cassert>
@@ -91,30 +93,16 @@ public:
         LOGW("Initialiazing");
        // init();
         engine.create_window(pApp);
-         init_gl();
+         
     #else
     Renderer(){
     #endif
-       
+       init_gl();
         
 
     };
    
 private:
-    #ifdef ANDROID
-    struct android_app * app;
-    char* load_shader_file(const char* path){
-        AAsset* file = AAssetManager_open(app->activity->assetManager,path, AASSET_MODE_BUFFER);
-
-        size_t file_length = AAsset_getLength(file);
-        char* fileContent = new char[file_length+1];
-
-        AAsset_read(file, fileContent,file_length);
-        AAsset_close(file);
-        return fileContent;
-    }
-    
-
     GLuint vertexbuffer;
     GLuint VertexArrayID;
 
@@ -134,7 +122,56 @@ private:
             mvp_loc;
 
     GLuint shaderProgram;
+    #if ES2
+    GLuint load_shader (
+            const char  *shader_source,
+            GLenum       type
+    )
+    {
+        GLuint  shader = glCreateShader( type );
 
+        glShaderSource  ( shader , 1 , &shader_source , NULL );
+        glCompileShader ( shader );
+
+       // print_shader_info_log ( shader );
+
+        return shader;
+    }
+    #endif
+    char* load_shader_file(const char* path){
+        #ifdef ANDROID
+            AAsset* file = AAssetManager_open(app->activity->assetManager,path, AASSET_MODE_BUFFER);
+
+            size_t file_length = AAsset_getLength(file);
+            char* fileContent = new char[file_length+1];
+
+            AAsset_read(file, fileContent,file_length);
+            AAsset_close(file);
+            return fileContent;
+        #else
+        std::string spath = path;
+         std::string content;
+            std::ifstream fileStream(spath, std::ios::in);
+
+            if(!fileStream.is_open()) {
+                throw std::runtime_error("Could not read file ");
+                
+            }
+
+            std::string line = "";
+            while(!fileStream.eof()) {
+                std::getline(fileStream, line);
+                content.append(line + "\n");
+            }
+
+            fileStream.close();
+             int n = content.length(); 
+             char* char_content = new char[n+1];
+             strcpy(char_content,content.c_str());
+
+            return char_content;
+        #endif
+    }
     
     void load_shaders(){
 
@@ -146,7 +183,7 @@ private:
         GLuint vertexShader   = load_shader ( vertex_shader_src , GL_VERTEX_SHADER  );     // load vertex shader
         GLuint fragmentShader = load_shader ( fragment_shader_src , GL_FRAGMENT_SHADER );  // load fragment shader
 
-        LOGW("Shaders loaded");
+        
         shaderProgram = glCreateProgram ();                 // create program object
         glAttachShader ( shaderProgram, vertexShader );             // and attach both...
         glAttachShader ( shaderProgram, fragmentShader );           // ... shaders to it
@@ -154,7 +191,6 @@ private:
         glLinkProgram ( shaderProgram );    // link the program
         glUseProgram  ( shaderProgram );    // and select it for usage
     }
-
     void init_gl(){
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LESS);
@@ -181,16 +217,14 @@ private:
             } */
 
         EMesh* mesh = new EMesh();
-        if(mesh->load_mode_gltf_android("police_patrol.gltf",app->activity->assetManager) == -1){
-
-            //__android_log_print(ANDROID_LOG_WARN,"native-activity","%s","error loading model");
-
-        }else{
-            //__android_log_print(ANDROID_LOG_WARN,"native-activity","%s","OK GLTF object loaded");
-        }
+        int mesh_load_result;
+        #ifdef ANDROID
+        mesh_load_result = mesh->load_mode_gltf_android("police_patrol.gltf",app->activity->assetManager);
+        #else
+        mesh_load_result = mesh->load_model_gltf("models/pavon_the_game/police_patrol.gltf");
+        #endif
+        
         meshes.push_back(mesh);
-
-
 
 
         glGenBuffers(1,&vertex_buffer);
@@ -208,10 +242,7 @@ private:
         AssetManager assets;
         textureid = assets.load_bmp("patrol.bmp",app->activity->assetManager);
         #endif
-      //  glActiveTexture(GL_TEXTURE0);
-        //glBindTexture(GL_TEXTURE_2D,textureid);
 
-        //// now get the locations (kind of handle) of the shaders variables
         position_loc  = glGetAttribLocation  ( shaderProgram , "position" );
         uvposition         = glGetAttribLocation( shaderProgram , "UV" );
 
@@ -219,6 +250,9 @@ private:
         sampler         = glGetUniformLocation( shaderProgram , "texture_sampler");
 
     }
+
+    #ifdef ANDROID
+    struct android_app * app;
 
    public:
        void render(){
