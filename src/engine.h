@@ -23,6 +23,9 @@
    #include <android_native_app_glue.h>
 
 #endif
+#ifdef ES2
+    #include <EGL/egl.h>
+#endif
 
 #include <chrono>
 #include <vector>
@@ -44,6 +47,13 @@ public:
         VulkanData vkdata = {VK_NULL_HANDLE};
         VkDevice * pDevice;
         vks::VulkanDevice* vulkan_device;
+
+        Engine(){init();};
+        void init(){
+           
+            app.engine = this;          
+            
+            };
     #endif
         pthread_t thread[2];
         GLFWwindow* window;
@@ -88,12 +98,7 @@ public:
         
 
 
-        Engine(){init();};
-        void init(){
-           
-            app.engine = this;          
-            
-            };
+        
     private:
        
          
@@ -113,6 +118,8 @@ public:
 
 #endif//end no define android
      
+
+   
 #ifdef ANDROID
     EGLDisplay display;
     EGLConfig config;
@@ -120,6 +127,14 @@ public:
     EGLSurface surface;
     EGLint num_config;
     void create_window(android_app *pApp);
+#endif
+#ifdef ES2
+    EGLDisplay display;
+    EGLConfig config;
+    EGLContext context;
+    EGLSurface surface;
+    EGLint num_config;
+    void create_window();
 #endif
     
 };

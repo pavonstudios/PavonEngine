@@ -2,12 +2,12 @@
 
 
 #include <sstream>
-#ifndef ANDROID
+#ifdef VULKAN
 	#include "Game/ThirdPerson.hpp"
 	#include "input_controller.h"
 #endif
 
-#ifndef ANDROID
+#ifdef VULKAN
 void Engine::main_loop(){
 	 ThirdPerson player;
 	 player.engine = this;
@@ -50,56 +50,7 @@ void Engine::main_loop(){
 
 }
 
-void Engine::InitWindow(){
-		move_y = 2;
-		if( !glfwInit() )
-		{
-			fprintf( stderr, "Failed to initialize GLFW\n" );
-			return;
-		}
-		
-	#ifdef VULKAN
-			glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-	#endif
 
-	#ifdef _OpenGL_Renderer_
-			glfwWindowHint(GLFW_SAMPLES, 4); // 4x antialiasing
-			glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); // We want OpenGL 3.3
-			glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-			glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
-			glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // We don't want the old OpenGL 
-			
-	#endif
-
-		
-		window = glfwCreateWindow(800, 600, "Engine", nullptr, nullptr);
-		if( window == NULL ){
-			fprintf( stderr, "Failed to open GLFW window\n" );
-			glfwTerminate();
-			return;
-		}
-			glfwSetWindowUserPointer(window, this);
-
-	#ifdef VULKAN	   
-			glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
-	#endif
-			glfwSetInputMode(window, GLFW_STICKY_KEYS, 1);
-			glfwSetKeyCallback(window, input.key_callback);
-			glfwSetCursorPosCallback(window, mouse_callback);
-			glfwSetMouseButtonCallback(window,mouse_button_callback);
-			glfwSetScrollCallback(window,input.scroll_callback);
-
-	#ifdef _OpenGL_Renderer_
-			
-			glfwMakeContextCurrent(window); // Initialize GLEW
-
-
-			if (glewInit() != GLEW_OK) {
-				fprintf(stderr, "Failed to initialize GLEW\n");
-				return;
-			}
-	#endif
-}
 
 void Engine::update_window_size(){
 	 int width = 0, height = 0;
@@ -381,8 +332,80 @@ float Engine::get_time(){
 			
             return time;
 }
-#endif
+#endif//end if def vulkan
 
+#ifndef ANDROID
+void Engine::InitWindow(){
+		move_y = 2;
+		if( !glfwInit() )
+		{
+			fprintf( stderr, "Failed to initialize GLFW\n" );
+			return;
+		}
+		
+	#ifdef VULKAN
+			glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+	#endif
+
+	#ifdef _OpenGL_Renderer_
+			glfwWindowHint(GLFW_SAMPLES, 4); // 4x antialiasing
+			glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); // We want OpenGL 3.3
+			glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+			glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
+			glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // We don't want the old OpenGL 
+			
+	#endif
+
+		
+		window = glfwCreateWindow(800, 600, "Engine", nullptr, nullptr);
+		if( window == NULL ){
+			fprintf( stderr, "Failed to open GLFW window\n" );
+			glfwTerminate();
+			return;
+		}
+			glfwSetWindowUserPointer(window, this);
+
+	#ifdef VULKAN	   
+			glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
+			glfwSetInputMode(window, GLFW_STICKY_KEYS, 1);
+			glfwSetKeyCallback(window, input.key_callback);
+			glfwSetCursorPosCallback(window, mouse_callback);
+			glfwSetMouseButtonCallback(window,mouse_button_callback);
+			glfwSetScrollCallback(window,input.scroll_callback);
+	#endif
+			
+
+	#ifdef _OpenGL_Renderer_
+			
+			glfwMakeContextCurrent(window); // Initialize GLEW
+
+
+			if (glewInit() != GLEW_OK) {
+				fprintf(stderr, "Failed to initialize GLEW\n");
+				return;
+			}
+	#endif
+}
+#include "android_helper.h"
+void Engine::create_window() {
+		display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
+
+
+		eglInitialize(display, NULL, NULL);
+
+		/* get an appropriate EGL frame buffer configuration */
+		eglChooseConfig(display, attribute_list, &config, 1, &num_config);
+
+
+		context = eglCreateContext(display, config, EGL_NO_CONTEXT, GiveMeGLES2);
+
+
+		//surface = eglCreateWindowSurface(display, config, window, NULL);
+
+        eglMakeCurrent(display, surface, surface, context);
+
+	}
+#endif//if not define android
 
 #ifdef ANDROID
 #include <android/log.h>

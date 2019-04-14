@@ -27,10 +27,10 @@ full: $(OBJs) game $(game) renderer.o
 	$(CC) -o ../renderer renderer.o $(OBJs) model_loader.o $(GAME) $(Library) -I./ -lvulkan  -DVULKAN $(DEFINES)
 
 .ONESHELL:
-es2: DEFINES := -D_OpenGL_Renderer_
-es2: $(OBJs) game $(game)
+es2: DEFINES := -DES2
+es2: 
 	mkdir -p bin && cd src
-	$(CC) opengl_renderer.cpp -o   $(OBJs) model_loader.o $(GAME) $(Library) $(INCLUDE_OPENGL) -I./ $(DEFINES) -DGLTF
+	$(CC) main.cpp engine.cpp -o ../renderer $(Library) $(INCLUDE_OPENGL) -I./ $(DEFINES) -DGLTF -lEGL
 
 .ONESHELL:
 gl: DEFINES=-Dch 

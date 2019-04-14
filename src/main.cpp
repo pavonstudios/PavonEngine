@@ -2,26 +2,37 @@
 
 #ifndef ANDROID
     #include "engine.h"
-    
-    int main() {
-        
-        Engine my_engine;
-
-        try {
-
-            my_engine.Execute();
-
-        } catch (const std::exception& e) {
-
-            std::cerr << e.what() << std::endl;
+    #ifdef VULKAN
+        int main() {
             
-            return EXIT_FAILURE;
-        }
-        //pthread_exit(NULL);
-        return EXIT_SUCCESS;
-        
+            Engine my_engine;
 
-    }
+            try {
+
+                my_engine.Execute();
+
+            } catch (const std::exception& e) {
+
+                std::cerr << e.what() << std::endl;
+                
+                return EXIT_FAILURE;
+            }
+            //pthread_exit(NULL);
+            return EXIT_SUCCESS;      
+        }
+    #endif
+    #ifdef ES2
+        int main(){
+            std::cout << "openg gl es2\n ";
+            Engine engine;
+            engine.InitWindow();
+             while (!glfwWindowShouldClose(engine.window)) {
+                
+             }
+
+            return 1;
+        }
+    #endif
 #endif
 
 #ifdef ANDROID
