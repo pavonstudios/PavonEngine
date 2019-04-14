@@ -24,6 +24,7 @@
 
 #endif
 #ifdef ES2
+    #include "WindowManager.hpp"
     #include <EGL/egl.h>
 #endif
 
@@ -134,7 +135,11 @@ public:
     EGLContext context;
     EGLSurface surface;
     EGLint num_config;
+    
+public:
+    WindowManager window_manager;
     void create_window();
+    
 #endif
     
 };

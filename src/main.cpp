@@ -25,10 +25,11 @@
         int main(){
             std::cout << "openg gl es2\n ";
             Engine engine;
-            engine.InitWindow();
-             while (!glfwWindowShouldClose(engine.window)) {
+            engine.window_manager.create_window();
+           
+             /* while (!glfwWindowShouldClose(engine.window)) {
                 
-             }
+             } */
 
             return 1;
         }

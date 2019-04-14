@@ -400,10 +400,13 @@ void Engine::create_window() {
 		context = eglCreateContext(display, config, EGL_NO_CONTEXT, GiveMeGLES2);
 
 
-		//surface = eglCreateWindowSurface(display, config, window, NULL);
+		surface = eglCreateWindowSurface(display, config, window_manager.win, NULL);
 
         eglMakeCurrent(display, surface, surface, context);
 
+		while(1){
+			
+		}
 	}
 #endif//if not define android
 
