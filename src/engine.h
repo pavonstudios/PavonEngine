@@ -26,6 +26,7 @@
 #ifdef ES2
     #include "WindowManager.hpp"
     #include <EGL/egl.h>
+    #include "android_renderer.h"
 #endif
 
 #include <chrono>

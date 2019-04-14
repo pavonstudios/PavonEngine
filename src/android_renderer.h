@@ -5,7 +5,7 @@
 #include <memory>
 #include <cstdlib>
 #include <cstring>
-#include <jni.h>
+
 #include <errno.h>
 #include <cassert>
 #include <vector>
@@ -13,10 +13,12 @@
 #include <EGL/egl.h>
 #include <GLES2/gl2.h>
 
-#include <android/log.h>
-#include <android_native_app_glue.h>
+#ifdef ANDROID
+    #include <android/log.h>
+    #include <android_native_app_glue.h>
+    #include <jni.h>
+#endif
 #include "3D_objects.h"
-
 
 
 #include "glm/glm.hpp"
@@ -25,8 +27,8 @@
 
 #include "android_helper.h"
 
-extern NativeWindowType createNativeWindow(void);
 
+#ifdef ANDROID
 void
 print_shader_info_log (
         GLuint  shader      // handle to the shader
@@ -39,8 +41,11 @@ print_shader_info_log (
     if ( length ) {
         char* buffer  =  new char [ length ];
         glGetShaderInfoLog ( shader , length , NULL , buffer );
-        LOGW("shader info %s",buffer);
-        //cout << "shader info: " <<  buffer << flush;
+        #ifdef ANDROID
+            LOGW("shader info %s",buffer);
+        #else
+            cout << "shader info: " <<  buffer << flush;
+        #endif
         delete [] buffer;
 
         GLint success;
@@ -66,7 +71,7 @@ load_shader (
 }
 
 
-
+#endif//androi define shader part
 
 #include "engine.h"
 #include "asset_manager.h"
@@ -76,21 +81,39 @@ using namespace glm;
 class Renderer{
 public:
    std::vector<EMesh*> meshes;
+   
+
+   #ifdef ANDROID
    Engine engine;
     Renderer(android_app *pApp){
         app = pApp;
+        
         LOGW("Initialiazing");
        // init();
         engine.create_window(pApp);
-
-        init_gl();
+         init_gl();
+    #else
+    Renderer(){
+    #endif
+       
         
 
     };
    
 private:
-
+    #ifdef ANDROID
     struct android_app * app;
+    char* load_shader_file(const char* path){
+        AAsset* file = AAssetManager_open(app->activity->assetManager,path, AASSET_MODE_BUFFER);
+
+        size_t file_length = AAsset_getLength(file);
+        char* fileContent = new char[file_length+1];
+
+        AAsset_read(file, fileContent,file_length);
+        AAsset_close(file);
+        return fileContent;
+    }
+    
 
     GLuint vertexbuffer;
     GLuint VertexArrayID;
@@ -112,16 +135,7 @@ private:
 
     GLuint shaderProgram;
 
-    char* load_shader_file(const char* path){
-        AAsset* file = AAssetManager_open(app->activity->assetManager,path, AASSET_MODE_BUFFER);
-
-        size_t file_length = AAsset_getLength(file);
-        char* fileContent = new char[file_length+1];
-
-        AAsset_read(file, fileContent,file_length);
-        AAsset_close(file);
-        return fileContent;
-    }
+    
     void load_shaders(){
 
 
@@ -144,9 +158,6 @@ private:
     void init_gl(){
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LESS);
-
-
-        LOGW("Loading shaders........................");
 
         load_shaders();
 
@@ -172,22 +183,20 @@ private:
         EMesh* mesh = new EMesh();
         if(mesh->load_mode_gltf_android("police_patrol.gltf",app->activity->assetManager) == -1){
 
-            __android_log_print(ANDROID_LOG_WARN,"native-activity","%s","error loading model");
+            //__android_log_print(ANDROID_LOG_WARN,"native-activity","%s","error loading model");
 
         }else{
-            __android_log_print(ANDROID_LOG_WARN,"native-activity","%s","OK GLTF object loaded");
+            //__android_log_print(ANDROID_LOG_WARN,"native-activity","%s","OK GLTF object loaded");
         }
         meshes.push_back(mesh);
-        LOGW("Generating vertex buffer");
+
 
 
 
         glGenBuffers(1,&vertex_buffer);
         glBindBuffer(GL_ARRAY_BUFFER,vertex_buffer);
         glBufferData(GL_ARRAY_BUFFER,mesh->vertices.size() * sizeof(Vertex),mesh->vertices.data(),GL_STATIC_DRAW);
-        LOGW("OK Vertex data generated");
 
-        LOGW("Generating index buffer");
 
 
         glGenBuffers(1,&indices);
@@ -195,10 +204,10 @@ private:
         glBufferData(GL_ELEMENT_ARRAY_BUFFER,mesh->indices.size() * sizeof(unsigned int),mesh->indices.data(), GL_STATIC_DRAW);
 
 
-        LOGW("Generating image buffer");
+        #ifdef ANDROID
         AssetManager assets;
         textureid = assets.load_bmp("patrol.bmp",app->activity->assetManager);
-
+        #endif
       //  glActiveTexture(GL_TEXTURE0);
         //glBindTexture(GL_TEXTURE_2D,textureid);
 
@@ -209,7 +218,6 @@ private:
         mvp_loc         = glGetUniformLocation( shaderProgram , "MVP");
         sampler         = glGetUniformLocation( shaderProgram , "texture_sampler");
 
-        LOGW("GGetting shader attribute location");
     }
 
    public:
@@ -251,7 +259,7 @@ private:
         
         eglSwapBuffers(engine.display, engine.surface);
     };
-
+    #endif//endif android incldude
 };
 
 #endif

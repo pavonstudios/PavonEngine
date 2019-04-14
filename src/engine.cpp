@@ -386,6 +386,7 @@ void Engine::InitWindow(){
 			}
 	#endif
 }
+#ifdef ES2
 #include "android_helper.h"
 void Engine::create_window() {
 		display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
@@ -408,6 +409,7 @@ void Engine::create_window() {
 			
 		}
 	}
+#endif //if define es2
 #endif//if not define android
 
 #ifdef ANDROID
