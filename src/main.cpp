@@ -26,7 +26,7 @@
             std::cout << "openg gl es2\n ";
             Engine engine;
             engine.window_manager.create_window();
-           
+            engine.renderer.init_gl();
              /* while (!glfwWindowShouldClose(engine.window)) {
                 
              } */

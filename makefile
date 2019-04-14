@@ -30,7 +30,7 @@ full: $(OBJs) game $(game) renderer.o
 es2: DEFINES := -DES2
 es2: 
 	mkdir -p bin && cd src
-	$(CC) main.cpp engine.cpp WindowManager.cpp -o ../renderer $(Library) $(INCLUDE_OPENGL) -I./ $(DEFINES) -DGLTF -lEGL -lX11 -lGLESv2
+	$(CC) main.cpp engine.cpp WindowManager.cpp 3D_objects.cpp -o ../renderer model_loader.o $(Library) $(INCLUDE_OPENGL) -I./ $(DEFINES) -DGLTF -lEGL -lX11 -lGLESv2
 
 .ONESHELL:
 gl: DEFINES=-Dch 

@@ -131,6 +131,7 @@ public:
     void create_window(android_app *pApp);
 #endif
 #ifdef ES2
+    //Renderer renderer = new Renderer();
     EGLDisplay display;
     EGLConfig config;
     EGLContext context;
@@ -141,6 +142,7 @@ public:
 public:
     WindowManager window_manager;
     void create_window();
+    Renderer renderer;
     
 #endif
     

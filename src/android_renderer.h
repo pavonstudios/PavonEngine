@@ -93,11 +93,11 @@ public:
         LOGW("Initialiazing");
        // init();
         engine.create_window(pApp);
-         
+         init_gl();
     #else
     Renderer(){
     #endif
-       init_gl();
+       
         
 
     };
@@ -191,6 +191,7 @@ private:
         glLinkProgram ( shaderProgram );    // link the program
         glUseProgram  ( shaderProgram );    // and select it for usage
     }
+public:
     void init_gl(){
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LESS);
