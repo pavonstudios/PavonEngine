@@ -136,6 +136,7 @@ public:
     EGLSurface surface;
     EGLint num_config;
     
+    
 public:
     WindowManager window_manager;
     void create_window();

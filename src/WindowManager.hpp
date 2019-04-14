@@ -28,6 +28,9 @@ public:
             EGLContext  egl_context;
             EGLSurface  egl_surface;
             void create_window();
+            void clear();
+        private:
+            void configure_egl();
         #endif
     #endif
 
