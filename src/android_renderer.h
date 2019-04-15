@@ -111,7 +111,7 @@ private:
     GLuint vertex_buffer;
     GLuint indices;
 
-    GLint textureid;
+    GLuint textureid;
 
     GLint
             phase_loc,
@@ -195,12 +195,13 @@ private:
         glAttachShader ( shaderProgram, fragmentShader );           // ... shaders to it
 
         glLinkProgram ( shaderProgram );    // link the program
-        glUseProgram  ( shaderProgram );    // and select it for usage
+       
     }
 public:
     void init_gl(){
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LESS);
+        glEnable( GL_TEXTURE_2D ); 
 
         load_shaders();
 
@@ -226,7 +227,7 @@ public:
         #ifdef ANDROID
         mesh_load_result = mesh->load_mode_gltf_android("police_patrol.gltf",app->activity->assetManager);
         #else
-        mesh_load_result = mesh->load_model_gltf("models/simple_bones.gltf");
+        mesh_load_result = mesh->load_model_gltf("models/pavon_the_game/police_patrol.gltf");
         #endif
         
         meshes.push_back(mesh);
@@ -246,13 +247,36 @@ public:
         #ifdef ANDROID
         AssetManager assets;
         textureid = assets.load_bmp("patrol.bmp",app->activity->assetManager);
+        #else
+        
+            glGenTextures(1, &textureid);
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, textureid);
+            
+            
+            float color[] = { 1.0f, 0.0f, 0.0f, 1.0f };
+            glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, color);
+            AssetManager assets;
+            image_size size = assets.load_and_get_size("textures/car01.jpg");
+                        float pixels[] = {
+                0.0f, 0.0f, 0.0f,   1.0f, 1.0f, 1.0f,
+                1.0f, 1.0f, 1.0f,   0.0f, 0.0f, 0.0f
+            };
+            glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,size.width,size.heigth,0,GL_RGB,GL_UNSIGNED_BYTE,size.pPixels);
+             glVertexAttribPointer ( 2, 2, GL_FLOAT, false, sizeof(Vertex), (void*)offsetof(Vertex,texCoord) );
+            glEnableVertexAttribArray ( 2 );
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            
+            //glGenerateMipmap(GL_TEXTURE_2D);
+            int texcoor =  glGetAttribLocation(shaderProgram,"v_TexCoord");
+             glUniform1i(glGetUniformLocation(shaderProgram, "texture_sampler"), 0);
+             
+             glUniform1i(2,0);
         #endif
-
-        position_loc  = glGetAttribLocation  ( shaderProgram , "position" );
-        uvposition         = glGetAttribLocation( shaderProgram , "UV" );
-
-        mvp_loc         = glGetUniformLocation( shaderProgram , "MVP");
-        sampler         = glGetUniformLocation( shaderProgram , "texture_sampler");
+       
 
     }
 
@@ -269,6 +293,9 @@ public:
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             //glFlush();
 
+            glBindTexture(GL_TEXTURE_2D,textureid);
+             glUseProgram  ( shaderProgram );    // and select it for usage
+
             static auto startTime = std::chrono::high_resolution_clock::now();
 
             auto currentTime = std::chrono::high_resolution_clock::now();
@@ -282,19 +309,21 @@ public:
 
             mat4 mvp = Projection * view * model;
 
-            glUniformMatrix4fv(mvp_loc,1,GL_FALSE,&mvp[0][0]);
+            glUniformMatrix4fv(0,1,GL_FALSE,&mvp[0][0]);
 
 
 
-            glVertexAttribPointer ( position_loc, 3, GL_FLOAT, false, sizeof(Vertex), (void*)0 );
-            glVertexAttribPointer ( 1, 2, GL_FLOAT, false, sizeof(Vertex), (void*)offsetof(Vertex,texCoord) );
+            glVertexAttribPointer ( 0, 3, GL_FLOAT, false, sizeof(Vertex), (void*)0 );
+            glEnableVertexAttribArray ( 0 );
 
 
-            glEnableVertexAttribArray ( position_loc );
-            glEnableVertexAttribArray ( 1 );
+            
+            
+            
+           
+           
 
-            //  glUniform3()f(textureid,sampler);
-            glBindTexture(GL_TEXTURE_2D,textureid);
+            
             glDrawElements(GL_TRIANGLES,meshes[0]->indices.size(),GL_UNSIGNED_INT,(void*)0);
 
             #ifdef ANDROID
