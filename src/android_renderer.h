@@ -205,31 +205,20 @@ public:
 
         load_shaders();
 
-/*         AAsset* file = AAssetManager_open(super_asset_manager,"openme.txt", AASSET_MODE_BUFFER);
+         init_3d_model();
+  
 
-        size_t file_length = AAsset_getLength(file);
-        char* fileContent = new char[file_length+1];
-
-        AAsset_read(file, fileContent,file_length);
-
-        __android_log_print(ANDROID_LOG_WARN,"native-activity","%s",fileContent);
-
-            EMesh * mesh = new EMesh();
-            if(mesh->load_model_gltf("skydome.gltf") == -1 ){
-                      __android_log_print(ANDROID_LOG_WARN,"native-activity","%s","error loading model");
-
-            }else{
-               __android_log_print(ANDROID_LOG_WARN,"native-activity","%s","OK GLTF object loaded");
-            } */
-
+    }
+  
+    void init_3d_model(){
         EMesh* mesh = new EMesh();
         int mesh_load_result;
         #ifdef ANDROID
-        mesh_load_result = mesh->load_mode_gltf_android("police_patrol.gltf",app->activity->assetManager);
-        #else
-        mesh_load_result = mesh->load_model_gltf("models/pavon_the_game/police_patrol.gltf");
+            mesh_load_result = mesh->load_mode_gltf_android("police_patrol.gltf",app->activity->assetManager);
+        #else//ES2
+            mesh_load_result = mesh->load_model_gltf("models/pavon_the_game/police_patrol.gltf");
         #endif
-        
+    
         meshes.push_back(mesh);
 
 
@@ -255,16 +244,17 @@ public:
         
 
         #ifdef ANDROID
-        AssetManager assets;
-        textureid = assets.load_bmp("patrol.bmp",app->activity->assetManager);
-        #else
+            AssetManager assets;
+            textureid = assets.load_bmp("patrol.bmp",app->activity->assetManager);
+        #else         
             
-            glGenTextures(1, &textureid);
-            glBindTexture(GL_TEXTURE_2D,textureid);
-            glActiveTexture(GL_TEXTURE0);
             
             AssetManager assets;
             image_size size = assets.load_and_get_size("textures/car01.jpg");
+
+            glGenTextures(1, &textureid);
+            glBindTexture(GL_TEXTURE_2D,textureid);
+            glActiveTexture(GL_TEXTURE0);
                      
             glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,size.width,size.heigth,0,GL_RGB,GL_UNSIGNED_BYTE,size.pPixels);
           
@@ -277,8 +267,6 @@ public:
             glEnable( GL_TEXTURE_2D ); 
         
         #endif
-       
-
     }
 
     #ifdef ANDROID
@@ -287,19 +275,30 @@ public:
 
    public:
        void render(){
-            //LOGW("rendering");
+           
             glViewport(0,0,800,600);
 
-            glClearColor(1.0, 0.0, 0.0, 1.0);
+            glClearColor(0.2, 0.0, 0.0, 1.0);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             glFlush();
 
-            glBindTexture(GL_TEXTURE_2D,textureid);
+         
             glUseProgram  ( shaderProgram );
 
-          
+             
+            update_mvp();
+            draw_mesh();
+            
 
-            {  //mvp 
+            #ifdef ANDROID
+            eglSwapBuffers(engine.display, engine.surface);
+            #endif
+
+    };
+
+    void update_mvp(){
+       
+        {  //mvp 
                 static auto startTime = std::chrono::high_resolution_clock::now();
                 auto currentTime = std::chrono::high_resolution_clock::now();
                 float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
@@ -315,18 +314,35 @@ public:
                 glUniformMatrix4fv(0,1,GL_FALSE,&mvp[0][0]);
             }
              
-            int samplerid = glGetUniformLocation(shaderProgram, "texture_sampler");
+  
+    }
+    void draw_mesh(){
+         glBindTexture(GL_TEXTURE_2D,textureid);
+                  int samplerid = glGetUniformLocation(shaderProgram, "texture_sampler");
             glUniform1i(samplerid, 0);   
 
             
             glDrawElements(GL_TRIANGLES,meshes[0]->indices.size(),GL_UNSIGNED_INT,(void*)0);
-
-            #ifdef ANDROID
-            eglSwapBuffers(engine.display, engine.surface);
-            #endif
-
-    };
+    }
     
 };
 
 #endif
+
+
+/*         AAsset* file = AAssetManager_open(super_asset_manager,"openme.txt", AASSET_MODE_BUFFER);
+
+        size_t file_length = AAsset_getLength(file);
+        char* fileContent = new char[file_length+1];
+
+        AAsset_read(file, fileContent,file_length);
+
+        __android_log_print(ANDROID_LOG_WARN,"native-activity","%s",fileContent);
+
+            EMesh * mesh = new EMesh();
+            if(mesh->load_model_gltf("skydome.gltf") == -1 ){
+                      __android_log_print(ANDROID_LOG_WARN,"native-activity","%s","error loading model");
+
+            }else{
+               __android_log_print(ANDROID_LOG_WARN,"native-activity","%s","OK GLTF object loaded");
+            } */

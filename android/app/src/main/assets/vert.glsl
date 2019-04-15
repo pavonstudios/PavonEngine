@@ -1,6 +1,6 @@
 
-attribute vec3        position;       
-attribute vec2          inUV;         
+attribute mediump vec3        position;       
+attribute mediump vec2          inUV;         
 uniform mat4          MVP;             
 varying vec2 v_TexCoord;                   
 									
