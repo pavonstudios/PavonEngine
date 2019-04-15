@@ -201,7 +201,7 @@ public:
     void init_gl(){
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LESS);
-        glEnable( GL_TEXTURE_2D ); 
+        
 
         load_shaders();
 
@@ -248,33 +248,24 @@ public:
         AssetManager assets;
         textureid = assets.load_bmp("patrol.bmp",app->activity->assetManager);
         #else
-        
+            
             glGenTextures(1, &textureid);
+            glBindTexture(GL_TEXTURE_2D,textureid);
             glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, textureid);
             
-            
-            float color[] = { 1.0f, 0.0f, 0.0f, 1.0f };
-            glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, color);
             AssetManager assets;
             image_size size = assets.load_and_get_size("textures/car01.jpg");
-                        float pixels[] = {
-                0.0f, 0.0f, 0.0f,   1.0f, 1.0f, 1.0f,
-                1.0f, 1.0f, 1.0f,   0.0f, 0.0f, 0.0f
-            };
+                     
             glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,size.width,size.heigth,0,GL_RGB,GL_UNSIGNED_BYTE,size.pPixels);
-             glVertexAttribPointer ( 2, 2, GL_FLOAT, false, sizeof(Vertex), (void*)offsetof(Vertex,texCoord) );
-            glEnableVertexAttribArray ( 2 );
+          
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-            
-            //glGenerateMipmap(GL_TEXTURE_2D);
-            int texcoor =  glGetAttribLocation(shaderProgram,"v_TexCoord");
-             glUniform1i(glGetUniformLocation(shaderProgram, "texture_sampler"), 0);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);       
+                              
              
-             glUniform1i(2,0);
+            glEnable( GL_TEXTURE_2D ); 
+        
         #endif
        
 
@@ -287,42 +278,44 @@ public:
    public:
        void render(){
             //LOGW("rendering");
-            //glViewport(0,0,800,600);
+            glViewport(0,0,800,600);
 
             glClearColor(1.0, 0.0, 0.0, 1.0);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            //glFlush();
+            glFlush();
 
             glBindTexture(GL_TEXTURE_2D,textureid);
-             glUseProgram  ( shaderProgram );    // and select it for usage
+            glUseProgram  ( shaderProgram );    // and select it for usage
 
             static auto startTime = std::chrono::high_resolution_clock::now();
 
-            auto currentTime = std::chrono::high_resolution_clock::now();
-            float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
+            {  //mvp 
+                auto currentTime = std::chrono::high_resolution_clock::now();
+                float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
-            glm::mat4 model = glm::mat4(1.0);
-            glm::mat4 Projection = glm::perspective(glm::radians(45.f), 768.f/1280.f, 0.01f, 1000.f);
-            glm::mat4 view = glm::lookAt(vec3(0,15,0),vec3(0,0,0),vec3(0,0,1));
+                glm::mat4 model = glm::mat4(1.0);
+                glm::mat4 Projection = glm::perspective(glm::radians(45.f), 768.f/1280.f, 0.01f, 1000.f);
+                glm::mat4 view = glm::lookAt(vec3(0,15,0),vec3(0,0,0),vec3(0,0,1));
 
-            model = glm::rotate(model, time * glm::radians(12.f), glm::vec3(0.0f, 1.0f, 1.0f));
+                model = glm::rotate(model, time * glm::radians(12.f), glm::vec3(0.0f, 1.0f, 1.0f));
 
-            mat4 mvp = Projection * view * model;
+                mat4 mvp = Projection * view * model;
 
-            glUniformMatrix4fv(0,1,GL_FALSE,&mvp[0][0]);
-
+                glUniformMatrix4fv(0,1,GL_FALSE,&mvp[0][0]);
+            }
+             
+            int samplerid = glGetUniformLocation(shaderProgram, "texture_sampler");
+            glUniform1i(samplerid, 0);   
 
 
             glVertexAttribPointer ( 0, 3, GL_FLOAT, false, sizeof(Vertex), (void*)0 );
-            glEnableVertexAttribArray ( 0 );
+            glEnableVertexAttribArray ( 0 ); 
 
-
-            
-            
-            
+            glVertexAttribPointer ( 1, 3, GL_FLOAT, false, sizeof(Vertex), (void*)offsetof(Vertex,color) );
+            glEnableVertexAttribArray ( 1 );            
            
-           
-
+            glVertexAttribPointer ( 2, 2, GL_FLOAT, false, sizeof(Vertex), (void*)offsetof(Vertex,texCoord) );
+            glEnableVertexAttribArray ( 2 );
             
             glDrawElements(GL_TRIANGLES,meshes[0]->indices.size(),GL_UNSIGNED_INT,(void*)0);
 
