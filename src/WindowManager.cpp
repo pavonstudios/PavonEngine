@@ -138,20 +138,26 @@ void WindowManager::create_window(){
    const float
       window_width  = 800.0,
       window_height = 480.0;
-
+/* 
     while(1){
-         XWindowAttributes  gwa;
+        XWindowAttributes  gwa;
       XGetWindowAttributes ( x_display , win , &gwa );
       glViewport ( 0 , 0 , gwa.width , gwa.height );
-      glClearColor ( 0.08 , 0.06 , 0.07 , 1.);    // background color
-       glClear ( GL_COLOR_BUFFER_BIT );
+      glClearColor ( 1.0 , 0.06 , 0.07 , 1.);    // background color
+      glClear ( GL_COLOR_BUFFER_BIT );
 
-      eglSwapBuffers ( egl_display, egl_surface );  // get the rendered buffer to the screen
+      swap_buffers();
 
-    }
+    } */
 
 
   
+
+}
+
+void WindowManager::swap_buffers(){
+
+      eglSwapBuffers ( egl_display, egl_surface );
 
 }
 

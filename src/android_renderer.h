@@ -154,7 +154,8 @@ private:
             std::ifstream fileStream(spath, std::ios::in);
 
             if(!fileStream.is_open()) {
-                throw std::runtime_error("Could not read file ");
+                std::string error = "Could not read file " + spath;
+                throw std::runtime_error(error);
                 
             }
 
@@ -176,8 +177,8 @@ private:
     void load_shaders(){
 
 
-        char* vertex_shader_src = load_shader_file("vert.glsl");
-        char* fragment_shader_src = load_shader_file("frag.glsl");
+        char* vertex_shader_src = load_shader_file("android/app/src/main/assets/vert.glsl");
+        char* fragment_shader_src = load_shader_file("android/app/src/main/assets/frag.glsl");
 
 
         GLuint vertexShader   = load_shader ( vertex_shader_src , GL_VERTEX_SHADER  );     // load vertex shader
@@ -197,8 +198,6 @@ public:
         glDepthFunc(GL_LESS);
 
         load_shaders();
-
-
 
 /*         AAsset* file = AAssetManager_open(super_asset_manager,"openme.txt", AASSET_MODE_BUFFER);
 
@@ -222,7 +221,7 @@ public:
         #ifdef ANDROID
         mesh_load_result = mesh->load_mode_gltf_android("police_patrol.gltf",app->activity->assetManager);
         #else
-        mesh_load_result = mesh->load_model_gltf("models/pavon_the_game/police_patrol.gltf");
+        mesh_load_result = mesh->load_model_gltf("models/simple_bones.gltf");
         #endif
         
         meshes.push_back(mesh);
@@ -254,47 +253,51 @@ public:
 
     #ifdef ANDROID
     struct android_app * app;
+    #endif
 
    public:
        void render(){
-        //LOGW("rendering");
-        //glViewport(0,0,800,600);
+            //LOGW("rendering");
+            //glViewport(0,0,800,600);
 
-        glClearColor(1.0, 0.0, 0.0, 1.0);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        //glFlush();
+            glClearColor(1.0, 0.0, 0.0, 1.0);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            //glFlush();
 
-      static auto startTime = std::chrono::high_resolution_clock::now();
+            static auto startTime = std::chrono::high_resolution_clock::now();
 
-    auto currentTime = std::chrono::high_resolution_clock::now();
-    float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
+            auto currentTime = std::chrono::high_resolution_clock::now();
+            float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
-        glm::mat4 model = glm::mat4(1.0);
-        glm::mat4 Projection = glm::perspective(glm::radians(45.f), 768.f/1280.f, 0.01f, 1000.f);
-        glm::mat4 view = glm::lookAt(vec3(0,15,0),vec3(0,0,0),vec3(0,0,1));
+            glm::mat4 model = glm::mat4(1.0);
+            glm::mat4 Projection = glm::perspective(glm::radians(45.f), 768.f/1280.f, 0.01f, 1000.f);
+            glm::mat4 view = glm::lookAt(vec3(0,15,0),vec3(0,0,0),vec3(0,0,1));
 
-      model = glm::rotate(model, time * glm::radians(12.f), glm::vec3(0.0f, 1.0f, 1.0f));
+            model = glm::rotate(model, time * glm::radians(12.f), glm::vec3(0.0f, 1.0f, 1.0f));
 
-        mat4 mvp = Projection * view * model;
+            mat4 mvp = Projection * view * model;
 
-        glUniformMatrix4fv(mvp_loc,1,GL_FALSE,&mvp[0][0]);
-
-
-
-        glVertexAttribPointer ( position_loc, 3, GL_FLOAT, false, sizeof(Vertex), (void*)0 );
-        glVertexAttribPointer ( 1, 2, GL_FLOAT, false, sizeof(Vertex), (void*)offsetof(Vertex,texCoord) );
+            glUniformMatrix4fv(mvp_loc,1,GL_FALSE,&mvp[0][0]);
 
 
-        glEnableVertexAttribArray ( position_loc );
-        glEnableVertexAttribArray ( 1 );
 
-      //  glUniform3()f(textureid,sampler);
-        glBindTexture(GL_TEXTURE_2D,textureid);
-        glDrawElements(GL_TRIANGLES,meshes[0]->indices.size(),GL_UNSIGNED_INT,(void*)0);
-        
-        eglSwapBuffers(engine.display, engine.surface);
+            glVertexAttribPointer ( position_loc, 3, GL_FLOAT, false, sizeof(Vertex), (void*)0 );
+            glVertexAttribPointer ( 1, 2, GL_FLOAT, false, sizeof(Vertex), (void*)offsetof(Vertex,texCoord) );
+
+
+            glEnableVertexAttribArray ( position_loc );
+            glEnableVertexAttribArray ( 1 );
+
+            //  glUniform3()f(textureid,sampler);
+            glBindTexture(GL_TEXTURE_2D,textureid);
+            glDrawElements(GL_TRIANGLES,meshes[0]->indices.size(),GL_UNSIGNED_INT,(void*)0);
+
+            #ifdef ANDROID
+            eglSwapBuffers(engine.display, engine.surface);
+            #endif
+
     };
-    #endif//endif android incldude
+    
 };
 
 #endif

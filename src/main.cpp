@@ -27,9 +27,13 @@
             Engine engine;
             engine.window_manager.create_window();
             engine.renderer.init_gl();
-             /* while (!glfwWindowShouldClose(engine.window)) {
-                
-             } */
+           
+            while(1){
+                    glClearColor ( 0.4 , 0.06 , 0.07 , 1.);    // background color
+                glClear ( GL_COLOR_BUFFER_BIT );
+                engine.renderer.render();
+                engine.window_manager.swap_buffers();
+            }              
 
             return 1;
         }

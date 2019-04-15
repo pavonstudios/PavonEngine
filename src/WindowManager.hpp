@@ -29,6 +29,7 @@ public:
             EGLSurface  egl_surface;
             void create_window();
             void clear();
+            void swap_buffers();
         private:
             void configure_egl();
         #endif
