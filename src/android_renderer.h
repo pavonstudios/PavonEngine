@@ -133,9 +133,33 @@ private:
         glShaderSource  ( shader , 1 , &shader_source , NULL );
         glCompileShader ( shader );
 
-       // print_shader_info_log ( shader );
+        print_shader_info_log ( shader );
 
         return shader;
+    }
+    void
+    print_shader_info_log (
+            GLuint  shader      // handle to the shader
+    )
+    {
+        GLint  length;
+
+        glGetShaderiv ( shader , GL_INFO_LOG_LENGTH , &length );
+
+        if ( length ) {
+            char* buffer  =  new char [ length ];
+            glGetShaderInfoLog ( shader , length , NULL , buffer );
+            #ifdef ANDROID
+                LOGW("shader info %s",buffer);
+            #else
+                cout << "shader info: " <<  buffer << flush;
+            #endif
+            delete [] buffer;
+
+            GLint success;
+            glGetShaderiv( shader, GL_COMPILE_STATUS, &success );
+            if ( success != GL_TRUE )   exit ( 1 );
+        }
     }
     #endif
     char* load_shader_file(const char* path){
@@ -193,6 +217,11 @@ private:
         shaderProgram = glCreateProgram ();                 // create program object
         glAttachShader ( shaderProgram, vertexShader );             // and attach both...
         glAttachShader ( shaderProgram, fragmentShader );           // ... shaders to it
+
+        glBindAttribLocation(shaderProgram,0,"position");
+        glBindAttribLocation(shaderProgram,1,"color");
+        glBindAttribLocation(shaderProgram,2,"v_TexCoord");
+
 
         glLinkProgram ( shaderProgram );    // link the program
        
@@ -267,6 +296,13 @@ public:
             glEnable( GL_TEXTURE_2D ); 
         
         #endif
+        int color = glGetAttribLocation(shaderProgram,"color");
+         int incolor = glGetAttribLocation(shaderProgram,"inColor");
+         int cood = glGetAttribLocation(shaderProgram,"v_TexCoord");
+         int incood = glGetAttribLocation(shaderProgram,"inUV");
+
+        int vPos = glGetAttribLocation(shaderProgram,"position");
+
     }
 
     #ifdef ANDROID
@@ -317,8 +353,10 @@ public:
   
     }
     void draw_mesh(){
-         glBindTexture(GL_TEXTURE_2D,textureid);
-                  int samplerid = glGetUniformLocation(shaderProgram, "texture_sampler");
+            glBindTexture(GL_TEXTURE_2D,textureid);
+            
+            
+            int samplerid = glGetUniformLocation(shaderProgram, "texture_sampler");
             glUniform1i(samplerid, 0);   
 
             
