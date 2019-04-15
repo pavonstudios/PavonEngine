@@ -244,6 +244,16 @@ public:
         glBufferData(GL_ELEMENT_ARRAY_BUFFER,mesh->indices.size() * sizeof(unsigned int),mesh->indices.data(), GL_STATIC_DRAW);
 
 
+        glVertexAttribPointer ( 0, 3, GL_FLOAT, false, sizeof(Vertex), (void*)0 );
+        glEnableVertexAttribArray ( 0 ); 
+
+        glVertexAttribPointer ( 1, 3, GL_FLOAT, false, sizeof(Vertex), (void*)offsetof(Vertex,color) );
+        glEnableVertexAttribArray ( 1 );            
+        
+        glVertexAttribPointer ( 2, 2, GL_FLOAT, false, sizeof(Vertex), (void*)offsetof(Vertex,texCoord) );
+        glEnableVertexAttribArray ( 2 );
+        
+
         #ifdef ANDROID
         AssetManager assets;
         textureid = assets.load_bmp("patrol.bmp",app->activity->assetManager);
@@ -285,11 +295,12 @@ public:
             glFlush();
 
             glBindTexture(GL_TEXTURE_2D,textureid);
-            glUseProgram  ( shaderProgram );    // and select it for usage
+            glUseProgram  ( shaderProgram );
 
-            static auto startTime = std::chrono::high_resolution_clock::now();
+          
 
             {  //mvp 
+                static auto startTime = std::chrono::high_resolution_clock::now();
                 auto currentTime = std::chrono::high_resolution_clock::now();
                 float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
@@ -307,15 +318,6 @@ public:
             int samplerid = glGetUniformLocation(shaderProgram, "texture_sampler");
             glUniform1i(samplerid, 0);   
 
-
-            glVertexAttribPointer ( 0, 3, GL_FLOAT, false, sizeof(Vertex), (void*)0 );
-            glEnableVertexAttribArray ( 0 ); 
-
-            glVertexAttribPointer ( 1, 3, GL_FLOAT, false, sizeof(Vertex), (void*)offsetof(Vertex,color) );
-            glEnableVertexAttribArray ( 1 );            
-           
-            glVertexAttribPointer ( 2, 2, GL_FLOAT, false, sizeof(Vertex), (void*)offsetof(Vertex,texCoord) );
-            glEnableVertexAttribArray ( 2 );
             
             glDrawElements(GL_TRIANGLES,meshes[0]->indices.size(),GL_UNSIGNED_INT,(void*)0);
 
