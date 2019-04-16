@@ -218,9 +218,9 @@ private:
         glAttachShader ( shaderProgram, vertexShader );             // and attach both...
         glAttachShader ( shaderProgram, fragmentShader );           // ... shaders to it
 
-        glBindAttribLocation(shaderProgram,0,"position");
-        glBindAttribLocation(shaderProgram,1,"color");
-        glBindAttribLocation(shaderProgram,2,"v_TexCoord");
+        //glBindAttribLocation(shaderProgram,0,"position");
+        //glBindAttribLocation(shaderProgram,1,"color");
+        //glBindAttribLocation(shaderProgram,2,"v_TexCoord");
 
 
         glLinkProgram ( shaderProgram );    // link the program
@@ -261,34 +261,8 @@ public:
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,indices);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER,mesh->indices.size() * sizeof(unsigned int),mesh->indices.data(), GL_STATIC_DRAW);
 
-
+        create_texture();       
        
-        
-
-        #ifdef ANDROID
-            AssetManager assets;
-            textureid = assets.load_bmp("patrol.bmp",app->activity->assetManager);
-        #else         
-            
-            
-            AssetManager assets;
-            image_size size = assets.load_and_get_size("textures/car01.jpg");
-
-            glGenTextures(1, &textureid);
-            glBindTexture(GL_TEXTURE_2D,textureid);
-            
-                     
-            glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,size.width,size.heigth,0,GL_RGB,GL_UNSIGNED_BYTE,size.pPixels);
-          
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);       
-                              
-             
-            glEnable( GL_TEXTURE_2D ); 
-        
-        #endif
         int vPos = glGetAttribLocation(shaderProgram,"position");
         int incolor = glGetAttribLocation(shaderProgram,"inColor");        
         int incood = glGetAttribLocation(shaderProgram,"inUV");
@@ -304,6 +278,41 @@ public:
         glVertexAttribPointer ( 2, 2, GL_FLOAT, false, sizeof(Vertex), (void*)offsetof(Vertex,texCoord) );
         glEnableVertexAttribArray ( 2 );
 
+    }
+    void create_texture(){
+             
+
+        #ifdef ANDROID
+            AssetManager assets;
+            textureid = assets.load_bmp("patrol.bmp",app->activity->assetManager);
+            
+        #else         
+            
+            
+            AssetManager assets;
+            image_size size = assets.load_and_get_size("textures/car01.jpg");
+            glActiveTexture(GL_TEXTURE0);
+            glGenTextures(1, &textureid);
+            glBindTexture(GL_TEXTURE_2D,textureid);
+            
+                     
+            //glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,size.width,size.heigth,0,GL_RGB,GL_UNSIGNED_BYTE,size.pPixels);
+
+            float pixels[] = {
+            0.0f, 0.0f, 0.0f,   1.0f, 1.0f, 1.0f,
+            1.0f, 1.0f, 1.0f,   0.0f, 0.0f, 0.0f
+            };
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 2, 2, 0, GL_RGB, GL_FLOAT, pixels);
+          
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);       
+            glGenerateMipmap(GL_TEXTURE_2D);
+             
+            glEnable( GL_TEXTURE_2D ); 
+        
+        #endif
     }
 
     #ifdef ANDROID
@@ -356,8 +365,8 @@ public:
     }
 
     void draw_mesh(){
-            glActiveTexture(GL_TEXTURE0);
-            //glBindTexture(GL_TEXTURE_2D,textureid);
+            
+            glBindTexture(GL_TEXTURE_2D,textureid);
             int samplerid = glGetUniformLocation(shaderProgram, "texture_sampler");
             glUniform1i(samplerid, 0);            
             
