@@ -20,7 +20,7 @@ image_size AssetManager::load_and_get_size(std::string texture_path){
 }
 
 #ifdef ANDROID
-GLuint AssetManager::load_bmp( const char * filename ,AAssetManager * assetManager)
+image_size AssetManager::load_bmp( const char * filename ,AAssetManager * assetManager)
 {
 
     GLuint texture;
@@ -32,22 +32,16 @@ GLuint AssetManager::load_bmp( const char * filename ,AAssetManager * assetManag
     AAsset* file = AAssetManager_open(assetManager,filename, AASSET_MODE_BUFFER);
 
     size_t size = AAsset_getLength(file);
-    size_t  file_length = width * height * 3;
-    unsigned char* data = (unsigned char *)malloc( width * height * 3 );
+      width = 1024;
+    height = 1024;
 
-    char* content = new char[size*3];
+    unsigned char* content = new unsigned char[size];
 
     AAsset_read(file, content,size);
 
-    if ( file == NULL ) return 0;
-    width = 1024;
-    height = 1024;
-    //data = (unsigned char *)malloc( width * height * 3 );
-    //int size = fseek(file,);
-    //fread( data, width * height * 3, 1, file );
-    //fclose( file );
-
-    for(int i = 0; i < width * height ; ++i)
+  
+ 
+   /*  for(int i = 0; i < width * height ; ++i)
     {
         int index = i*3;
         unsigned char B,R;
@@ -57,29 +51,22 @@ GLuint AssetManager::load_bmp( const char * filename ,AAssetManager * assetManag
         content[index] = R;
         content[index+2] = B;
 
-    }
+    } */
+
+    /* for(int i = 0; i < width * height *3; i += 3)
+    {
+            unsigned char tmp = content[i];
+            content[i] = content[i+2];
+            content[i+2] = tmp;
+    } */
 
 
-    glGenTextures( 1, &texture );
-    glBindTexture( GL_TEXTURE_2D, texture );
-    //glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE,GL_MODULATE );
-    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_NEAREST );
+    
 
+    //free( data );
 
-    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,GL_LINEAR );
-    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,GL_REPEAT );
-    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T,GL_REPEAT );
-    //gluBuild2DMipmaps( GL_TEXTURE_2D, 3, width, height,GL_RGB, GL_UNSIGNED_BYTE, data );
-    //glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,1024, 1024,0,GL_RGB, GL_UNSIGNED_BYTE, data);
-     float pixels[] = {
-            0.0f, 0.0f, 0.0f,   1.0f, 1.0f, 1.0f,
-            1.0f, 1.0f, 1.0f,   0.0f, 0.0f, 0.0f
-            };
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 2, 2, 0, GL_RGB, GL_FLOAT, pixels);
-
-    free( data );
-
-    return texture;
+    image_size image_Data = {width, height, content, content};
+    return image_Data;
 }
 
 #endif

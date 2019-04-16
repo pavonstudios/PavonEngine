@@ -20,7 +20,7 @@ public:
     image_size load_and_get_size(std::string texture_path);
 	//int load_model_gltf(const char* path);
     #ifdef ANDROID
-    GLuint load_bmp(const char* filename, AAssetManager * assetManager);
+    image_size load_bmp(const char* filename, AAssetManager * assetManager);
     #endif
 	
 };

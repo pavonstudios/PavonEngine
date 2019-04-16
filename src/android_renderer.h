@@ -229,13 +229,13 @@ public:
        
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LESS);   
-         glClearDepth(1.0f);    
+         
 
         load_shaders();
 
          init_3d_model();
         //create_triangule();
-       // create_texture();
+        //create_texture();
 
     }
     void create_triangule(){
@@ -332,20 +332,27 @@ public:
     }
     void create_texture(){
              
-        ///glEnable( GL_TEXTURE_2D ); 
+        glEnable( GL_TEXTURE_2D );
         #ifdef ANDROID
-            //AssetManager assets;
-            //textureid = assets.load_bmp("patrol.bmp",app->activity->assetManager);
+            AssetManager assets;
+            image_size size = assets.load_bmp("police_patrol.pvn",app->activity->assetManager);
+
+          
+
             
         #else         
             
             
             AssetManager assets;
             image_size size = assets.load_and_get_size("textures/car01.jpg");
+
+             
+            
+        #endif
+           
              glActiveTexture(GL_TEXTURE0);
             glGenTextures(1, &textureid);
             glBindTexture(GL_TEXTURE_2D,textureid);
-            
                      
             glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,size.width,size.heigth,0,GL_RGB,GL_UNSIGNED_BYTE,size.data);
 
@@ -366,7 +373,7 @@ public:
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);       
             glGenerateMipmap(GL_TEXTURE_2D);
-        #endif
+        //#endif
            
              
             

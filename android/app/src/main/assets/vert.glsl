@@ -5,13 +5,11 @@ attribute mediump vec2          inUV;
 
 varying mediump vec2 v_TexCoord;
 varying mediump vec3 color;       
-uniform mat4          MVP;             
-                
-									
-void main()                         
+uniform mat4          MVP;           
+void main()
 {                                   
-	gl_Position = MVP * vec4(position,1.0); 
-	//gl_Position = vec4(position,1.0);     
+	gl_Position = MVP * vec4(position,1.0);
+	//gl_Position = vec4(position,1.0);
 	v_TexCoord = vec2(inUV.x, inUV.y);
 	color = inColor;
 }
