@@ -25,6 +25,7 @@ void WindowManager::configure_egl(){
       EGL_BUFFER_SIZE, 16,
       EGL_RENDERABLE_TYPE,
       EGL_OPENGL_ES2_BIT,
+      EGL_DEPTH_SIZE, 24,
       EGL_NONE
    };
  

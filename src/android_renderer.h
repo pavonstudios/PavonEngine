@@ -139,10 +139,7 @@ private:
         return shader;
     }
     void
-    print_shader_info_log (
-            GLuint  shader      // handle to the shader
-    )
-    {
+    print_shader_info_log (GLuint  shader){
         GLint  length;
 
         glGetShaderiv ( shader , GL_INFO_LOG_LENGTH , &length );
@@ -229,8 +226,10 @@ private:
     }
 public:
     void init_gl(){
-        
-        
+       
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LESS);   
+         glClearDepth(1.0f);    
 
         load_shaders();
 
@@ -381,9 +380,7 @@ public:
 
    public:
        void render(){
-            glEnable(GL_DEPTH_TEST);
-            glDepthFunc(GL_LESS);
-           
+                       
             glViewport(0,0,800,600);
 
             glClearColor(0.2, 0.0, 0.0, 1.0);
@@ -429,8 +426,8 @@ public:
     void draw_mesh(){
             
             glBindTexture(GL_TEXTURE_2D,textureid);
-            int samplerid = glGetUniformLocation(shaderProgram, "texture_sampler");
-            glUniform1i(samplerid, 0);            
+            //int samplerid = glGetUniformLocation(shaderProgram, "texture_sampler");
+            //glUniform1i(samplerid, 0);            
             
             
             glDrawElements(GL_TRIANGLES,meshes[0]->indices.size(),GL_UNSIGNED_INT,(void*)0);
