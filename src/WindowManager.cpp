@@ -86,7 +86,7 @@ void WindowManager::create_window(){
               CopyFromParent, CWEventMask,
               &swa );
  
-   XSetWindowAttributes  xattr;
+  /*  XSetWindowAttributes  xattr;
    Atom  atom;
    int   one = 1;
  
@@ -109,14 +109,14 @@ void WindowManager::create_window(){
    XWMHints hints;
    hints.input = True;
    hints.flags = InputHint;
-   XSetWMHints(x_display, win, &hints);
+   XSetWMHints(x_display, win, &hints); */
  
    XMapWindow ( x_display , win );             // make the window visible on the screen
    XStoreName ( x_display , win , "GL test" ); // give the window a name
  
    //// get identifiers for the provided atom name strings
    Atom wm_state   = XInternAtom ( x_display, "_NET_WM_STATE", False );
-   Atom fullscreen = XInternAtom ( x_display, "_NET_WM_STATE_FULLSCREEN", False );
+   //Atom fullscreen = XInternAtom ( x_display, "_NET_WM_STATE_FULLSCREEN", False );
  
    XEvent xev;
    memset ( &xev, 0, sizeof(xev) );
@@ -125,8 +125,8 @@ void WindowManager::create_window(){
    xev.xclient.window       = win;
    xev.xclient.message_type = wm_state;
    xev.xclient.format       = 32;
-   xev.xclient.data.l[0]    = 1;
-   xev.xclient.data.l[1]    = fullscreen;
+  // xev.xclient.data.l[0]    = 1;
+   //xev.xclient.data.l[1]    = fullscreen;
    XSendEvent (                // send an event mask to the X-server
       x_display,
       DefaultRootWindow ( x_display ),

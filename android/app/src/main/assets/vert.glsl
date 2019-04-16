@@ -1,5 +1,5 @@
 #version 100
-attribute mediump vec3        position;
+attribute mediump vec3        	position;
 attribute mediump vec3			inColor;          
 attribute mediump vec2          inUV; 
 
@@ -12,6 +12,5 @@ void main()
 {                                   
 	gl_Position = MVP * vec4(position,1.0);   
 	v_TexCoord = vec2(inUV.x, inUV.y); 
-	//v_TexCoord += vec2(v_TexCoord.x + position.x, v_TexCoord.y + position.y);
 	color = inColor;             
 }                        

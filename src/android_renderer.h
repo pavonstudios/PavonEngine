@@ -317,6 +317,7 @@ public:
 
             glClearColor(0.2, 0.0, 0.0, 1.0);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
             glFlush();
 
          
@@ -353,10 +354,10 @@ public:
              
   
     }
-    
+
     void draw_mesh(){
             glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D,textureid);
+            //glBindTexture(GL_TEXTURE_2D,textureid);
             int samplerid = glGetUniformLocation(shaderProgram, "texture_sampler");
             glUniform1i(samplerid, 0);            
             
