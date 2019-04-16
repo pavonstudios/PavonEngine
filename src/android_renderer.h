@@ -255,15 +255,18 @@ public:
         vert3.pos = glm::vec3(0.0,1.0,0.0);
 
         vert1.texCoord = glm::vec2(0.0f,0.0f);
+        vert1.color = vec3(1.0,0.0,0.0);
         vert1.joint0 = glm::vec4(0.0f);
         vert1.weight0 = glm::vec4(0.0f);
 
            vert3.texCoord = glm::vec2(0.0f,1.0f);
         vert3.joint0 = glm::vec4(0.0f);
+         vert3.color = vec3(0.0,0.0,1.0);
         vert3.weight0 = glm::vec4(0.0f);
 
            vert2.texCoord = glm::vec2(1.0f,1.0f);
         vert2.joint0 = glm::vec4(0.0f);
+         vert2.color = vec3(0.0,1.0,0.0);
         vert2.weight0 = glm::vec4(0.0f);
 
         triangle->vertices.push_back(vert1);
@@ -273,18 +276,18 @@ public:
                 float vertices[] = {
             // positions          // colors           // texture coords
             -0.5f,  0.0f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // top right
-            0.5f, 0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // bottom right
-            -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f   // bottom left
+            0.5f, 0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   1.0f, 0.0f,   // bottom right
+            -0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   0.0f, 0.0f   // bottom left
            // -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // top left 
         };
 
         glGenBuffers(1,&vertex_buffer);
         glBindBuffer(GL_ARRAY_BUFFER,vertex_buffer);
-        glBufferData(GL_ARRAY_BUFFER,8 * sizeof(float),vertices,GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER,triangle->vertices.size() * sizeof(Vertex),triangle->vertices.data(),GL_STATIC_DRAW);
 
-        glVertexAttribPointer ( 0, 3, GL_FLOAT, false, sizeof(float), (void*)0 );
+        glVertexAttribPointer ( 0, 3, GL_FLOAT, false, sizeof(Vertex), (void*)0 );
         glEnableVertexAttribArray ( 0 ); 
-        glVertexAttribPointer ( 1, 3, GL_FLOAT, false, sizeof(float), (void*)(3*sizeof(float)) );
+        glVertexAttribPointer ( 1, 3, GL_FLOAT, false, sizeof(Vertex), (void*)offsetof(Vertex,color) );
         glEnableVertexAttribArray ( 1 );
        // glVertexAttribPointer ( 2, 2, GL_FLOAT, false, 8 * sizeof(float), (void*)(6*sizeof(float)) );
         //glEnableVertexAttribArray ( 2 );
