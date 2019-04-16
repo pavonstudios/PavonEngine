@@ -262,14 +262,7 @@ public:
         glBufferData(GL_ELEMENT_ARRAY_BUFFER,mesh->indices.size() * sizeof(unsigned int),mesh->indices.data(), GL_STATIC_DRAW);
 
 
-        glVertexAttribPointer ( 0, 3, GL_FLOAT, false, sizeof(Vertex), (void*)0 );
-        glEnableVertexAttribArray ( 0 ); 
-
-        glVertexAttribPointer ( 1, 3, GL_FLOAT, false, sizeof(Vertex), (void*)offsetof(Vertex,color) );
-        glEnableVertexAttribArray ( 1 );            
-        
-        glVertexAttribPointer ( 2, 2, GL_FLOAT, false, sizeof(Vertex), (void*)offsetof(Vertex,texCoord) );
-        glEnableVertexAttribArray ( 2 );
+       
         
 
         #ifdef ANDROID
@@ -283,7 +276,7 @@ public:
 
             glGenTextures(1, &textureid);
             glBindTexture(GL_TEXTURE_2D,textureid);
-            glActiveTexture(GL_TEXTURE0);
+            
                      
             glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,size.width,size.heigth,0,GL_RGB,GL_UNSIGNED_BYTE,size.pPixels);
           
@@ -296,12 +289,20 @@ public:
             glEnable( GL_TEXTURE_2D ); 
         
         #endif
-        int color = glGetAttribLocation(shaderProgram,"color");
-         int incolor = glGetAttribLocation(shaderProgram,"inColor");
-         int cood = glGetAttribLocation(shaderProgram,"v_TexCoord");
-         int incood = glGetAttribLocation(shaderProgram,"inUV");
-
         int vPos = glGetAttribLocation(shaderProgram,"position");
+        int incolor = glGetAttribLocation(shaderProgram,"inColor");        
+        int incood = glGetAttribLocation(shaderProgram,"inUV");
+        int samplerid = glGetUniformLocation(shaderProgram, "texture_sampler");
+         
+      
+        glVertexAttribPointer ( 0, 3, GL_FLOAT, false, sizeof(Vertex), (void*)0 );
+        glEnableVertexAttribArray ( 0 ); 
+
+        glVertexAttribPointer ( 1, 3, GL_FLOAT, false, sizeof(Vertex), (void*)offsetof(Vertex,color) );
+        glEnableVertexAttribArray ( 1 );            
+        
+        glVertexAttribPointer ( 2, 2, GL_FLOAT, false, sizeof(Vertex), (void*)offsetof(Vertex,texCoord) );
+        glEnableVertexAttribArray ( 2 );
 
     }
 
@@ -352,13 +353,13 @@ public:
              
   
     }
+    
     void draw_mesh(){
+            glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D,textureid);
-            
-            
             int samplerid = glGetUniformLocation(shaderProgram, "texture_sampler");
-            glUniform1i(samplerid, 0);   
-
+            glUniform1i(samplerid, 0);            
+            
             
             glDrawElements(GL_TRIANGLES,meshes[0]->indices.size(),GL_UNSIGNED_INT,(void*)0);
     }

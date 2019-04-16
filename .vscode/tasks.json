@@ -42,6 +42,23 @@
       "problemMatcher": [
         "$gcc"
       ]
+    },
+    {
+      "type": "shell",
+      "label": "make es2",
+      "command": "make",
+      "args": [
+        "es2",
+        "-j8"
+      ],
+      "options": {},
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": [
+        "$gcc"
+      ]
     }
   ],
   "version": "2.0.0"
