@@ -11,6 +11,7 @@ struct image_size{
     int width;
     int heigth;
     void * pPixels;
+    unsigned char* data;
 };
 
 class AssetManager{

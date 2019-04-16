@@ -8,16 +8,17 @@ void AssetManager::free_image(void * pixels){
 }
 image_size AssetManager::load_and_get_size(std::string texture_path){
     int texWidth, texHeight, texChannels;
-    stbi_uc* pixels = stbi_load(texture_path.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+    stbi_uc* pixels = stbi_load(texture_path.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb);
         
-    
+    unsigned char* data = stbi_load(texture_path.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb);
     if (!pixels) {
             std::string error = "failed to load texture image! " + texture_path;
             throw std::runtime_error(error);
     }
-    image_size size = {texWidth, texHeight, pixels};
+    image_size size = {texWidth, texHeight, pixels, data};
     return size;
 }
+
 #ifdef ANDROID
 GLuint AssetManager::load_bmp( const char * filename ,AAssetManager * assetManager)
 {

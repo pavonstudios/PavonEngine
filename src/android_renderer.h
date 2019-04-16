@@ -229,15 +229,14 @@ private:
     }
 public:
     void init_gl(){
-        glEnable(GL_DEPTH_TEST);
-        glDepthFunc(GL_LESS);
+        
         
 
         load_shaders();
 
-        // init_3d_model();
-        create_triangule();
-        create_texture();
+         init_3d_model();
+        //create_triangule();
+       // create_texture();
 
     }
     void create_triangule(){
@@ -254,17 +253,17 @@ public:
         Vertex vert3{};
         vert3.pos = glm::vec3(0.0,1.0,0.0);
 
-        vert1.texCoord = glm::vec2(0.0f,0.0f);
+        vert1.texCoord = glm::vec2(1.0f,1.0f);
         vert1.color = vec3(1.0,0.0,0.0);
         vert1.joint0 = glm::vec4(0.0f);
         vert1.weight0 = glm::vec4(0.0f);
 
-           vert3.texCoord = glm::vec2(0.0f,1.0f);
+           vert3.texCoord = glm::vec2(0.0f,0.0f);
         vert3.joint0 = glm::vec4(0.0f);
          vert3.color = vec3(0.0,0.0,1.0);
         vert3.weight0 = glm::vec4(0.0f);
 
-           vert2.texCoord = glm::vec2(1.0f,1.0f);
+           vert2.texCoord = glm::vec2(1.0f,0.0f);
         vert2.joint0 = glm::vec4(0.0f);
          vert2.color = vec3(0.0,1.0,0.0);
         vert2.weight0 = glm::vec4(0.0f);
@@ -289,8 +288,8 @@ public:
         glEnableVertexAttribArray ( 0 ); 
         glVertexAttribPointer ( 1, 3, GL_FLOAT, false, sizeof(Vertex), (void*)offsetof(Vertex,color) );
         glEnableVertexAttribArray ( 1 );
-       // glVertexAttribPointer ( 2, 2, GL_FLOAT, false, 8 * sizeof(float), (void*)(6*sizeof(float)) );
-        //glEnableVertexAttribArray ( 2 );
+        glVertexAttribPointer ( 2, 2, GL_FLOAT, false, sizeof(Vertex), (void*)offsetof(Vertex,texCoord) );
+        glEnableVertexAttribArray ( 2 );
     }
   
     void init_3d_model(){
@@ -334,38 +333,46 @@ public:
     }
     void create_texture(){
              
-        glEnable( GL_TEXTURE_2D ); 
+        ///glEnable( GL_TEXTURE_2D ); 
         #ifdef ANDROID
-            AssetManager assets;
-            textureid = assets.load_bmp("patrol.bmp",app->activity->assetManager);
+            //AssetManager assets;
+            //textureid = assets.load_bmp("patrol.bmp",app->activity->assetManager);
             
         #else         
             
             
             AssetManager assets;
-            image_size size = assets.load_and_get_size("/home/pavon/Textures/coust/modules_coust.png");
-            glActiveTexture(GL_TEXTURE0);
+            image_size size = assets.load_and_get_size("textures/car01.jpg");
+             glActiveTexture(GL_TEXTURE0);
             glGenTextures(1, &textureid);
             glBindTexture(GL_TEXTURE_2D,textureid);
             
                      
-            glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,size.width,size.heigth,0,GL_RGB,GL_UNSIGNED_BYTE,size.pPixels);
+            glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,size.width,size.heigth,0,GL_RGB,GL_UNSIGNED_BYTE,size.data);
 
             float pixels[] = {
-            0.0f, 0.0f, 0.0f,   1.0f, 0.0f, 0.0f,
-            1.0f, 0.0f, 0.0f,   0.0f, 0.0f, 0.0f
+            0.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f,
+            0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 0.0f,
+            0.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f,
+            0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 0.0f,
+            0.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f,
+            0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 0.0f,
+            0.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f,
+            0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 0.0f
             };
-           // glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 2, 2, 0, GL_RGB, GL_FLOAT, pixels);
+            //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 8, 8, 0, GL_RGB, GL_FLOAT, pixels);
           
-            //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	
-           // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);       
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);       
             glGenerateMipmap(GL_TEXTURE_2D);
+        #endif
+           
              
             
         
-        #endif
+       // #endif
     }
 
     #ifdef ANDROID
@@ -374,19 +381,21 @@ public:
 
    public:
        void render(){
+            glEnable(GL_DEPTH_TEST);
+            glDepthFunc(GL_LESS);
            
             glViewport(0,0,800,600);
 
             glClearColor(0.2, 0.0, 0.0, 1.0);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            glFlush();
+           // glFlush();
 
          
             glUseProgram  ( shaderProgram );
 
              
-            //update_mvp();
+            update_mvp();
             draw_mesh();
             
 
@@ -407,8 +416,8 @@ public:
                 glm::mat4 Projection = glm::perspective(glm::radians(45.f), 768.f/1280.f, 0.01f, 1000.f);
                 glm::mat4 view = glm::lookAt(vec3(0,15,0),vec3(0,0,0),vec3(0,0,1));
 
-               // model = glm::rotate(model, time * glm::radians(12.f), glm::vec3(0.0f, 1.0f, 1.0f));
-                model = rotate(model, radians(90.f),vec3(1.0f,0.0f,0.0f));
+                model = glm::rotate(model, time * glm::radians(12.f), glm::vec3(0.0f, 1.0f, 1.0f));
+                //model = rotate(model, radians(90.f),vec3(1.0f,0.0f,0.0f));
                 mat4 mvp = Projection * view * model;
 
                 glUniformMatrix4fv(0,1,GL_FALSE,&mvp[0][0]);
@@ -424,9 +433,9 @@ public:
             glUniform1i(samplerid, 0);            
             
             
-            //glDrawElements(GL_TRIANGLES,meshes[0]->indices.size(),GL_UNSIGNED_INT,(void*)0);
+            glDrawElements(GL_TRIANGLES,meshes[0]->indices.size(),GL_UNSIGNED_INT,(void*)0);
 
-            glDrawArrays(GL_TRIANGLES,0,3);
+            //glDrawArrays(GL_TRIANGLES,0,3);
             //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     }
     
