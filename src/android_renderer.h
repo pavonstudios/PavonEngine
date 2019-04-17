@@ -328,8 +328,8 @@ public:
             image_size size = assets.load_bmp("police_patrol.pvn",app->activity->assetManager);            
         #else                   
             AssetManager assets;
-            image_size size = assets.load_and_get_size("textures/car01.jpg");              #endif
-           
+            image_size size = assets.load_and_get_size("textures/car01.jpg");      
+        #endif
             glActiveTexture(GL_TEXTURE0);
             glGenTextures(1, &textureid);
             glBindTexture(GL_TEXTURE_2D,textureid);
@@ -352,7 +352,8 @@ public:
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);       
-            glGenerateMipmap(GL_TEXTURE_2D);       
+            glGenerateMipmap(GL_TEXTURE_2D); 
+
     }
 
     #ifdef ANDROID
