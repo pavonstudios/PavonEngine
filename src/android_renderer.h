@@ -226,7 +226,7 @@ public:
 
         load_shaders();
 
-        init_3d_model();
+        //init_3d_model();
         //create_triangule();
         //create_texture();
 
@@ -310,7 +310,10 @@ public:
         int incood = glGetAttribLocation(shaderProgram,"inUV");
         int samplerid = glGetUniformLocation(shaderProgram, "texture_sampler");
          
-      
+        activate_vertex_attributes();
+    }
+    void activate_vertex_attributes(){
+              
         glVertexAttribPointer ( 0, 3, GL_FLOAT, false, sizeof(Vertex), (void*)0 );
         glEnableVertexAttribArray ( 0 ); 
 
@@ -372,7 +375,7 @@ public:
             glUseProgram  ( shaderProgram );
             
             update_mvp();
-            draw_mesh();            
+            //draw_mesh();            
 
             #ifdef ANDROID
                 eglSwapBuffers(engine.display, engine.surface);
@@ -412,6 +415,13 @@ public:
 
             //glDrawArrays(GL_TRIANGLES,0,3);
             //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    }
+
+    void draw(EMesh* mesh){
+        glBindBuffer(GL_ARRAY_BUFFER,mesh->vertex_buffer);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,mesh->indices_buffer);
+        glDrawElements(GL_TRIANGLES,mesh->indices.size(),GL_UNSIGNED_INT,(void*)0);
+
     }
     
 };

@@ -11,10 +11,14 @@
                 engine.window_manager.create_window();
                 engine.load_map("map01.map");
                 engine.renderer.init_gl();
-                
+                engine.meshes[4]->create_buffers();
+                engine.renderer.activate_vertex_attributes();
+                engine.renderer.create_texture();
                     while(1){
                         engine.renderer.render();
+                        engine.renderer.draw(engine.meshes[4]);
                         engine.window_manager.swap_buffers();
+                        
                     }              
             #endif
             #ifdef VULKAN
