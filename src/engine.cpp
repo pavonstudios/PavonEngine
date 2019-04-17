@@ -9,15 +9,18 @@
 
 #ifdef VULKAN
 void Engine::main_loop(){
-	 ThirdPerson player;
-	 player.engine = this;
-		player.mesh = meshes[3];
-	 while (!glfwWindowShouldClose(window)) {
+	ThirdPerson player;
+	player.engine = this;
+	player.mesh = meshes[3];
+	
+	while (!glfwWindowShouldClose(window)) {
 		 	print_fps();
 		 	glfwPollEvents();
 			update_input();
+
 			if(!edit_mode)
 				player.update();			
+
 			get_time();
 			main_camera.cameraSpeed = main_camera.velocity * deltaTime;
 
@@ -205,14 +208,14 @@ void Engine::Execute(){
 
 void * Engine::Render(){
 			#ifdef VULKAN
-	        app.run(&vkdata);
-			
-			glfwSetScrollCallback(window,input.scroll_callback);
-            load_map("map01.map");
-            app.configure_objects();
-            std::cout << "Rendering" << std::endl;
-            main_loop();
-            //pthread_exit(NULL);
+				app.run(&vkdata);
+				
+				glfwSetScrollCallback(window,input.scroll_callback);
+				load_map("map01.map");
+				app.configure_objects();
+				std::cout << "Rendering" << std::endl;
+				main_loop();
+				//pthread_exit(NULL);
 			#endif
             return (void *)nullptr;
 }

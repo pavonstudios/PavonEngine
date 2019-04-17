@@ -85,17 +85,17 @@ public:
    std::vector<EMesh*> meshes;
    
 
-   #ifdef ANDROID
-   Engine engine;
-    Renderer(android_app *pApp){
-        app = pApp;
-        
-        LOGW("Initialiazing");
-       // init();
-        engine.create_window(pApp);
-         init_gl();
+    #ifdef ANDROID
+        Engine engine;
+        Renderer(android_app *pApp){
+            app = pApp;
+            
+            LOGW("Initialiazing");
+            // init();
+            engine.create_window(pApp);
+            init_gl();
     #else
-    Renderer(){
+        Renderer(){
     #endif
        
         

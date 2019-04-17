@@ -7,16 +7,8 @@
             
             Engine my_engine;
 
-            try {
+            my_engine.Execute();
 
-                my_engine.Execute();
-
-            } catch (const std::exception& e) {
-
-                std::cerr << e.what() << std::endl;
-                
-                return EXIT_FAILURE;
-            }
             //pthread_exit(NULL);
             return EXIT_SUCCESS;      
         }
