@@ -58,9 +58,6 @@ game:
 	cd src/Game
 	$(foreach chori,*.cpp,$(COMPILE) $(chori))
 
-
-
-
 .ONESHELL:
 main.o:
 	cd src

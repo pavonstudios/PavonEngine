@@ -199,14 +199,12 @@ private:
     void load_shaders(){
 
         #ifdef ANDROID
-        char* vertex_shader_src = load_shader_file("vert.glsl");
-        char* fragment_shader_src = load_shader_file("frag.glsl");
+            char* vertex_shader_src = load_shader_file("vert.glsl");
+            char* fragment_shader_src = load_shader_file("frag.glsl");
         #else
-        char* vertex_shader_src = load_shader_file("android/app/src/main/assets/vert.glsl");
-        char* fragment_shader_src = load_shader_file("android/app/src/main/assets/frag.glsl");
-        #endif
-       
-
+            char* vertex_shader_src = load_shader_file("android/app/src/main/assets/vert.glsl");
+            char* fragment_shader_src = load_shader_file("android/app/src/main/assets/frag.glsl");
+        #endif      
 
         GLuint vertexShader   = load_shader ( vertex_shader_src , GL_VERTEX_SHADER  );     // load vertex shader
         GLuint fragmentShader = load_shader ( fragment_shader_src , GL_FRAGMENT_SHADER );  // load fragment shader
@@ -216,11 +214,6 @@ private:
         glAttachShader ( shaderProgram, vertexShader );             // and attach both...
         glAttachShader ( shaderProgram, fragmentShader );           // ... shaders to it
 
-        //glBindAttribLocation(shaderProgram,0,"position");
-        //glBindAttribLocation(shaderProgram,1,"color");
-        //glBindAttribLocation(shaderProgram,2,"v_TexCoord");
-
-
         glLinkProgram ( shaderProgram );    // link the program
        
     }
@@ -228,12 +221,11 @@ public:
     void init_gl(){
        
         glEnable(GL_DEPTH_TEST);
-        glDepthFunc(GL_LESS);   
-         
+        glDepthFunc(GL_LESS);           
 
         load_shaders();
 
-         init_3d_model();
+        init_3d_model();
         //create_triangule();
         //create_texture();
 
@@ -297,7 +289,7 @@ public:
         #ifdef ANDROID
             mesh_load_result = mesh->load_mode_gltf_android("police_patrol.gltf",app->activity->assetManager);
         #else//ES2
-            mesh_load_result = mesh->load_model_gltf("models/pavon_the_game/police_patrol.gltf");
+            mesh_load_result = mesh->load_model_gltf("android/app/src/main/assets/police_patrol.gltf");
         #endif
     
         meshes.push_back(mesh);
@@ -305,8 +297,6 @@ public:
         glGenBuffers(1,&vertex_buffer);
         glBindBuffer(GL_ARRAY_BUFFER,vertex_buffer);
         glBufferData(GL_ARRAY_BUFFER,mesh->vertices.size() * sizeof(Vertex),mesh->vertices.data(),GL_STATIC_DRAW);
-
-
 
         glGenBuffers(1,&indices);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,indices);
@@ -335,22 +325,12 @@ public:
         glEnable( GL_TEXTURE_2D );
         #ifdef ANDROID
             AssetManager assets;
-            image_size size = assets.load_bmp("police_patrol.pvn",app->activity->assetManager);
-
-          
-
-            
-        #else         
-            
-            
+            image_size size = assets.load_bmp("police_patrol.pvn",app->activity->assetManager);            
+        #else                   
             AssetManager assets;
-            image_size size = assets.load_and_get_size("textures/car01.jpg");
-
-             
-            
-        #endif
+            image_size size = assets.load_and_get_size("textures/car01.jpg");              #endif
            
-             glActiveTexture(GL_TEXTURE0);
+            glActiveTexture(GL_TEXTURE0);
             glGenTextures(1, &textureid);
             glBindTexture(GL_TEXTURE_2D,textureid);
                      
@@ -372,13 +352,7 @@ public:
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);       
-            glGenerateMipmap(GL_TEXTURE_2D);
-        //#endif
-           
-             
-            
-        
-       // #endif
+            glGenerateMipmap(GL_TEXTURE_2D);       
     }
 
     #ifdef ANDROID
@@ -393,18 +367,13 @@ public:
             glClearColor(0.2, 0.0, 0.0, 1.0);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-           // glFlush();
-
-         
             glUseProgram  ( shaderProgram );
-
-             
-            update_mvp();
-            draw_mesh();
             
+            update_mvp();
+            draw_mesh();            
 
             #ifdef ANDROID
-            eglSwapBuffers(engine.display, engine.surface);
+                eglSwapBuffers(engine.display, engine.surface);
             #endif
 
     };

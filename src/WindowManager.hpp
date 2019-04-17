@@ -17,7 +17,6 @@ class WindowManager{
 public:
     
     #ifdef ES2
-
        
         #ifdef ANDROID
             void create_window(android_app * app);

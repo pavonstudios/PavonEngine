@@ -23,45 +23,15 @@ image_size AssetManager::load_and_get_size(std::string texture_path){
 image_size AssetManager::load_bmp( const char * filename ,AAssetManager * assetManager)
 {
 
-    GLuint texture;
-
-    int width, height;
-
-
-
     AAsset* file = AAssetManager_open(assetManager,filename, AASSET_MODE_BUFFER);
 
     size_t size = AAsset_getLength(file);
-      width = 1024;
+    width = 1024;
     height = 1024;
 
     unsigned char* content = new unsigned char[size];
 
     AAsset_read(file, content,size);
-
-  
- 
-   /*  for(int i = 0; i < width * height ; ++i)
-    {
-        int index = i*3;
-        unsigned char B,R;
-        B = content[index];
-        R = content[index+2];
-
-        content[index] = R;
-        content[index+2] = B;
-
-    } */
-
-    /* for(int i = 0; i < width * height *3; i += 3)
-    {
-            unsigned char tmp = content[i];
-            content[i] = content[i+2];
-            content[i+2] = tmp;
-    } */
-
-
-    
 
     //free( data );
 
