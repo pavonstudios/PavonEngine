@@ -88,7 +88,7 @@ public:
         void Execute();
         void *Render();
         void load_models();
-        void load_and_instance_at_location(std::string path, glm::vec3 location);
+        void load_and_assing_location(std::string path, glm::vec3 location);
         void load_map(std::string path);
         float get_time();
         void update_input();

@@ -1,36 +1,34 @@
 
-
+#include "engine.h"
 #ifndef ANDROID
-    #include "engine.h"
-    #ifdef VULKAN
+    
+   
         int main() {
             
-            Engine my_engine;
-
-            my_engine.Execute();
+            Engine engine;
+            #ifdef ES2
+                std::cout << "openg gl es2\n ";
+                 engine.window_manager.create_window();
+                    engine.renderer.init_gl();
+                
+                    while(1){
+                        engine.renderer.render();
+                        engine.window_manager.swap_buffers();
+                    }              
+            #endif
+            #ifdef VULKAN
+                engine.Execute();
+            #endif
 
             //pthread_exit(NULL);
             return EXIT_SUCCESS;      
         }
-    #endif
-    #ifdef ES2
-        int main(){
-            std::cout << "openg gl es2\n ";
-            Engine engine;
-            engine.window_manager.create_window();
-            engine.renderer.init_gl();
-           
-            while(1){
-                engine.renderer.render();
-                engine.window_manager.swap_buffers();
-            }              
-            return 1;
-        }
-    #endif
+   
+   
 #endif
 
 #ifdef ANDROID
-    #include "engine.h"
+    
     #include "android_renderer.h"
     extern "C" {
     void handle_cmd(android_app *pApp, int32_t cmd) {

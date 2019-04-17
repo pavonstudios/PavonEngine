@@ -185,41 +185,42 @@ void Engine::load_models(){
 
 }
 
-void Engine::load_and_instance_at_location(std::string path, glm::vec3 location){
+void Engine::load_and_assing_location(std::string path, glm::vec3 location){
 	#ifdef VULKAN
-	EMesh *model = new EMesh(vulkan_device);	
+		EMesh *model = new EMesh(vulkan_device);	
 	#else
-	EMesh *model = new EMesh();
+		EMesh *model = new EMesh();
 	#endif
 	model->load_model_gltf(path.c_str());
 	glm::mat4 model_matrix = glm::mat4(1.0f);
 	model_matrix = glm::translate(model_matrix, location);
 	model->model_matrix = model_matrix;
-	meshes.push_back(model);
-	//std::cout << "loading Emesh" << std::endl;
+	meshes.push_back(model);	
 
 }
 void Engine::Execute(){
 			//pthread_create(&thread[0],NULL, ExecuteRenderHanler, this);
             //pthread_create(&thread[1],NULL, ExecuteInputHanler, this);
             InitWindow();
-            Render();
-}
-
-void * Engine::Render(){
-			#ifdef VULKAN
+			
+          	#ifdef VULKAN
 				app.run(&vkdata);
 				
 				glfwSetScrollCallback(window,input.scroll_callback);
-				load_map("map01.map");
+				load_map("map01.map");//vulkan device must initialized 
 				app.configure_objects();
 				std::cout << "Rendering" << std::endl;
 				main_loop();
 				//pthread_exit(NULL);
 			#endif
+}
+
+void * Engine::Render(){
+			
             return (void *)nullptr;
 }
 void Engine::load_map(std::string path){
+	//load objects paths
 	FILE* file = fopen(path.c_str(),"r");
 	if(file == NULL){
 		throw std::runtime_error("failed to load map file");
@@ -251,7 +252,7 @@ void Engine::load_map(std::string path){
 	}
 	
 	for(uint i = 0; i < models_paths.size();i++){		
-		load_and_instance_at_location(models_paths[i],locations[i]);
+		load_and_assing_location(models_paths[i],locations[i]);
 				
 	}
 
@@ -259,8 +260,7 @@ void Engine::load_map(std::string path){
 	for(uint i = 0; i < models_paths.size();i++){	
 	meshes[i]->texture_path = textures_paths[i];
 	}
-	//load gltf model
-	//load_models();
+	
 }
 
 void Engine::delete_meshes(){
