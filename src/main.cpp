@@ -8,8 +8,9 @@
             Engine engine;
             #ifdef ES2
                 std::cout << "openg gl es2\n ";
-                 engine.window_manager.create_window();
-                    engine.renderer.init_gl();
+                engine.window_manager.create_window();
+                engine.load_map("map01.map");
+                engine.renderer.init_gl();
                 
                     while(1){
                         engine.renderer.render();

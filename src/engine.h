@@ -40,10 +40,6 @@ public:
 
 
 #ifndef ANDROID
-    #ifdef _OpenGL_Renderer_
-        RendererGL app;
-       // class Renderer renderer;
-    #endif
     #ifdef VULKAN
         Renderer app;
         VulkanData vkdata = {VK_NULL_HANDLE};
@@ -86,8 +82,7 @@ public:
         void update_window_size();
         void delete_meshes();
         void Execute();
-        void *Render();
-        void load_models();
+        void *Render();        
         void load_and_assing_location(std::string path, glm::vec3 location);
         void load_map(std::string path);
         float get_time();

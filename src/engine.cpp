@@ -180,24 +180,7 @@ void Engine::update_input(){
 	}
 }
 
-void Engine::load_models(){	
-	
 
-}
-
-void Engine::load_and_assing_location(std::string path, glm::vec3 location){
-	#ifdef VULKAN
-		EMesh *model = new EMesh(vulkan_device);	
-	#else
-		EMesh *model = new EMesh();
-	#endif
-	model->load_model_gltf(path.c_str());
-	glm::mat4 model_matrix = glm::mat4(1.0f);
-	model_matrix = glm::translate(model_matrix, location);
-	model->model_matrix = model_matrix;
-	meshes.push_back(model);	
-
-}
 void Engine::Execute(){
 			//pthread_create(&thread[0],NULL, ExecuteRenderHanler, this);
             //pthread_create(&thread[1],NULL, ExecuteInputHanler, this);
@@ -219,61 +202,18 @@ void * Engine::Render(){
 			
             return (void *)nullptr;
 }
-void Engine::load_map(std::string path){
-	//load objects paths
-	FILE* file = fopen(path.c_str(),"r");
-	if(file == NULL){
-		throw std::runtime_error("failed to load map file");
-
-	}
-	
-	std::vector<std::string> models_paths;
-	std::vector<glm::vec3> locations;
-	std::vector<std::string> textures_paths;
-	while(1){
-		char lineHeader[128];
-		int res = fscanf(file, "%s", lineHeader);
-		if (res == EOF)
-        	break; 
-
-		if(!(strcmp( lineHeader, "#" ) == 0)){
-			if ( strcmp( lineHeader, "m" ) == 0 ){
-				char model_path[256];
-				glm::vec3 location;
-				char texture_path[256];
-				fscanf(file, "%s %f %f %f %s\n", model_path, &location.x, &location.y, &location.z, texture_path);
-				models_paths.push_back(std::string(model_path));
-				locations.push_back(location);
-				textures_paths.push_back(std::string(texture_path));
-			}
-			
-		}
-		
-	}
-	
-	for(uint i = 0; i < models_paths.size();i++){		
-		load_and_assing_location(models_paths[i],locations[i]);
-				
-	}
-
-	//add textures path
-	for(uint i = 0; i < models_paths.size();i++){	
-	meshes[i]->texture_path = textures_paths[i];
-	}
-	
-}
 
 void Engine::delete_meshes(){
 	for(auto mesh : meshes){
 		delete mesh;
 	}
 }
-#ifdef VULKAN
+
 void Engine::framebufferResizeCallback(GLFWwindow* window, int width, int height) {
   auto app = reinterpret_cast<Renderer*>(glfwGetWindowUserPointer(window));
             app->framebufferResized = true;
 }
-#endif
+
 void * Engine::InputHanled(){
 	std::cout << "Input thread created" << std::endl;
             char character;
@@ -389,6 +329,66 @@ void Engine::InitWindow(){
 			}
 	#endif
 }
+
+void Engine::load_and_assing_location(std::string path, glm::vec3 location){
+	#ifdef VULKAN
+		EMesh *model = new EMesh(vulkan_device);//vulkan device for create vertex buffers	
+	#else
+		EMesh *model = new EMesh();
+	#endif
+	model->load_model_gltf(path.c_str());
+	glm::mat4 model_matrix = glm::mat4(1.0f);
+	model_matrix = glm::translate(model_matrix, location);
+	model->model_matrix = model_matrix;
+	meshes.push_back(model);	
+
+}
+
+void Engine::load_map(std::string path){
+	//load objects paths
+	FILE* file = fopen(path.c_str(),"r");
+	if(file == NULL){
+		throw std::runtime_error("failed to load map file");
+
+	}
+	
+	std::vector<std::string> models_paths;
+	std::vector<glm::vec3> locations;
+	std::vector<std::string> textures_paths;
+	while(1){
+		char lineHeader[128];
+		int res = fscanf(file, "%s", lineHeader);
+		if (res == EOF)
+        	break; 
+
+		if(!(strcmp( lineHeader, "#" ) == 0)){
+			if ( strcmp( lineHeader, "m" ) == 0 ){
+				char model_path[256];
+				glm::vec3 location;
+				char texture_path[256];
+				fscanf(file, "%s %f %f %f %s\n", model_path, &location.x, &location.y, &location.z, texture_path);
+				models_paths.push_back(std::string(model_path));
+				locations.push_back(location);
+				textures_paths.push_back(std::string(texture_path));
+			}
+			
+		}
+		
+	}
+	
+	for(uint i = 0; i < models_paths.size();i++){		
+		load_and_assing_location(models_paths[i],locations[i]);
+				
+	}
+
+	//add textures path
+	for(uint i = 0; i < models_paths.size();i++){	
+	meshes[i]->texture_path = textures_paths[i];
+	}
+	
+}
+
+
 #ifdef ES2
 #include "android_helper.h"
 void Engine::create_window() {
