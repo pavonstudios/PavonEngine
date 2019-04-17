@@ -27,8 +27,8 @@ image_size AssetManager::load_bmp( const char * filename ,AAssetManager * assetM
     AAsset* file = AAssetManager_open(assetManager,filename, AASSET_MODE_BUFFER);
 
     size_t size = AAsset_getLength(file);
-    width = 1024;
-    height = 1024;
+    int width = 1024;
+    int height = 1024;
 
     unsigned char* content = new unsigned char[size];
 

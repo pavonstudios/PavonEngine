@@ -225,8 +225,9 @@ public:
         glDepthFunc(GL_LESS);           
 
         load_shaders();
-
-        //init_3d_model();
+        #ifdef ANDROID
+            init_3d_model();
+        #endif
         //create_triangule();
         //create_texture();
 
@@ -332,7 +333,7 @@ public:
             image_size size = assets.load_bmp("police_patrol.pvn",app->activity->assetManager);            
         #else                   
             AssetManager assets;
-            image_size size = assets.load_and_get_size("textures/car01.jpg");      
+            image_size size = assets.load_and_get_size("textures/skydome.jpg");      
         #endif
             glActiveTexture(GL_TEXTURE0);
             glGenTextures(1, &textureid);
@@ -375,9 +376,11 @@ public:
             glUseProgram  ( shaderProgram );
             
             update_mvp();
-            //draw_mesh();            
+            
+             
 
             #ifdef ANDROID
+                draw_mesh();   
                 eglSwapBuffers(engine.display, engine.surface);
             #endif
 
@@ -391,7 +394,7 @@ public:
                 float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
                 glm::mat4 model = glm::mat4(1.0);
-                glm::mat4 Projection = glm::perspective(glm::radians(45.f), 768.f/1280.f, 0.01f, 1000.f);
+                glm::mat4 Projection = glm::perspective(glm::radians(45.f), 768.f/1280.f, 0.01f, 5000.f);
                 glm::mat4 view = glm::lookAt(vec3(0,15,0),vec3(0,0,0),vec3(0,0,1));
 
                 model = glm::rotate(model, time * glm::radians(12.f), glm::vec3(0.0f, 1.0f, 1.0f));
@@ -416,14 +419,14 @@ public:
             //glDrawArrays(GL_TRIANGLES,0,3);
             //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     }
-
+#ifndef ANDROID
     void draw(EMesh* mesh){
         glBindBuffer(GL_ARRAY_BUFFER,mesh->vertex_buffer);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,mesh->indices_buffer);
         glDrawElements(GL_TRIANGLES,mesh->indices.size(),GL_UNSIGNED_INT,(void*)0);
 
     }
-    
+#endif
 };
 
 #endif
