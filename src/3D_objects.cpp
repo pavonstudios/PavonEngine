@@ -11,9 +11,25 @@
     #include <glm/gtc/matrix_transform.hpp>
     #include <glm/gtc/type_ptr.hpp>    
 #endif
+#ifdef ES2
+    #include <GLES2/gl2.h>
+#endif
 
 #ifdef GLTF
 using namespace engine;
+
+void EMesh::create_buffers(){
+    #ifdef ES2
+        glGenBuffers(1,&vertex_buffer);
+        glBindBuffer(GL_ARRAY_BUFFER,vertex_buffer);
+        glBufferData(GL_ARRAY_BUFFER,vertices.size() * sizeof(Vertex),vertices.data(),GL_STATIC_DRAW);
+
+        glGenBuffers(1,&indices_buffer);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,indices_buffer);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER,indices.size() * sizeof(unsigned int),indices.data(), GL_STATIC_DRAW);
+
+    #endif
+}
 void EMesh::load_joints_matrix(){
     
 }

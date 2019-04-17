@@ -73,6 +73,7 @@ public:
     EMesh();
 #endif
     ~EMesh();
+    void create_buffers();
     void clean_object();
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
@@ -126,10 +127,9 @@ public:
     VkDeviceMemory indexBufferMemory;
     VkDeviceMemory textureImageMemory;   
 #endif
-#ifdef _OpenGL_Renderer_
-    GLuint vertexbuffer;
-	GLuint VertexArrayID;
-    GLuint indices_buffer;
+#ifdef ES2
+    GLuint vertex_buffer;
+	GLuint indices_buffer;
 #endif
     UniformBufferObject ubo;
     
