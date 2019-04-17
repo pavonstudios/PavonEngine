@@ -19,12 +19,13 @@
     #include <android/log.h>
     #include <android_native_app_glue.h>
     #include <jni.h>
+    #include "glm/glm.hpp"
+    #include "glm/gtc/matrix_transform.hpp"
 #endif
 #include "3D_objects.h"
 
 
-#include "glm/glm.hpp"
-#include "glm/gtc/matrix_transform.hpp"
+
 #include <chrono>
 
 #include "android_helper.h"
