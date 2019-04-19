@@ -10,22 +10,15 @@
         #include "VulkanData.hpp"
     #endif
 
-    #ifdef _OpenGL_Renderer_
-        #include "opengl_renderer.h"
-    #endif
-    #include <pthread.h>
     #include <GLFW/glfw3.h>
     #include "input_controller.h"
     #include "camera.h"
 #else
-   // #include "opengl_renderer.h"
    #include <EGL/egl.h>
    #include <android_native_app_glue.h>
-
 #endif
 #ifdef ES2
     #include "WindowManager.hpp"
-    #include <EGL/egl.h>
     #include "android_renderer.h"
 #endif
 
@@ -37,29 +30,18 @@ using namespace engine;
 class Engine {
 public:
 
-
+    Engine();
 
 #ifndef ANDROID
     #ifdef VULKAN
         Renderer app;
         VulkanData vkdata = {VK_NULL_HANDLE};
-        VkDevice * pDevice;
-        vks::VulkanDevice* vulkan_device;
-
-        Engine(){init();};
-        void init(){
-           
-            app.engine = this;          
-            
-            };
+        vks::VulkanDevice* vulkan_device;      
     #endif
-        pthread_t thread[2];
         GLFWwindow* window;
         class Input input;
         AssetManager objects_manager;
-        float move_y = 0;
         std::vector<EMesh*> meshes;
-        EMesh* skeletal;
         Camera main_camera;
         bool edit_mode = false;
 
@@ -69,9 +51,7 @@ public:
         int frames = 0;
         float fps = 0;  
         int last_fps = 0;   
-        float frame_time = 0;
-      
-      
+        float frame_time = 0;    
  
         GLFWwindow* get_window_pointer()
         {
@@ -81,8 +61,7 @@ public:
         void main_loop();
         void update_window_size();
         void delete_meshes();
-        void Execute();
-        void *Render();        
+        void Execute();    
         void load_and_assing_location(std::string path, glm::vec3 location);
         void load_map(std::string path);
         float get_time();

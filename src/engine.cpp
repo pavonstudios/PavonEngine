@@ -7,6 +7,19 @@
 	#include "input_controller.h"
 #endif
 
+#ifndef ANDROID
+Engine::Engine(){
+	#ifdef VULKAN 
+		 app.engine = this;
+	#endif
+}
+#endif
+
+#ifdef ANDROID
+Engine::Engine(android_app * pApp){
+
+}
+#endif
 #ifdef VULKAN
 void Engine::main_loop(){
 	ThirdPerson player;
@@ -39,8 +52,7 @@ void Engine::main_loop(){
 					fps = 0;
 					frames = 0;
 				}
-			
-		
+
 			
 
 			glfwSwapBuffers(window);
@@ -48,7 +60,7 @@ void Engine::main_loop(){
 	app.finish();
 	glfwDestroyWindow(window);
 
-    glfwTerminate();
+  glfwTerminate();
 
 
 }
@@ -69,9 +81,6 @@ void Engine::update_window_size(){
  void Engine::mouse_callback(GLFWwindow* window, double xpos, double ypos){
 	#ifdef VULKAN
 	  auto app = reinterpret_cast<Renderer*>(glfwGetWindowUserPointer(window));
-	#endif
-	#ifdef _OpenGL_Renderer_
-		auto app = reinterpret_cast<RendererGL*>(glfwGetWindowUserPointer(window));
 	#endif
 
 		if(!app){
@@ -111,9 +120,6 @@ void Engine::update_window_size(){
 void Engine::mouse_button_callback(GLFWwindow* window, int button, int action, int mods){
 	#ifdef VULKAN
 		auto app = reinterpret_cast<Renderer*>(glfwGetWindowUserPointer(window));
-	#endif
-	#ifdef _OpenGL_Renderer_
-		auto app = reinterpret_cast<RendererGL*>(glfwGetWindowUserPointer(window));
 	#endif
 
 		if (button == GLFW_MOUSE_BUTTON_RIGHT ){
@@ -182,11 +188,10 @@ void Engine::update_input(){
 
 
 void Engine::Execute(){
-			//pthread_create(&thread[0],NULL, ExecuteRenderHanler, this);
-            //pthread_create(&thread[1],NULL, ExecuteInputHanler, this);
-            InitWindow();
+
+      InitWindow();
 			
-          	#ifdef VULKAN
+      #ifdef VULKAN
 				app.run(&vkdata);
 				
 				glfwSetScrollCallback(window,input.scroll_callback);
@@ -194,14 +199,11 @@ void Engine::Execute(){
 				app.configure_objects();
 				std::cout << "Rendering" << std::endl;
 				main_loop();
-				//pthread_exit(NULL);
+				
 			#endif
 }
 
-void * Engine::Render(){
-			
-            return (void *)nullptr;
-}
+
 
 void Engine::delete_meshes(){
 	for(auto mesh : meshes){
@@ -230,17 +232,15 @@ void Engine::framebufferResizeCallback(GLFWwindow* window, int width, int height
 
 #endif
 float Engine::get_time(){
-            static auto startTime = std::chrono::high_resolution_clock::now();
+		static auto startTime = std::chrono::high_resolution_clock::now();
 
-            auto currentTime = std::chrono::high_resolution_clock::now();
-            float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
+		auto currentTime = std::chrono::high_resolution_clock::now();
+		float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
-            deltaTime = time - lastFrame;
-            lastFrame = time;
-
-
-			
-            return time;
+		deltaTime = time - lastFrame;
+		lastFrame = time;
+		
+		return time;
 }
 #endif//end if def vulkan
 
