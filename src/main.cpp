@@ -39,11 +39,9 @@
     void handle_cmd(android_app *pApp, int32_t cmd) {
         switch (cmd) {
             case APP_CMD_INIT_WINDOW:
-
-                    //pApp->userData = new Engine();
-                    pApp->userData = new Renderer(pApp);
-                    //Renderer renderer = Renderer(pApp);
                     
+                    pApp->userData = new Renderer(pApp);
+                                        
                     break;
 
 
@@ -51,7 +49,6 @@
 
             case APP_CMD_TERM_WINDOW:
                 if (pApp->userData) {
-                // auto *pRenderer = reinterpret_cast<Engine *>(pApp->userData);
                     auto *pRenderer = reinterpret_cast<Renderer *>(pApp->userData);
                     pApp->userData = nullptr;
                     delete pRenderer;
@@ -72,7 +69,6 @@
                 }
             }
             if (pApp->userData) {
-                //auto *pRenderer = reinterpret_cast<Engine *>(pApp->userData);
                 auto *pRenderer = reinterpret_cast<Renderer *>(pApp->userData);
                 pRenderer->render();
             }

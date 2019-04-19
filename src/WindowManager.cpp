@@ -56,16 +56,10 @@ void WindowManager::configure_egl(){
    if ( egl_context == EGL_NO_CONTEXT ) {
       cerr << "Unable to create EGL context (eglError: " << eglGetError() << ")" << endl;
       
-   }
- 
+   } 
    //// associate the egl-context with the egl-surface
    eglMakeCurrent( egl_display, egl_surface, egl_surface, egl_context );
-
-
 }
-
-
-
 
 void WindowManager::swap_buffers(){
 
@@ -96,37 +90,11 @@ void WindowManager::create_window_xorg(){
               CopyFromParent, CWEventMask,
               &swa );
  
-  /*  XSetWindowAttributes  xattr;
-   Atom  atom;
-   int   one = 1;
- 
-   xattr.override_redirect = False;
-   XChangeWindowAttributes ( x_display, win, CWOverrideRedirect, &xattr );
- 
-   atom = XInternAtom ( x_display, "_NET_WM_STATE_FULLSCREEN", True );
-   XChangeProperty (
-      x_display, win,
-      XInternAtom ( x_display, "_NET_WM_STATE", True ),
-      XA_ATOM,  32,  PropModeReplace,
-      (unsigned char*) &atom,  1 );
- 
-   XChangeProperty (
-      x_display, win,
-      XInternAtom ( x_display, "_HILDON_NON_COMPOSITED_WINDOW", False ),
-      XA_INTEGER,  32,  PropModeReplace,
-      (unsigned char*) &one,  1);
- 
-   XWMHints hints;
-   hints.input = True;
-   hints.flags = InputHint;
-   XSetWMHints(x_display, win, &hints); */
  
    XMapWindow ( x_display , win );             // make the window visible on the screen
    XStoreName ( x_display , win , "GL test" ); // give the window a name
  
-   //// get identifiers for the provided atom name strings
    Atom wm_state   = XInternAtom ( x_display, "_NET_WM_STATE", False );
-   //Atom fullscreen = XInternAtom ( x_display, "_NET_WM_STATE_FULLSCREEN", False );
  
    XEvent xev;
    memset ( &xev, 0, sizeof(xev) );
@@ -135,8 +103,7 @@ void WindowManager::create_window_xorg(){
    xev.xclient.window       = win;
    xev.xclient.message_type = wm_state;
    xev.xclient.format       = 32;
-  // xev.xclient.data.l[0]    = 1;
-   //xev.xclient.data.l[1]    = fullscreen;
+
    XSendEvent (                // send an event mask to the X-server
       x_display,
       DefaultRootWindow ( x_display ),
@@ -148,19 +115,7 @@ void WindowManager::create_window_xorg(){
    const float
       window_width  = 800.0,
       window_height = 480.0;
-   /* 
-      while(1){
-         XWindowAttributes  gwa;
-         XGetWindowAttributes ( x_display , win , &gwa );
-         glViewport ( 0 , 0 , gwa.width , gwa.height );
-         glClearColor ( 1.0 , 0.06 , 0.07 , 1.);    // background color
-         glClear ( GL_COLOR_BUFFER_BIT );
-
-         swap_buffers();
-
-      } */
-
-
+ 
 }
 
 void WindowManager::clear(){
