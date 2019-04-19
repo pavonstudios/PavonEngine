@@ -91,27 +91,16 @@ public:
         #ifdef DEVELOPMENT
         void print_debug(const std::string text, int8_t posx, int8_t posy);
         void print_fps();
-        #endif
-        
+        #endif 
 
-
-        
-    private:
-       
+    private:      
          
     #ifdef VULKAN
         static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
     #endif
         static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
         static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
-	
-        static void* ExecuteInputHanler(void* This){
-            return ((Engine *)This)->InputHanled();
-        }
-        static void* ExecuteRenderHanler(void * This){
-            return ((Engine *)This)->Render();
-        }
-        void *InputHanled();
+	       
 
 #endif//end no define android
      
@@ -125,14 +114,7 @@ public:
     EGLint num_config;
     void create_window(android_app *pApp);
 #endif
-#ifdef ES2
-    //Renderer renderer = new Renderer();
-    EGLDisplay display;
-    EGLConfig config;
-    EGLContext context;
-    EGLSurface surface;
-    EGLint num_config;
-    
+#ifdef ES2  
     
 public:
     WindowManager window_manager;

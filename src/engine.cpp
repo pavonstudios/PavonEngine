@@ -214,39 +214,6 @@ void Engine::framebufferResizeCallback(GLFWwindow* window, int width, int height
             app->framebufferResized = true;
 }
 
-void * Engine::InputHanled(){
-	std::cout << "Input thread created" << std::endl;
-            char character;
-            bool repeat = true;
-            while(repeat){
-                if(!app.bIsRunnning){
-                    std::cout << "Exiting from input console";
-                    break;
-                }
-                std::cin >> character;
-                if(character == 's'){
-                    std::cout << "Letter S pressed";
-                }
-                if(character == 'f'){
-                    repeat = false;
-                }
-                if(character == 'x'){
-                    std::cout << "Rotation value changed to 45";
-                    //app.RotationValue = 45;
-                }
-                if(character == 'z'){
-                    std::cout << "LRotation Value changed to 90";
-                     //app.RotationValue = 90;
-                }
-                if(character == 'm'){
-                    std::cout << "Loading other model";
-                    //app.loadModel("models/chalet.obj");
-                }
-                
-            }
-   
-            pthread_exit(NULL);
-}
 
 #ifdef DEVELOPMENT
     void Engine::print_debug(const std::string text, int8_t posx, int8_t posy){		
@@ -286,11 +253,7 @@ void Engine::InitWindow(){
 			return;
 		}
 		
-	#ifdef VULKAN
-			glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-	#endif
-
-	
+		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);	
 
 		
 		window = glfwCreateWindow(800, 600, "Engine", nullptr, nullptr);
@@ -299,6 +262,7 @@ void Engine::InitWindow(){
 			glfwTerminate();
 			return;
 		}
+	
 			glfwSetWindowUserPointer(window, this);
 
 	#ifdef VULKAN	   
@@ -371,31 +335,6 @@ void Engine::load_map(std::string path){
 	
 }
 
-
-#ifdef ES2
-#include "android_helper.h"
-void Engine::create_window() {
-		display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
-
-
-		eglInitialize(display, NULL, NULL);
-
-		/* get an appropriate EGL frame buffer configuration */
-		eglChooseConfig(display, attribute_list, &config, 1, &num_config);
-
-
-		context = eglCreateContext(display, config, EGL_NO_CONTEXT, GiveMeGLES2);
-
-
-		surface = eglCreateWindowSurface(display, config, window_manager.win, NULL);
-
-        eglMakeCurrent(display, surface, surface, context);
-
-		while(1){
-			
-		}
-	}
-#endif //if define es2
 #endif//if not define android
 
 #ifdef ANDROID
