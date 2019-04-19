@@ -10,6 +10,11 @@
     #include <GLES2/gl2.h>
     using namespace std;
 #endif
+#ifdef ANDROID
+    #include <EGL/egl.h>
+    #include <GLES2/gl2.h>
+    #include <android_native_app_glue.h>
+#endif
 #ifdef VULKAN
     #include "GLFW/glfw3.h"
 
@@ -44,7 +49,15 @@ public:
         GLFWwindow* window;
         void create_window_glfw();
     #endif
-
+    #ifdef ANDROID
+        EGLDisplay display;
+        EGLConfig config;
+        EGLContext context;
+        EGLSurface surface;
+        EGLint num_config;
+        void create_window(android_app *pApp);
+        void swap_buffers();
+    #endif
 };
 
 #endif

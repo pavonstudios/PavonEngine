@@ -16,6 +16,7 @@
 #else
    #include <EGL/egl.h>
    #include <android_native_app_glue.h>
+    #include "WindowManager.hpp"
 #endif
 #ifdef ES2
     #include "WindowManager.hpp"
@@ -29,10 +30,12 @@
 using namespace engine;
 class Engine {
 public:
-
-    Engine();
+    #ifdef ANDROID
+       // Engine(android_app * pApp);
+    #endif
 
 #ifndef ANDROID
+    Engine();
     #ifdef VULKAN
         Renderer app;
         VulkanData vkdata = {VK_NULL_HANDLE};
@@ -84,7 +87,7 @@ public:
 #endif//end no define android
      
 
-   
+
 #ifdef ANDROID
     EGLDisplay display;
     EGLConfig config;
@@ -92,6 +95,8 @@ public:
     EGLSurface surface;
     EGLint num_config;
     void create_window(android_app *pApp);
+    public:
+    WindowManager window_manager;
 #endif
 #ifdef ES2  
     

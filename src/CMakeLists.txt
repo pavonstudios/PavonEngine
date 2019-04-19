@@ -26,6 +26,7 @@ add_library(maincode
         model_loader.cpp
         asset_manager.cpp
         engine.cpp
+        WindowManager.cpp
     
     )
 

@@ -93,7 +93,8 @@ public:
             
             LOGW("Initialiazing");
             // init();
-            engine.create_window(pApp);
+            //engine.create_window(pApp);
+            engine.window_manager.create_window(pApp);
             init_gl();
     #else
         Renderer(){
@@ -226,7 +227,9 @@ public:
 
         load_shaders();
         #ifdef ANDROID
-            init_3d_model();
+            //init_3d_model();
+            create_triangule();
+            create_texture();
         #endif
         //create_triangule();
         //create_texture();
@@ -268,8 +271,8 @@ public:
                 float vertices[] = {
             // positions          // colors           // texture coords
             -0.5f,  0.0f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // top right
-            0.5f, 0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   1.0f, 0.0f,   // bottom right
-            -0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   0.0f, 0.0f   // bottom left
+            0.5f, 0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // bottom right
+            -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f   // bottom left
            // -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // top left 
         };
 
@@ -327,7 +330,7 @@ public:
     }
     void create_texture(){
              
-        glEnable( GL_TEXTURE_2D );
+
         #ifdef ANDROID
             AssetManager assets;
             image_size size = assets.load_bmp("police_patrol.pvn",app->activity->assetManager);            
@@ -339,25 +342,20 @@ public:
             glGenTextures(1, &textureid);
             glBindTexture(GL_TEXTURE_2D,textureid);
                      
-            glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,size.width,size.heigth,0,GL_RGB,GL_UNSIGNED_BYTE,size.data);
+           // glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,size.width,size.heigth,0,GL_RGB,GL_UNSIGNED_BYTE,size.data);
 
             float pixels[] = {
             0.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f,
-            0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 0.0f,
-            0.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f,
-            0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 0.0f,
-            0.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f,
-            0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 0.0f,
-            0.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f,
             0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 0.0f
+
             };
-            //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 8, 8, 0, GL_RGB, GL_FLOAT, pixels);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 2, 2, 0, GL_RGB, GL_FLOAT, pixels);
           
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);       
-            glGenerateMipmap(GL_TEXTURE_2D); 
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            //glGenerateMipmap(GL_TEXTURE_2D);
 
     }
 
@@ -375,13 +373,13 @@ public:
 
             glUseProgram  ( shaderProgram );
             
-            update_mvp();
+           // update_mvp();
             
              
 
             #ifdef ANDROID
                 draw_mesh();   
-                eglSwapBuffers(engine.display, engine.surface);
+                engine.window_manager.swap_buffers();
             #endif
 
     };
@@ -410,13 +408,13 @@ public:
     void draw_mesh(){
             
             glBindTexture(GL_TEXTURE_2D,textureid);
-            //int samplerid = glGetUniformLocation(shaderProgram, "texture_sampler");
-            //glUniform1i(samplerid, 0);            
+            int samplerid = glGetUniformLocation(shaderProgram, "texture_sampler");
+            glUniform1i(samplerid, 0);
             
             
-            glDrawElements(GL_TRIANGLES,meshes[0]->indices.size(),GL_UNSIGNED_INT,(void*)0);
+           // glDrawElements(GL_TRIANGLES,meshes[0]->indices.size(),GL_UNSIGNED_INT,(void*)0);
 
-            //glDrawArrays(GL_TRIANGLES,0,3);
+            glDrawArrays(GL_TRIANGLES,0,3);
             //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     }
 #ifndef ANDROID

@@ -16,9 +16,9 @@ Engine::Engine(){
 #endif
 
 #ifdef ANDROID
-Engine::Engine(android_app * pApp){
+//Engine::Engine(android_app * pApp){
 
-}
+//}
 #endif
 #ifdef VULKAN
 void Engine::main_loop(){
