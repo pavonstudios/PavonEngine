@@ -12,7 +12,7 @@
 #include <cassert>
 #include <vector>
 
-#include <EGL/egl.h>
+
 #include <GLES2/gl2.h>
 
 #ifdef ANDROID
@@ -21,6 +21,7 @@
     #include <jni.h>
     #include "glm/glm.hpp"
     #include "glm/gtc/matrix_transform.hpp"
+
 #endif
 #include "3D_objects.h"
 
@@ -31,7 +32,7 @@
 #include "android_helper.h"
 
 
-#include "engine.h"
+
 #include "asset_manager.h"
 
 using  namespace engine;
