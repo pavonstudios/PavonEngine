@@ -80,12 +80,10 @@ load_shader (
 #include "asset_manager.h"
 
 using  namespace engine;
+using namespace std;
 using namespace glm;
 class Renderer{
 public:
-   std::vector<EMesh*> meshes;
-   
-
     #ifdef ANDROID
         Engine engine;
         Renderer(android_app *pApp){
@@ -106,23 +104,12 @@ public:
    
 private:
     GLuint vertexbuffer;
-    GLuint VertexArrayID;
-
-    GLuint vertex_array_id;
 
     GLuint vertex_buffer;
     GLuint indices;
 
     GLuint textureid;
     GLuint texture2id;
-
-    GLint
-            phase_loc,
-            offset_loc,
-            position_loc,
-            sampler,
-            uvposition,
-            mvp_loc;
 
     GLuint shaderProgram;
     #if ES2
@@ -297,8 +284,7 @@ public:
             mesh_load_result = mesh->load_model_gltf("android/app/src/main/assets/police_patrol.gltf");
         #endif
     
-        meshes.push_back(mesh);
-
+       
         glGenBuffers(1,&vertex_buffer);
         glBindBuffer(GL_ARRAY_BUFFER,vertex_buffer);
         glBufferData(GL_ARRAY_BUFFER,mesh->vertices.size() * sizeof(Vertex),mesh->vertices.data(),GL_STATIC_DRAW);

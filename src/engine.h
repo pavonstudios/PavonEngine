@@ -3,7 +3,7 @@
 #define _Engine_H_
 
 #ifndef ANDROID
-    #include "asset_manager.h"
+
     #ifdef VULKAN
         #include "renderer.h"
         #define GLFW_INCLUDE_VULKAN
@@ -14,22 +14,24 @@
     #include "input_controller.h"
     #include "camera.h"
 #else
-   #include <EGL/egl.h>
-   #include <android_native_app_glue.h>
-    #include "WindowManager.hpp"
+
+    
 #endif
 #ifdef ES2
-    #include "WindowManager.hpp"
+    
     #include "android_renderer.h"
 #endif
 
 #include <chrono>
 #include <vector>
-
+#include "asset_manager.h"
+#include "WindowManager.hpp"
 #include "3D_objects.h"
 using namespace engine;
 class Engine {
 public:
+    WindowManager window_manager;
+    AssetManager objects_manager;
     #ifdef ANDROID
        // Engine(android_app * pApp);
     #endif
@@ -41,9 +43,10 @@ public:
         VulkanData vkdata = {VK_NULL_HANDLE};
         vks::VulkanDevice* vulkan_device;      
     #endif
+
         GLFWwindow* window;
         class Input input;
-        AssetManager objects_manager;
+
         std::vector<EMesh*> meshes;
         Camera main_camera;
         bool edit_mode = false;
@@ -85,23 +88,16 @@ public:
 	       
 
 #endif//end no define android
-     
+   
 
 
-#ifdef ANDROID
-    EGLDisplay display;
-    EGLConfig config;
-    EGLContext context;
-    EGLSurface surface;
-    EGLint num_config;
-    void create_window(android_app *pApp);
-    public:
-    WindowManager window_manager;
-#endif
+
+
+    
 #ifdef ES2  
     
 public:
-    WindowManager window_manager;
+   
     void create_window();
     Renderer renderer;
     
