@@ -64,7 +64,16 @@ void WindowManager::configure_egl(){
 
 }
 
-void WindowManager::create_window(){
+
+
+
+void WindowManager::swap_buffers(){
+
+      eglSwapBuffers ( egl_display, egl_surface );
+
+}
+
+void WindowManager::create_window_xorg(){
        ///////  the X11 part  //////////////////////////////////////////////////////////////////
    // in the first part the program opens a connection to the X11 window manager
    //
@@ -139,26 +148,18 @@ void WindowManager::create_window(){
    const float
       window_width  = 800.0,
       window_height = 480.0;
-/* 
-    while(1){
-        XWindowAttributes  gwa;
-      XGetWindowAttributes ( x_display , win , &gwa );
-      glViewport ( 0 , 0 , gwa.width , gwa.height );
-      glClearColor ( 1.0 , 0.06 , 0.07 , 1.);    // background color
-      glClear ( GL_COLOR_BUFFER_BIT );
+   /* 
+      while(1){
+         XWindowAttributes  gwa;
+         XGetWindowAttributes ( x_display , win , &gwa );
+         glViewport ( 0 , 0 , gwa.width , gwa.height );
+         glClearColor ( 1.0 , 0.06 , 0.07 , 1.);    // background color
+         glClear ( GL_COLOR_BUFFER_BIT );
 
-      swap_buffers();
+         swap_buffers();
 
-    } */
+      } */
 
-
-  
-
-}
-
-void WindowManager::swap_buffers(){
-
-      eglSwapBuffers ( egl_display, egl_surface );
 
 }
 
@@ -172,3 +173,32 @@ void WindowManager::clear(){
 #endif
 
 #endif
+#ifdef VULKAN
+void WindowManager::create_window_glfw(){
+   	if( !glfwInit() )
+		{
+			fprintf( stderr, "Failed to initialize GLFW\n" );
+			return;
+		}	
+	
+		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+		
+		window = glfwCreateWindow(800, 600, "Engine", nullptr, nullptr);
+		if( window == NULL ){
+			fprintf( stderr, "Failed to open GLFW window\n" );
+			glfwTerminate();
+			return;
+		}
+}
+#endif
+
+void WindowManager::create_window(){
+   #ifdef ES2
+      create_window_xorg();
+   #endif
+   #ifdef VULKAN
+      create_window_glfw();
+   #endif
+  
+
+}

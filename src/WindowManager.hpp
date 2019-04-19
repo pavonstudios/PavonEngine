@@ -5,17 +5,23 @@
     #include  <X11/Xlib.h>
     #include  <X11/Xatom.h>
     #include  <X11/Xutil.h>
-   #include  <iostream>
-    #include  <cstdlib>
-    #include  <cstring>
+    
     #include <EGL/egl.h>
     #include <GLES2/gl2.h>
     using namespace std;
 #endif
+#ifdef VULKAN
+    #include "GLFW/glfw3.h"
+
+#endif
+
+#include  <iostream>
+#include  <cstdlib>
+#include  <cstring>
 
 class WindowManager{
 public:
-    
+    void create_window();
     #ifdef ES2
        
         #ifdef ANDROID
@@ -26,12 +32,17 @@ public:
             EGLDisplay  egl_display;
             EGLContext  egl_context;
             EGLSurface  egl_surface;
-            void create_window();
+                        
+            void create_window_xorg();
             void clear();
             void swap_buffers();
         private:
             void configure_egl();
         #endif
+    #endif
+    #ifdef VULKAN
+        GLFWwindow* window;
+        void create_window_glfw();
     #endif
 
 };

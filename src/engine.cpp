@@ -279,7 +279,7 @@ float Engine::get_time(){
 
 #ifndef ANDROID
 void Engine::InitWindow(){
-		move_y = 2;
+		
 		if( !glfwInit() )
 		{
 			fprintf( stderr, "Failed to initialize GLFW\n" );
@@ -290,14 +290,7 @@ void Engine::InitWindow(){
 			glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 	#endif
 
-	#ifdef _OpenGL_Renderer_
-			glfwWindowHint(GLFW_SAMPLES, 4); // 4x antialiasing
-			glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); // We want OpenGL 3.3
-			glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-			glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
-			glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // We don't want the old OpenGL 
-			
-	#endif
+	
 
 		
 		window = glfwCreateWindow(800, 600, "Engine", nullptr, nullptr);
@@ -315,19 +308,9 @@ void Engine::InitWindow(){
 			glfwSetCursorPosCallback(window, mouse_callback);
 			glfwSetMouseButtonCallback(window,mouse_button_callback);
 			glfwSetScrollCallback(window,input.scroll_callback);
-	#endif
-			
+	#endif		
 
-	#ifdef _OpenGL_Renderer_
-			
-			glfwMakeContextCurrent(window); // Initialize GLEW
-
-
-			if (glewInit() != GLEW_OK) {
-				fprintf(stderr, "Failed to initialize GLEW\n");
-				return;
-			}
-	#endif
+	
 }
 
 void Engine::load_and_assing_location(std::string path, glm::vec3 location){
