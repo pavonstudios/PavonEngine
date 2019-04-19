@@ -6,9 +6,10 @@
         int main() {
             
             Engine engine;
+            engine.window_manager.create_window();
             #ifdef ES2
                 std::cout << "openg gl es2\n ";
-                engine.window_manager.create_window();
+                
                 engine.load_map("map01.map");
                 engine.renderer.init_gl();
                 engine.meshes[4]->create_buffers();

@@ -188,7 +188,7 @@ void Engine::update_input(){
 
 
 void Engine::Execute(){
-			window_manager.create_window();
+			
       InitWindow();
 			
 			
@@ -248,10 +248,12 @@ float Engine::get_time(){
 #ifndef ANDROID
 void Engine::InitWindow(){	
 	
+			
+
+	#ifdef VULKAN	
 			window = window_manager.get_window();
 			glfwSetWindowUserPointer(window, this);
-
-	#ifdef VULKAN	   
+			   
 			glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
 			glfwSetInputMode(window, GLFW_STICKY_KEYS, 1);
 			glfwSetKeyCallback(window, input.key_callback);
