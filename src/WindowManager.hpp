@@ -27,6 +27,13 @@
 class WindowManager{
 public:
     void create_window();
+    void swap_buffers();
+    ~WindowManager();
+    #ifdef VULKAN
+        GLFWwindow* get_window(){
+            return glfw_window;
+        }
+    #endif
     #ifdef ES2
        
         #ifdef ANDROID
@@ -40,13 +47,14 @@ public:
                         
             void create_window_xorg();
             void clear();
-            void swap_buffers();
+            
         private:
             void configure_egl();
         #endif
     #endif
     #ifdef VULKAN
-        GLFWwindow* window;
+    private:
+        GLFWwindow* glfw_window;
         void create_window_glfw();
     #endif
     #ifdef ANDROID
@@ -56,7 +64,7 @@ public:
         EGLSurface surface;
         EGLint num_config;
         void create_window(android_app *pApp);
-        void swap_buffers();
+        
     #endif
 };
 

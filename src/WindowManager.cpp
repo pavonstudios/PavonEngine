@@ -61,11 +61,7 @@ void WindowManager::configure_egl(){
    eglMakeCurrent( egl_display, egl_surface, egl_surface, egl_context );
 }
 
-void WindowManager::swap_buffers(){
 
-      eglSwapBuffers ( egl_display, egl_surface );
-
-}
 
 void WindowManager::create_window_xorg(){
        ///////  the X11 part  //////////////////////////////////////////////////////////////////
@@ -138,8 +134,8 @@ void WindowManager::create_window_glfw(){
 	
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 		
-		window = glfwCreateWindow(800, 600, "Engine", nullptr, nullptr);
-		if( window == NULL ){
+		glfw_window = glfwCreateWindow(800, 600, "Engine", nullptr, nullptr);
+		if( glfw_window == NULL ){
 			fprintf( stderr, "Failed to open GLFW window\n" );
 			glfwTerminate();
 			return;
@@ -179,7 +175,25 @@ void WindowManager::create_window(){
       	eglMakeCurrent(display, surface, surface, context);
 
 	}
-	void WindowManager::swap_buffers() {
-        eglSwapBuffers(display, surface);
-    }
+	
 #endif
+
+void WindowManager::swap_buffers(){
+      #ifdef ANDROID
+         eglSwapBuffers(display, surface);
+      #endif
+      #ifdef ES2
+         eglSwapBuffers ( egl_display, egl_surface );
+      #endif
+      #ifdef VULKAN
+         glfwSwapBuffers(glfw_window);
+      #endif
+}
+
+WindowManager::~WindowManager(){
+   #ifdef VULKAN
+   glfwDestroyWindow(glfw_window);
+
+   glfwTerminate();
+   #endif
+}

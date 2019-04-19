@@ -22,9 +22,9 @@ DEFINES :=
 
 .ONESHELL:
 full: DEFINES := -DVULKAN
-full: $(OBJs) game $(game) renderer.o
+full: $(OBJs) game $(game) renderer.o WindowManager.o
 	mkdir -p bin && cd src
-	$(CC) -o ../renderer renderer.o $(OBJs) model_loader.o $(GAME) $(Library) -I./ -lvulkan  -DVULKAN $(DEFINES)
+	$(CC) -o ../renderer renderer.o $(OBJs) model_loader.o WindowManager.o $(GAME) $(Library) -I./ -lvulkan  -DVULKAN $(DEFINES)
 
 .ONESHELL:
 es2: DEFINES := -DES2

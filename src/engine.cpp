@@ -188,8 +188,9 @@ void Engine::update_input(){
 
 
 void Engine::Execute(){
-
+			window_manager.create_window();
       InitWindow();
+			
 			
       #ifdef VULKAN
 				app.run(&vkdata);
@@ -245,24 +246,9 @@ float Engine::get_time(){
 #endif//end if def vulkan
 
 #ifndef ANDROID
-void Engine::InitWindow(){
-		
-		if( !glfwInit() )
-		{
-			fprintf( stderr, "Failed to initialize GLFW\n" );
-			return;
-		}
-		
-		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);	
-
-		
-		window = glfwCreateWindow(800, 600, "Engine", nullptr, nullptr);
-		if( window == NULL ){
-			fprintf( stderr, "Failed to open GLFW window\n" );
-			glfwTerminate();
-			return;
-		}
+void Engine::InitWindow(){	
 	
+			window = window_manager.get_window();
 			glfwSetWindowUserPointer(window, this);
 
 	#ifdef VULKAN	   

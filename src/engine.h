@@ -88,17 +88,11 @@ public:
 	       
 
 #endif//end no define android
-   
-
-
-
 
     
 #ifdef ES2  
     
 public:
-   
-    void create_window();
     Renderer renderer;
     
 #endif
