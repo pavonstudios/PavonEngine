@@ -14,7 +14,7 @@
     #include "input_controller.h"
     #include "camera.h"
 #else
-
+#include "android_renderer.h"
     
 #endif
 #ifdef ES2
@@ -29,11 +29,16 @@
 #include "3D_objects.h"
 using namespace engine;
 class Engine {
+#ifdef ANDROID
+public:
+    Renderer renderer;
+#endif
 public:
     WindowManager window_manager;
     AssetManager objects_manager;
     #ifdef ANDROID
-       // Engine(android_app * pApp);
+        Engine(android_app * pApp);
+        Engine();
     #endif
 
 #ifndef ANDROID
@@ -96,6 +101,7 @@ public:
     Renderer renderer;
     
 #endif
+
     
 };
 #endif

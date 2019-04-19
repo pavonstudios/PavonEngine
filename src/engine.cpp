@@ -16,9 +16,14 @@ Engine::Engine(){
 #endif
 
 #ifdef ANDROID
-//Engine::Engine(android_app * pApp){
-
-//}
+	Engine::Engine(android_app * pApp){
+        renderer.app = pApp;
+        window_manager.create_window(pApp);
+        renderer.init_gl();
+	}
+	Engine::Engine(){
+			
+	}
 #endif
 #ifdef VULKAN
 void Engine::main_loop(){

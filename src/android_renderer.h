@@ -31,51 +31,6 @@
 #include "android_helper.h"
 
 
-#ifdef ANDROID
-void
-print_shader_info_log (
-        GLuint  shader      // handle to the shader
-)
-{
-    GLint  length;
-
-    glGetShaderiv ( shader , GL_INFO_LOG_LENGTH , &length );
-
-    if ( length ) {
-        char* buffer  =  new char [ length ];
-        glGetShaderInfoLog ( shader , length , NULL , buffer );
-        #ifdef ANDROID
-            LOGW("shader info %s",buffer);
-        #else
-            cout << "shader info: " <<  buffer << flush;
-        #endif
-        delete [] buffer;
-
-        GLint success;
-        glGetShaderiv( shader, GL_COMPILE_STATUS, &success );
-        if ( success != GL_TRUE )   exit ( 1 );
-    }
-}
-
-GLuint
-load_shader (
-        const char  *shader_source,
-        GLenum       type
-)
-{
-    GLuint  shader = glCreateShader( type );
-
-    glShaderSource  ( shader , 1 , &shader_source , NULL );
-    glCompileShader ( shader );
-
-    print_shader_info_log ( shader );
-
-    return shader;
-}
-
-
-#endif//androi define shader part
-
 #include "engine.h"
 #include "asset_manager.h"
 
@@ -83,25 +38,7 @@ using  namespace engine;
 using namespace std;
 using namespace glm;
 class Renderer{
-public:
-    #ifdef ANDROID
-        Engine engine;
-        Renderer(android_app *pApp){
-            app = pApp;
-            
-            LOGW("Initialiazing");
-            // init();
-            //engine.create_window(pApp);
-            engine.window_manager.create_window(pApp);
-            init_gl();
-    #else
-        Renderer(){
-    #endif
-       
-        
 
-    };
-   
 private:
     GLuint vertexbuffer;
 
@@ -112,7 +49,7 @@ private:
     GLuint texture2id;
 
     GLuint shaderProgram;
-    #if ES2
+
     GLuint load_shader (
             const char  *shader_source,
             GLenum       type
@@ -148,7 +85,7 @@ private:
             if ( success != GL_TRUE )   exit ( 1 );
         }
     }
-    #endif
+    
     char* load_shader_file(const char* path){
         #ifdef ANDROID
             AAsset* file = AAssetManager_open(app->activity->assetManager,path, AASSET_MODE_BUFFER);
@@ -365,7 +302,7 @@ public:
 
             #ifdef ANDROID
                 draw_mesh();   
-                engine.window_manager.swap_buffers();
+//                engine.window_manager.swap_buffers();
             #endif
 
     };

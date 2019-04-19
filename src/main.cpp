@@ -34,14 +34,14 @@
 #endif
 
 #ifdef ANDROID
-    
-    #include "android_renderer.h"
+    #include "engine.h"
+
     extern "C" {
     void handle_cmd(android_app *pApp, int32_t cmd) {
         switch (cmd) {
             case APP_CMD_INIT_WINDOW:
                     
-                    pApp->userData = new Renderer(pApp);
+                    pApp->userData = new Engine(pApp);
                                         
                     break;
 
@@ -50,9 +50,9 @@
 
             case APP_CMD_TERM_WINDOW:
                 if (pApp->userData) {
-                    auto *pRenderer = reinterpret_cast<Renderer *>(pApp->userData);
+                    auto *pEngine = reinterpret_cast<Engine *>(pApp->userData);
                     pApp->userData = nullptr;
-                    delete pRenderer;
+                    delete pEngine;
                 }
         }
     }
@@ -70,8 +70,9 @@
                 }
             }
             if (pApp->userData) {
-                auto *pRenderer = reinterpret_cast<Renderer *>(pApp->userData);
-                pRenderer->render();
+                auto *pEngine = reinterpret_cast<Engine *>(pApp->userData);
+                pEngine->renderer.render();
+                pEngine->window_manager.swap_buffers();
             }
 
 
