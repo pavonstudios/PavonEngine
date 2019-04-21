@@ -42,6 +42,7 @@ public:
 public:
     WindowManager window_manager;
     AssetManager objects_manager;
+    
     #ifdef ANDROID
         Engine(android_app * pApp);
         Engine();
@@ -83,6 +84,7 @@ public:
         void load_map(std::string path);
         float get_time();
         void update_input();
+        void update_mvp(EMesh* mesh);
 
         #ifdef DEVELOPMENT
         void print_debug(const std::string text, int8_t posx, int8_t posy);

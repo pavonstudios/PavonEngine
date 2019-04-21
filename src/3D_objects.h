@@ -134,6 +134,7 @@ public:
 #endif
     UniformBufferObject ubo;
     pipeline_data data;
+    glm::mat4 MVP;
 		
 };
 #include "Node.h"

@@ -31,6 +31,7 @@
                         engine.window_manager.check_events();
                         for(EMesh* mesh : engine.meshes){
                             engine.renderer.activate_vertex_attributes(mesh);
+                            engine.update_mvp(mesh);
                             engine.renderer.draw(mesh);
                         }
                       

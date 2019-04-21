@@ -341,15 +341,7 @@ public:
    }
 
 #endif
-       void render(){
-                       
-            
-
-            
-            
-            //update_mvp();
-            
-             
+       void render(){                    
 
             #ifdef ANDROID
                 glUseProgram  ( shaderProgram );
@@ -394,7 +386,7 @@ public:
                 //model = rotate(model, radians(90.f),vec3(1.0f,0.0f,0.0f));
                 mat4 mvp = Projection * view * mesh->model_matrix;
 
-                glUniformMatrix4fv(0,1,GL_FALSE,&mvp[0][0]);
+                glUniformMatrix4fv(0,1,GL_FALSE,&mesh->MVP[0][0]);
             
              
   
@@ -417,7 +409,7 @@ public:
     void draw(EMesh* mesh){
         glUseProgram  ( mesh->shader_program );
         glBindTexture(GL_TEXTURE_2D,mesh->texture_id);
-        update_mvp(mesh);
+        //update_mvp(mesh);
         glBindBuffer(GL_ARRAY_BUFFER,mesh->vertex_buffer);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,mesh->indices_buffer);
         glDrawElements(GL_TRIANGLES,mesh->indices.size(),GL_UNSIGNED_INT,(void*)0);

@@ -251,6 +251,14 @@ float Engine::get_time(){
 #endif//end if def vulkan
 
 #ifndef ANDROID
+void Engine::update_mvp(EMesh* mesh){
+	glm::mat4 mat = main_camera.Projection * main_camera.View * mesh->model_matrix;
+	mesh->MVP = mat;
+	#ifdef ES2
+		renderer.update_mvp(mesh);
+	#endif
+
+}
 void Engine::InitWindow(){	
 	
 			
