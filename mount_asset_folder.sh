@@ -1,0 +1,1 @@
+ln -sr ./Game/Assets ./android/app/src/main/assets

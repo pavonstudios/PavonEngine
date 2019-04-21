@@ -14,7 +14,7 @@
             #ifdef ES2
                 std::cout << "openg gl es2\n ";
                 
-                engine.load_map("map01.map");
+                engine.load_map("Game/map01.map");
                 
                 engine.renderer.init_gl();                
             
