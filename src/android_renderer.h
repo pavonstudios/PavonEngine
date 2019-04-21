@@ -144,14 +144,40 @@ private:
         glLinkProgram ( shaderProgram );    // link the program
        
     }
+     
 public:
+#ifdef ES2
+    void load_shaders(EMesh* mesh){
+
+        char* vertex_shader_src = load_shader_file(mesh->data.vertex_shader_path.c_str());
+        char* fragment_shader_src = load_shader_file(mesh->data.fragment_shader_path.c_str());
+         
+
+        GLuint vertexShader   = load_shader ( vertex_shader_src , GL_VERTEX_SHADER  );     // load vertex shader
+        GLuint fragmentShader = load_shader ( fragment_shader_src , GL_FRAGMENT_SHADER );  // load fragment shader
+
+        
+        mesh->shader_program = glCreateProgram ();                 // create program object
+        glAttachShader ( mesh->shader_program, vertexShader );             // and attach both...
+        glAttachShader ( mesh->shader_program, fragmentShader );           // ... shaders to it
+
+        glLinkProgram ( mesh->shader_program  );    // link the program
+       
+    }
+
+#endif
     void init_gl(){
+        glViewport(0,0,800,600);
+
+        glClearColor(0.2, 0.0, 0.0, 1.0);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
        
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LESS);           
 
-        load_shaders();
+        
         #ifdef ANDROID
+            load_shaders();
             //init_3d_model();
             create_triangule();
             create_texture();
@@ -238,10 +264,12 @@ public:
         int incood = glGetAttribLocation(shaderProgram,"inUV");
         int samplerid = glGetUniformLocation(shaderProgram, "texture_sampler");
          
-        activate_vertex_attributes();
+        activate_vertex_attributes(mesh);
     }
-    void activate_vertex_attributes(){
-              
+    void activate_vertex_attributes(EMesh* mesh){
+#ifdef ES2
+        glBindBuffer(GL_ARRAY_BUFFER,mesh->vertex_buffer);
+#endif
         glVertexAttribPointer ( 0, 3, GL_FLOAT, false, sizeof(Vertex), (void*)0 );
         glEnableVertexAttribArray ( 0 ); 
 
@@ -282,26 +310,49 @@ public:
             //glGenerateMipmap(GL_TEXTURE_2D);
 
     }
-
+    
     #ifdef ANDROID
     struct android_app * app;
     #endif
-
+#ifdef ES2
    public:
+   void load_mesh_texture(EMesh* mesh){
+        AssetManager assets;
+        #ifdef ANDROID
+            
+            image_size size = assets.load_bmp("police_patrol.pvn",app->activity->assetManager);    //TODO: load texture with android path        
+        #else                   
+            
+            image_size size = assets.load_and_get_size(mesh->texture_path.c_str());      
+        #endif
+       
+        glActiveTexture(GL_TEXTURE0);
+        glGenTextures(1, &mesh->texture_id);
+        glBindTexture(GL_TEXTURE_2D,mesh->texture_id);
+                    
+        glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,size.width,size.heigth,0,GL_RGB,GL_UNSIGNED_BYTE,size.data);
+        
+        
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        //glGenerateMipmap(GL_TEXTURE_2D);
+   }
+
+#endif
        void render(){
                        
-            glViewport(0,0,800,600);
-
-            glClearColor(0.2, 0.0, 0.0, 1.0);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-            glUseProgram  ( shaderProgram );
             
-           // update_mvp();
+
+            
+            
+            //update_mvp();
             
              
 
             #ifdef ANDROID
+                glUseProgram  ( shaderProgram );
                 draw_mesh();   
 //                engine.window_manager.swap_buffers();
             #endif
@@ -328,6 +379,26 @@ public:
              
   
     }
+    void update_mvp(EMesh* mesh){
+       
+       
+                static auto startTime = std::chrono::high_resolution_clock::now();
+                auto currentTime = std::chrono::high_resolution_clock::now();
+                float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
+
+                glm::mat4 model = glm::mat4(1.0);
+                glm::mat4 Projection = glm::perspective(glm::radians(45.f), 768.f/1280.f, 0.01f, 5000.f);
+                glm::mat4 view = glm::lookAt(vec3(0,15,0),vec3(0,0,0),vec3(0,0,1));
+
+                model = glm::rotate(model, time * glm::radians(12.f), glm::vec3(0.0f, 1.0f, 1.0f));
+                //model = rotate(model, radians(90.f),vec3(1.0f,0.0f,0.0f));
+                mat4 mvp = Projection * view * mesh->model_matrix;
+
+                glUniformMatrix4fv(0,1,GL_FALSE,&mvp[0][0]);
+            
+             
+  
+    }
 
     void draw_mesh(){
             
@@ -340,12 +411,17 @@ public:
 
             glDrawArrays(GL_TRIANGLES,0,3);
             //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
     }
 #ifndef ANDROID
     void draw(EMesh* mesh){
+        glUseProgram  ( mesh->shader_program );
+        glBindTexture(GL_TEXTURE_2D,mesh->texture_id);
+        update_mvp(mesh);
         glBindBuffer(GL_ARRAY_BUFFER,mesh->vertex_buffer);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,mesh->indices_buffer);
         glDrawElements(GL_TRIANGLES,mesh->indices.size(),GL_UNSIGNED_INT,(void*)0);
+
 
     }
 #endif

@@ -12,7 +12,7 @@
         #include <vulkan/vulkan.h>
         #include "VulkanDevice.hpp"
     #else
-        #include <GL/gl.h>
+        #include <GLES2/gl2.h>
     #endif
     #include <glm/gtc/quaternion.hpp>
 #else
@@ -33,14 +33,16 @@
 #define MESH_TYPE_SKINNED 1
 
 namespace engine{
-    #ifdef VULKAN
+   
     struct pipeline_data{
         std::string vertex_shader_path;
         std::string fragment_shader_path;
+        #ifdef VULKAN
         VkPrimitiveTopology draw_type;
+        #endif
         int mesh_type;
     };
-    #endif
+    
     struct Node;
     struct Skin {
         Node *skeleton_root = nullptr;
@@ -127,9 +129,11 @@ public:
 #ifdef ES2
     GLuint vertex_buffer;
 	GLuint indices_buffer;
+    GLuint shader_program;
+    GLuint texture_id;
 #endif
     UniformBufferObject ubo;
-    
+    pipeline_data data;
 		
 };
 #include "Node.h"

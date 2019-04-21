@@ -33,6 +33,12 @@ class Engine {
 public:
     Renderer renderer;
 #endif
+#ifdef ES2  
+    
+public:
+    Renderer renderer;
+    
+#endif
 public:
     WindowManager window_manager;
     AssetManager objects_manager;
@@ -95,12 +101,7 @@ public:
 #endif//end no define android
 
     
-#ifdef ES2  
-    
-public:
-    Renderer renderer;
-    
-#endif
+
 
     
 };
