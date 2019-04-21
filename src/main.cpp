@@ -28,7 +28,7 @@
                 }
                   
                     while(1){
-                        
+                        engine.window_manager.check_events();
                         for(EMesh* mesh : engine.meshes){
                             engine.renderer.activate_vertex_attributes(mesh);
                             engine.renderer.draw(mesh);

@@ -61,7 +61,14 @@ void WindowManager::configure_egl(){
    eglMakeCurrent( egl_display, egl_surface, egl_surface, egl_context );
 }
 
-
+void WindowManager::check_events(){
+   XEvent  xev;
+   XNextEvent( x_display, &xev );
+   if ( xev.type == KeyPress ){
+      std::cout << "key pressed \n";
+   }
+   
+}
 
 void WindowManager::create_window_xorg(){
        ///////  the X11 part  //////////////////////////////////////////////////////////////////

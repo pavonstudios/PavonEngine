@@ -47,6 +47,7 @@ public:
                         
             void create_window_xorg();
             void clear();
+            void check_events();
             
         private:
             void configure_egl();
