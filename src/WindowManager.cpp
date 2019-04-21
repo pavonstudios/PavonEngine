@@ -63,10 +63,24 @@ void WindowManager::configure_egl(){
 
 void WindowManager::check_events(){
    XEvent  xev;
+   KeySym key;		
+	char text[255];		
    XNextEvent( x_display, &xev );
    if ( xev.type == KeyPress ){
       std::cout << "key pressed \n";
    }
+
+      /* use the XLookupString routine to convert the invent
+		   KeyPress data into regular text.  Weird but necessary...
+		*/
+   if (xev.type==KeyPress&&
+		    XLookupString(&xev.xkey,text,255,&key,0)==1) {
+		
+			if (text[0]=='q') {
+				
+			}
+			//printf("You pressed the %c key!\n",text[0]);
+		}
    
 }
 
