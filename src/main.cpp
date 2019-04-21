@@ -38,6 +38,7 @@
                         engine.window_manager.swap_buffers();
                     }              
             #endif
+            
             #ifdef VULKAN
                 engine.Execute();
             #endif
