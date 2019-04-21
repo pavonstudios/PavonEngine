@@ -132,7 +132,7 @@ public:
     Gluint shader_program;
 #endif
     UniformBufferObject ubo;
-    
+    pipeline_data data;
 		
 };
 #include "Node.h"

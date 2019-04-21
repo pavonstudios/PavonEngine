@@ -146,13 +146,9 @@ private:
     }
      void load_shaders(EMesh* mesh){
 
-        #ifdef ANDROID
-            char* vertex_shader_src = load_shader_file("vert.glsl");
-            char* fragment_shader_src = load_shader_file("frag.glsl");
-        #else
-            char* vertex_shader_src = load_shader_file("android/app/src/main/assets/vert.glsl");
-            char* fragment_shader_src = load_shader_file("android/app/src/main/assets/frag.glsl");
-        #endif      
+        char* vertex_shader_src = load_shader_file(mesh->data.vertex_shader_path.c_str());
+        char* fragment_shader_src = load_shader_file(mesh->data.fragment_shader_path.c_str());
+         
 
         GLuint vertexShader   = load_shader ( vertex_shader_src , GL_VERTEX_SHADER  );     // load vertex shader
         GLuint fragmentShader = load_shader ( fragment_shader_src , GL_FRAGMENT_SHADER );  // load fragment shader
