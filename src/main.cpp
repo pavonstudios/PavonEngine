@@ -15,16 +15,17 @@
                 std::cout << "openg gl es2\n ";
                 
                 engine.load_map("map01.map");
+                int id_object = 0;
                 engine.renderer.init_gl();
-                engine.meshes[4]->data = data;
-                engine.renderer.load_shaders(engine.meshes[4]);
-                engine.meshes[4]->create_buffers();
+                engine.meshes[id_object]->data = data;
+                engine.renderer.load_shaders(engine.meshes[id_object]);
+                engine.meshes[id_object]->create_buffers();
                 engine.renderer.activate_vertex_attributes();
-                engine.renderer.load_mesh_texture(engine.meshes[4]);
+                engine.renderer.load_mesh_texture(engine.meshes[id_object]);
                 
                     while(1){
                         engine.renderer.render();
-                        engine.renderer.draw(engine.meshes[4]);
+                        engine.renderer.draw(engine.meshes[id_object]);
                         engine.window_manager.swap_buffers();
                         
                     }              

@@ -146,6 +146,7 @@ private:
     }
      
 public:
+#ifdef ES2
     void load_shaders(EMesh* mesh){
 
         char* vertex_shader_src = load_shader_file(mesh->data.vertex_shader_path.c_str());
@@ -163,6 +164,8 @@ public:
         glLinkProgram ( mesh->shader_program  );    // link the program
        
     }
+
+#endif
     void init_gl(){
        
         glEnable(GL_DEPTH_TEST);
@@ -305,7 +308,7 @@ public:
     #ifdef ANDROID
     struct android_app * app;
     #endif
-
+#ifdef ES2
    public:
    void load_mesh_texture(EMesh* mesh){
         AssetManager assets;
@@ -330,7 +333,8 @@ public:
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         //glGenerateMipmap(GL_TEXTURE_2D);
    }
-   
+
+#endif
        void render(){
                        
             glViewport(0,0,800,600);
@@ -340,7 +344,7 @@ public:
 
             
             
-            update_mvp();
+            //update_mvp();
             
              
 
@@ -372,6 +376,26 @@ public:
              
   
     }
+    void update_mvp(EMesh* mesh){
+       
+       
+                static auto startTime = std::chrono::high_resolution_clock::now();
+                auto currentTime = std::chrono::high_resolution_clock::now();
+                float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
+
+                glm::mat4 model = glm::mat4(1.0);
+                glm::mat4 Projection = glm::perspective(glm::radians(45.f), 768.f/1280.f, 0.01f, 5000.f);
+                glm::mat4 view = glm::lookAt(vec3(0,15,0),vec3(0,0,0),vec3(0,0,1));
+
+                model = glm::rotate(model, time * glm::radians(12.f), glm::vec3(0.0f, 1.0f, 1.0f));
+                //model = rotate(model, radians(90.f),vec3(1.0f,0.0f,0.0f));
+                mat4 mvp = Projection * view * mesh->model_matrix;
+
+                glUniformMatrix4fv(0,1,GL_FALSE,&mvp[0][0]);
+            
+             
+  
+    }
 
     void draw_mesh(){
             
@@ -388,6 +412,7 @@ public:
 #ifndef ANDROID
     void draw(EMesh* mesh){
         glUseProgram  ( mesh->shader_program );
+        update_mvp(mesh);
         glBindBuffer(GL_ARRAY_BUFFER,mesh->vertex_buffer);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,mesh->indices_buffer);
         glDrawElements(GL_TRIANGLES,mesh->indices.size(),GL_UNSIGNED_INT,(void*)0);
