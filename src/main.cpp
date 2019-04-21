@@ -15,10 +15,8 @@
                 std::cout << "openg gl es2\n ";
                 
                 engine.load_map("map01.map");
-                int id_object =0  ;
-                int id_secode = 4;
-                engine.renderer.init_gl();
                 
+                engine.renderer.init_gl();                
             
                 for(EMesh* mesh : engine.meshes){
                     mesh->data = data;
@@ -29,6 +27,7 @@
                   
                     while(1){
                         engine.window_manager.check_events();
+                        
                         for(EMesh* mesh : engine.meshes){
                             engine.renderer.activate_vertex_attributes(mesh);
                             engine.update_mvp(mesh);
@@ -43,7 +42,6 @@
                 engine.Execute();
             #endif
 
-            //pthread_exit(NULL);
             return EXIT_SUCCESS;      
         }
    
