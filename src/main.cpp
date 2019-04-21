@@ -19,25 +19,21 @@
                 int id_secode = 4;
                 engine.renderer.init_gl();
                 
-                
-                    engine.meshes[id_object]->data = data;
-                    engine.renderer.load_shaders(engine.meshes[id_object]);
-                    engine.meshes[0]->create_buffers();
-                    engine.renderer.load_mesh_texture(engine.meshes[id_object]);
-                    id_object = 4;
-                     engine.meshes[id_object]->data = data;
-                    engine.renderer.load_shaders(engine.meshes[id_object]);
-                    engine.meshes[4]->create_buffers();
-                    engine.renderer.load_mesh_texture(engine.meshes[id_object]);
-                    
-                    id_object = 0;
+            
+                for(EMesh* mesh : engine.meshes){
+                    mesh->data = data;
+                    engine.renderer.load_shaders(mesh);
+                    mesh->create_buffers();
+                    engine.renderer.load_mesh_texture(mesh);
+                }
+                  
                     while(1){
-                        engine.renderer.activate_vertex_attributes(engine.meshes[0]);
-                        engine.renderer.draw(engine.meshes[0]);
                         
-                      engine.renderer.activate_vertex_attributes(engine.meshes[4]);
-                        engine.renderer.draw(engine.meshes[4]);
-                        
+                        for(EMesh* mesh : engine.meshes){
+                            engine.renderer.activate_vertex_attributes(mesh);
+                            engine.renderer.draw(mesh);
+                        }
+                      
                         
                         engine.window_manager.swap_buffers();
                     }              

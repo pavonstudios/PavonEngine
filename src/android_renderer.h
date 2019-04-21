@@ -267,8 +267,9 @@ public:
         activate_vertex_attributes(mesh);
     }
     void activate_vertex_attributes(EMesh* mesh){
+#ifdef ES2
         glBindBuffer(GL_ARRAY_BUFFER,mesh->vertex_buffer);
-
+#endif
         glVertexAttribPointer ( 0, 3, GL_FLOAT, false, sizeof(Vertex), (void*)0 );
         glEnableVertexAttribArray ( 0 ); 
 
