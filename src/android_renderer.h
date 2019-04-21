@@ -144,6 +144,27 @@ private:
         glLinkProgram ( shaderProgram );    // link the program
        
     }
+     void load_shaders(EMesh* mesh){
+
+        #ifdef ANDROID
+            char* vertex_shader_src = load_shader_file("vert.glsl");
+            char* fragment_shader_src = load_shader_file("frag.glsl");
+        #else
+            char* vertex_shader_src = load_shader_file("android/app/src/main/assets/vert.glsl");
+            char* fragment_shader_src = load_shader_file("android/app/src/main/assets/frag.glsl");
+        #endif      
+
+        GLuint vertexShader   = load_shader ( vertex_shader_src , GL_VERTEX_SHADER  );     // load vertex shader
+        GLuint fragmentShader = load_shader ( fragment_shader_src , GL_FRAGMENT_SHADER );  // load fragment shader
+
+        
+        mesh->shader_program = glCreateProgram ();                 // create program object
+        glAttachShader ( mesh->shader_program, vertexShader );             // and attach both...
+        glAttachShader ( mesh->shader_program, fragmentShader );           // ... shaders to it
+
+        glLinkProgram ( mesh->shader_program  );    // link the program
+       
+    }
 public:
     void init_gl(){
        
@@ -295,13 +316,14 @@ public:
             glClearColor(0.2, 0.0, 0.0, 1.0);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            glUseProgram  ( shaderProgram );
+            
             
            // update_mvp();
             
              
 
             #ifdef ANDROID
+                glUseProgram  ( shaderProgram );
                 draw_mesh();   
 //                engine.window_manager.swap_buffers();
             #endif
@@ -343,6 +365,7 @@ public:
     }
 #ifndef ANDROID
     void draw(EMesh* mesh){
+        glUseProgram  ( mesh->shader_program );
         glBindBuffer(GL_ARRAY_BUFFER,mesh->vertex_buffer);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,mesh->indices_buffer);
         glDrawElements(GL_TRIANGLES,mesh->indices.size(),GL_UNSIGNED_INT,(void*)0);

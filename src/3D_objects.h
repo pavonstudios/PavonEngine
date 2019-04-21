@@ -33,14 +33,16 @@
 #define MESH_TYPE_SKINNED 1
 
 namespace engine{
-    #ifdef VULKAN
+   
     struct pipeline_data{
         std::string vertex_shader_path;
         std::string fragment_shader_path;
+        #ifdef VULKAN
         VkPrimitiveTopology draw_type;
+        #endif
         int mesh_type;
     };
-    #endif
+    
     struct Node;
     struct Skin {
         Node *skeleton_root = nullptr;
@@ -127,6 +129,7 @@ public:
 #ifdef ES2
     GLuint vertex_buffer;
 	GLuint indices_buffer;
+    Gluint shader_program;
 #endif
     UniformBufferObject ubo;
     
