@@ -144,7 +144,9 @@ private:
         glLinkProgram ( shaderProgram );    // link the program
        
     }
-     void load_shaders(EMesh* mesh){
+     
+public:
+    void load_shaders(EMesh* mesh){
 
         char* vertex_shader_src = load_shader_file(mesh->data.vertex_shader_path.c_str());
         char* fragment_shader_src = load_shader_file(mesh->data.fragment_shader_path.c_str());
@@ -161,14 +163,14 @@ private:
         glLinkProgram ( mesh->shader_program  );    // link the program
        
     }
-public:
     void init_gl(){
        
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LESS);           
 
-        load_shaders();
+        
         #ifdef ANDROID
+            load_shaders();
             //init_3d_model();
             create_triangule();
             create_texture();
@@ -314,7 +316,7 @@ public:
 
             
             
-           // update_mvp();
+            update_mvp();
             
              
 

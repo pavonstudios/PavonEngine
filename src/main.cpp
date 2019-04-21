@@ -7,11 +7,17 @@
             
             Engine engine;
             engine.window_manager.create_window();
+            pipeline_data data = {};
+                data.fragment_shader_path = "android/app/src/main/assets/frag.glsl";
+                data.vertex_shader_path = "android/app/src/main/assets/vert_mvp.glsl";
+                
             #ifdef ES2
                 std::cout << "openg gl es2\n ";
                 
                 engine.load_map("map01.map");
                 engine.renderer.init_gl();
+                engine.meshes[4]->data = data;
+                engine.renderer.load_shaders(engine.meshes[4]);
                 engine.meshes[4]->create_buffers();
                 engine.renderer.activate_vertex_attributes();
                 engine.renderer.create_texture();

@@ -12,7 +12,7 @@
         #include <vulkan/vulkan.h>
         #include "VulkanDevice.hpp"
     #else
-        #include <GL/gl.h>
+        #include <GLES2/gl2.h>
     #endif
     #include <glm/gtc/quaternion.hpp>
 #else
@@ -129,7 +129,7 @@ public:
 #ifdef ES2
     GLuint vertex_buffer;
 	GLuint indices_buffer;
-    Gluint shader_program;
+    GLuint shader_program;
 #endif
     UniformBufferObject ubo;
     pipeline_data data;
