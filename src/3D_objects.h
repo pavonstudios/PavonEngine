@@ -130,6 +130,7 @@ public:
     GLuint vertex_buffer;
 	GLuint indices_buffer;
     GLuint shader_program;
+    GLuint texture_id;
 #endif
     UniformBufferObject ubo;
     pipeline_data data;

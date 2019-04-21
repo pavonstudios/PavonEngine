@@ -301,12 +301,36 @@ public:
             //glGenerateMipmap(GL_TEXTURE_2D);
 
     }
-
+    
     #ifdef ANDROID
     struct android_app * app;
     #endif
 
    public:
+   void load_mesh_texture(EMesh* mesh){
+        AssetManager assets;
+        #ifdef ANDROID
+            
+            image_size size = assets.load_bmp("police_patrol.pvn",app->activity->assetManager);    //TODO: load texture with android path        
+        #else                   
+            
+            image_size size = assets.load_and_get_size(mesh->texture_path.c_str());      
+        #endif
+       
+        glActiveTexture(GL_TEXTURE0);
+        glGenTextures(1, &mesh->texture_id);
+        glBindTexture(GL_TEXTURE_2D,mesh->texture_id);
+                    
+        glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,size.width,size.heigth,0,GL_RGB,GL_UNSIGNED_BYTE,size.data);
+        
+        
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        //glGenerateMipmap(GL_TEXTURE_2D);
+   }
+   
        void render(){
                        
             glViewport(0,0,800,600);

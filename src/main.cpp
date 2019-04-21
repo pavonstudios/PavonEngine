@@ -20,7 +20,8 @@
                 engine.renderer.load_shaders(engine.meshes[4]);
                 engine.meshes[4]->create_buffers();
                 engine.renderer.activate_vertex_attributes();
-                engine.renderer.create_texture();
+                engine.renderer.load_mesh_texture(engine.meshes[4]);
+                
                     while(1){
                         engine.renderer.render();
                         engine.renderer.draw(engine.meshes[4]);
