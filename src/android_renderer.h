@@ -167,6 +167,10 @@ public:
 
 #endif
     void init_gl(){
+        glViewport(0,0,800,600);
+
+        glClearColor(0.2, 0.0, 0.0, 1.0);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
        
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LESS);           
@@ -260,10 +264,11 @@ public:
         int incood = glGetAttribLocation(shaderProgram,"inUV");
         int samplerid = glGetUniformLocation(shaderProgram, "texture_sampler");
          
-        activate_vertex_attributes();
+        activate_vertex_attributes(mesh);
     }
-    void activate_vertex_attributes(){
-              
+    void activate_vertex_attributes(EMesh* mesh){
+        glBindBuffer(GL_ARRAY_BUFFER,mesh->vertex_buffer);
+
         glVertexAttribPointer ( 0, 3, GL_FLOAT, false, sizeof(Vertex), (void*)0 );
         glEnableVertexAttribArray ( 0 ); 
 
@@ -337,10 +342,7 @@ public:
 #endif
        void render(){
                        
-            glViewport(0,0,800,600);
-
-            glClearColor(0.2, 0.0, 0.0, 1.0);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            
 
             
             
@@ -408,14 +410,17 @@ public:
 
             glDrawArrays(GL_TRIANGLES,0,3);
             //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
     }
 #ifndef ANDROID
     void draw(EMesh* mesh){
         glUseProgram  ( mesh->shader_program );
+        glBindTexture(GL_TEXTURE_2D,mesh->texture_id);
         update_mvp(mesh);
         glBindBuffer(GL_ARRAY_BUFFER,mesh->vertex_buffer);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,mesh->indices_buffer);
         glDrawElements(GL_TRIANGLES,mesh->indices.size(),GL_UNSIGNED_INT,(void*)0);
+
 
     }
 #endif
