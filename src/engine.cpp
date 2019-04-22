@@ -83,73 +83,9 @@ void Engine::update_window_size(){
 	main_camera.update_projection_matrix();
 }
 
- void Engine::mouse_callback(GLFWwindow* window, double xpos, double ypos){
-	#ifdef VULKAN
-	  auto app = reinterpret_cast<Renderer*>(glfwGetWindowUserPointer(window));
-	#endif
+ 
 
-		if(!app){
-			throw std::runtime_error("no app pointer");
-		}
-	
-	if(app->engine->input.move_camera){
-		if(app->engine->input.first_mouse){
-			app->engine->input.lastX = xpos;
-			app->engine->input.lastY = ypos;
-			app->engine->input.first_mouse = false;
-		}
 
-		float xoffset = xpos - app->engine->input.lastX ;
-		float yoffset = app->engine->input.lastY - ypos; // reversed since y-coordinates range from bottom to top
-		app->engine->input.lastX = xpos;
-		app->engine->input.lastY = ypos;
-
-		float sensitivity = 0.05f;
-		xoffset *= sensitivity;
-		yoffset *= sensitivity;
-
-		app->engine->input.yaw   += xoffset;
-		app->engine->input.pitch += yoffset;  
-
-		if(app->engine->input.pitch > 89.0f)
-			app->engine->input.pitch =  89.0f;
-		if(app->engine->input.pitch < -89.0f)
-			app->engine->input.pitch = -89.0f;		
-
-	}//end right click pressed
-	
-	
-
-}
-
-void Engine::mouse_button_callback(GLFWwindow* window, int button, int action, int mods){
-	#ifdef VULKAN
-		auto app = reinterpret_cast<Renderer*>(glfwGetWindowUserPointer(window));
-	#endif
-
-		if (button == GLFW_MOUSE_BUTTON_RIGHT ){
-			if(action == GLFW_PRESS){
-				app->engine->input.right_button_pressed = true;
-				glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);  
-				app->engine->input.move_camera = false;
-			}
-			if(action == GLFW_RELEASE){
-				app->engine->input.right_button_pressed = false;
-			}
-
-		}
-		if (button == GLFW_MOUSE_BUTTON_LEFT ){
-			if(action == GLFW_PRESS){
-				glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); 
-				app->engine->input.move_camera = true; 
-			}
-			if(action == GLFW_RELEASE){
-				//app->engine->input.right_button_pressed = false;
-			}
-
-		}
-
-}
 
 
 void Engine::update_input(){
@@ -270,8 +206,8 @@ void Engine::InitWindow(){
 			glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
 			glfwSetInputMode(window, GLFW_STICKY_KEYS, 1);
 			glfwSetKeyCallback(window, input.key_callback);
-			glfwSetCursorPosCallback(window, mouse_callback);
-			glfwSetMouseButtonCallback(window,mouse_button_callback);
+			glfwSetCursorPosCallback(window, input.mouse_callback);
+			glfwSetMouseButtonCallback(window,input.mouse_button_callback);
 			glfwSetScrollCallback(window,input.scroll_callback);
 	#endif		
 

@@ -96,8 +96,6 @@ public:
     #ifdef VULKAN
         static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
     #endif
-        static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
-        static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 	       
 
 #endif//end no define android

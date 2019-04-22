@@ -102,3 +102,67 @@ void Input::key_callback(GLFWwindow* window, int key, int scancode, int action, 
            #endif
            
 }
+void Input::mouse_callback(GLFWwindow* window, double xpos, double ypos){
+	#ifdef VULKAN
+	  auto engine = reinterpret_cast<Engine*>(glfwGetWindowUserPointer(window));
+	
+		
+	
+	if(engine->input.move_camera){
+		if(engine->input.first_mouse){
+			engine->input.lastX = xpos;
+			engine->input.lastY = ypos;
+			engine->input.first_mouse = false;
+		}
+
+		float xoffset = xpos - engine->input.lastX ;
+		float yoffset = engine->input.lastY - ypos; // reversed since y-coordinates range from bottom to top
+		engine->input.lastX = xpos;
+		engine->input.lastY = ypos;
+
+		float sensitivity = 0.05f;
+		xoffset *= sensitivity;
+		yoffset *= sensitivity;
+
+		engine->input.yaw   += xoffset;
+		engine->input.pitch += yoffset;  
+
+		if(engine->input.pitch > 89.0f)
+			engine->input.pitch =  89.0f;
+		if(engine->input.pitch < -89.0f)
+			engine->input.pitch = -89.0f;		
+
+	}//end right click pressed
+	
+	#endif
+
+}
+
+void Input::mouse_button_callback(GLFWwindow* window, int button, int action, int mods){
+	#ifdef VULKAN
+		auto engine = reinterpret_cast<Engine*>(glfwGetWindowUserPointer(window));
+	#endif
+
+		if (button == GLFW_MOUSE_BUTTON_RIGHT ){
+			if(action == GLFW_PRESS){
+				engine->input.right_button_pressed = true;
+				glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);  
+				engine->input.move_camera = false;
+			}
+			if(action == GLFW_RELEASE){
+				engine->input.right_button_pressed = false;
+			}
+
+		}
+		if (button == GLFW_MOUSE_BUTTON_LEFT ){
+			if(action == GLFW_PRESS){
+				glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); 
+				engine->input.move_camera = true; 
+			}
+			if(action == GLFW_RELEASE){
+				//app->engine->input.right_button_pressed = false;
+			}
+
+		}
+
+}
