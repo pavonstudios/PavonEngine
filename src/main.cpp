@@ -7,6 +7,7 @@
             
             Engine engine;
             engine.window_manager.create_window();
+            engine.window_manager.engine = &engine;
             pipeline_data data = {};
                 data.fragment_shader_path = "android/app/src/main/assets/frag.glsl";
                 data.vertex_shader_path = "android/app/src/main/assets/vert_mvp.glsl";
@@ -21,6 +22,7 @@
             #ifdef VULKAN
                 engine.app.configure_objects();
             #endif
+
             #ifdef ES2
                 std::cout << "openg gl es2\n ";             
                
@@ -35,7 +37,7 @@
                   
                     while(1){
                         engine.window_manager.check_events();
-                        
+                        engine.update_input();
                         for(EMesh* mesh : engine.meshes){
                             engine.renderer.activate_vertex_attributes(mesh);
                             engine.update_mvp(mesh);

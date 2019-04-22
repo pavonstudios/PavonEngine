@@ -28,9 +28,9 @@ full: $(OBJs) game $(game) renderer.o WindowManager.o
 
 .ONESHELL:
 es2: DEFINES := -DES2
-es2: engine.o WindowManager.o 3D_objects.o asset_manager.o
+es2: engine.o WindowManager.o 3D_objects.o asset_manager.o camera.o input.o
 	mkdir -p bin && cd src
-	$(CC) main.cpp -o ../renderer model_loader.o engine.o WindowManager.o 3D_objects.o asset_manager.o $(Library) $(INCLUDE_OPENGL) -I./ $(DEFINES) -DGLTF -lEGL -lX11 -lGLESv2
+	$(CC) main.cpp -o ../renderer model_loader.o engine.o WindowManager.o 3D_objects.o asset_manager.o camera.o input.o $(Library) $(INCLUDE_OPENGL) -I./ $(DEFINES) -DGLTF -lEGL -lX11 -lGLESv2
 
 .ONESHELL:
 gl: DEFINES=-Dch 

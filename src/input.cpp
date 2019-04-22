@@ -1,10 +1,9 @@
-
-
 #include "engine.h"
 #include "input.h"
 #include "3D_objects.h"
 #include "camera.h"
 
+#ifdef VULKAN
 void Input::scroll_callback(GLFWwindow* window, double xoffset, double yoffset){
 			#ifdef VULKAN
 	  			auto engine = reinterpret_cast<Engine*>(glfwGetWindowUserPointer(window));
@@ -165,4 +164,17 @@ void Input::mouse_button_callback(GLFWwindow* window, int button, int action, in
 
 		}
 
+}
+#endif//end if define vulkan
+
+void Input::key_verifier_pressed(char character){
+	if(character == 'w'){
+		this->W.bIsPressed = true;
+	}
+}
+
+void Input::key_verifier_released(char character){
+	if(character == 'w'){
+		this->W.bIsPressed = false;
+	}
 }

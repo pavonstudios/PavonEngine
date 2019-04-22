@@ -79,44 +79,7 @@ void Engine::update_window_size(){
 	main_camera.update_projection_matrix();
 }
 
-void Engine::update_input(){
-	
-	if(edit_mode){
-			if(input.S.bIsPressed){
-				main_camera.MoveBackward();
-				
-			}
-			if(input.W.bIsPressed){
-				main_camera.MoveForward();
-			}
-			if(input.A.bIsPressed){		
-				main_camera.MoveLeft();
-			}
-			if(input.D.bIsPressed){		
-				main_camera.MoveRight();
-				
-			}
-			if(input.Z.bIsPressed){
-				meshes[1]->nodes[2]->move_root();
-			}
-			if(input.X.bIsPressed){	
-				meshes[1]->nodes[2]->rotate();
-			}
 
-			if(input.Q.bIsPressed){
-				main_camera.MoveDown();
-			}
-			if(input.E.bIsPressed){
-				main_camera.MoveUp();
-			}
-
-			if(input.move_camera){
-				main_camera.mouse_control_update(input.yaw, input.pitch);
-
-			}
-
-	}
-}
 
 
 void Engine::init_renderer(){
@@ -246,5 +209,45 @@ void Engine::load_map(std::string path){
 	meshes[i]->texture_path = textures_paths[i];
 	}
 	
+}
+void Engine::update_input(){
+	
+	if(edit_mode){
+			if(input.S.bIsPressed){
+				main_camera.MoveBackward();				
+			}
+
+			if(input.W.bIsPressed){
+				main_camera.MoveForward();
+			}
+
+			if(input.A.bIsPressed){		
+				main_camera.MoveLeft();
+			}
+
+			if(input.D.bIsPressed){		
+				main_camera.MoveRight();	
+			}
+			
+			if(input.Z.bIsPressed){
+				meshes[1]->nodes[2]->move_root();
+			}
+			if(input.X.bIsPressed){	
+				meshes[1]->nodes[2]->rotate();
+			}
+
+			if(input.Q.bIsPressed){
+				main_camera.MoveDown();
+			}
+			if(input.E.bIsPressed){
+				main_camera.MoveUp();
+			}
+
+			if(input.move_camera){
+				main_camera.mouse_control_update(input.yaw, input.pitch);
+
+			}
+
+	}
 }
 #endif//if not define android

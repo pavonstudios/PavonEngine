@@ -4,6 +4,7 @@
 #ifdef ANDROID
 
 #else
+#include "engine.h"
 void WindowManager::configure_egl(){
     ///////  the egl part  //////////////////////////////////////////////////////////////////
    //  egl provides an interface to connect the graphics related functionality of openGL ES
@@ -79,9 +80,14 @@ void WindowManager::check_events(){
 			if (text[0]=='q') {
 				
 			}
-			//printf("You pressed the %c key!\n",text[0]);
+         engine->input.key_verifier_pressed(text[0]);
+
 		}
-   
+   if (xev.type==KeyRelease &&
+		    XLookupString(&xev.xkey,text,255,&key,0)==1) {
+
+         engine->input.key_verifier_released(text[0]);
+		}
 }
 
 void WindowManager::create_window_xorg(){

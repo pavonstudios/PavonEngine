@@ -17,15 +17,16 @@
 #endif
 #ifdef VULKAN
     #include "GLFW/glfw3.h"
-
 #endif
 
 #include  <iostream>
 #include  <cstdlib>
 #include  <cstring>
+class Engine;
 
 class WindowManager{
 public:
+    Engine* engine;
     void create_window();
     void swap_buffers();
     ~WindowManager();
