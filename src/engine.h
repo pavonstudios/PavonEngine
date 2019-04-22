@@ -70,11 +70,11 @@ public:
         {
             return window;
         }
-        void InitWindow();
+        void configure_window_callback();
         void main_loop();
         void update_window_size();
         void delete_meshes();
-        void Execute();    
+        void init_renderer();    
         void load_and_assing_location(std::string path, glm::vec3 location);
         void load_map(std::string path);
         float get_time();

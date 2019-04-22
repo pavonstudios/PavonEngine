@@ -10,6 +10,11 @@
             pipeline_data data = {};
                 data.fragment_shader_path = "android/app/src/main/assets/frag.glsl";
                 data.vertex_shader_path = "android/app/src/main/assets/vert_mvp.glsl";
+            engine.configure_window_callback();
+
+             #ifdef VULKAN
+                engine.init_renderer();
+            #endif
                 
             #ifdef ES2
                 std::cout << "openg gl es2\n ";
@@ -40,8 +45,9 @@
             #endif
             
             #ifdef VULKAN
-                engine.Execute();
+                engine.main_loop();
             #endif
+           
 
             return EXIT_SUCCESS;      
         }

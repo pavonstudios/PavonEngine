@@ -24,6 +24,8 @@ Engine::Engine(){
 #endif
 #ifdef VULKAN
 void Engine::main_loop(){
+	std::cout << "Rendering" << std::endl;
+
 	ThirdPerson player;
 	player.engine = this;
 	player.mesh = meshes[3];
@@ -56,7 +58,7 @@ void Engine::main_loop(){
 				}			
 
 			glfwSwapBuffers(window);
-			
+
     }
 	app.finish();
 	glfwDestroyWindow(window);
@@ -117,20 +119,12 @@ void Engine::update_input(){
 }
 
 
-void Engine::Execute(){
-			
-      InitWindow();
-			
-			
+void Engine::init_renderer(){
+		
       #ifdef VULKAN
-				app.run(&vkdata);
-				
-				
+				app.run(&vkdata);		
 				load_map("Game/map01.map");//vulkan device must initialized 
 				app.configure_objects();
-				std::cout << "Rendering" << std::endl;
-				main_loop();
-				
 			#endif
 }
 
@@ -185,7 +179,7 @@ void Engine::update_mvp(EMesh* mesh){
 
 }
 
-void Engine::InitWindow(){			
+void Engine::configure_window_callback(){			
 	#ifdef VULKAN	
 			window = window_manager.get_window();
 			glfwSetWindowUserPointer(window, this);
