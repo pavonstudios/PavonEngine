@@ -457,8 +457,8 @@ void Renderer::create_meshes_graphics_pipeline(){
     pipeline_data data_static_mesh = {};
     data_static_mesh.draw_type = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
     data_static_mesh.mesh_type = MESH_TYPE_STATIC;
-    data_static_mesh.fragment_shader_path = "shaders/frag.spv";
-    data_static_mesh.vertex_shader_path = "shaders/vert.spv";
+    data_static_mesh.fragment_shader_path = "Game/Assets/shaders/frag.spv";
+    data_static_mesh.vertex_shader_path = "Game/Assets/shaders/vert.spv";
 
     pipeline_data data_static_skinned_mesh = {};
     data_static_skinned_mesh.draw_type = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;

@@ -201,7 +201,7 @@ void Engine::Execute(){
 				app.run(&vkdata);
 				
 				glfwSetScrollCallback(window,input.scroll_callback);
-				load_map("map01.map");//vulkan device must initialized 
+				load_map("Game/map01.map");//vulkan device must initialized 
 				app.configure_objects();
 				std::cout << "Rendering" << std::endl;
 				main_loop();
