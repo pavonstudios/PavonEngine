@@ -143,7 +143,7 @@ void WindowManager::create_window_xorg(){
    configure_egl();
    const float
       window_width  = 800.0,
-      window_height = 480.0;
+      window_height = 600.0;
  
 }
 

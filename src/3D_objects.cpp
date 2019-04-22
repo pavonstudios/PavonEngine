@@ -84,6 +84,18 @@ void EMesh::load_skins(){
     }
     
 }
+void EMesh::load_textures_gltf(){
+    if(gltf_model.images.size() > 0){
+        tinygltf::Image tiny_image = gltf_model.images[0];
+
+        unsigned char * image_data = nullptr;
+        u_int32_t image_size = 0;
+
+        image_data = &tiny_image.image[0];
+        image_size = tiny_image.image.size();
+    }
+    
+}
 
 void EMesh::load_node(engine::Node *parent, uint32_t index, const tinygltf::Node &gltf_node){
     Node *new_node = new Node{};
@@ -161,6 +173,7 @@ int EMesh::load_model_gltf(const char* path){
     }
     
     load_primitives_data();
+    load_textures_gltf();
 
     int node_count = gltf_model.nodes.size();
     for(size_t i = 0; i < node_count;i++){

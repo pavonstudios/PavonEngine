@@ -99,6 +99,7 @@ public:
     int load_mode_gltf_android(const char* path, AAssetManager* pAssetManager);
     #endif
     void load_primitives_data();
+    void load_textures_gltf();
     std::vector<Node*> nodes;
     std::vector<Node*> linear_nodes;
     std::vector<Skin*> skins;
