@@ -120,11 +120,10 @@ void Engine::update_input(){
 
 
 void Engine::init_renderer(){
-		
+
       #ifdef VULKAN
 				app.run(&vkdata);		
-				load_map("Game/map01.map");//vulkan device must initialized 
-				app.configure_objects();
+			//	load_map("Game/map01.map");//vulkan device must initialized before load object(it's becouse buffer need vulkan device for creation)	
 			#endif
 }
 

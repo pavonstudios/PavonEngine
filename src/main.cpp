@@ -12,15 +12,18 @@
                 data.vertex_shader_path = "android/app/src/main/assets/vert_mvp.glsl";
             engine.configure_window_callback();
 
-             #ifdef VULKAN
+            #ifdef VULKAN
                 engine.init_renderer();
             #endif
-                
+            
+            engine.load_map("Game/map01.map");
+
+            #ifdef VULKAN
+                engine.app.configure_objects();
+            #endif
             #ifdef ES2
-                std::cout << "openg gl es2\n ";
-                
-                engine.load_map("Game/map01.map");
-                
+                std::cout << "openg gl es2\n ";             
+               
                 engine.renderer.init_gl();                
             
                 for(EMesh* mesh : engine.meshes){
