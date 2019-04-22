@@ -195,13 +195,14 @@ void Engine::load_map(std::string path){
 				locations.push_back(location);
 				textures_paths.push_back(std::string(texture_path));
 			}
-			if ( strcmp( lineHeader, "mi" ) == 0 ){
+			if ( strcmp( lineHeader, "c" ) == 0 ){
 				char model_path[256];
 				glm::vec3 location;
 				char texture_path[256];
 				fscanf(file, "%s %f %f %f\n", model_path, &location.x, &location.y, &location.z);
 				models_paths.push_back(std::string(model_path));
 				locations.push_back(location);
+				textures_paths.push_back(std::string("Game/Assets/textures/car01.jpg"));
 			}
 			
 		}

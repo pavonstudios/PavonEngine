@@ -469,6 +469,7 @@ void Renderer::create_meshes_graphics_pipeline(){
     for (int i = 0; i< engine->meshes.size(); i++){
         createGraphicsPipeline(&data_static_mesh,&engine->meshes[i]->graphics_pipeline);
         createTextureImage(engine->meshes[i]->texture_path, engine->meshes[i]);
+        
     }
     //vkDestroyPipeline(device,engine->meshes.back()->graphics_pipeline,nullptr);//before change the pipeline, it must be destroyed
     

@@ -8,4 +8,4 @@ m Game/Assets/models/pavon_the_game/police_patrol.gltf 3 -6 0 Game/Assets/textur
 m Game/Assets/models/pavon_the_game/police_patrolLOD3.gltf -8 -6 0 Game/Assets/textures/car01.jpg
 m Game/Assets/models/pavon_the_game/road_plus_border_coast.gltf 0 0 0 /home/pavon/Textures/coust/modules_coust.png
 m Game/Assets/models/pavon_the_game/back_bulding.gltf 0 0 0 /home/pavon/Textures/Asuncion/bakcbuilding02.png
-mi Game/Assets/models/pavon_the_game/mercedes_benz_sprinter.gltf 5 5 0
+c Game/Assets/models/pavon_the_game/mercedes_benz_sprinter.gltf 8 10 0

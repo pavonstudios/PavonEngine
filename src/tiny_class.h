@@ -3,9 +3,6 @@
 #ifndef TINY_CLASS
 #define TINY_CLASS
 
-#define TINYGLTF_NO_STB_IMAGE
-#define TINYGLTF_NO_STB_IMAGE_WRITE
-//#define TINYGLTF_NO_EXTERNAL_IMAGE
 
 #ifdef TINYGLTF_ANDROID_LOAD_FROM_ASSETS
  #include <android/asset_manager.h>
@@ -121,6 +118,8 @@ class Model {
   Value extras;
 };
 
+
+
 ///
 /// LoadImageDataFunction type. Signature for custom image loading callbacks.
 ///
@@ -133,6 +132,20 @@ typedef bool (*LoadImageDataFunction)(Image *, const int, std::string *,
 ///
 typedef bool (*WriteImageDataFunction)(const std::string *, const std::string *,
                                        Image *, bool, void *);
+
+
+#ifndef TINYGLTF_NO_STB_IMAGE
+// Declaration of default image loader callback
+bool LoadImageData(Image *image, const int image_idx, std::string *err,
+                   std::string *warn, int req_width, int req_height,
+                   const unsigned char *bytes, int size, void *);
+#endif
+
+#ifndef TINYGLTF_NO_STB_IMAGE_WRITE
+// Declaration of default image writer callback
+bool WriteImageData(const std::string *basepath, const std::string *filename,
+                    Image *image, bool embedImages, void *);
+#endif
 
 
 ///
