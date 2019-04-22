@@ -1,7 +1,7 @@
 #include "asset_manager.h"
 #include "iostream"
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
+
+
 //#include "tiny_class.h"
 void AssetManager::free_image(void * pixels){
     stbi_image_free(pixels);

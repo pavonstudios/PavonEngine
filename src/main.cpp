@@ -1,5 +1,6 @@
-
+#define STB_IMAGE_IMPLEMENTATION
 #include "engine.h"
+
 #ifndef ANDROID
     
    
@@ -11,6 +12,7 @@
             pipeline_data data = {};
                 data.fragment_shader_path = "android/app/src/main/assets/frag.glsl";
                 data.vertex_shader_path = "android/app/src/main/assets/vert_mvp.glsl";
+
             engine.configure_window_callback();
 
             #ifdef VULKAN

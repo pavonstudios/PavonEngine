@@ -2,10 +2,10 @@ m Game/Assets/models/skydome.gltf 0 0 0 Game/Assets/textures/skydome.jpg
 m Game/Assets/models/pavon_the_game/terrain.gltf 0 0 0 /home/pavon/Textures/grass_texture/grass03.png
 m Game/Assets/models/pavon_the_game/building_front.gltf 0 0 0 Game/Assets/textures/building01.jpg
 m Game/Assets/models/pavon_the_game/police.gltf 0 0 0 Game/Assets/textures/character2.jpg
-m Game/Assets/models/pavon_the_game/police_patrol.gltf 0 0 0 Game/Assets/textures/car01.jpg
+m Game/Assets/models/pavon_the_game/police_patrol.gltf 0 12 0 Game/Assets/textures/car01.jpg
 m Game/Assets/models/pavon_the_game/police_patrol.gltf 5 5 0 Game/Assets/textures/car01.jpg
 m Game/Assets/models/pavon_the_game/police_patrol.gltf 3 -6 0 Game/Assets/textures/car01.jpg
 m Game/Assets/models/pavon_the_game/police_patrolLOD3.gltf -8 -6 0 Game/Assets/textures/car01.jpg
 m Game/Assets/models/pavon_the_game/road_plus_border_coast.gltf 0 0 0 /home/pavon/Textures/coust/modules_coust.png
 m Game/Assets/models/pavon_the_game/back_bulding.gltf 0 0 0 /home/pavon/Textures/Asuncion/bakcbuilding02.png
-c Game/Assets/models/pavon_the_game/mercedes_benz_sprinter.gltf 8 10 0
+c Game/Assets/models/pavon_the_game/mercedes_benz_sprinter.gltf 0 -10 0

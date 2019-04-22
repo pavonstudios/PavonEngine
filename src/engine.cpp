@@ -43,7 +43,7 @@ void Engine::main_loop(){
 
 			
 				auto tStart = std::chrono::high_resolution_clock::now();
-				app.main_loop();//draw frame
+					app.main_loop();//draw frame
 				frames++;
 
 				auto tEnd = std::chrono::high_resolution_clock::now();
