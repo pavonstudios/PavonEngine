@@ -39,9 +39,11 @@ public:
 	static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 	static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 	#endif
-	
+
 	void key_verifier_pressed(char character);
 	void key_verifier_released(char character);
+private:
+	void key_set(const char key, bool isPressed);
 
 };
 #endif

@@ -167,15 +167,34 @@ void Input::mouse_button_callback(GLFWwindow* window, int button, int action, in
 }
 #endif//end if define vulkan
 
-void Input::key_verifier_pressed(char character){
-	if(character == 'w'){
-		this->W.bIsPressed = true;
-	}
+void Input::key_verifier_pressed(char character){	
+	key_set(character,true);
 }
 
-void Input::key_verifier_released(char character){
-	if(character == 'w'){
-		this->W.bIsPressed = false;
+void Input::key_verifier_released(char character){	
+	key_set(character,false);
+}
+
+void Input::key_set(const char key, bool isPressed){
+	key_pressed *actual_key;
+	if(key == 'w'){
+		actual_key = &this->W;
 	}
-	
+	if(key == 's'){
+		actual_key = &this->S;
+	}
+	if(key == 'd'){
+		actual_key = &this->D;
+	}
+	if(key == 'a'){
+		actual_key = &this->A;
+	}
+
+	if(actual_key){
+		if(isPressed){
+		actual_key->bIsPressed = true;
+		}else{
+			actual_key->bIsPressed = false;
+		}
+	}
 }
