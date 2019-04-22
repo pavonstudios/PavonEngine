@@ -177,4 +177,5 @@ void Input::key_verifier_released(char character){
 	if(character == 'w'){
 		this->W.bIsPressed = false;
 	}
+	
 }

@@ -65,10 +65,16 @@ void WindowManager::configure_egl(){
 void WindowManager::check_events(){
    XEvent  xev;
    KeySym key;		
-	char text[255];		
+	char text[255];	
+   KeySym key_release;		
+	char key_release_char[255];	
    XNextEvent( x_display, &xev );
+
    if ( xev.type == KeyPress ){
-      std::cout << "key pressed \n";
+      //std::cout << "key pressed \n";
+   } 
+   if (xev.type == KeyRelease){
+     // std::cout << "key realease from window manager \n";
    }
 
       /* use the XLookupString routine to convert the invent
@@ -84,9 +90,9 @@ void WindowManager::check_events(){
 
 		}
    if (xev.type==KeyRelease &&
-		    XLookupString(&xev.xkey,text,255,&key,0)==1) {
+		    XLookupString(&xev.xkey,key_release_char,255,&key_release,0)==1) {
 
-         engine->input.key_verifier_released(text[0]);
+         engine->input.key_verifier_released(key_release_char[0]);
 		}
 }
 
@@ -104,7 +110,7 @@ void WindowManager::create_window_xorg(){
    Window root  =  DefaultRootWindow( x_display );   // get the root window (usually the whole screen)
  
    XSetWindowAttributes  swa;
-   swa.event_mask  =  ExposureMask | PointerMotionMask | KeyPressMask;
+   swa.event_mask  =  ExposureMask | PointerMotionMask | KeyPressMask | KeyReleaseMask;
  
    win  =  XCreateWindow (   // create a window with the provided parameters
               x_display, root,

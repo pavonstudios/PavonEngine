@@ -31,31 +31,25 @@ public:
 				glm::vec3(0,0,0), // and looks at the origin
 				glm::vec3(0,0,1)  // Head is up (set to 0,-1,0 to look upside-down)
 			);
-		
-		}
+	
+	}
+	
 	void update_projection_matrix(){
-		Projection = glm::perspective(glm::radians(45.f), screen_width/screen_height, 0.01f, 5000.f);
+	Projection = glm::perspective(glm::radians(45.f), screen_width/screen_height, 0.01f, 5000.f);
 	}
 	void update(){
-			View = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
-		};
-		void rotate(){
-			 /*   float radius = 10.0f;
-        float camX = sin(glfwGetTime()) * radius;
-        float camZ = cos(glfwGetTime()) * radius;
-        glm::mat4 view;
-        view = glm::lookAt(glm::vec3(camX, camZ, 0), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 1.0));   */
-		};
-		
-		float cameraSpeed = 0.05f; 
-		float velocity = 5.f;
-		void MoveForward();
-		void MoveBackward();
-		void MoveLeft();
-		void MoveRight();
-		void mouse_control_update(float , float);
-		void MoveUp();
-		void MoveDown();
+		View = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+	};		
+	
+	float cameraSpeed = 0.05f; 
+	float velocity = 5.f;
+	void MoveForward();
+	void MoveBackward();
+	void MoveLeft();
+	void MoveRight();
+	void mouse_control_update(float , float);
+	void MoveUp();
+	void MoveDown();
 };
 
 #endif
