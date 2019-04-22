@@ -4,7 +4,7 @@
 #include <sstream>
 #ifdef VULKAN
 	#include "Game/ThirdPerson.hpp"
-	#include "input_controller.h"
+	#include "input.h"
 #endif
 
 #ifndef ANDROID
@@ -200,7 +200,7 @@ void Engine::Execute(){
       #ifdef VULKAN
 				app.run(&vkdata);
 				
-				glfwSetScrollCallback(window,input.scroll_callback);
+				
 				load_map("Game/map01.map");//vulkan device must initialized 
 				app.configure_objects();
 				std::cout << "Rendering" << std::endl;

@@ -11,7 +11,7 @@
     #endif
 
     #include <GLFW/glfw3.h>
-    #include "input_controller.h"
+    #include "input.h"
     #include "camera.h"
 #else
 #include "android_renderer.h"
