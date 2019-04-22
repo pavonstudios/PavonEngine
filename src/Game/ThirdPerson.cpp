@@ -13,7 +13,6 @@ void ThirdPerson::move_forward(){
 	glm::mat4 translated =glm::translate(glm::mat4(1.0),glm::vec3(0,-1.5,-2.5));
 
 
-
 	this->engine->main_camera.View = translated * rotated3 * glm::inverse(this->mesh->model_matrix);
 	
 }

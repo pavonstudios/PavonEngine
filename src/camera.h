@@ -55,8 +55,7 @@ public:
 		void MoveRight();
 		void mouse_control_update(float , float);
 		void MoveUp();
-		void MoveDown();	
-
+		void MoveDown();
 };
 
 #endif

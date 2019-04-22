@@ -3,22 +3,17 @@
 #define _Engine_H_
 
 #ifndef ANDROID
-
     #ifdef VULKAN
         #include "renderer.h"
         #define GLFW_INCLUDE_VULKAN
         #include "VulkanData.hpp"
     #endif
-
     #include <GLFW/glfw3.h>
     #include "input.h"
-    #include "camera.h"
-#else
-#include "android_renderer.h"
-    
+    #include "camera.h" 
 #endif
-#ifdef ES2
-    
+
+#ifdef ES2    
     #include "android_renderer.h"
 #endif
 

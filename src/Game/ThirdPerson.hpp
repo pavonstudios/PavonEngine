@@ -9,7 +9,6 @@ class ThirdPerson{
 		void move_forward();
 		void monse_control(float yaw, float pitch);
 		void update();
-
 };
 
 #endif

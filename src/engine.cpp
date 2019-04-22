@@ -1,10 +1,7 @@
 #include "engine.h"
-
-
 #include <sstream>
 #ifdef VULKAN
-	#include "Game/ThirdPerson.hpp"
-	#include "input.h"
+	#include "Game/ThirdPerson.hpp"	
 #endif
 
 #ifndef ANDROID
@@ -56,11 +53,10 @@ void Engine::main_loop(){
 					last_fps = static_cast<uint32_t>((float)frames * (1000.0f / fps));
 					fps = 0;
 					frames = 0;
-				}
-
-			
+				}			
 
 			glfwSwapBuffers(window);
+			
     }
 	app.finish();
 	glfwDestroyWindow(window);
@@ -69,8 +65,6 @@ void Engine::main_loop(){
 
 
 }
-
-
 
 void Engine::update_window_size(){
 	 int width = 0, height = 0;
@@ -82,11 +76,6 @@ void Engine::update_window_size(){
 	main_camera.screen_height = height;
 	main_camera.update_projection_matrix();
 }
-
- 
-
-
-
 
 void Engine::update_input(){
 	
@@ -195,10 +184,8 @@ void Engine::update_mvp(EMesh* mesh){
 	#endif
 
 }
-void Engine::InitWindow(){	
-	
-			
 
+void Engine::InitWindow(){			
 	#ifdef VULKAN	
 			window = window_manager.get_window();
 			glfwSetWindowUserPointer(window, this);
@@ -209,9 +196,7 @@ void Engine::InitWindow(){
 			glfwSetCursorPosCallback(window, input.mouse_callback);
 			glfwSetMouseButtonCallback(window,input.mouse_button_callback);
 			glfwSetScrollCallback(window,input.scroll_callback);
-	#endif		
-
-	
+	#endif			
 }
 
 void Engine::load_and_assing_location(std::string path, glm::vec3 location){
@@ -225,7 +210,6 @@ void Engine::load_and_assing_location(std::string path, glm::vec3 location){
 	model_matrix = glm::translate(model_matrix, location);
 	model->model_matrix = model_matrix;
 	meshes.push_back(model);	
-
 }
 
 void Engine::load_map(std::string path){
@@ -261,8 +245,7 @@ void Engine::load_map(std::string path){
 	}
 	
 	for(uint i = 0; i < models_paths.size();i++){		
-		load_and_assing_location(models_paths[i],locations[i]);
-				
+		load_and_assing_location(models_paths[i],locations[i]);				
 	}
 
 	//add textures path
@@ -271,6 +254,4 @@ void Engine::load_map(std::string path){
 	}
 	
 }
-
 #endif//if not define android
-
