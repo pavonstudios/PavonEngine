@@ -34,10 +34,11 @@
                     mesh->create_buffers();
                     engine.renderer.load_mesh_texture(mesh);
                 }
-                  
+                  engine.edit_mode = true;
                     while(1){
                         engine.window_manager.check_events();
                         engine.update_input();
+                        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
                         for(EMesh* mesh : engine.meshes){
                             engine.renderer.activate_vertex_attributes(mesh);
                             engine.update_mvp(mesh);
