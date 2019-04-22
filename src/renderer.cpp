@@ -186,10 +186,23 @@ void Renderer::createCommandBuffers() {
 }
 
 void Renderer::createTextureImage(std::string texture_path, EMesh* mesh) {
-       
-        image_size size = engine->objects_manager.load_and_get_size(texture_path);
+       VkDeviceSize imageSize = 0;
+       image_size size;
+       if(mesh->texture.hasTexture){
+
+        size.pPixels = mesh->texture.data;
+
+        imageSize = mesh->texture.size;
+
+        size.heigth = 1024;
+        size.width = 1024;
+
+       }else{
+            size = engine->objects_manager.load_and_get_size(texture_path);
         
-        VkDeviceSize imageSize = size.heigth * size.width * 4;
+            imageSize = size.heigth * size.width * 4;
+       }
+        
 
         VkBuffer stagingBuffer;
         VkDeviceMemory stagingBufferMemory;
@@ -202,8 +215,10 @@ void Renderer::createTextureImage(std::string texture_path, EMesh* mesh) {
         vkMapMemory(device, stagingBufferMemory, 0, imageSize, 0, &data);
             memcpy(data, size.pPixels, static_cast<size_t>(imageSize));
         vkUnmapMemory(device, stagingBufferMemory);
-        
-        engine->objects_manager.free_image(size.pPixels);
+         
+         if(!mesh->texture.hasTexture){
+            engine->objects_manager.free_image(size.pPixels);
+         }
 
         createImage(size.width, size.heigth, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_TILING_OPTIMAL, 
         VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, 

@@ -85,6 +85,7 @@ void EMesh::load_skins(){
     
 }
 void EMesh::load_textures_gltf(){
+    EImageData image_data_struct = {};
     if(gltf_model.images.size() > 0){
         tinygltf::Image tiny_image = gltf_model.images[0];
 
@@ -93,7 +94,15 @@ void EMesh::load_textures_gltf(){
 
         image_data = &tiny_image.image[0];
         image_size = tiny_image.image.size();
+        std::cout << "image loaded from gltf loader\n";
+
+        image_data_struct.data = image_data;
+        image_data_struct.size = image_size;
+        image_data_struct.hasTexture = true;
+
+        this->texture = image_data_struct;
     }
+    
     
 }
 

@@ -33,7 +33,11 @@
 #define MESH_TYPE_SKINNED 1
 
 namespace engine{
-   
+    struct EImageData{
+        unsigned char* data;
+        int size = 0;
+        bool hasTexture = false;
+    };
     struct pipeline_data{
         std::string vertex_shader_path;
         std::string fragment_shader_path;
@@ -136,6 +140,7 @@ public:
     UniformBufferObject ubo;
     pipeline_data data;
     glm::mat4 MVP;
+    EImageData texture;
 		
 };
 #include "Node.h"
