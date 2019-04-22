@@ -121,7 +121,7 @@ void WindowManager::create_window_xorg(){
  
  
    XMapWindow ( x_display , win );             // make the window visible on the screen
-   XStoreName ( x_display , win , "GL test" ); // give the window a name
+   XStoreName ( x_display , win , "Engine" ); // give the window a name
  
    Atom wm_state   = XInternAtom ( x_display, "_NET_WM_STATE", False );
  

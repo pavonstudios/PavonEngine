@@ -189,6 +189,12 @@ void Input::key_set(const char key, bool isPressed){
 	if(key == 'a'){
 		actual_key = &this->A;
 	}
+	if(key == 'q'){
+		actual_key = &this->Q;
+	}
+	if(key == 'e'){
+		actual_key = &this->E;
+	}
 
 	if(actual_key){
 		if(isPressed){
