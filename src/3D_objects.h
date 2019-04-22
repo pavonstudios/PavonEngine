@@ -37,6 +37,8 @@ namespace engine{
         unsigned char* data;
         int size = 0;
         bool hasTexture = false;
+        float height = 0;
+        float width = 0;
     };
     struct pipeline_data{
         std::string vertex_shader_path;

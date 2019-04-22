@@ -92,6 +92,11 @@ void EMesh::load_textures_gltf(){
         unsigned char * image_data = nullptr;
         u_int32_t image_size = 0;
 
+        if(tiny_image.component == 3){
+            std::cout << "RGB\n"; 
+        }
+
+
         image_data = &tiny_image.image[0];
         image_size = tiny_image.image.size();
         std::cout << "image loaded from gltf loader\n";
@@ -99,6 +104,10 @@ void EMesh::load_textures_gltf(){
         image_data_struct.data = image_data;
         image_data_struct.size = image_size;
         image_data_struct.hasTexture = true;
+        image_data_struct.height = tiny_image.height;
+        image_data_struct.width = tiny_image.width;
+
+
 
         this->texture = image_data_struct;
     }

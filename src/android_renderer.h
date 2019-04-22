@@ -317,21 +317,29 @@ public:
 #ifdef ES2
    public:
    void load_mesh_texture(EMesh* mesh){
+
+        glActiveTexture(GL_TEXTURE0);
+        glGenTextures(1, &mesh->texture_id);
+        glBindTexture(GL_TEXTURE_2D,mesh->texture_id);
+
+
         AssetManager assets;
         #ifdef ANDROID
             
             image_size size = assets.load_bmp("police_patrol.pvn",app->activity->assetManager);    //TODO: load texture with android path        
         #else                   
-            
-            image_size size = assets.load_and_get_size(mesh->texture_path.c_str());      
-        #endif
-       
-        glActiveTexture(GL_TEXTURE0);
-        glGenTextures(1, &mesh->texture_id);
-        glBindTexture(GL_TEXTURE_2D,mesh->texture_id);
-                    
-        glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,size.width,size.heigth,0,GL_RGB,GL_UNSIGNED_BYTE,size.data);
-        
+            image_size size;
+            if(mesh->texture.hasTexture){
+                size.heigth = mesh->texture.height;
+                size.width = mesh->texture.width;
+                size.data = mesh->texture.data;
+                glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,size.width,size.heigth,0,GL_RGBA,GL_UNSIGNED_BYTE,size.data);
+            }else{
+                size = assets.load_and_get_size(mesh->texture_path.c_str());
+                glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,size.width,size.heigth,0,GL_RGB,GL_UNSIGNED_BYTE,size.data); 
+            }
+                
+        #endif                   
         
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);

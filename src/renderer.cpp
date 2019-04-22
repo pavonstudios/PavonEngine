@@ -194,8 +194,8 @@ void Renderer::createTextureImage(std::string texture_path, EMesh* mesh) {
 
         imageSize = mesh->texture.size;
 
-        size.heigth = 1024;
-        size.width = 1024;
+        size.heigth = mesh->texture.height;;
+        size.width = mesh->texture.width;
 
        }else{
             size = engine->objects_manager.load_and_get_size(texture_path);
