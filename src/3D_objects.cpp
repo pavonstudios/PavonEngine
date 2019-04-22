@@ -151,8 +151,7 @@ int EMesh::load_mode_gltf_android(const char* path, AAssetManager* assetManager)
     return -1;
 }
 #endif//android gltf loader
-int EMesh::load_model_gltf(const char* path){
-    
+int EMesh::load_model_gltf(const char* path){    
     
     tinygltf::TinyGLTF loader;
     std::string err;
@@ -163,11 +162,12 @@ int EMesh::load_model_gltf(const char* path){
     if(!ret){
         std::string error = "Failed to open " + std::string(path);
         #ifndef ANDROID
-        throw std::runtime_error(error);
-        return 0;
+            std::cout << "ERROR: " << err << std::endl;
+            throw std::runtime_error(error);
+            return -1;
         #else
-        std::cout << "error inlcoad file " << std::endl;
-        return -1;
+            std::cout << "error inlcoad file " << std::endl;
+            return -1;
         #endif
 
     }
