@@ -56,7 +56,7 @@
         {
             "bufferView" : 3,
             "mimeType" : "image/png",
-            "name" : "checker_02"
+            "name" : "checker_03"
         }
     ],
     "accessors" : [
@@ -65,13 +65,13 @@
             "componentType" : 5126,
             "count" : 3,
             "max" : [
-                0.9999999403953552,
-                0,
+                0.3333333134651184,
+                5.828184868050812e-08,
                 2
             ],
             "min" : [
-                -0.9999999403953552,
-                0,
+                -1.6666665077209473,
+                -1.1656369736101624e-07,
                 0
             ],
             "type" : "VEC3"
@@ -107,7 +107,7 @@
         },
         {
             "buffer" : 0,
-            "byteLength" : 80,
+            "byteLength" : 74,
             "byteOffset" : 68
         }
     ],
@@ -119,8 +119,8 @@
     ],
     "buffers" : [
         {
-            "byteLength" : 148,
-            "uri" : "data:application/octet-stream;base64,//9/vwAAAAAAAAAA//9/PwAAAAAAAAAA//9/vwAAAAAAAABAAAAAAAAAgD8AAIA/AACAPwAAAAAAAAAAAAABAAIAAACJUE5HDQoaCgAAAA1JSERSAAAAAgAAAAIIBgAAAHK2DSQAAAAXSURBVHicY2Bg2Pz/PwPDfwYwsdn0PwA/3weWL3Pq8wAAAABJRU5ErkJggg=="
+            "byteLength" : 144,
+            "uri" : "data:application/octet-stream;base64,qqqqPpJRejMAAAAAVFXVv5JR+rMAAAAAqqqqPpJRejMAAABAAAAAAAAAgD8AAIA/AACAPwAAAAAAAAAAAAABAAIAAACJUE5HDQoaCgAAAA1JSERSAAAAAgAAAAIIBgAAAHK2DSQAAAARSURBVHicY/jPwPAfDKHEfwBDzgf5Cf62awAAAABJRU5ErkJgggAA"
         }
     ]
 }

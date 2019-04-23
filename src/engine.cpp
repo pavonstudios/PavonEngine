@@ -165,7 +165,8 @@ void Engine::load_and_assing_location(std::string path, glm::vec3 location){
 	glm::mat4 model_matrix = glm::mat4(1.0f);
 	model_matrix = glm::translate(model_matrix, location);
 	model->model_matrix = model_matrix;
-	meshes.push_back(model);	
+	meshes.push_back(model);
+	model->texture.format = VK_FORMAT_R8G8B8A8_UNORM;	
 }
 
 void Engine::load_map(std::string path){

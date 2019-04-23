@@ -39,6 +39,9 @@ namespace engine{
         bool hasTexture = false;
         float height = 0;
         float width = 0;
+        #ifdef VULKAN
+        VkFormat format;
+        #endif
     };
     struct pipeline_data{
         std::string vertex_shader_path;
