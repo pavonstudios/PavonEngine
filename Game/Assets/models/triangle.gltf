@@ -56,7 +56,7 @@
         {
             "bufferView" : 3,
             "mimeType" : "image/png",
-            "name" : "checker_03"
+            "name" : "checker_04.png"
         }
     ],
     "accessors" : [
@@ -107,7 +107,7 @@
         },
         {
             "buffer" : 0,
-            "byteLength" : 74,
+            "byteLength" : 78,
             "byteOffset" : 68
         }
     ],
@@ -119,8 +119,8 @@
     ],
     "buffers" : [
         {
-            "byteLength" : 144,
-            "uri" : "data:application/octet-stream;base64,qqqqPpJRejMAAAAAVFXVv5JR+rMAAAAAqqqqPpJRejMAAABAAAAAAAAAgD8AAIA/AACAPwAAAAAAAAAAAAABAAIAAACJUE5HDQoaCgAAAA1JSERSAAAAAgAAAAIIBgAAAHK2DSQAAAARSURBVHicY/jPwPAfDKHEfwBDzgf5Cf62awAAAABJRU5ErkJgggAA"
+            "byteLength" : 148,
+            "uri" : "data:application/octet-stream;base64,qqqqPpJRejMAAAAAVFXVv5JR+rMAAAAAqqqqPpJRejMAAABAAAAAAAAAgD8AAIA/AACAPwAAAAAAAAAAAAABAAIAAACJUE5HDQoaCgAAAA1JSERSAAAAAgAAAAIIBgAAAHK2DSQAAAAVSURBVHicY2Bg+P+fEQgZ/gNZIAgAQ+YH+8YUVAMAAAAASUVORK5CYIIAAA=="
         }
     ]
 }

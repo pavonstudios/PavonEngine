@@ -106,6 +106,7 @@ void EMesh::load_textures_gltf(){
         image_data_struct.hasTexture = true;
         image_data_struct.height = tiny_image.height;
         image_data_struct.width = tiny_image.width;
+        image_data_struct.format = VK_FORMAT_R8G8B8A8_UNORM;
 
 
 
