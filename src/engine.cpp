@@ -125,11 +125,11 @@ void Engine::main_loop(){
 
 	#endif//end if define vulkan
 
-#if defined(ES2) || defined(ANDROID)
+    #if defined(ES2) || defined(ANDROID)
 		while(1){
 			es2_loop();
 		}              
-  #endif
+    #endif
 }
 
 void Engine::es2_loop() {
@@ -248,17 +248,23 @@ void Engine::load_and_assing_location(std::string path, glm::vec3 location){
 		model->texture.format = VK_FORMAT_R8G8B8A8_UNORM;		
 	#else
 		EMesh *model = new EMesh();
-	#endif	
+    #endif
+#ifdef ANDROID
+	model->load_mode_gltf_android(path.c_str(),pAndroid_app->activity->assetManager);
+#else
 	model->load_model_gltf(path.c_str());
+#endif
+
 	glm::mat4 model_matrix = glm::mat4(1.0f);
 	model_matrix = glm::translate(model_matrix, location);
 	model->model_matrix = model_matrix;
 	meshes.push_back(model);
 	
 }
+//load objects paths
 
 void Engine::load_map(std::string path){
-	//load objects paths
+
     #ifndef ANDROID
 	    //FILE* file = fopen(path.c_str(),"r");
 			std::stringstream file;
@@ -311,8 +317,8 @@ void Engine::load_map(std::string path){
 				texture_path = "textures/car01.jpg";
 			}
 			if(first_char != '#'){
-				models_paths.push_back(model_path.c_str());
-				textures_paths.push_back(texture_path.c_str());
+				models_paths.push_back(model_path);
+				textures_paths.push_back(texture_path);
 				locations.push_back(location);
 			}			
 		

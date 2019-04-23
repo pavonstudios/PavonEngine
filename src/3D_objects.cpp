@@ -19,7 +19,7 @@
 using namespace engine;
 
 void EMesh::create_buffers(){
-    #ifdef ES2
+    #if defined(ES2) || defined(ANDROID)
         glGenBuffers(1,&vertex_buffer);
         glBindBuffer(GL_ARRAY_BUFFER,vertex_buffer);
         glBufferData(GL_ARRAY_BUFFER,vertices.size() * sizeof(Vertex),vertices.data(),GL_STATIC_DRAW);
