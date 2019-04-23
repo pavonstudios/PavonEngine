@@ -60,6 +60,7 @@
                 //init gl and window
                 if(!pEngine->renderer.bReady){
                    pEngine->window_manager.create_window(pApp);
+                   pEngine->init();
                    pEngine->renderer.init_gl();
                    pEngine->renderer.bReady = true;
                 }

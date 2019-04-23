@@ -23,8 +23,10 @@ Engine::Engine(){
 #endif
 
 void Engine::init(){
-
+		#ifndef ANDROID
 		window_manager.create_window();
+		#endif
+		
 		window_manager.engine = this;
 		pipeline_data data = {};
 				data.fragment_shader_path = "android/app/src/main/assets/frag.glsl";
@@ -44,24 +46,24 @@ void Engine::init(){
 
 
 		  #ifdef ES2
-                std::cout << "openg gl es2\n ";             
-               
-                renderer.init_gl();                
-            
-                for(EMesh* mesh : meshes){
-                    mesh->data = data;
-                    renderer.load_shaders(mesh);
-                    mesh->create_buffers();
-                    renderer.load_mesh_texture(mesh);
-                }
+				std::cout << "openg gl es2\n ";             
+				
+				renderer.init_gl();                
+		
+				for(EMesh* mesh : meshes){
+						mesh->data = data;
+						renderer.load_shaders(mesh);
+						mesh->create_buffers();
+						renderer.load_mesh_texture(mesh);
+				}
 
-                edit_mode = true;
+				edit_mode = true;
       #endif
 }
 
 void Engine::main_loop(){
 	#ifdef VULKAN
-		std::cout << "Rendering" << std::endl;
+		std::cout << "Vulkan Rendering" << std::endl;
 
 		ThirdPerson player;
 		player.engine = this;
@@ -186,7 +188,7 @@ float Engine::get_time(){
 }
 #endif//end if def vulkan
 
-#ifndef ANDROID
+
 void Engine::update_mvp(EMesh* mesh){
 	glm::mat4 mat = main_camera.Projection * main_camera.View * mesh->model_matrix;
 	mesh->MVP = mat;
@@ -276,6 +278,7 @@ void Engine::load_map(std::string path){
 	}
 	
 }
+#ifndef ANDROID
 void Engine::update_input(){
 	
 	if(edit_mode){
@@ -316,4 +319,4 @@ void Engine::update_input(){
 
 	}
 }
-#endif//if not define android
+#endif

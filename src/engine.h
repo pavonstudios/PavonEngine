@@ -10,7 +10,7 @@
     #endif
     #include <GLFW/glfw3.h>
     #include "input.h"
-    #include "camera.h"
+
 #else
     #include "android_renderer.h"
 #endif
@@ -24,6 +24,7 @@
 #include "asset_manager.h"
 #include "WindowManager.hpp"
 #include "3D_objects.h"
+#include "camera.h"
 using namespace engine;
 class Engine {
 #ifdef ANDROID
@@ -45,6 +46,30 @@ public:
         Engine();
     #endif
 
+    std::vector<EMesh*> meshes;
+    Camera main_camera;
+    bool edit_mode = false;
+
+    float deltaTime = 0.0f;	// Time between current frame and last frame
+    float lastFrame = 0.0f; // Time of last frame
+
+    int frames = 0;
+    float fps = 0;
+    int last_fps = 0;
+    float frame_time = 0;
+
+    void configure_window_callback();
+    void main_loop();
+    void update_window_size();
+    void delete_meshes();
+    void init_renderer();
+    void load_and_assing_location(std::string path, glm::vec3 location);
+    void load_map(std::string path);
+    float get_time();
+    void update_input();
+    void update_mvp(EMesh* mesh);
+    void init();
+
 #ifndef ANDROID
     Engine();
     #ifdef VULKAN
@@ -56,33 +81,13 @@ public:
         GLFWwindow* window;
         class Input input;
 
-        std::vector<EMesh*> meshes;
-        Camera main_camera;
-        bool edit_mode = false;
 
-        float deltaTime = 0.0f;	// Time between current frame and last frame
-        float lastFrame = 0.0f; // Time of last frame  
-
-        int frames = 0;
-        float fps = 0;  
-        int last_fps = 0;   
-        float frame_time = 0;    
  
         GLFWwindow* get_window_pointer()
         {
             return window;
         }
-        void configure_window_callback();
-        void main_loop();
-        void update_window_size();
-        void delete_meshes();
-        void init_renderer();    
-        void load_and_assing_location(std::string path, glm::vec3 location);
-        void load_map(std::string path);
-        float get_time();
-        void update_input();
-        void update_mvp(EMesh* mesh);
-        void init();
+
 
         #ifdef DEVELOPMENT
         void print_debug(const std::string text, int8_t posx, int8_t posy);
