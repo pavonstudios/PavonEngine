@@ -44,6 +44,7 @@ public:
     #ifdef ANDROID
         Engine(android_app * pApp);
         Engine();
+        android_app * pAndroid_app;
     #endif
 
     std::vector<EMesh*> meshes;

@@ -15,6 +15,7 @@ Engine::Engine(){
 #ifdef ANDROID
 	Engine::Engine(android_app * pApp){
         renderer.app = pApp;
+        this->pAndroid_app = pApp;
 
 	}
 	Engine::Engine(){
@@ -38,7 +39,13 @@ void Engine::init(){
 				init_renderer();
 		#endif
 
-		load_map("Game/map01.map");
+		#ifdef ANDROID
+			string map_path = "Maps/map01.map";
+		#else
+		std::string map_path = "Game/Asset/Maps/map01.map";
+		#endif
+
+		load_map(map_path);
 
 		#ifdef VULKAN
 				app.configure_objects();
@@ -229,12 +236,32 @@ void Engine::load_and_assing_location(std::string path, glm::vec3 location){
 
 void Engine::load_map(std::string path){
 	//load objects paths
-	FILE* file = fopen(path.c_str(),"r");
-	if(file == NULL){
-		throw std::runtime_error("failed to load map file");
+    #ifndef ANDROID
+	    FILE* file = fopen(path.c_str(),"r");
+    #endif
 
+	    #ifdef ANDROID
+			AAsset* android_file = AAssetManager_open(pAndroid_app->activity->assetManager,path.c_str(), AASSET_MODE_BUFFER);
+
+			size_t file_length = AAsset_getLength(android_file);
+			char* fileContent = new char[file_length+1];
+
+			AAsset_read(android_file, fileContent,file_length);
+			AAsset_close(android_file);
+
+			FILE* file;
+			fprintf(file,"%s",fileContent);
+
+	    #endif
+	if(file == NULL){
+        #ifndef ANDROID
+		    throw std::runtime_error("failed to load map file");
+        #endif
+        #ifdef ANDROID
+            LOGW("No file map");
+        #endif
 	}
-	
+
 	std::vector<std::string> models_paths;
 	std::vector<glm::vec3> locations;
 	std::vector<std::string> textures_paths;
