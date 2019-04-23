@@ -59,12 +59,12 @@ private:
         glShaderSource  ( shader , 1 , &shader_source , NULL );
         glCompileShader ( shader );
 
-        print_shader_info_log ( shader );
+        print_shader_info_log ( shader , shader_source);
 
         return shader;
     }
 
-    void print_shader_info_log (GLuint  shader){
+    void print_shader_info_log (GLuint  shader, const char* path){
         GLint  length;
 
         glGetShaderiv ( shader , GL_INFO_LOG_LENGTH , &length );
@@ -73,7 +73,7 @@ private:
             char* buffer  =  new char [ length ];
             glGetShaderInfoLog ( shader , length , NULL , buffer );
             #ifdef ANDROID
-                LOGW("shader info %s",buffer);
+                LOGW("shader info %s in file %s",buffer,path);
             #else
                 cout << "shader info: " <<  buffer << flush;
             #endif
@@ -81,7 +81,14 @@ private:
 
             GLint success;
             glGetShaderiv( shader, GL_COMPILE_STATUS, &success );
-            if ( success != GL_TRUE )   exit ( 1 );
+            if ( success != GL_TRUE ) {
+#ifdef ANDROID
+                LOGW("ERROR in shader loader, %s",buffer);
+#endif
+                #ifdef ES2
+                    exit ( 1 );
+                #endif
+            }
         }
     }
     
@@ -90,7 +97,7 @@ private:
             AAsset* file = AAssetManager_open(app->activity->assetManager,path, AASSET_MODE_BUFFER);
 
             size_t file_length = AAsset_getLength(file);
-            char* fileContent = new char[file_length+1];
+            char* fileContent = new char[file_length-1];
 
             AAsset_read(file, fileContent,file_length);
             AAsset_close(file);
@@ -144,7 +151,7 @@ private:
     }
      
 public:
-#ifdef ES2
+#if defined(ES2) || defined(ANDROID)
     void load_shaders(EMesh* mesh){
 
         char* vertex_shader_src = load_shader_file(mesh->data.vertex_shader_path.c_str());

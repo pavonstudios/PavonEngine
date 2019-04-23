@@ -3,9 +3,9 @@
 #include <iostream>
 #include <fstream>
 
-#ifdef VULKAN
-	#include "Game/ThirdPerson.hpp"	
-#endif
+
+#include "Game/ThirdPerson.hpp"	
+
 
 #ifndef ANDROID
 Engine::Engine(){
@@ -33,8 +33,15 @@ void Engine::init(){
 		
 		window_manager.engine = this;
 		pipeline_data data = {};
-				data.fragment_shader_path = "android/app/src/main/assets/frag.glsl";
-				data.vertex_shader_path = "android/app/src/main/assets/vert_mvp.glsl";
+
+		#ifndef ANDROID
+			data.fragment_shader_path = "android/app/src/main/assets/frag.glsl";
+			data.vertex_shader_path = "android/app/src/main/assets/vert_mvp.glsl";
+		#endif
+		#ifdef ANDROID
+			data.fragment_shader_path = "frag_vert_color.glsl";
+			data.vertex_shader_path = "vert_mvp.glsl";
+        #endif
 
 		configure_window_callback();
 
@@ -55,8 +62,8 @@ void Engine::init(){
 		#endif
 
 
-		  #ifdef ES2
-				std::cout << "openg gl es2\n ";             
+		#if defined(ES2) || defined(ANDROID)
+				//std::cout << "openg gl es2\n ";
 				
 				renderer.init_gl();                
 		
@@ -64,20 +71,22 @@ void Engine::init(){
 						mesh->data = data;
 						renderer.load_shaders(mesh);
 						mesh->create_buffers();
+          			#ifndef ANDROID
 						renderer.load_mesh_texture(mesh);
+				  	#endif
 				}
 
 				edit_mode = true;
-      #endif
+        #endif
 }
 
 void Engine::main_loop(){
-	#ifdef VULKAN
-		std::cout << "Vulkan Rendering" << std::endl;
+	ThirdPerson player;
+	player.engine = this;
+	player.mesh = meshes[3];
 
-		ThirdPerson player;
-		player.engine = this;
-		player.mesh = meshes[3];
+	#ifdef VULKAN
+		std::cout << "Vulkan Rendering" << std::endl;		
 		
 		while (!glfwWindowShouldClose(window)) {
 				print_fps();
