@@ -59,55 +59,70 @@ void Engine::init(){
       #endif
 }
 
-
-
-
-#ifdef VULKAN
 void Engine::main_loop(){
-	std::cout << "Rendering" << std::endl;
+	#ifdef VULKAN
+		std::cout << "Rendering" << std::endl;
 
-	ThirdPerson player;
-	player.engine = this;
-	player.mesh = meshes[3];
-	
-	while (!glfwWindowShouldClose(window)) {
-		 	print_fps();
-		 	glfwPollEvents();
-			update_input();
+		ThirdPerson player;
+		player.engine = this;
+		player.mesh = meshes[3];
+		
+		while (!glfwWindowShouldClose(window)) {
+				print_fps();
+				glfwPollEvents();
+				update_input();
 
-			if(!edit_mode)
-				player.update();			
+				if(!edit_mode)
+					player.update();			
 
-			get_time();
-			main_camera.cameraSpeed = main_camera.velocity * deltaTime;
+				get_time();
+				main_camera.cameraSpeed = main_camera.velocity * deltaTime;
 
-			
-				auto tStart = std::chrono::high_resolution_clock::now();
-					app.main_loop();//draw frame
-				frames++;
+				
+					auto tStart = std::chrono::high_resolution_clock::now();
+						app.main_loop();//draw frame
+					frames++;
 
-				auto tEnd = std::chrono::high_resolution_clock::now();
-				auto tDiff = std::chrono::duration<double, std::milli>(tEnd - tStart).count();
-				frame_time = (float)tDiff/1000.0f;
+					auto tEnd = std::chrono::high_resolution_clock::now();
+					auto tDiff = std::chrono::duration<double, std::milli>(tEnd - tStart).count();
+					frame_time = (float)tDiff/1000.0f;
 
-				fps += (float)tDiff;
-				if(fps > 1000.0f){
-					last_fps = static_cast<uint32_t>((float)frames * (1000.0f / fps));
-					fps = 0;
-					frames = 0;
-				}			
+					fps += (float)tDiff;
+					if(fps > 1000.0f){
+						last_fps = static_cast<uint32_t>((float)frames * (1000.0f / fps));
+						fps = 0;
+						frames = 0;
+					}			
 
-			glfwSwapBuffers(window);
+				glfwSwapBuffers(window);
 
-    }
-	app.finish();
-	glfwDestroyWindow(window);
+			}
+		app.finish();
+		glfwDestroyWindow(window);
 
-  glfwTerminate();
+		glfwTerminate();
 
-
+	#endif//end if define vulkan
+	   
+	#ifdef ES2
+		while(1){
+				window_manager.check_events();
+				update_input();
+				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+				
+				for(EMesh* mesh : meshes){
+						renderer.activate_vertex_attributes(mesh);
+						update_mvp(mesh);
+						renderer.draw(mesh);
+				}
+					
+						
+				window_manager.swap_buffers();
+		}              
+  #endif
 }
 
+#ifdef VULKAN
 void Engine::update_window_size(){
 	 int width = 0, height = 0;
         while (width == 0 || height == 0) {
