@@ -240,7 +240,14 @@ void Engine::load_and_assing_location(std::string path, glm::vec3 location){
 void Engine::load_map(std::string path){
 	//load objects paths
     #ifndef ANDROID
-	    FILE* file = fopen(path.c_str(),"r");
+	    //FILE* file = fopen(path.c_str(),"r");
+			std::stringstream file;
+			std::ifstream text_file (path);
+			if(text_file){
+				file << text_file.rdbuf();
+				text_file.close();
+			}
+			
     #endif
 
 	    #ifdef ANDROID
@@ -256,67 +263,41 @@ void Engine::load_map(std::string path){
 
 	    #endif
 			
-	if(!file){
-        #ifndef ANDROID
-		    throw std::runtime_error("failed to load map file");
-        #endif
-        #ifdef ANDROID
-            LOGW("No file map");
-        #endif
-	}
-
-
-	std::vector<std::string> models_paths;
-	std::vector<glm::vec3> locations;
-	std::vector<std::string> textures_paths;
-	while(1){
-		char lineHeader[128];
-    #ifndef ANDROID
-		int res = fscanf(file, "%s", lineHeader);
-		if (res == EOF)
-        	break;
-    #endif
-    #ifdef ANDROID
-            std::string line;
-            std::getline(file,line);
-            lineHeader[0] = line[0];
-            if(lineHeader[0] == EOF)
-                break;
-    #endif
-
-
-		if(!(strcmp( lineHeader, "#" ) == 0)){
-			if ( strcmp( lineHeader, "m" ) == 0 ){
-				char model_path[256];
-				glm::vec3 location;
-				char texture_path[256];
-#ifndef ANDROID
-				fscanf(file, "%s %f %f %f %s\n", model_path, &location.x, &location.y, &location.z, texture_path);
-#else
-                sscanf(line.c_str(),"%s %f %f %f %s\n", model_path, &location.x, &location.y, &location.z, texture_path);
-#endif
-
-				models_paths.push_back(std::string(model_path));
-				locations.push_back(location);
-				textures_paths.push_back(std::string(texture_path));
-			}
-			if ( strcmp( lineHeader, "c" ) == 0 ){
-				char model_path[256];
-				glm::vec3 location;
-				char texture_path[256];
-#ifndef ANDROID
-				fscanf(file, "%s %f %f %f\n", model_path, &location.x, &location.y, &location.z);
-#else
-                sscanf(line.c_str(),"%s %f %f %f\n", model_path, &location.x, &location.y, &location.z, texture_path);
-#endif
-				models_paths.push_back(std::string(model_path));
-				locations.push_back(location);
-				textures_paths.push_back(std::string("Game/Assets/textures/car01.jpg"));
-			}
-			
+		if(!file){
+					#ifndef ANDROID
+					throw std::runtime_error("failed to load map file");
+					#endif
+					#ifdef ANDROID
+							LOGW("No file map");
+					#endif
 		}
+
+
+		std::vector<std::string> models_paths;
+		std::vector<glm::vec3> locations;
+		std::vector<std::string> textures_paths;
+		std::string line;
+		while( std::getline(file,line) ) {		
+
+			char first_char;
+			std::stringstream line_stream (line);
 		
-	}
+			std::string model_path;
+			glm::vec3 location;
+			std::string texture_path;
+
+			line_stream >> first_char >> model_path >> location.x >> location.y >> location.z >> texture_path;
+			if(first_char == 'c'){
+				texture_path = "textures/car01.jpg";
+			}
+			if(first_char != '#'){
+				models_paths.push_back(model_path.c_str());
+				textures_paths.push_back(texture_path.c_str());
+				locations.push_back(location);
+			}			
+		
+		}
+
 	#ifndef ANDROID
 		//convert path to asset folder path
 		std::vector<std::string> new_paths;
