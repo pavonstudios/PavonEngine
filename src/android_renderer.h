@@ -39,7 +39,8 @@ using  namespace engine;
 using namespace std;
 using namespace glm;
 class Renderer{
-
+public:
+    bool bReady = false;
 private:
     GLuint vertexbuffer;
 
@@ -294,19 +295,20 @@ public:
             glGenTextures(1, &textureid);
             glBindTexture(GL_TEXTURE_2D,textureid);
                      
-           // glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,size.width,size.heigth,0,GL_RGB,GL_UNSIGNED_BYTE,size.data);
+            //glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,size.width,size.heigth,0,GL_RGB,GL_UNSIGNED_BYTE,size.data);
 
             float pixels[] = {
-            0.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f,
-            0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 0.0f
+            255.0f, 0.0f, 0.0f,1.0f ,   0.0f, 255.0f, 0.0f, 1.0f,
+            0.0f, 255.0f, 0.0f,1.0f ,   0.0f, 0.0f, 255.0f,1.0f
 
             };
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 2, 2, 0, GL_RGB, GL_FLOAT, pixels);
-          
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_FLOAT, pixels);
+            glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
             //glGenerateMipmap(GL_TEXTURE_2D);
 
     }
@@ -401,10 +403,10 @@ public:
     }
 
     void draw_mesh(){
-            
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             glBindTexture(GL_TEXTURE_2D,textureid);
-            int samplerid = glGetUniformLocation(shaderProgram, "texture_sampler");
-            glUniform1i(samplerid, 0);
+           // int samplerid = glGetUniformLocation(shaderProgram, "texture_sampler");
+            //glUniform1i(samplerid, 0);
             
             
            // glDrawElements(GL_TRIANGLES,meshes[0]->indices.size(),GL_UNSIGNED_INT,(void*)0);

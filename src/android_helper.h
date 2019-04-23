@@ -13,8 +13,12 @@ static EGLint const attribute_list[] = {
         EGL_GREEN_SIZE, 8,
         EGL_RED_SIZE, 8,
         EGL_CONFORMANT, EGL_OPENGL_ES2_BIT,
+        //EGL_RENDERABLE_TYPE,
+        //EGL_DEPTH_SIZE, 24,
+        //EGL_BUFFER_SIZE, 16,
         EGL_NONE
 };
+
 static const EGLint GiveMeGLES2[] = {
         EGL_CONTEXT_CLIENT_VERSION, 2,
         EGL_NONE

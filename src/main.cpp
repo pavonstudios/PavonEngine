@@ -96,16 +96,28 @@
 
         int events;
         android_poll_source *pSource;
+
         do {
             if (ALooper_pollAll(0, nullptr, &events, (void **) &pSource) >= 0) {
                 if (pSource) {
                     pSource->process(pApp, pSource);
                 }
             }
+
+
             if (pApp->userData) {
                 auto *pEngine = reinterpret_cast<Engine *>(pApp->userData);
-                pEngine->renderer.render();
-                pEngine->window_manager.swap_buffers();
+                //init gl and window
+                if(!pEngine->renderer.bReady){
+                   pEngine->window_manager.create_window(pApp);
+                   pEngine->renderer.init_gl();
+                   pEngine->renderer.bReady = true;
+                }
+                if(pEngine->renderer.bReady){
+                    pEngine->renderer.render();
+                    pEngine->window_manager.swap_buffers();
+                }
+
             }
 
 

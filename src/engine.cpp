@@ -15,8 +15,7 @@ Engine::Engine(){
 #ifdef ANDROID
 	Engine::Engine(android_app * pApp){
         renderer.app = pApp;
-        window_manager.create_window(pApp);
-        renderer.init_gl();
+
 	}
 	Engine::Engine(){
 			
