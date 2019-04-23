@@ -1,5 +1,8 @@
 #include "engine.h"
 #include <sstream>
+#include <iostream>
+#include <fstream>
+
 #ifdef VULKAN
 	#include "Game/ThirdPerson.hpp"	
 #endif
@@ -249,11 +252,11 @@ void Engine::load_map(std::string path){
 			AAsset_read(android_file, fileContent,file_length);
 			AAsset_close(android_file);
 
-			FILE* file;
-			fprintf(file,"%s",fileContent);
+			std::stringstream file ((std::string(fileContent)));
 
 	    #endif
-	if(file == NULL){
+			
+	if(!file){
         #ifndef ANDROID
 		    throw std::runtime_error("failed to load map file");
         #endif
@@ -262,21 +265,37 @@ void Engine::load_map(std::string path){
         #endif
 	}
 
+
 	std::vector<std::string> models_paths;
 	std::vector<glm::vec3> locations;
 	std::vector<std::string> textures_paths;
 	while(1){
 		char lineHeader[128];
+    #ifndef ANDROID
 		int res = fscanf(file, "%s", lineHeader);
 		if (res == EOF)
-        	break; 
+        	break;
+    #endif
+    #ifdef ANDROID
+            std::string line;
+            std::getline(file,line);
+            lineHeader[0] = line[0];
+            if(lineHeader[0] == EOF)
+                break;
+    #endif
+
 
 		if(!(strcmp( lineHeader, "#" ) == 0)){
 			if ( strcmp( lineHeader, "m" ) == 0 ){
 				char model_path[256];
 				glm::vec3 location;
 				char texture_path[256];
+#ifndef ANDROID
 				fscanf(file, "%s %f %f %f %s\n", model_path, &location.x, &location.y, &location.z, texture_path);
+#else
+                sscanf(line.c_str(),"%s %f %f %f %s\n", model_path, &location.x, &location.y, &location.z, texture_path);
+#endif
+
 				models_paths.push_back(std::string(model_path));
 				locations.push_back(location);
 				textures_paths.push_back(std::string(texture_path));
@@ -285,7 +304,11 @@ void Engine::load_map(std::string path){
 				char model_path[256];
 				glm::vec3 location;
 				char texture_path[256];
+#ifndef ANDROID
 				fscanf(file, "%s %f %f %f\n", model_path, &location.x, &location.y, &location.z);
+#else
+                sscanf(line.c_str(),"%s %f %f %f\n", model_path, &location.x, &location.y, &location.z, texture_path);
+#endif
 				models_paths.push_back(std::string(model_path));
 				locations.push_back(location);
 				textures_paths.push_back(std::string("Game/Assets/textures/car01.jpg"));
@@ -302,7 +325,7 @@ void Engine::load_map(std::string path){
 			new_paths.push_back(new_path);
 		}
 		models_paths = new_paths;
-		
+
 		new_paths.clear();
 		for(std::string path : textures_paths){
 			std::string new_path = objects_manager.convert_to_asset_folder_path(path);
