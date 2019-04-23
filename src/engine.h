@@ -70,6 +70,7 @@ public:
     void update_input();
     void update_mvp(EMesh* mesh);
     void init();
+    void es2_loop();
 
 #ifndef ANDROID
     Engine();

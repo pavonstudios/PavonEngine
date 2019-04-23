@@ -124,25 +124,36 @@ void Engine::main_loop(){
 		glfwTerminate();
 
 	#endif//end if define vulkan
-	   
-	#ifdef ES2
+
+#if defined(ES2) || defined(ANDROID)
 		while(1){
-				window_manager.check_events();
-				update_input();
-				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-				
-				for(EMesh* mesh : meshes){
-						renderer.activate_vertex_attributes(mesh);
-						update_mvp(mesh);
-						renderer.draw(mesh);
-				}
-					
-						
-				window_manager.swap_buffers();
+			es2_loop();
 		}              
   #endif
 }
 
+void Engine::es2_loop() {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	#ifdef ES2
+		window_manager.check_events();
+					update_input();
+
+    for(EMesh* mesh : meshes){
+		renderer.activate_vertex_attributes(mesh);
+		update_mvp(mesh);
+		renderer.draw(mesh);
+	}
+
+    #endif
+#ifdef ANDROID
+    renderer.activate_vertex_attributes(meshes[4]);
+    update_mvp(meshes[4]);
+    renderer.draw(meshes[4]);
+#endif
+
+
+	window_manager.swap_buffers();
+}
 #ifdef VULKAN
 void Engine::update_window_size(){
 	 int width = 0, height = 0;

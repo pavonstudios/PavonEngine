@@ -42,13 +42,13 @@ class Renderer{
 public:
     bool bReady = false;
 private:
-    GLuint vertexbuffer;
+
 
     GLuint vertex_buffer;
     GLuint indices;
 
     GLuint textureid;
-    GLuint texture2id;
+
 
     GLuint shaderProgram;
 
@@ -64,7 +64,8 @@ private:
         return shader;
     }
 
-    void print_shader_info_log (GLuint  shader, const char* path){
+    void print_shader_info_log (GLuint shader, const char* path){
+
         GLint  length;
 
         glGetShaderiv ( shader , GL_INFO_LOG_LENGTH , &length );
@@ -82,9 +83,9 @@ private:
             GLint success;
             glGetShaderiv( shader, GL_COMPILE_STATUS, &success );
             if ( success != GL_TRUE ) {
-#ifdef ANDROID
-                LOGW("ERROR in shader loader, %s",buffer);
-#endif
+                #ifdef ANDROID
+                    LOGW("ERROR in shader loader, %s",buffer);
+                #endif
                 #ifdef ES2
                     exit ( 1 );
                 #endif
@@ -133,10 +134,11 @@ private:
         #ifdef ANDROID
             char* vertex_shader_src = load_shader_file("vert.glsl");
             char* fragment_shader_src = load_shader_file("frag_vert_color.glsl");
+            LOGW("%s",vertex_shader_src);
         #else
             char* vertex_shader_src = load_shader_file("android/app/src/main/assets/vert.glsl");
             char* fragment_shader_src = load_shader_file("android/app/src/main/assets/frag.glsl");
-        #endif      
+        #endif
 
         GLuint vertexShader   = load_shader ( vertex_shader_src , GL_VERTEX_SHADER  );     // load vertex shader
         GLuint fragmentShader = load_shader ( fragment_shader_src , GL_FRAGMENT_SHADER );  // load fragment shader
@@ -182,10 +184,10 @@ public:
 
         
         #ifdef ANDROID
-            load_shaders();
+            //load_shaders();
             //init_3d_model();
-            create_triangule();
-            create_texture();
+            //create_triangule();
+            //create_texture();
         #endif
 
 
@@ -418,10 +420,12 @@ public:
             //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
     }
-#ifndef ANDROID
+
     void draw(EMesh* mesh){        
         glUseProgram  ( mesh->shader_program );
-        glBindTexture(GL_TEXTURE_2D,mesh->texture_id);
+        #ifdef ES2
+                glBindTexture(GL_TEXTURE_2D,mesh->texture_id);
+        #endif
         //update_mvp(mesh);
         glBindBuffer(GL_ARRAY_BUFFER,mesh->vertex_buffer);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,mesh->indices_buffer);
@@ -429,7 +433,7 @@ public:
 
 
     }
-#endif
+
 };
 
 #endif
