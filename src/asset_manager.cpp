@@ -6,6 +6,11 @@
 void AssetManager::free_image(void * pixels){
     stbi_image_free(pixels);
 }
+
+std::string AssetManager::convert_to_asset_folder_path(std::string path_to_convert){
+    return AssetPath + path_to_convert;
+}
+
 image_size AssetManager::load_and_get_size(std::string texture_path){
     int texWidth, texHeight, texChannels;
     stbi_uc* pixels = stbi_load(texture_path.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
