@@ -9,3 +9,4 @@ m Game/Assets/models/pavon_the_game/police_patrolLOD3.gltf -8 -6 0 Game/Assets/t
 m Game/Assets/models/pavon_the_game/road_plus_border_coast.gltf 0 0 0 /home/pavon/Textures/coust/modules_coust.png
 m Game/Assets/models/pavon_the_game/back_bulding.gltf 0 0 0 /home/pavon/Textures/Asuncion/bakcbuilding02.png
 c Game/Assets/models/pavon_the_game/mercedes_benz_sprinter.gltf 0 -10 0
+c Game/Assets/models/triangle.gltf 0 -5 0
