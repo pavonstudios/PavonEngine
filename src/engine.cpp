@@ -157,11 +157,11 @@ void Engine::configure_window_callback(){
 
 void Engine::load_and_assing_location(std::string path, glm::vec3 location){
 	#ifdef VULKAN
-		EMesh *model = new EMesh(vulkan_device);//vulkan device for create vertex buffers	
+		EMesh *model = new EMesh(vulkan_device);//vulkan device for create vertex buffers
+		model->texture.format = VK_FORMAT_R8G8B8A8_UNORM;		
 	#else
 		EMesh *model = new EMesh();
-	#endif
-	model->texture.format = VK_FORMAT_R8G8B8A8_UNORM;	
+	#endif	
 	model->load_model_gltf(path.c_str());
 	glm::mat4 model_matrix = glm::mat4(1.0f);
 	model_matrix = glm::translate(model_matrix, location);

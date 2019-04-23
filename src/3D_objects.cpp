@@ -106,8 +106,9 @@ void EMesh::load_textures_gltf(){
         image_data_struct.hasTexture = true;
         image_data_struct.height = tiny_image.height;
         image_data_struct.width = tiny_image.width;
+        #ifdef VULKAN
         image_data_struct.format = VK_FORMAT_R8G8B8A8_UNORM;
-
+        #endif
 
 
         this->texture = image_data_struct;
