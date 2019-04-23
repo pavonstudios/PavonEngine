@@ -82,6 +82,7 @@ public:
         float get_time();
         void update_input();
         void update_mvp(EMesh* mesh);
+        void init();
 
         #ifdef DEVELOPMENT
         void print_debug(const std::string text, int8_t posx, int8_t posy);

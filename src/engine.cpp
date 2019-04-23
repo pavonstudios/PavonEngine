@@ -21,6 +21,47 @@ Engine::Engine(){
 			
 	}
 #endif
+
+void Engine::init(){
+
+		window_manager.create_window();
+		window_manager.engine = this;
+		pipeline_data data = {};
+				data.fragment_shader_path = "android/app/src/main/assets/frag.glsl";
+				data.vertex_shader_path = "android/app/src/main/assets/vert_mvp.glsl";
+
+		configure_window_callback();
+
+		#ifdef VULKAN
+				init_renderer();
+		#endif
+
+		load_map("Game/map01.map");
+
+		#ifdef VULKAN
+				app.configure_objects();
+		#endif
+
+
+		  #ifdef ES2
+                std::cout << "openg gl es2\n ";             
+               
+                renderer.init_gl();                
+            
+                for(EMesh* mesh : meshes){
+                    mesh->data = data;
+                    renderer.load_shaders(mesh);
+                    mesh->create_buffers();
+                    renderer.load_mesh_texture(mesh);
+                }
+
+                edit_mode = true;
+      #endif
+}
+
+
+
+
 #ifdef VULKAN
 void Engine::main_loop(){
 	std::cout << "Rendering" << std::endl;

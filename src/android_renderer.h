@@ -52,10 +52,7 @@ private:
 
     GLuint shaderProgram;
 
-    GLuint load_shader (
-            const char  *shader_source,
-            GLenum       type
-    )
+    GLuint load_shader (const char  *shader_source, GLenum type)
     {
         GLuint  shader = glCreateShader( type );
 
@@ -66,8 +63,8 @@ private:
 
         return shader;
     }
-    void
-    print_shader_info_log (GLuint  shader){
+
+    void print_shader_info_log (GLuint  shader){
         GLint  length;
 
         glGetShaderiv ( shader , GL_INFO_LOG_LENGTH , &length );
@@ -128,7 +125,7 @@ private:
 
         #ifdef ANDROID
             char* vertex_shader_src = load_shader_file("vert.glsl");
-            char* fragment_shader_src = load_shader_file("frag.glsl");
+            char* fragment_shader_src = load_shader_file("frag_vert_color.glsl");
         #else
             char* vertex_shader_src = load_shader_file("android/app/src/main/assets/vert.glsl");
             char* fragment_shader_src = load_shader_file("android/app/src/main/assets/frag.glsl");
@@ -168,7 +165,7 @@ public:
 
 #endif
     void init_gl(){
-        glViewport(0,0,800,600);
+        //glViewport(0,0,800,600);
 
         glClearColor(0.2, 0.0, 0.0, 1.0);
         
@@ -183,8 +180,7 @@ public:
             create_triangule();
             create_texture();
         #endif
-        //create_triangule();
-        //create_texture();
+
 
     }
     void create_triangule(){
