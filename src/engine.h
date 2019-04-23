@@ -10,7 +10,9 @@
     #endif
     #include <GLFW/glfw3.h>
     #include "input.h"
-    #include "camera.h" 
+    #include "camera.h"
+#else
+    #include "android_renderer.h"
 #endif
 
 #ifdef ES2    

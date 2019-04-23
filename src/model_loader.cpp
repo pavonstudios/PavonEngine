@@ -2,7 +2,9 @@
 #ifdef GLTF
     #define TINYGLTF_IMPLEMENTATION 
     #define STB_IMAGE_WRITE_IMPLEMENTATION
-    #define TINYGLTF_NO_INCLUDE_STB_IMAGE
+    #ifndef ANDROID
+        #define TINYGLTF_NO_INCLUDE_STB_IMAGE
+    #endif
     #include "tiny_gltf.h"
 #endif
 
