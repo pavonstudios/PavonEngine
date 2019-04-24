@@ -5,7 +5,7 @@
 
 
 #include "Game/ThirdPerson.hpp"	
-
+#include "Game/gui.hpp"
 
 #ifndef ANDROID
 Engine::Engine(){
@@ -56,6 +56,7 @@ void Engine::init(){
 		#endif
 
 		load_map(map_path);
+		gui = new GUI(this);
 
 		#ifdef VULKAN
 				renderer.configure_objects();
@@ -301,11 +302,11 @@ void Engine::load_and_assing_location(std::string path, glm::vec3 location){
 	#else
 		EMesh *model = new EMesh();
     #endif
-#ifdef ANDROID
-	model->load_mode_gltf_android(path.c_str(),pAndroid_app->activity->assetManager);
-#else
-	model->load_model_gltf(path.c_str());
-#endif
+	#ifdef ANDROID
+		model->load_mode_gltf_android(path.c_str(),pAndroid_app->activity->assetManager);
+	#else
+		model->load_model_gltf(path.c_str());
+	#endif
 
 	glm::mat4 model_matrix = glm::mat4(1.0f);
 	model_matrix = glm::translate(model_matrix, location);

@@ -5,7 +5,7 @@
 
 class GUI{
 	public:
-		GUI();
+		GUI(Engine* engine);
 		Engine* engine;
 		EMesh* mesh;
 		void update();

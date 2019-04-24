@@ -8,9 +8,10 @@
 #endif
 using namespace glm;
 using namespace engine;
-GUI::GUI(){
-	EMesh* triangle = new EMesh();
-        glm::vec2 texcoor = glm::vec2(0.f);
+GUI::GUI(Engine* engine){
+	this->engine = engine;
+		EMesh* triangle = new EMesh();
+        /* glm::vec2 texcoor = glm::vec2(0.f);
         glm::vec4 posss = glm::vec4(0.f);
         glm::vec4 witjj = glm::vec4(0.f);
         Vertex vert1{};
@@ -38,4 +39,22 @@ GUI::GUI(){
         triangle->vertices.push_back(vert1);
         triangle->vertices.push_back(vert2);
         triangle->vertices.push_back(vert3);
+
+		triangle->indices.push_back(1); */
+		triangle->load_model_gltf("Game/Assets/models/button01.gltf");
+
+		triangle->data.fragment_shader_path = "Game/Assets/shaders/red.spv";
+		triangle->data.vertex_shader_path = "Game/Assets/shaders/vert.spv";
+		triangle->texture_path = "Game/Assets/textures/car01.jpg";
+		#ifdef VULKAN
+		triangle->data.draw_type = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+    	triangle->data.mesh_type = MESH_TYPE_STATIC;
+
+		triangle->init(engine->vulkan_device);
+		triangle->texture.format = VK_FORMAT_R8G8B8A8_UNORM;	
+		#endif
+		
+		this->mesh = triangle;
+
+		engine->meshes.push_back(this->mesh);
 }

@@ -81,6 +81,7 @@ public:
 #ifdef VULKAN
     EMesh(vks::VulkanDevice* vulkan_device);
     vks::VulkanDevice* vulkan_device;
+    void init(vks::VulkanDevice* vulkan_device);
 #endif
     ~EMesh();
     void create_buffers();

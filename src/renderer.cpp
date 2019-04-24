@@ -484,7 +484,12 @@ void Renderer::create_meshes_graphics_pipeline(){
     data_static_skinned_mesh.vertex_shader_path = "shaders/skin.spv";
 
     for (int i = 0; i< engine->meshes.size(); i++){
-        createGraphicsPipeline(&data_static_mesh,&engine->meshes[i]->graphics_pipeline);
+        if(engine->meshes[i]->data.vertex_shader_path != ""){
+            createGraphicsPipeline(&engine->meshes[i]->data,&engine->meshes[i]->graphics_pipeline);
+
+        }else{
+            createGraphicsPipeline(&data_static_mesh,&engine->meshes[i]->graphics_pipeline);
+        }
         createTextureImage(engine->meshes[i]->texture_path, engine->meshes[i]);
         
     }
