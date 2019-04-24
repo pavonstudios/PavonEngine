@@ -123,6 +123,7 @@ void Engine::main_loop(){
 		while (!glfwWindowShouldClose(window)) {
 			
 				glfwPollEvents();
+
 				update_input();
 
 				loop_data();
@@ -169,6 +170,8 @@ void Engine::es2_loop() {
 	#ifdef ES2
 		window_manager.check_events();
 					update_input();
+
+					loop_data();
 
     for(EMesh* mesh : meshes){
 		renderer.activate_vertex_attributes(mesh);
@@ -347,34 +350,38 @@ void Engine::load_map(std::string path){
 		std::string line;
 		while( std::getline(file,line) ) {		
 
-			char first_char;
-			std::stringstream line_stream (line);
-		
-			std::string model_path;
-			glm::vec3 location;
-			std::string texture_path;
-			std::string type;
-			int counter;
-
-			line_stream >> first_char >> model_path >> location.x >> location.y >> location.z >> texture_path >> type;
-
-			if(first_char == 'c'){
-				texture_path = "textures/car01.jpg";
-			}
+			if(line != ""){
+					char first_char;
+				std::stringstream line_stream (line);
 			
-			if(first_char != '#'){
-				models_paths.push_back(model_path);
-				textures_paths.push_back(texture_path);
-				locations.push_back(location);
+				std::string model_path;
+				glm::vec3 location;
+				std::string texture_path;
+				std::string type;
+				int counter;
 
-				if(player_id == -1){
-					if(type == "player"){
-						this->player_id = counter;
-					}
-				}
+				line_stream >> first_char >> model_path >> location.x >> location.y >> location.z >> texture_path >> type;				
 				
-				counter++;
-			}			
+				if(first_char != '#'){
+
+					if(first_char == 'c'){
+						texture_path = "textures/car01.jpg";
+					}
+					models_paths.push_back(model_path);
+					textures_paths.push_back(texture_path);
+					locations.push_back(location);
+
+					if(player_id == -1){
+						if(type == "player"){
+							this->player_id = counter;
+						}
+					}
+					
+					
+					counter++;
+				}			
+			
+			}
 			
 			
 		
