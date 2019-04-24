@@ -39,7 +39,7 @@ void Engine::init(){
 			data.vertex_shader_path = "android/app/src/main/assets/vert_mvp.glsl";
 		#endif
 		#ifdef ANDROID
-			data.fragment_shader_path = "frag_vert_color.glsl";
+			data.fragment_shader_path = "frag_uv_color.glsl";
 			data.vertex_shader_path = "vert_mvp.glsl";
         #endif
 
@@ -66,16 +66,32 @@ void Engine::init(){
 				//std::cout << "openg gl es2\n ";
 				
 				renderer.init_gl();                
-		
-				for(EMesh* mesh : meshes){
-						mesh->data = data;
-						renderer.load_shaders(mesh);
-						mesh->create_buffers();
-          			#ifndef ANDROID
-						renderer.load_mesh_texture(mesh);
-				  	#endif
-				}
-
+                #ifdef  ES2
+                        for(EMesh* mesh : meshes){
+                                mesh->data = data;
+                                renderer.load_shaders(mesh);
+                                mesh->create_buffers();
+                            #ifndef ANDROID
+                                renderer.load_mesh_texture(mesh);
+                            #endif
+                        }
+                #endif
+                #ifdef  ANDROID
+                       /* meshes[0]->data = data;
+                        renderer.load_shaders(meshes[0]);
+                        meshes[0]->create_buffers();
+                        meshes[4]->data = data;
+                        renderer.load_shaders(meshes[4]);
+                        meshes[4]->create_buffers();*/
+                            for(EMesh* mesh : meshes){
+                                mesh->data = data;
+                                renderer.load_shaders(mesh);
+                                mesh->create_buffers();
+                        #ifndef ANDROID
+                                renderer.load_mesh_texture(mesh);
+                        #endif
+                            }
+                #endif
 				edit_mode = true;
         #endif
 }
@@ -145,11 +161,19 @@ void Engine::es2_loop() {
 	}
 
     #endif
-#ifdef ANDROID
-    renderer.activate_vertex_attributes(meshes[4]);
-    update_mvp(meshes[4]);
-    renderer.draw(meshes[4]);
-#endif
+    #ifdef ANDROID
+        /*renderer.activate_vertex_attributes(meshes[0]);
+        update_mvp(meshes[0]);
+        renderer.draw(meshes[0]);
+        renderer.activate_vertex_attributes(meshes[4]);
+        update_mvp(meshes[4]);
+        renderer.draw(meshes[4]);*/
+        for(EMesh* mesh : meshes){
+            renderer.activate_vertex_attributes(mesh);
+            update_mvp(mesh);
+            renderer.draw(mesh);
+        }
+    #endif
 
 
 	window_manager.swap_buffers();
@@ -222,7 +246,7 @@ float Engine::get_time(){
 void Engine::update_mvp(EMesh* mesh){
 	glm::mat4 mat = main_camera.Projection * main_camera.View * mesh->model_matrix;
 	mesh->MVP = mat;
-	#ifdef ES2
+    #if defined(ES2) || defined(ANDROID)
 		renderer.update_mvp(mesh);
 	#endif
 

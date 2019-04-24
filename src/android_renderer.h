@@ -54,17 +54,19 @@ private:
 
     GLuint load_shader (const char  *shader_source, GLenum type)
     {
+        //LOGW("Shader source:\n %s",shader_source);
         GLuint  shader = glCreateShader( type );
 
         glShaderSource  ( shader , 1 , &shader_source , NULL );
         glCompileShader ( shader );
 
+       // LOGW("Shader safter compile :\n %s",shader_source);
         print_shader_info_log ( shader , shader_source);
 
         return shader;
     }
 
-    void print_shader_info_log (GLuint shader, const char* path){
+    void print_shader_info_log (GLuint shader, const char* src){
 
         GLint  length;
 
@@ -74,7 +76,7 @@ private:
             char* buffer  =  new char [ length ];
             glGetShaderInfoLog ( shader , length , NULL , buffer );
             #ifdef ANDROID
-                LOGW("shader info %s in file %s",buffer,path);
+                LOGW("shader info %s ",buffer,src);
             #else
                 cout << "shader info: " <<  buffer << flush;
             #endif
@@ -84,7 +86,7 @@ private:
             glGetShaderiv( shader, GL_COMPILE_STATUS, &success );
             if ( success != GL_TRUE ) {
                 #ifdef ANDROID
-                    LOGW("ERROR in shader loader, %s",buffer);
+                    LOGW("ERROR in shader loader");
                 #endif
                 #ifdef ES2
                     exit ( 1 );
@@ -134,13 +136,15 @@ private:
         #ifdef ANDROID
             char* vertex_shader_src = load_shader_file("vert.glsl");
             char* fragment_shader_src = load_shader_file("frag_vert_color.glsl");
-            LOGW("%s",vertex_shader_src);
+            //LOGW("%s",vertex_shader_src);
         #else
             char* vertex_shader_src = load_shader_file("android/app/src/main/assets/vert.glsl");
             char* fragment_shader_src = load_shader_file("android/app/src/main/assets/frag.glsl");
         #endif
 
         GLuint vertexShader   = load_shader ( vertex_shader_src , GL_VERTEX_SHADER  );     // load vertex shader
+
+
         GLuint fragmentShader = load_shader ( fragment_shader_src , GL_FRAGMENT_SHADER );  // load fragment shader
 
         
