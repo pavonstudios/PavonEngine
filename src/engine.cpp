@@ -149,7 +149,10 @@ void Engine::main_loop(){
 }
 
 void Engine::es2_loop() {
+	#if defined(ES2) || defined(ANDROID)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	#endif
+	
 	#ifdef ES2
 		window_manager.check_events();
 					update_input();
