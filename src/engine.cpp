@@ -98,8 +98,8 @@ void Engine::init(){
 
 void Engine::main_loop(){
 	ThirdPerson player;
-	player.engine = this;
-	player.mesh = meshes[3];
+	player.engine = this;	
+	player.mesh = this->meshes[this->player_id];
 
 	#ifdef VULKAN
 		std::cout << "Vulkan Rendering" << std::endl;		
@@ -152,7 +152,7 @@ void Engine::es2_loop() {
 	#if defined(ES2) || defined(ANDROID)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	#endif
-	
+
 	#ifdef ES2
 		window_manager.check_events();
 					update_input();
@@ -338,16 +338,27 @@ void Engine::load_map(std::string path){
 			std::string model_path;
 			glm::vec3 location;
 			std::string texture_path;
+			std::string type;
+			int counter;
 
-			line_stream >> first_char >> model_path >> location.x >> location.y >> location.z >> texture_path;
+			line_stream >> first_char >> model_path >> location.x >> location.y >> location.z >> texture_path >> type;
+
 			if(first_char == 'c'){
 				texture_path = "textures/car01.jpg";
 			}
+			
 			if(first_char != '#'){
 				models_paths.push_back(model_path);
 				textures_paths.push_back(texture_path);
 				locations.push_back(location);
+
+				if(type == "player"){
+					this->player_id = counter;
+				}
+				counter++;
 			}			
+			
+			
 		
 		}
 
