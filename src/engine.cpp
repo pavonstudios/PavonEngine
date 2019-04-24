@@ -41,7 +41,7 @@ void Engine::init(){
 		#ifdef ANDROID
 			data.fragment_shader_path = "frag_uv_color.glsl";
 			data.vertex_shader_path = "vert_mvp.glsl";
-        #endif
+    #endif
 
 		configure_window_callback();
 
@@ -68,7 +68,9 @@ void Engine::init(){
 				renderer.init_gl();                
 				#ifdef  ES2
 								for(EMesh* mesh : meshes){
-												mesh->data = data;
+												if(mesh->data.vertex_shader_path == ""){
+														mesh->data = data;
+												}													
 												renderer.load_shaders(mesh);
 												mesh->create_buffers();
 										#ifndef ANDROID
@@ -111,12 +113,23 @@ void Engine::es2_loop() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	#endif
 
-	#ifdef ES2
-		for(EMesh* mesh : meshes){
-			renderer.activate_vertex_attributes(mesh);
-			update_mvp(mesh);
-			renderer.draw(mesh);
-		}
+		#ifdef ES2
+
+			for(EMesh* mesh : meshes){
+				
+				if(!mesh->bIsGUI){
+					renderer.activate_vertex_attributes(mesh);
+					update_mvp(mesh);
+					renderer.draw(mesh);
+				}					
+				else{
+					renderer.activate_vertex_attributes(mesh);
+					update_mvp(mesh);
+					renderer.draw_gui(mesh);
+				}
+
+			}
+
 
     #endif
     #ifdef ANDROID

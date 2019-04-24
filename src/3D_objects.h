@@ -146,6 +146,7 @@ public:
     pipeline_data data;
     glm::mat4 MVP;
     EImageData texture;
+    bool bIsGUI = false;
 		
 };
 #include "Node.h"

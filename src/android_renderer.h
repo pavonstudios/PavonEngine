@@ -276,10 +276,11 @@ public:
          
         activate_vertex_attributes(mesh);
     }
-    void activate_vertex_attributes(EMesh* mesh){
-#ifdef ES2
-        glBindBuffer(GL_ARRAY_BUFFER,mesh->vertex_buffer);
-#endif
+
+void activate_vertex_attributes(EMesh* mesh){
+        #ifdef ES2
+            glBindBuffer(GL_ARRAY_BUFFER,mesh->vertex_buffer);
+        #endif
         glVertexAttribPointer ( 0, 3, GL_FLOAT, false, sizeof(Vertex), (void*)0 );
         glEnableVertexAttribArray ( 0 ); 
 
@@ -424,6 +425,15 @@ public:
             //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
     }
+    void draw_gui(EMesh* mesh){
+        
+        //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glUseProgram  ( mesh->shader_program );
+        glBindBuffer(GL_ARRAY_BUFFER,mesh->vertex_buffer);
+        glDrawArrays(GL_TRIANGLES,0,3);
+        glBindBuffer(GL_ARRAY_BUFFER,0);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,0);
+    }
 
     void draw(EMesh* mesh){        
         glUseProgram  ( mesh->shader_program );
@@ -434,7 +444,8 @@ public:
         glBindBuffer(GL_ARRAY_BUFFER,mesh->vertex_buffer);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,mesh->indices_buffer);
         glDrawElements(GL_TRIANGLES,mesh->indices.size(),GL_UNSIGNED_INT,(void*)0);
-
+        glBindBuffer(GL_ARRAY_BUFFER,0);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,0);
 
     }
 

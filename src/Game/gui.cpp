@@ -55,11 +55,12 @@ GUI::GUI(Engine* engine){
             triangle->texture.format = VK_FORMAT_R8G8B8A8_UNORM;	
 		#endif
         #ifdef ES2
-            triangle->data.fragment_shader_path = "Game/Assets/frag.glsl";
-            triangle->data.vertex_shader_path = "Game/Assets/vert.glsl";
+            triangle->data.fragment_shader_path = "Game/Assets/shaders/gles/red.glsl";
+            triangle->data.vertex_shader_path = "Game/Assets/vert_mvp.glsl";
         #endif
-		
+		triangle->bIsGUI = true;
 		this->mesh = triangle;
 
 		engine->meshes.push_back(this->mesh);
+        
 }

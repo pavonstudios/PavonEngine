@@ -1,4 +1,4 @@
-m models/pavon_the_game/police.gltf 15 10 0 textures/character2.jpg player
+m models/pavon_the_game/police.gltf 5 10 0 textures/character2.jpg player
 
 
 #m models/skydome.gltf 0 0 0 textures/skydome.jpg
