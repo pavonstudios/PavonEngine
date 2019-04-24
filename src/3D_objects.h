@@ -77,11 +77,10 @@ struct UniformBufferObject {
 namespace engine{
 class EMesh : public GameObject{
 public:
+    EMesh();
 #ifdef VULKAN
     EMesh(vks::VulkanDevice* vulkan_device);
     vks::VulkanDevice* vulkan_device;
-#else
-    EMesh();
 #endif
     ~EMesh();
     void create_buffers();

@@ -27,6 +27,7 @@
 #include "camera.h"
 
 class ThirdPerson;
+class GUI;
 
 using namespace engine;
 
@@ -42,6 +43,7 @@ public:
     AssetManager objects_manager;
 
     ThirdPerson * player;
+    GUI* gui;
     
     #ifdef ANDROID
         Engine(android_app * pApp);

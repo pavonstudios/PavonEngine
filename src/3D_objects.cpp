@@ -328,6 +328,9 @@ EMesh::EMesh(vks::VulkanDevice* vulkan_device){
             &node_uniform);               
     }
 }
+EMesh::EMesh(){
+    
+}
 EMesh::~EMesh(){
     clean_object();
         for(auto buffer: uniformBuffers){
