@@ -2,8 +2,10 @@
 #define THIRD_PERSON
 
 #include "../engine.h"
+
 class ThirdPerson{
 	public:
+		ThirdPerson();
 		Engine* engine;
 		EMesh* mesh;
 		void move_forward();

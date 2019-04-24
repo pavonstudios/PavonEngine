@@ -25,7 +25,11 @@
 #include "WindowManager.hpp"
 #include "3D_objects.h"
 #include "camera.h"
+
+class ThirdPerson;
+
 using namespace engine;
+
 class Engine {
 #ifdef ANDROID
 public:
@@ -40,6 +44,8 @@ public:
 public:
     WindowManager window_manager;
     AssetManager objects_manager;
+
+    ThirdPerson * player;
     
     #ifdef ANDROID
         Engine(android_app * pApp);
@@ -72,6 +78,9 @@ public:
     void update_mvp(EMesh* mesh);
     void init();
     void es2_loop();
+    void loop_data();
+
+    
 
 #ifndef ANDROID
     Engine();

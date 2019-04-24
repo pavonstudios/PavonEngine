@@ -95,14 +95,25 @@ void Engine::init(){
 				edit_mode = true;
         #endif
 }
+void Engine::loop_data(){
+		#ifdef DEVELOPMENT
+			print_fps();
+		#endif
 
+		if(!edit_mode)
+					player->update();			
+
+		get_time();
+		main_camera.cameraSpeed = main_camera.velocity * deltaTime;
+}
 void Engine::main_loop(){
-	ThirdPerson player;
-	player.engine = this;	
+	
+	player = new ThirdPerson();
+	player->engine = this;	
 	if(this->player_id == -1){
 		std::runtime_error("no player assigned from map file");
 	}else{
-			player.mesh = this->meshes[this->player_id];
+			player->mesh = this->meshes[this->player_id];
 
 	}
 
@@ -110,15 +121,12 @@ void Engine::main_loop(){
 		std::cout << "Vulkan Rendering" << std::endl;		
 		
 		while (!glfwWindowShouldClose(window)) {
-				print_fps();
+			
 				glfwPollEvents();
 				update_input();
 
-				if(!edit_mode)
-					player.update();			
-
-				get_time();
-				main_camera.cameraSpeed = main_camera.velocity * deltaTime;
+				loop_data();
+				
 
 				
 					auto tStart = std::chrono::high_resolution_clock::now();
@@ -223,6 +231,9 @@ void Engine::framebufferResizeCallback(GLFWwindow* window, int width, int height
 }
 
 
+
+
+#endif//end if def vulkan
 #ifdef DEVELOPMENT
     void Engine::print_debug(const std::string text, int8_t posx, int8_t posy){		
 		printf("%c[%i;%iH",0x1B,posx,posy);
@@ -237,6 +248,7 @@ void Engine::framebufferResizeCallback(GLFWwindow* window, int width, int height
 	}
 
 #endif
+
 float Engine::get_time(){
 		static auto startTime = std::chrono::high_resolution_clock::now();
 
@@ -248,8 +260,6 @@ float Engine::get_time(){
 		
 		return time;
 }
-#endif//end if def vulkan
-
 
 void Engine::update_mvp(EMesh* mesh){
 	glm::mat4 mat = main_camera.Projection * main_camera.View * mesh->model_matrix;

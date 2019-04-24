@@ -2,6 +2,10 @@
 #include <glm/glm.hpp> 
 #include <glm/gtc/matrix_transform.hpp> 
 
+ThirdPerson::ThirdPerson(){
+
+}
+
 void ThirdPerson::move_forward(){
 	//this->engine->main_camera.MoveForward();
 	glm::mat4 mat = glm::translate(glm::mat4(1.0),glm::vec3(0,0,0));
