@@ -29,6 +29,8 @@ public:
     Engine* engine;
     void create_window();
     void swap_buffers();
+    bool window_should_close();
+    void check_events();
     ~WindowManager();
     #ifdef VULKAN
         GLFWwindow* get_window(){
@@ -48,7 +50,7 @@ public:
                         
             void create_window_xorg();
             void clear();
-            void check_events();
+            
             
         private:
             void configure_egl();

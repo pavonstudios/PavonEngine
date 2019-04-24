@@ -63,35 +63,32 @@ void Engine::init(){
 
 
 		#if defined(ES2) || defined(ANDROID)
-				//std::cout << "openg gl es2\n ";
-				
+								
 				renderer.init_gl();                
-                #ifdef  ES2
-                        for(EMesh* mesh : meshes){
-                                mesh->data = data;
-                                renderer.load_shaders(mesh);
-                                mesh->create_buffers();
-                            #ifndef ANDROID
-                                renderer.load_mesh_texture(mesh);
-                            #endif
-                        }
-                #endif
-                #ifdef  ANDROID
-                       /* meshes[0]->data = data;
-                        renderer.load_shaders(meshes[0]);
-                        meshes[0]->create_buffers();
-                        meshes[4]->data = data;
-                        renderer.load_shaders(meshes[4]);
-                        meshes[4]->create_buffers();*/
-                            for(EMesh* mesh : meshes){
-                                mesh->data = data;
-                                renderer.load_shaders(mesh);
-                                mesh->create_buffers();
-                        #ifndef ANDROID
-                                renderer.load_mesh_texture(mesh);
-                        #endif
-                            }
-                #endif
+				#ifdef  ES2
+								for(EMesh* mesh : meshes){
+												mesh->data = data;
+												renderer.load_shaders(mesh);
+												mesh->create_buffers();
+										#ifndef ANDROID
+												renderer.load_mesh_texture(mesh);
+										#endif
+								}
+				#endif
+				#ifdef  ANDROID
+								/* meshes[0]->data = data;
+								renderer.load_shaders(meshes[0]);
+								meshes[0]->create_buffers();
+								meshes[4]->data = data;
+								renderer.load_shaders(meshes[4]);
+								meshes[4]->create_buffers();*/
+										for(EMesh* mesh : meshes){
+												mesh->data = data;
+												renderer.load_shaders(mesh);
+												mesh->create_buffers();
+								
+										}
+				#endif
 				edit_mode = true;
         #endif
 }
@@ -101,83 +98,22 @@ void Engine::loop_data(){
 		#endif
 
 		if(!edit_mode)
-					player->update();			
+			player->update();			
 
 		get_time();
 		main_camera.cameraSpeed = main_camera.velocity * deltaTime;
 }
-void Engine::main_loop(){
-	
-	player = new ThirdPerson();
-	player->engine = this;	
-	if(this->player_id == -1){
-		std::runtime_error("no player assigned from map file");
-	}else{
-			player->mesh = this->meshes[this->player_id];
-
-	}
-
-	#ifdef VULKAN
-		std::cout << "Vulkan Rendering" << std::endl;		
-		
-		while (!glfwWindowShouldClose(window)) {
-			
-				glfwPollEvents();
-
-				update_input();
-
-				loop_data();
-				
-
-				
-					auto tStart = std::chrono::high_resolution_clock::now();
-						app.main_loop();//draw frame
-					frames++;
-
-					auto tEnd = std::chrono::high_resolution_clock::now();
-					auto tDiff = std::chrono::duration<double, std::milli>(tEnd - tStart).count();
-					frame_time = (float)tDiff/1000.0f;
-
-					fps += (float)tDiff;
-					if(fps > 1000.0f){
-						last_fps = static_cast<uint32_t>((float)frames * (1000.0f / fps));
-						fps = 0;
-						frames = 0;
-					}			
-
-				glfwSwapBuffers(window);
-
-			}
-		app.finish();
-		glfwDestroyWindow(window);
-
-		glfwTerminate();
-
-	#endif//end if define vulkan
-
-	#if defined(ES2)
-	while(1){
-		es2_loop();
-	}              
-	#endif
-}
-
 void Engine::es2_loop() {
 	#if defined(ES2) || defined(ANDROID)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	#endif
 
 	#ifdef ES2
-		window_manager.check_events();
-					update_input();
-
-					loop_data();
-
-    for(EMesh* mesh : meshes){
-		renderer.activate_vertex_attributes(mesh);
-		update_mvp(mesh);
-		renderer.draw(mesh);
-	}
+		for(EMesh* mesh : meshes){
+			renderer.activate_vertex_attributes(mesh);
+			update_mvp(mesh);
+			renderer.draw(mesh);
+		}
 
     #endif
     #ifdef ANDROID
@@ -194,9 +130,74 @@ void Engine::es2_loop() {
         }
     #endif
 
-
-	window_manager.swap_buffers();
 }
+#ifdef VULKAN
+void Engine::vulkan_loop(){					
+					
+						app.main_loop();//draw frame
+					
+
+}
+#endif
+
+void Engine::main_loop(){
+	
+	player = new ThirdPerson();
+	player->engine = this;	
+	if(this->player_id == -1){
+		std::runtime_error("no player assigned from map file");
+	}else{
+			player->mesh = this->meshes[this->player_id];
+
+	}
+
+		
+			while (!window_manager.window_should_close()) {
+					window_manager.check_events();
+
+					update_input();
+
+					loop_data();
+				
+					auto tStart = std::chrono::high_resolution_clock::now();
+
+					#ifdef VULKAN
+						vulkan_loop();
+					#endif
+					
+					#ifdef ES2
+						es2_loop();
+					#endif		
+
+					frames++;
+
+					auto tEnd = std::chrono::high_resolution_clock::now();
+					auto tDiff = std::chrono::duration<double, std::milli>(tEnd - tStart).count();
+					frame_time = (float)tDiff/1000.0f;
+
+					fps += (float)tDiff;
+					if(fps > 1000.0f){
+						last_fps = static_cast<uint32_t>((float)frames * (1000.0f / fps));
+						fps = 0;
+						frames = 0;
+					}			
+
+
+					window_manager.swap_buffers();
+					
+			}
+
+			#ifdef VULKAN
+				app.finish();
+				glfwDestroyWindow(window);
+
+				glfwTerminate();
+
+			#endif//end if define vulkan
+	
+}
+
+
 #ifdef VULKAN
 void Engine::update_window_size(){
 	 int width = 0, height = 0;

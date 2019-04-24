@@ -62,39 +62,7 @@ void WindowManager::configure_egl(){
    eglMakeCurrent( egl_display, egl_surface, egl_surface, egl_context );
 }
 
-void WindowManager::check_events(){
-   XEvent  xev;
-   KeySym key;		
-	char text[255];	
-   KeySym key_release;		
-	char key_release_char[255];	
-   XNextEvent( x_display, &xev );
 
-   if ( xev.type == KeyPress ){
-      //std::cout << "key pressed \n";
-   } 
-   if (xev.type == KeyRelease){
-     // std::cout << "key realease from window manager \n";
-   }
-
-      /* use the XLookupString routine to convert the invent
-		   KeyPress data into regular text.  Weird but necessary...
-		*/
-   if (xev.type==KeyPress&&
-		    XLookupString(&xev.xkey,text,255,&key,0)==1) {
-		
-			if (text[0]=='q') {
-				
-			}
-         engine->input.key_verifier_pressed(text[0]);
-
-		}
-   if (xev.type==KeyRelease &&
-		    XLookupString(&xev.xkey,key_release_char,255,&key_release,0)==1) {
-
-         engine->input.key_verifier_released(key_release_char[0]);
-		}
-}
 
 void WindowManager::create_window_xorg(){
        ///////  the X11 part  //////////////////////////////////////////////////////////////////
@@ -228,5 +196,53 @@ WindowManager::~WindowManager(){
    glfwDestroyWindow(glfw_window);
 
    glfwTerminate();
+   #endif
+}
+bool WindowManager::window_should_close(){
+   bool value = false; 
+   #ifdef VULKAN
+      value = glfwWindowShouldClose(glfw_window);
+   #endif
+   #if defined(ES2)
+      value = false;
+   #endif
+   return value;
+}
+void WindowManager::check_events(){
+   #ifdef ES2
+   XEvent  xev;
+   KeySym key;		
+	char text[255];	
+   KeySym key_release;		
+	char key_release_char[255];	
+   XNextEvent( x_display, &xev );
+
+   if ( xev.type == KeyPress ){
+      //std::cout << "key pressed \n";
+   } 
+   if (xev.type == KeyRelease){
+     // std::cout << "key realease from window manager \n";
+   }
+
+      /* use the XLookupString routine to convert the invent
+		   KeyPress data into regular text.  Weird but necessary...
+		*/
+   if (xev.type==KeyPress&&
+		    XLookupString(&xev.xkey,text,255,&key,0)==1) {
+		
+			if (text[0]=='q') {
+				
+			}
+         engine->input.key_verifier_pressed(text[0]);
+
+		}
+   if (xev.type==KeyRelease &&
+		    XLookupString(&xev.xkey,key_release_char,255,&key_release,0)==1) {
+
+         engine->input.key_verifier_released(key_release_char[0]);
+		}
+   #endif
+   #ifdef VULKAN
+      	glfwPollEvents();
    #endif
 }

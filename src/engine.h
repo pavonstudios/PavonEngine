@@ -79,8 +79,9 @@ public:
     void init();
     void es2_loop();
     void loop_data();
-
-    
+    #ifdef VULKAN
+    void vulkan_loop();
+    #endif
 
 #ifndef ANDROID
     Engine();
