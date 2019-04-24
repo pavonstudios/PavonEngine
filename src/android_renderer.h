@@ -278,7 +278,7 @@ public:
     }
 
 void activate_vertex_attributes(EMesh* mesh){
-        #ifdef ES2
+        #if defined(ES2) || defined(ANDROID)
             glBindBuffer(GL_ARRAY_BUFFER,mesh->vertex_buffer);
         #endif
         glVertexAttribPointer ( 0, 3, GL_FLOAT, false, sizeof(Vertex), (void*)0 );
@@ -391,6 +391,7 @@ void activate_vertex_attributes(EMesh* mesh){
              
   
     }
+
     void update_mvp(EMesh* mesh){
                                 
                 glUniformMatrix4fv(0,1,GL_FALSE,&mesh->MVP[0][0]);
@@ -409,6 +410,7 @@ void activate_vertex_attributes(EMesh* mesh){
             //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
     }
+
     void draw_gui(EMesh* mesh){
         glUseProgram  ( mesh->shader_program );
         glBindBuffer(GL_ARRAY_BUFFER,mesh->vertex_buffer);
@@ -418,7 +420,7 @@ void activate_vertex_attributes(EMesh* mesh){
     }
 
     void draw(EMesh* mesh){        
-        glUseProgram  ( mesh->shader_program );
+        
         #ifdef ES2
                 glBindTexture(GL_TEXTURE_2D,mesh->texture_id);
         #endif
@@ -426,8 +428,8 @@ void activate_vertex_attributes(EMesh* mesh){
         glBindBuffer(GL_ARRAY_BUFFER,mesh->vertex_buffer);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,mesh->indices_buffer);
         glDrawElements(GL_TRIANGLES,mesh->indices.size(),GL_UNSIGNED_INT,(void*)0);
-        glBindBuffer(GL_ARRAY_BUFFER,0);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,0);
+        //glBindBuffer(GL_ARRAY_BUFFER,0);
+        //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,0);
 
     }
 

@@ -82,7 +82,8 @@ void Engine::init(){
 
 		#if defined(ES2) || defined(ANDROID)
 								
-				renderer.init_gl();                
+				renderer.init_gl();   
+
 				#ifdef  ES2
 								for(EMesh* mesh : meshes){
 												if(mesh->data.vertex_shader_path == ""){
@@ -109,7 +110,7 @@ void Engine::init(){
 								
 										}
 				#endif
-				//edit_mode = true;
+				edit_mode = true;
         #endif
 
 
@@ -143,6 +144,7 @@ void Engine::es2_loop() {
 			for(EMesh* mesh : meshes){
 				
 				if(!mesh->bIsGUI){
+					glUseProgram  ( mesh->shader_program );
 					renderer.activate_vertex_attributes(mesh);
 					update_mvp(mesh);
 					renderer.draw(mesh);
