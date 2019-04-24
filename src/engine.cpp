@@ -97,8 +97,10 @@ void Engine::loop_data(){
 			print_fps();
 		#endif
 
-		if(!edit_mode)
-			player->update();			
+		if(!edit_mode){
+				player->update();	
+		}
+				
 
 		get_time();
 		main_camera.cameraSpeed = main_camera.velocity * deltaTime;
@@ -143,12 +145,16 @@ void Engine::vulkan_loop(){
 void Engine::main_loop(){
 	
 	player = new ThirdPerson();
+	input.W.bIsPressed = false;
 	player->engine = this;	
 	if(this->player_id == -1){
 		std::runtime_error("no player assigned from map file");
 	}else{
 			player->mesh = this->meshes[this->player_id];
 
+	}
+	if(!player->mesh){
+		std::runtime_error("no player mesh pointer assigner");
 	}
 
 		
@@ -312,7 +318,7 @@ void Engine::load_and_assing_location(std::string path, glm::vec3 location){
 void Engine::load_map(std::string path){
 
     #ifndef ANDROID
-	    //FILE* file = fopen(path.c_str(),"r");
+	    
 			std::stringstream file;
 			std::ifstream text_file (path);
 			if(text_file){
@@ -322,7 +328,7 @@ void Engine::load_map(std::string path){
 			
     #endif
 
-	    #ifdef ANDROID
+		#ifdef ANDROID
 			AAsset* android_file = AAssetManager_open(pAndroid_app->activity->assetManager,path.c_str(), AASSET_MODE_BUFFER);
 
 			size_t file_length = AAsset_getLength(android_file);
@@ -333,11 +339,11 @@ void Engine::load_map(std::string path){
 
 			std::stringstream file ((std::string(fileContent)));
 
-	    #endif
+		#endif
 			
 		if(!file){
 					#ifndef ANDROID
-					throw std::runtime_error("failed to load map file");
+						throw std::runtime_error("failed to load map file");
 					#endif
 					#ifdef ANDROID
 							LOGW("No file map");
@@ -359,7 +365,7 @@ void Engine::load_map(std::string path){
 				glm::vec3 location;
 				std::string texture_path;
 				std::string type;
-				int counter;
+				int counter = 0;
 
 				line_stream >> first_char >> model_path >> location.x >> location.y >> location.z >> texture_path >> type;				
 				
@@ -417,7 +423,16 @@ void Engine::load_map(std::string path){
 }
 #ifndef ANDROID
 void Engine::update_input(){
-	
+		if(input.TAB.Released){
+					if(!edit_mode)
+						edit_mode = true;
+					else
+					{
+						edit_mode = false;
+					}
+					input.TAB.Released = false;
+			}
+
 	if(edit_mode){
 			if(input.S.bIsPressed){
 				main_camera.MoveBackward();				
@@ -453,6 +468,8 @@ void Engine::update_input(){
 				main_camera.mouse_control_update(input.yaw, input.pitch);
 
 			}
+
+		
 
 	}
 }

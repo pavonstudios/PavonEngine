@@ -21,15 +21,17 @@ void Input::key_callback(GLFWwindow* window, int key, int scancode, int action, 
 			if(key == GLFW_KEY_TAB){
 				if(action == GLFW_PRESS){
 					engine->input.TAB.bIsPressed = true;
+					engine->input.TAB.Released = false;
 				}
 				if(action == GLFW_RELEASE){
 					engine->input.TAB.bIsPressed = false;
-					if(!engine->edit_mode)
+					engine->input.TAB.Released = true;
+					/* if(!engine->edit_mode)
 						engine->edit_mode = true;
 					else
 					{
 						engine->edit_mode = false;
-					}
+					} */
 					
 				}
 			}
@@ -194,6 +196,9 @@ void Input::key_set(const char key, bool isPressed){
 	}
 	if(key == 'e'){
 		actual_key = &this->E;
+	}
+	if(key == 'p'){
+		actual_key = &this->TAB;
 	}
 
 	if(actual_key){

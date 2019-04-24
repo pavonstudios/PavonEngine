@@ -27,7 +27,7 @@ void ThirdPerson::move_forward(){
 void ThirdPerson::update(){
 	move_forward();
 #ifndef ANDROID
-	if(engine->input.W.bIsPressed){
+	if(engine->input.W.bIsPressed == true){
 		
 		this->mesh->model_matrix = glm::translate(mesh->model_matrix,glm::vec3(0,-0.001,0));
 		engine->print_debug("moving around",10,0);

@@ -88,7 +88,7 @@ public:
     #endif
 
         GLFWwindow* window;
-        class Input input;
+        Input input;
 
 
  

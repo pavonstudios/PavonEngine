@@ -9,6 +9,7 @@
 
 struct key_pressed{
 	bool bIsPressed = false;
+	bool Released = false;
 };
 class Input{
 public:
@@ -19,7 +20,7 @@ public:
 	key_pressed Q;
 	key_pressed X;
 	key_pressed Z;
-	key_pressed W;
+	key_pressed W = {false,false};
 	key_pressed S;
 	key_pressed TAB;
 
