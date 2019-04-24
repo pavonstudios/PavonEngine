@@ -28,6 +28,7 @@ add_library(maincode
         engine.cpp
         WindowManager.cpp
         Game/ThirdPerson.cpp
+        Game/gui.cpp
     )
 
 

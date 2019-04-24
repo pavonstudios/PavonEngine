@@ -7,13 +7,15 @@
 #include "Game/ThirdPerson.hpp"	
 #include "Game/gui.hpp"
 
-#ifndef ANDROID
+
 Engine::Engine(){
+
 	#ifdef VULKAN 
 		 renderer.engine = this;
 	#endif
+
 }
-#endif
+
 
 #ifdef ANDROID
 	Engine::Engine(android_app * pApp){
@@ -21,10 +23,24 @@ Engine::Engine(){
         this->pAndroid_app = pApp;
 
 	}
-	Engine::Engine(){
-			
-	}
 #endif
+void Engine::init_player(){
+
+		player = new ThirdPerson();
+		//input.W.bIsPressed = false;
+		player->engine = this;	
+		player->mesh = nullptr;
+		if(this->player_id == -1){
+			std::runtime_error("no player assigned from map file");
+		}else{
+				player->mesh = this->meshes[this->player_id];
+
+		}
+		if(!player->mesh){
+			std::runtime_error("no player mesh pointer assigner");
+		}
+
+}
 
 void Engine::init(){
 		#ifndef ANDROID
@@ -32,6 +48,7 @@ void Engine::init(){
 		#endif
 		
 		window_manager.engine = this;
+		
 		pipeline_data data = {};
 
 		#ifndef ANDROID
@@ -92,8 +109,11 @@ void Engine::init(){
 								
 										}
 				#endif
-				edit_mode = true;
+				//edit_mode = true;
         #endif
+
+
+				init_player();
 }
 void Engine::loop_data(){
 		#ifdef DEVELOPMENT
@@ -101,7 +121,10 @@ void Engine::loop_data(){
 		#endif
 
 		if(!edit_mode){
-				player->update();	
+			if(player->mesh){
+					player->update();	
+			}
+			
 		}
 				
 
@@ -110,6 +133,7 @@ void Engine::loop_data(){
 		
 }
 void Engine::es2_loop() {
+
 	#if defined(ES2) || defined(ANDROID)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	#endif
@@ -156,25 +180,14 @@ void Engine::vulkan_loop(){
 
 void Engine::main_loop(){
 	
-	player = new ThirdPerson();
-	input.W.bIsPressed = false;
-	player->engine = this;	
-	if(this->player_id == -1){
-		std::runtime_error("no player assigned from map file");
-	}else{
-			player->mesh = this->meshes[this->player_id];
-
-	}
-	if(!player->mesh){
-		std::runtime_error("no player mesh pointer assigner");
-	}
-
+	
 		
 			while (!window_manager.window_should_close()) {
 					window_manager.check_events();
 
+#ifndef ANDROID
 					update_input();
-
+#endif
 					loop_data();
 				
 					auto tStart = std::chrono::high_resolution_clock::now();
@@ -256,6 +269,7 @@ void Engine::framebufferResizeCallback(GLFWwindow* window, int width, int height
 
 
 #endif//end if def vulkan
+
 #ifdef DEVELOPMENT
     void Engine::print_debug(const std::string text, int8_t posx, int8_t posy){		
 		printf("%c[%i;%iH",0x1B,posx,posy);
@@ -439,6 +453,7 @@ void Engine::load_map(std::string path){
 	}
 	
 }
+
 #ifndef ANDROID
 void Engine::update_input(){
 		if(input.TAB.Released){
@@ -449,6 +464,7 @@ void Engine::update_input(){
 						edit_mode = false;
 					}
 					input.TAB.Released = false;
+					this->print_debug("tab pressed or released",0,0);
 			}
 
 	if(edit_mode){

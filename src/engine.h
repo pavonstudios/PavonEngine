@@ -39,21 +39,22 @@ public:
 #endif
 
 public:
+    Engine();
     WindowManager window_manager;
     AssetManager objects_manager;
+    Camera main_camera;
 
     ThirdPerson * player;
     GUI* gui;
     
     #ifdef ANDROID
         Engine(android_app * pApp);
-        Engine();
         android_app * pAndroid_app;
     #endif
 
     std::vector<EMesh*> meshes;
     int player_id = -1;
-    Camera main_camera;
+    
     bool edit_mode = false;
 
     float deltaTime = 0.0f;	// Time between current frame and last frame
@@ -80,9 +81,10 @@ public:
     #ifdef VULKAN
     void vulkan_loop();
     #endif
+    void init_player();
 
 #ifndef ANDROID
-    Engine();
+    
     #ifdef VULKAN
         Renderer renderer;
         VulkanData vkdata = {VK_NULL_HANDLE};
