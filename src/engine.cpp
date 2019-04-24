@@ -99,7 +99,12 @@ void Engine::init(){
 void Engine::main_loop(){
 	ThirdPerson player;
 	player.engine = this;	
-	player.mesh = this->meshes[this->player_id];
+	if(this->player_id == -1){
+		std::runtime_error("no player assigned from map file");
+	}else{
+			player.mesh = this->meshes[this->player_id];
+
+	}
 
 	#ifdef VULKAN
 		std::cout << "Vulkan Rendering" << std::endl;		
@@ -352,9 +357,12 @@ void Engine::load_map(std::string path){
 				textures_paths.push_back(texture_path);
 				locations.push_back(location);
 
-				if(type == "player"){
-					this->player_id = counter;
+				if(player_id == -1){
+					if(type == "player"){
+						this->player_id = counter;
+					}
 				}
+				
 				counter++;
 			}			
 			

@@ -48,7 +48,7 @@ public:
     #endif
 
     std::vector<EMesh*> meshes;
-    int player_id = 0;
+    int player_id = -1;
     Camera main_camera;
     bool edit_mode = false;
 
