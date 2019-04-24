@@ -107,6 +107,7 @@ void Engine::loop_data(){
 
 		get_time();
 		main_camera.cameraSpeed = main_camera.velocity * deltaTime;
+		
 }
 void Engine::es2_loop() {
 	#if defined(ES2) || defined(ANDROID)

@@ -210,37 +210,41 @@ bool WindowManager::window_should_close(){
 }
 void WindowManager::check_events(){
    #ifdef ES2
-   XEvent  xev;
-   KeySym key;		
-	char text[255];	
-   KeySym key_release;		
-	char key_release_char[255];	
-   XNextEvent( x_display, &xev );
+      while ( XPending ( x_display ) ){
+               XEvent  xev;
+         KeySym key;		
+         char text[255];	
+         KeySym key_release;		
+         char key_release_char[255];	
+         XNextEvent( x_display, &xev );
 
-   if ( xev.type == KeyPress ){
-      //std::cout << "key pressed \n";
-   } 
-   if (xev.type == KeyRelease){
-     // std::cout << "key realease from window manager \n";
-   }
+         if ( xev.type == KeyPress ){
+            //std::cout << "key pressed \n";
+         } 
+         if (xev.type == KeyRelease){
+         // std::cout << "key realease from window manager \n";
+         }
 
-      /* use the XLookupString routine to convert the invent
-		   KeyPress data into regular text.  Weird but necessary...
-		*/
-   if (xev.type==KeyPress&&
-		    XLookupString(&xev.xkey,text,255,&key,0)==1) {
-		
-			if (text[0]=='q') {
-				
-			}
-         engine->input.key_verifier_pressed(text[0]);
+            /* use the XLookupString routine to convert the invent
+               KeyPress data into regular text.  Weird but necessary...
+            */
+         if (xev.type==KeyPress&&
+               XLookupString(&xev.xkey,text,255,&key,0)==1) {
+            
+               if (text[0]=='q') {
+                  
+               }
+               engine->input.key_verifier_pressed(text[0]);
 
-		}
-   if (xev.type==KeyRelease &&
-		    XLookupString(&xev.xkey,key_release_char,255,&key_release,0)==1) {
+            }
+         if (xev.type==KeyRelease &&
+               XLookupString(&xev.xkey,key_release_char,255,&key_release,0)==1) {
 
-         engine->input.key_verifier_released(key_release_char[0]);
-		}
+               engine->input.key_verifier_released(key_release_char[0]);
+            }
+      }
+      
+     
    #endif
    #ifdef VULKAN
       	glfwPollEvents();
