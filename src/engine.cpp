@@ -134,9 +134,9 @@ void Engine::loop_data(){
 }
 void Engine::es2_loop() {
 
-	#if defined(ES2) || defined(ANDROID)
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	#endif
+		#if defined(ES2) || defined(ANDROID)
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		#endif
 
 		#ifdef ES2
 
@@ -147,7 +147,7 @@ void Engine::es2_loop() {
 					update_mvp(mesh);
 					renderer.draw(mesh);
 				}					
-				else{
+				if(mesh->bIsGUI){
 					renderer.activate_vertex_attributes(mesh);
 					update_mvp(mesh);
 					//renderer.draw_gui(mesh);
@@ -178,8 +178,7 @@ void Engine::vulkan_loop(){
 }
 #endif
 
-void Engine::main_loop(){
-	
+void Engine::main_loop(){	
 	
 		
 			while (!window_manager.window_should_close()) {
