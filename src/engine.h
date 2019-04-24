@@ -31,16 +31,12 @@ class ThirdPerson;
 using namespace engine;
 
 class Engine {
-#ifdef ANDROID
+
+#if defined(ES2) || defined(ANDROID)    
 public:
-    Renderer renderer;
+    Renderer renderer;    
 #endif
-#ifdef ES2  
-    
-public:
-    Renderer renderer;
-    
-#endif
+
 public:
     WindowManager window_manager;
     AssetManager objects_manager;
@@ -86,7 +82,7 @@ public:
 #ifndef ANDROID
     Engine();
     #ifdef VULKAN
-        Renderer app;
+        Renderer renderer;
         VulkanData vkdata = {VK_NULL_HANDLE};
         vks::VulkanDevice* vulkan_device;      
     #endif

@@ -10,7 +10,7 @@
 #ifndef ANDROID
 Engine::Engine(){
 	#ifdef VULKAN 
-		 app.engine = this;
+		 renderer.engine = this;
 	#endif
 }
 #endif
@@ -58,7 +58,7 @@ void Engine::init(){
 		load_map(map_path);
 
 		#ifdef VULKAN
-				app.configure_objects();
+				renderer.configure_objects();
 		#endif
 
 
@@ -134,7 +134,7 @@ void Engine::es2_loop() {
 #ifdef VULKAN
 void Engine::vulkan_loop(){					
 					
-						app.main_loop();//draw frame
+						renderer.main_loop();//draw frame
 					
 
 }
@@ -188,7 +188,7 @@ void Engine::main_loop(){
 			}
 
 			#ifdef VULKAN
-				app.finish();
+				renderer.finish();
 				glfwDestroyWindow(window);
 
 				glfwTerminate();
@@ -216,7 +216,7 @@ void Engine::update_window_size(){
 void Engine::init_renderer(){
 
       #ifdef VULKAN
-				app.run(&vkdata);		
+				renderer.run(&vkdata);		
 			//	load_map("Game/map01.map");//vulkan device must initialized before load object(it's becouse buffer need vulkan device for creation)	
 			#endif
 }
