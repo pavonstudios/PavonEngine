@@ -43,16 +43,21 @@ GUI::GUI(Engine* engine){
 		triangle->indices.push_back(1); */
 		triangle->load_model_gltf("Game/Assets/models/button01.gltf");
 
-		triangle->data.fragment_shader_path = "Game/Assets/shaders/red.spv";
-		triangle->data.vertex_shader_path = "Game/Assets/shaders/vert.spv";
+		
 		triangle->texture_path = "Game/Assets/textures/car01.jpg";
 		#ifdef VULKAN
-		triangle->data.draw_type = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
-    	triangle->data.mesh_type = MESH_TYPE_STATIC;
+            triangle->data.fragment_shader_path = "Game/Assets/shaders/red.spv";
+            triangle->data.vertex_shader_path = "Game/Assets/shaders/simple_vert.spv";
+            triangle->data.draw_type = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+            triangle->data.mesh_type = MESH_TYPE_STATIC;
 
-		triangle->init(engine->vulkan_device);
-		triangle->texture.format = VK_FORMAT_R8G8B8A8_UNORM;	
+            triangle->init(engine->vulkan_device);
+            triangle->texture.format = VK_FORMAT_R8G8B8A8_UNORM;	
 		#endif
+        #ifdef ES2
+            triangle->data.fragment_shader_path = "Game/Assets/frag.glsl";
+            triangle->data.vertex_shader_path = "Game/Assets/vert.glsl";
+        #endif
 		
 		this->mesh = triangle;
 

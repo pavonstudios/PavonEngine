@@ -8,7 +8,7 @@ DEFINES= -DGLTF -DDEVELOPMENT
 OBJs= main.o engine.o camera.o asset_manager.o 3D_objects.o input.o
 
 
-COMPILE= $(CC) -c -DGLTF -DVULKAN -DDEVELOPMENT
+COMPILE= $(CC) -c -DGLTF $(DEFINES) -DDEVELOPMENT
 
 GAMEOBJs = $(wildcard /home/pavon/rt_renderer/src/Game/*.o)
 
