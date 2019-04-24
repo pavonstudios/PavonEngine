@@ -27,7 +27,7 @@ add_library(maincode
         asset_manager.cpp
         engine.cpp
         WindowManager.cpp
-    
+        Game/ThirdPerson.cpp
     )
 
 

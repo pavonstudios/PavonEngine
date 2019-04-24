@@ -154,11 +154,11 @@ void Engine::main_loop(){
 
 	#endif//end if define vulkan
 
-    #if defined(ES2) || defined(ANDROID)
-		while(1){
-			es2_loop();
-		}              
-    #endif
+	#if defined(ES2)
+	while(1){
+		es2_loop();
+	}              
+	#endif
 }
 
 void Engine::es2_loop() {

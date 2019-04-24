@@ -76,7 +76,7 @@ private:
             char* buffer  =  new char [ length ];
             glGetShaderInfoLog ( shader , length , NULL , buffer );
             #ifdef ANDROID
-                LOGW("shader info %s ",buffer,src);
+                LOGW("shader info %s ",buffer);
             #else
                 cout << "shader info: " <<  buffer << flush;
             #endif

@@ -1,7 +1,11 @@
 #include "ThirdPerson.hpp"
-#include <glm/glm.hpp> 
-#include <glm/gtc/matrix_transform.hpp> 
-
+#ifndef ANDROID
+    #include <glm/glm.hpp>
+    #include <glm/gtc/matrix_transform.hpp>
+#else
+    #include "../glm/glm.hpp"
+    #include "../glm/gtc/matrix_transform.hpp"
+#endif
 ThirdPerson::ThirdPerson(){
 
 }
@@ -22,6 +26,7 @@ void ThirdPerson::move_forward(){
 }
 void ThirdPerson::update(){
 	move_forward();
+#ifndef ANDROID
 	if(engine->input.W.bIsPressed){
 		
 		this->mesh->model_matrix = glm::translate(mesh->model_matrix,glm::vec3(0,-0.001,0));
@@ -33,6 +38,7 @@ void ThirdPerson::update(){
 		
 	}
 	monse_control(engine->input.yaw, engine->input.pitch);
+#endif
 }
 void ThirdPerson::monse_control(float yaw, float pitch){
 	this->mesh->model_matrix = glm::rotate(mesh->model_matrix,glm::radians(-yaw * (2.f * engine->deltaTime)),glm::vec3(0,0,1));
