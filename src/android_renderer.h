@@ -392,24 +392,8 @@ void activate_vertex_attributes(EMesh* mesh){
   
     }
     void update_mvp(EMesh* mesh){
-       
-       
-                static auto startTime = std::chrono::high_resolution_clock::now();
-                auto currentTime = std::chrono::high_resolution_clock::now();
-                float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
-
-                glm::mat4 model = glm::mat4(1.0);
-                glm::mat4 Projection = glm::perspective(glm::radians(45.f), 768.f/1280.f, 0.01f, 5000.f);
-                glm::mat4 view = glm::lookAt(vec3(0,15,0),vec3(0,0,0),vec3(0,0,1));
-
-                model = glm::rotate(model, time * glm::radians(12.f), glm::vec3(0.0f, 1.0f, 1.0f));
-                //model = rotate(model, radians(90.f),vec3(1.0f,0.0f,0.0f));
-                mat4 mvp = Projection * view * mesh->model_matrix;
-
+                                
                 glUniformMatrix4fv(0,1,GL_FALSE,&mesh->MVP[0][0]);
-            
-             
-  
     }
 
     void draw_mesh(){
@@ -426,11 +410,9 @@ void activate_vertex_attributes(EMesh* mesh){
 
     }
     void draw_gui(EMesh* mesh){
-        
-        //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glUseProgram  ( mesh->shader_program );
         glBindBuffer(GL_ARRAY_BUFFER,mesh->vertex_buffer);
-        glDrawArrays(GL_TRIANGLES,0,3);
+        glDrawArrays(GL_TRIANGLES,0,6);
         glBindBuffer(GL_ARRAY_BUFFER,0);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,0);
     }

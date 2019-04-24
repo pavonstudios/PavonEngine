@@ -56,7 +56,7 @@ GUI::GUI(Engine* engine){
 		#endif
         #ifdef ES2
             triangle->data.fragment_shader_path = "Game/Assets/shaders/gles/red.glsl";
-            triangle->data.vertex_shader_path = "Game/Assets/vert_mvp.glsl";
+            triangle->data.vertex_shader_path = "Game/Assets/shaders/gles/triangle_vert_shader.glsl";
         #endif
 		triangle->bIsGUI = true;
 		this->mesh = triangle;

@@ -125,7 +125,7 @@ void Engine::es2_loop() {
 				else{
 					renderer.activate_vertex_attributes(mesh);
 					update_mvp(mesh);
-					renderer.draw_gui(mesh);
+					//renderer.draw_gui(mesh);
 				}
 
 			}
@@ -148,11 +148,8 @@ void Engine::es2_loop() {
 
 }
 #ifdef VULKAN
-void Engine::vulkan_loop(){					
-					
+void Engine::vulkan_loop(){										
 						renderer.main_loop();//draw frame
-					
-
 }
 #endif
 
@@ -286,11 +283,17 @@ float Engine::get_time(){
 }
 
 void Engine::update_mvp(EMesh* mesh){
-	glm::mat4 mat = main_camera.Projection * main_camera.View * mesh->model_matrix;
-	mesh->MVP = mat;
+		
+		if(mesh->bIsGUI){
+			glm::mat4 Projection = glm::ortho(0.0f, (float)800,(float)600,0.0f, 0.1f, 100.0f);
+			glm::mat4 model_view_inverse = mesh->model_matrix * glm::inverse(main_camera.View);
+			mesh->model_matrix = model_view_inverse;
+		}
+		glm::mat4 mat = main_camera.Projection * main_camera.View * mesh->model_matrix;
+		mesh->MVP = mat;
     #if defined(ES2) || defined(ANDROID)
 		renderer.update_mvp(mesh);
-	#endif
+		#endif
 
 }
 
