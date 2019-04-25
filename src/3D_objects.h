@@ -83,26 +83,19 @@ public:
     void init(vks::VulkanDevice* vulkan_device);
 #endif
     ~EMesh();
+
     void create_buffers();
-    void clean_object();
-    std::vector<Vertex> vertices;
-    std::vector<unsigned int> indices;
-    
-    glm::mat4 model_matrix = glm::mat4(1.0);
-    glm::vec3 location_vector;
-    std::string texture_path;   
+    void clean_object();    
 
     //skeletal
     void load_joints_matrix();
     void load_node(engine::Node *parent, uint32_t index, const tinygltf::Node &gltf_node);
     void load_skins();
     Node* node_from_index(uint32_t index);
-    Node* find_node(Node* parent, uint32_t index);
-
-       
+    Node* find_node(Node* parent, uint32_t index);      
 
 #ifdef GLTF
-    int load_model_gltf(const char* path);
+    
     #ifdef ANDROID
     int load_mode_gltf_android(const char* path, AAssetManager* pAssetManager);
     #endif
@@ -128,13 +121,13 @@ public:
     VkImageView texture_image_view;
 
     std::vector<VkBuffer> uniform_node_buffers;
-    std::vector<VkDeviceMemory> uniform_node_buffer_memory;
-    
+    std::vector<VkDeviceMemory> uniform_node_buffer_memory;    
 
     VkDeviceMemory vertexBufferMemory;
     VkDeviceMemory indexBufferMemory;
     VkDeviceMemory textureImageMemory;   
 #endif
+
 #if defined(ES2) || defined(ANDROID)
     GLuint vertex_buffer;
 	GLuint indices_buffer;
@@ -146,8 +139,21 @@ public:
     glm::mat4 MVP;
     EImageData texture;
     bool bIsGUI = false;
+
+    std::vector<Vertex> vertices;
+    std::vector<unsigned int> indices;
+    
+    glm::mat4 model_matrix = glm::mat4(1.0);
+    glm::vec3 location_vector;
+    std::string texture_path;  
 		
 };
 #include "Node.h"
+
+class MeshManager{
+    public:
+        int load_model_gltf(EMesh* mesh, const char* path);
+};
+
 }//namespace engine
 #endif

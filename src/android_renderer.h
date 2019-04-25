@@ -260,7 +260,7 @@ public:
         #ifdef ANDROID
             mesh_load_result = mesh->load_mode_gltf_android("police_patrol.gltf",app->activity->assetManager);
         #else//ES2
-            mesh_load_result = mesh->load_model_gltf("android/app/src/main/assets/police_patrol.gltf");
+            //mesh_load_result = engine->mesh_manager.load_model_gltf(mesh, "android/app/src/main/assets/police_patrol.gltf");
         #endif
     
        

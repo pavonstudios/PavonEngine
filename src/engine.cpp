@@ -342,7 +342,7 @@ void Engine::load_and_assing_location(std::string path, glm::vec3 location){
 	#ifdef ANDROID
 		model->load_mode_gltf_android(path.c_str(),pAndroid_app->activity->assetManager);
 	#else
-		model->load_model_gltf(path.c_str());
+		mesh_manager.load_model_gltf(model, path.c_str());
 	#endif
 
 	glm::mat4 model_matrix = glm::mat4(1.0f);

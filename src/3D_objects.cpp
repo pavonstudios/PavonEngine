@@ -17,7 +17,76 @@
 
 #ifdef GLTF
 using namespace engine;
+EMesh::EMesh(){
+    
+}
 
+using namespace engine;
+#ifdef VULKAN
+EMesh::EMesh(vks::VulkanDevice* vulkan_device){
+    this->vulkan_device = vulkan_device;
+    this->node_uniform.matrix = glm::mat4(1.0);
+        
+
+    VkDeviceSize bufferSize = sizeof(NodeUniform);
+
+    uniform_node_buffers.resize(3);
+    uniform_node_buffer_memory.resize(3);
+
+    for (size_t i = 0; i < 3; i++) {
+        vulkan_device->createBuffer(
+            VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+            VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+            sizeof(NodeUniform),
+            &uniform_node_buffers[i],
+            &uniform_node_buffer_memory[i],
+            &node_uniform);               
+    }
+}
+
+void EMesh::init(vks::VulkanDevice* vulkan_device){
+    this->vulkan_device = vulkan_device;
+    this->node_uniform.matrix = glm::mat4(1.0);
+        
+
+    VkDeviceSize bufferSize = sizeof(NodeUniform);
+
+    uniform_node_buffers.resize(3);
+    uniform_node_buffer_memory.resize(3);
+
+    for (size_t i = 0; i < 3; i++) {
+        vulkan_device->createBuffer(
+            VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+            VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+            sizeof(NodeUniform),
+            &uniform_node_buffers[i],
+            &uniform_node_buffer_memory[i],
+            &node_uniform);               
+    }
+}
+#endif
+EMesh::~EMesh(){
+    #ifdef VULKAN
+    clean_object();
+        for(auto buffer: uniformBuffers){
+            vkDestroyBuffer(vulkan_device->logicalDevice,buffer,nullptr);
+        }
+        for(auto buffer: uniform_node_buffers){
+            vkDestroyBuffer(vulkan_device->logicalDevice,buffer,nullptr);
+        }
+          vkDestroyBuffer(vulkan_device->logicalDevice,indexBuffer,nullptr);
+        vkDestroyBuffer(vulkan_device->logicalDevice,vertices_buffer,nullptr);
+         for(auto uniform_memory : uniformBuffersMemory){
+            vkFreeMemory(vulkan_device->logicalDevice,uniform_memory, nullptr);
+        }
+        for(auto uniform_memory : uniform_node_buffer_memory){
+            vkFreeMemory(vulkan_device->logicalDevice,uniform_memory, nullptr);
+        }
+         vkFreeMemory(vulkan_device->logicalDevice, textureImageMemory, nullptr);
+        vkFreeMemory(vulkan_device->logicalDevice, indexBufferMemory, nullptr);
+        vkFreeMemory(vulkan_device->logicalDevice, vertexBufferMemory, nullptr);
+    #endif
+}
 void EMesh::create_buffers(){
     #if defined(ES2) || defined(ANDROID)
         glGenBuffers(1,&vertex_buffer);
@@ -177,13 +246,13 @@ int EMesh::load_mode_gltf_android(const char* path, AAssetManager* assetManager)
     return -1;
 }
 #endif//android gltf loader
-int EMesh::load_model_gltf(const char* path){    
+int MeshManager::load_model_gltf(EMesh* mesh, const char* path){    
     
     tinygltf::TinyGLTF loader;
     std::string err;
     std::string warn;
 
-    bool ret = loader.LoadASCIIFromFile(&gltf_model, &err, &warn, path);
+    bool ret = loader.LoadASCIIFromFile(&mesh->gltf_model, &err, &warn, path);
     //bool ret = loader.LoadBinaryFromFile(&model, &err, &warn, argv[1]); // for binary glTF(.glb)
     if(!ret){
         std::string error = "Failed to open " + std::string(path);
@@ -198,21 +267,21 @@ int EMesh::load_model_gltf(const char* path){
 
     }
     
-    load_primitives_data();
-    load_textures_gltf();
+    mesh->load_primitives_data();
+    mesh->load_textures_gltf();
 
-    int node_count = gltf_model.nodes.size();
+    int node_count = mesh->gltf_model.nodes.size();
     for(size_t i = 0; i < node_count;i++){
-        load_node(nullptr,i,gltf_model.nodes[i]);
+        mesh->load_node(nullptr,i,mesh->gltf_model.nodes[i]);
     }
 
-    load_skins();
-    for(auto node : linear_nodes){
+    mesh->load_skins();
+    for(auto node : mesh->linear_nodes){
        // if(node->skin_index > -1)
          //   node->skin = skins[node->skin_index];
         if(node->mesh){
-            if(skins.size()>0)
-                node->skin = skins[0];
+            if(mesh->skins.size()>0)
+                node->skin = mesh->skins[0];
            //node->update(); //for some reason this not work, produce issues in vertices transformation
         }
     }   
@@ -312,79 +381,10 @@ void EMesh::load_primitives_data(){
 }
 #endif
 
-using namespace engine;
-#ifdef VULKAN
-EMesh::EMesh(vks::VulkanDevice* vulkan_device){
-    this->vulkan_device = vulkan_device;
-    this->node_uniform.matrix = glm::mat4(1.0);
-        
 
-    VkDeviceSize bufferSize = sizeof(NodeUniform);
 
-    uniform_node_buffers.resize(3);
-    uniform_node_buffer_memory.resize(3);
 
-    for (size_t i = 0; i < 3; i++) {
-        vulkan_device->createBuffer(
-            VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
-            VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-            sizeof(NodeUniform),
-            &uniform_node_buffers[i],
-            &uniform_node_buffer_memory[i],
-            &node_uniform);               
-    }
-}
-EMesh::EMesh(){
 
-}
-void EMesh::init(vks::VulkanDevice* vulkan_device){
-    this->vulkan_device = vulkan_device;
-    this->node_uniform.matrix = glm::mat4(1.0);
-        
-
-    VkDeviceSize bufferSize = sizeof(NodeUniform);
-
-    uniform_node_buffers.resize(3);
-    uniform_node_buffer_memory.resize(3);
-
-    for (size_t i = 0; i < 3; i++) {
-        vulkan_device->createBuffer(
-            VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
-            VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-            sizeof(NodeUniform),
-            &uniform_node_buffers[i],
-            &uniform_node_buffer_memory[i],
-            &node_uniform);               
-    }
-}
-EMesh::~EMesh(){
-    clean_object();
-        for(auto buffer: uniformBuffers){
-            vkDestroyBuffer(vulkan_device->logicalDevice,buffer,nullptr);
-        }
-        for(auto buffer: uniform_node_buffers){
-            vkDestroyBuffer(vulkan_device->logicalDevice,buffer,nullptr);
-        }
-          vkDestroyBuffer(vulkan_device->logicalDevice,indexBuffer,nullptr);
-        vkDestroyBuffer(vulkan_device->logicalDevice,vertices_buffer,nullptr);
-         for(auto uniform_memory : uniformBuffersMemory){
-            vkFreeMemory(vulkan_device->logicalDevice,uniform_memory, nullptr);
-        }
-        for(auto uniform_memory : uniform_node_buffer_memory){
-            vkFreeMemory(vulkan_device->logicalDevice,uniform_memory, nullptr);
-        }
-         vkFreeMemory(vulkan_device->logicalDevice, textureImageMemory, nullptr);
-        vkFreeMemory(vulkan_device->logicalDevice, indexBufferMemory, nullptr);
-        vkFreeMemory(vulkan_device->logicalDevice, vertexBufferMemory, nullptr);
-}
-#else
-EMesh::EMesh(){
-    
-}
-EMesh::~EMesh(){
-
-}
-#endif
 void EMesh::clean_object(){
     #ifdef VULKAN
         if(graphics_pipeline != VK_NULL_HANDLE)

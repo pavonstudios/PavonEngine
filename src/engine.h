@@ -43,6 +43,7 @@ public:
     WindowManager window_manager;
     AssetManager objects_manager;
     Camera main_camera;
+    MeshManager mesh_manager;
 
     ThirdPerson * player;
     GUI* gui;
