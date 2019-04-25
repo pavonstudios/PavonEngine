@@ -33,9 +33,12 @@ void Engine::init_player(){
 		if(this->player_id == -1){
 			std::runtime_error("no player assigned from map file");
 		}else{
-				player->mesh = this->meshes[this->player_id];
-
+				
+			player->mesh = this->meshes[this->player_id];
 		}
+
+		
+		
 		if(!player->mesh){
 			std::runtime_error("no player mesh pointer assigner");
 		}
@@ -110,7 +113,7 @@ void Engine::init(){
 								
 										}
 				#endif
-				edit_mode = true;
+				//edit_mode = true;
         #endif
 
 
@@ -388,6 +391,7 @@ void Engine::load_map(std::string path){
 		std::vector<glm::vec3> locations;
 		std::vector<std::string> textures_paths;
 		std::string line;
+		int counter = 0;
 		while( std::getline(file,line) ) {		
 
 			if(line != ""){
@@ -398,7 +402,7 @@ void Engine::load_map(std::string path){
 				glm::vec3 location;
 				std::string texture_path;
 				std::string type;
-				int counter = 0;
+				
 
 				line_stream >> first_char >> model_path >> location.x >> location.y >> location.z >> texture_path >> type;				
 				
@@ -411,14 +415,16 @@ void Engine::load_map(std::string path){
 					textures_paths.push_back(texture_path);
 					locations.push_back(location);
 
+					
 					if(player_id == -1){
 						if(type == "player"){
 							this->player_id = counter;
+							
 						}
 					}
 					
-					
 					counter++;
+					
 				}			
 			
 			}
