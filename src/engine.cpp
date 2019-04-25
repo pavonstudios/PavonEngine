@@ -121,7 +121,7 @@ void Engine::init(){
 }
 void Engine::loop_data(){
 		#ifdef DEVELOPMENT
-			print_fps();
+			//print_fps();
 		#endif
 
 		if(!edit_mode){

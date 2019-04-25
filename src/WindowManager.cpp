@@ -75,44 +75,23 @@ void WindowManager::create_window_xorg(){
       
    }
  
-   Window root  =  DefaultRootWindow( x_display );   // get the root window (usually the whole screen)
+   Window x_window  =  DefaultRootWindow( x_display );   // get the root window (usually the whole screen)
  
    XSetWindowAttributes  swa;
    swa.event_mask  =  ExposureMask | PointerMotionMask | KeyPressMask | KeyReleaseMask;
  
    win  =  XCreateWindow (   // create a window with the provided parameters
-              x_display, root,
-              0, 0, 800, 480,   0,
+              x_display, x_window,
+              0, 0, this->window_width, this->window_height,   0,
               CopyFromParent, InputOutput,
               CopyFromParent, CWEventMask,
-              &swa );
- 
- 
-   XMapWindow ( x_display , win );             // make the window visible on the screen
-   XStoreName ( x_display , win , "Engine" ); // give the window a name
- 
-   Atom wm_state   = XInternAtom ( x_display, "_NET_WM_STATE", False );
- 
-   XEvent xev;
-   memset ( &xev, 0, sizeof(xev) );
- 
-   xev.type                 = ClientMessage;
-   xev.xclient.window       = win;
-   xev.xclient.message_type = wm_state;
-   xev.xclient.format       = 32;
+              &swa ); 
 
-   XSendEvent (                // send an event mask to the X-server
-      x_display,
-      DefaultRootWindow ( x_display ),
-      False,
-      SubstructureNotifyMask,
-      &xev );
+   XMapWindow ( x_display , win );             // make the window visible on the screen
+   XStoreName ( x_display , win , this->window_name.c_str() ); // give the window a name 
 
    configure_egl();
-   const float
-      window_width  = 800.0,
-      window_height = 600.0;
- 
+    
 }
 
 void WindowManager::clear(){
@@ -135,7 +114,7 @@ void WindowManager::create_window_glfw(){
 	
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 		
-		glfw_window = glfwCreateWindow(800, 600, "Engine", nullptr, nullptr);
+		glfw_window = glfwCreateWindow(this->window_width, this->window_height, this->window_name.c_str(), nullptr, nullptr);
 		if( glfw_window == NULL ){
 			fprintf( stderr, "Failed to open GLFW window\n" );
 			glfwTerminate();
@@ -211,7 +190,7 @@ bool WindowManager::window_should_close(){
 void WindowManager::check_events(){
    #ifdef ES2
       while ( XPending ( x_display ) ){
-               XEvent  xev;
+         XEvent  xev;
          KeySym key;		
          char text[255];	
          KeySym key_release;		
@@ -242,6 +221,12 @@ void WindowManager::check_events(){
 
                engine->input.key_verifier_released(key_release_char[0]);
             }
+
+
+         if(xev.xclient.data.l[1] == wmDeleteMessage){
+            std::cout << "client message\n";
+            break;
+         }
       }
       
      
