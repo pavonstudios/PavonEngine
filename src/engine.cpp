@@ -58,8 +58,9 @@ void Engine::init(){
 			data.fragment_shader_path = "android/app/src/main/assets/frag.glsl";
 			data.vertex_shader_path = "android/app/src/main/assets/vert_mvp.glsl";
 		#endif
+
 		#ifdef ANDROID
-			data.fragment_shader_path = "frag_uv_color.glsl";
+			data.fragment_shader_path = "shaders/gles/frag_uv_color.glsl";
 			data.vertex_shader_path = "vert_mvp.glsl";
     #endif
 
@@ -119,6 +120,7 @@ void Engine::init(){
 
 				init_player();
 }
+
 void Engine::loop_data(){
 		#ifdef DEVELOPMENT
 			//print_fps();
@@ -312,7 +314,8 @@ void Engine::update_mvp(EMesh* mesh){
 		}
 		glm::mat4 mat = main_camera.Projection * main_camera.View * mesh->model_matrix;
 		mesh->MVP = mat;
-    #if defined(ES2) || defined(ANDROID)
+
+        #if defined(ES2) || defined(ANDROID)
 		renderer.update_mvp(mesh);
 		#endif
 

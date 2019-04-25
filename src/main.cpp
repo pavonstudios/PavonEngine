@@ -64,7 +64,8 @@
                    pEngine->renderer.bReady = true;
                 }
                 if(pEngine->renderer.bReady){
-                    pEngine->renderer.render();
+                    //pEngine->renderer.render();
+                    pEngine->loop_data();
                     pEngine->es2_loop();
                     pEngine->window_manager.swap_buffers();
 
