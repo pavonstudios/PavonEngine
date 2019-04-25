@@ -459,7 +459,7 @@ void Engine::load_map(std::string path){
 	
 }
 
-#ifndef ANDROID
+
 void Engine::update_input(){
 		if(input.TAB.Released){
 					if(!edit_mode)
@@ -469,8 +469,10 @@ void Engine::update_input(){
 						edit_mode = false;
 					}
 					input.TAB.Released = false;
+#ifdef DEVELOPMENT
 					this->print_debug("tab pressed or released",0,0);
-			}
+#endif
+		}
 
 	if(edit_mode){
 			if(input.S.bIsPressed){
@@ -512,4 +514,4 @@ void Engine::update_input(){
 
 	}
 }
-#endif
+

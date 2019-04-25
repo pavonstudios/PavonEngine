@@ -18,8 +18,38 @@
 
 #ifdef ANDROID
     #include "engine.h"
-
+#include <android/input.h>
     extern "C" {
+
+    int32_t handle_input(android_app* app, AInputEvent* event) {
+        auto *pEngine = reinterpret_cast<Engine *>(app->userData);
+
+        int32_t eventType = AInputEvent_getType(event);
+        switch(eventType){
+            case AINPUT_EVENT_TYPE_MOTION:
+                switch(AInputEvent_getSource(event)){
+                    case AINPUT_SOURCE_TOUCHSCREEN:
+                        int action = AKeyEvent_getAction(event) & AMOTION_EVENT_ACTION_MASK;
+                        switch(action){
+                            case AMOTION_EVENT_ACTION_DOWN:
+                                pEngine->input.W.bIsPressed = true;
+                                break;
+                            case AMOTION_EVENT_ACTION_UP:
+                                pEngine->input.W.bIsPressed = false;
+                                break;
+                            case AMOTION_EVENT_ACTION_MOVE:
+                                break;
+                        }
+                        break;
+                } // end switch
+                break;
+            case AINPUT_EVENT_TYPE_KEY:
+                // handle key input...
+                break;
+        } // end switch
+        return  -1;
+    }
+
     void handle_cmd(android_app *pApp, int32_t cmd) {
         switch (cmd) {
             case APP_CMD_INIT_WINDOW:
@@ -42,7 +72,7 @@
 
     void android_main(struct android_app *pApp) {
         pApp->onAppCmd = handle_cmd;
-        pApp->userData;
+        pApp->onInputEvent = handle_input;
 
         int events;
         android_poll_source *pSource;
@@ -65,6 +95,7 @@
                 }
                 if(pEngine->renderer.bReady){
                     //pEngine->renderer.render();
+                    pEngine->update_input();
                     pEngine->loop_data();
                     pEngine->es2_loop();
                     pEngine->window_manager.swap_buffers();

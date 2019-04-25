@@ -26,11 +26,11 @@ void ThirdPerson::move_forward(){
 }
 void ThirdPerson::update(){
 	move_forward();
-#ifndef ANDROID
+
 	if(engine->input.W.bIsPressed == true){
 		
 		this->mesh->model_matrix = glm::translate(mesh->model_matrix,glm::vec3(0,-2 * engine->deltaTime,0));
-		engine->print_debug("moving around",10,0);
+		//engine->print_debug("moving around",10,0);
 	}
 	if(engine->input.Z.bIsPressed){
 		
@@ -43,7 +43,7 @@ void ThirdPerson::update(){
 		
 	}
 	monse_control(engine->input.yaw, engine->input.pitch);
-#endif
+
 }
 void ThirdPerson::monse_control(float yaw, float pitch){
 	this->mesh->model_matrix = glm::rotate(mesh->model_matrix,glm::radians(-yaw * (2.f * engine->deltaTime)),glm::vec3(0,0,1));

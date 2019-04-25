@@ -9,7 +9,7 @@
         #include "VulkanData.hpp"
     #endif
     #include <GLFW/glfw3.h>
-    #include "input.h"
+    
 
 #else
     #include "android_renderer.h"
@@ -21,6 +21,8 @@
 
 #include <chrono>
 #include <vector>
+
+#include "input.h"
 #include "asset_manager.h"
 #include "WindowManager.hpp"
 #include "3D_objects.h"
@@ -41,6 +43,7 @@ public:
     AssetManager objects_manager;
     Camera main_camera;
     MeshManager mesh_manager;
+    Input input;
 
     ThirdPerson * player;
     GUI* gui;
@@ -89,7 +92,7 @@ public:
     #endif
 
         GLFWwindow* window;
-        Input input;
+        
 
 
  
