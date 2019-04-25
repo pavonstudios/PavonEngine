@@ -114,7 +114,7 @@ void Engine::init(){
 								
 										}
 				#endif
-				edit_mode = true;
+				//edit_mode = true;
         #endif
 
 
@@ -157,24 +157,16 @@ void Engine::es2_loop() {
 				if(mesh->bIsGUI){
 					glUseProgram  ( mesh->shader_program );
 					renderer.activate_vertex_attributes(mesh);
-					update_mvp(mesh);
-					//renderer.draw_gui(mesh);
+					renderer.draw_gui(mesh);
 				}
 
 			}
 
-			glUseProgram(meshes.back()->shader_program);
+		/* 	glUseProgram(meshes.back()->shader_program);
 			glBindBuffer(GL_ARRAY_BUFFER,renderer.vertex_buffer);
-			//renderer.activate_vertex_attributes(meshes.back());
-			//update_mvp(meshes.back());
-			//renderer.draw_gui(meshes.back());
 			glVertexAttribPointer ( 0, 3, GL_FLOAT, false, sizeof(Vertex), (void*)0 );
-        glEnableVertexAttribArray ( 0 ); 
-        glVertexAttribPointer ( 1, 3, GL_FLOAT, false, sizeof(Vertex), (void*)offsetof(Vertex,color) );
-        glEnableVertexAttribArray ( 1 );
-        glVertexAttribPointer ( 2, 2, GL_FLOAT, false, sizeof(Vertex), (void*)offsetof(Vertex,texCoord) );
-        glEnableVertexAttribArray ( 2 );
-			renderer.draw_mesh();
+      glEnableVertexAttribArray ( 0 );        
+			renderer.draw_mesh(); */
 
 
     #endif

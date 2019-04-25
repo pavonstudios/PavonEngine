@@ -411,7 +411,7 @@ void activate_vertex_attributes(EMesh* mesh){
             
            // glDrawElements(GL_TRIANGLES,meshes[0]->indices.size(),GL_UNSIGNED_INT,(void*)0);
 
-            glDrawArrays(GL_TRIANGLES,0,3);
+            glDrawArrays(GL_TRIANGLE_STRIP,0,3);
             //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
     }
@@ -419,7 +419,7 @@ void activate_vertex_attributes(EMesh* mesh){
     void draw_gui(EMesh* mesh){
         
         glBindBuffer(GL_ARRAY_BUFFER,mesh->vertex_buffer);
-        glDrawArrays(GL_TRIANGLES,0,6);
+        glDrawArrays(GL_TRIANGLE_STRIP,0,mesh->vertices.size());
         glBindBuffer(GL_ARRAY_BUFFER,0);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,0);
     }

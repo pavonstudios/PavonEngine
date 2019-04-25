@@ -24,9 +24,12 @@ void EMesh::create_buffers(){
         glBindBuffer(GL_ARRAY_BUFFER,vertex_buffer);
         glBufferData(GL_ARRAY_BUFFER,vertices.size() * sizeof(Vertex),vertices.data(),GL_STATIC_DRAW);
 
-        glGenBuffers(1,&indices_buffer);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,indices_buffer);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER,indices.size() * sizeof(unsigned int),indices.data(), GL_STATIC_DRAW);
+        if(indices.size() > 0){
+                glGenBuffers(1,&indices_buffer);
+                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,indices_buffer);
+                glBufferData(GL_ELEMENT_ARRAY_BUFFER,indices.size() * sizeof(unsigned int),indices.data(), GL_STATIC_DRAW);
+
+        }
         
         glBindBuffer(GL_ARRAY_BUFFER,0);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,0);
