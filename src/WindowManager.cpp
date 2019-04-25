@@ -42,7 +42,7 @@ void WindowManager::configure_egl(){
     
    }
  
-   egl_surface = eglCreateWindowSurface ( egl_display, ecfg, win, NULL );
+   egl_surface = eglCreateWindowSurface ( egl_display, ecfg, x_window, NULL );
    if ( egl_surface == EGL_NO_SURFACE ) {
       cerr << "Unable to create EGL surface (eglError: " << eglGetError() << ")" << endl;
       
@@ -75,20 +75,23 @@ void WindowManager::create_window_xorg(){
       
    }
  
-   Window x_window  =  DefaultRootWindow( x_display );   // get the root window (usually the whole screen)
+   x_window  =  DefaultRootWindow( x_display );   // get the root window (usually the whole screen)
  
    XSetWindowAttributes  swa;
    swa.event_mask  =  ExposureMask | PointerMotionMask | KeyPressMask | KeyReleaseMask;
  
-   win  =  XCreateWindow (   // create a window with the provided parameters
+   x_window  =  XCreateWindow (   // create a window with the provided parameters
               x_display, x_window,
               0, 0, this->window_width, this->window_height,   0,
               CopyFromParent, InputOutput,
               CopyFromParent, CWEventMask,
               &swa ); 
 
-   XMapWindow ( x_display , win );             // make the window visible on the screen
-   XStoreName ( x_display , win , this->window_name.c_str() ); // give the window a name 
+   XMapWindow ( x_display , x_window );             // make the window visible on the screen
+   XStoreName ( x_display , x_window , this->window_name.c_str() ); // give the window a name 
+
+   Atom wmDeleteMessage = XInternAtom(x_display, "WM_DESTROY_WINDOW", False);
+   XSetWMProtocols(x_display, x_window, &wmDeleteMessage, 1);
 
    configure_egl();
     
@@ -98,7 +101,7 @@ void WindowManager::clear(){
       eglDestroyContext ( egl_display, egl_context );
       eglDestroySurface ( egl_display, egl_surface );
       eglTerminate      ( egl_display );
-      XDestroyWindow    ( x_display, win );
+      XDestroyWindow    ( x_display, x_window );
       XCloseDisplay     ( x_display );
 }
 #endif
@@ -223,9 +226,9 @@ void WindowManager::check_events(){
             }
 
 
-         if(xev.xclient.data.l[1] == wmDeleteMessage){
-            std::cout << "client message\n";
-            break;
+         if(xev.type == ClientMessage && xev.xclient.data.l[0] == wmDeleteMessage){
+            std::cout << "close message\n";
+            
          }
       }
       

@@ -46,7 +46,7 @@ public:
             void create_window(android_app * app);
         #else
             Display    *x_display;
-            Window      win;
+            Window      x_window;
             Atom wmDeleteMessage;
             EGLDisplay  egl_display;
             EGLContext  egl_context;
