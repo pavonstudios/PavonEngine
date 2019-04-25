@@ -144,7 +144,7 @@ void Engine::es2_loop() {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		#endif
 
-		#ifdef ES2
+		#if defined(ES2) || defined(ANDROID)
 
 			for(EMesh* mesh : meshes){
 				
@@ -165,10 +165,10 @@ void Engine::es2_loop() {
 
     #endif
     #ifdef ANDROID
-        glUseProgram  ( meshes[0]->shader_program );
+       /*  glUseProgram  ( meshes[0]->shader_program );
         renderer.activate_vertex_attributes(meshes[0]);
         update_mvp(meshes[0]);
-        renderer.draw(meshes[0]);
+        renderer.draw(meshes[0]); */
         /* renderer.activate_vertex_attributes(meshes[4]);
         update_mvp(meshes[4]);
         renderer.draw(meshes[4]); */

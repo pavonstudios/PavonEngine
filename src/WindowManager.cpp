@@ -138,8 +138,9 @@ void WindowManager::create_window(){
 }
 
 #ifdef ANDROID
-#include <android/log.h>
-#include "android_helper.h"
+   #include <android/log.h>
+   #include "android_helper.h"
+
 	void WindowManager::create_window(android_app *pApp) {
 		display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
 
@@ -155,7 +156,7 @@ void WindowManager::create_window(){
 
 		surface = eglCreateWindowSurface(display, config, pApp->window, NULL);
 
-      	eglMakeCurrent(display, surface, surface, context);
+      eglMakeCurrent(display, surface, surface, context);
 
 	}
 	
