@@ -22,7 +22,6 @@
     #include <android/asset_manager.h>
 #endif
 
-#include "game_object.h"
 
 #include "tiny_class.h"
 #include "vertex.h"
@@ -75,7 +74,7 @@ struct UniformBufferObject {
 
 
 namespace engine{
-class EMesh : public GameObject{
+class EMesh {
 public:
     EMesh();
 #ifdef VULKAN
@@ -100,7 +99,7 @@ public:
     Node* node_from_index(uint32_t index);
     Node* find_node(Node* parent, uint32_t index);
 
-    virtual void SetLocation(float x, float y, float z);    
+       
 
 #ifdef GLTF
     int load_model_gltf(const char* path);
