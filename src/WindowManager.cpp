@@ -79,7 +79,7 @@ void WindowManager::create_window_xorg(){
    x_window  =  DefaultRootWindow( x_display );   // get the root window (usually the whole screen)
  
    XSetWindowAttributes  swa;
-   swa.event_mask  =  ExposureMask | PointerMotionMask | KeyPressMask | KeyReleaseMask;
+   swa.event_mask  =  ExposureMask | PointerMotionMask | KeyPressMask | KeyReleaseMask | StructureNotifyMask;
  
    x_window  =  XCreateWindow (   // create a window with the provided parameters
               x_display, x_window,
@@ -217,6 +217,12 @@ void WindowManager::check_events(){
             /* use the XLookupString routine to convert the invent
                KeyPress data into regular text.  Weird but necessary...
             */
+         if(xev.type == ConfigureNotify){
+            XConfigureEvent xce = xev.xconfigure;
+            this->window_width = xce.width;
+            this->window_height = xce.height;
+            glViewport(0,0,window_width,window_height);
+         }
          if (xev.type==KeyPress&&
                XLookupString(&xev.xkey,text,255,&key,0)==1) {
             

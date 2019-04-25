@@ -32,7 +32,6 @@ class GUI;
 using namespace engine;
 
 class Engine {
-
   
 public:
     Renderer renderer; 
@@ -104,12 +103,7 @@ public:
         void print_debug(const std::string text, int8_t posx, int8_t posy);
         void print_fps();
         #endif 
-
-    private:      
-         
-    #ifdef VULKAN
-        
-    #endif
+    
 	       
 
 #endif//end no define android
