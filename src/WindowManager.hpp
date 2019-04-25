@@ -61,9 +61,12 @@ public:
         #endif
     #endif
     #ifdef VULKAN
+    public:
+        static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
     private:
         GLFWwindow* glfw_window;
         void create_window_glfw();
+        
     #endif
     #ifdef ANDROID
         EGLDisplay display;

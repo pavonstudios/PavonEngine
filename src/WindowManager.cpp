@@ -1,4 +1,5 @@
 #include "WindowManager.hpp"
+#include "engine.h"
 
 #ifdef ES2
 #ifdef ANDROID
@@ -124,6 +125,11 @@ void WindowManager::create_window_glfw(){
 			return;
 		}
 }
+void WindowManager::framebufferResizeCallback(GLFWwindow* window, int width, int height) {
+  Engine* engine = reinterpret_cast<Engine*>(glfwGetWindowUserPointer(window));
+            engine->renderer.framebufferResized = true;
+}
+
 #endif
 
 void WindowManager::create_window(){

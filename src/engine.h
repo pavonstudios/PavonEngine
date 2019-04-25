@@ -33,12 +33,10 @@ using namespace engine;
 
 class Engine {
 
-#if defined(ES2) || defined(ANDROID)    
+  
 public:
-    Renderer renderer;    
-#endif
+    Renderer renderer; 
 
-public:
     Engine();
     WindowManager window_manager;
     AssetManager objects_manager;
@@ -86,8 +84,7 @@ public:
 
 #ifndef ANDROID
     
-    #ifdef VULKAN
-        Renderer renderer;
+    #ifdef VULKAN        
         VulkanData vkdata = {VK_NULL_HANDLE};
         vks::VulkanDevice* vulkan_device;      
     #endif
@@ -111,7 +108,7 @@ public:
     private:      
          
     #ifdef VULKAN
-        static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
+        
     #endif
 	       
 

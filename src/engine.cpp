@@ -260,10 +260,6 @@ void Engine::delete_meshes(){
 	}
 }
 
-void Engine::framebufferResizeCallback(GLFWwindow* window, int width, int height) {
-  auto app = reinterpret_cast<Renderer*>(glfwGetWindowUserPointer(window));
-            app->framebufferResized = true;
-}
 
 
 
@@ -323,7 +319,7 @@ void Engine::configure_window_callback(){
 			window = window_manager.get_window();
 			glfwSetWindowUserPointer(window, this);
 			   
-			glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
+			glfwSetFramebufferSizeCallback(window, window_manager.framebufferResizeCallback);
 			glfwSetInputMode(window, GLFW_STICKY_KEYS, 1);
 			glfwSetKeyCallback(window, input.key_callback);
 			glfwSetCursorPosCallback(window, input.mouse_callback);
