@@ -214,15 +214,21 @@ void WindowManager::check_events(){
          // std::cout << "key realease from window manager \n";
          }
 
-            /* use the XLookupString routine to convert the invent
-               KeyPress data into regular text.  Weird but necessary...
-            */
+         if ( xev.type == MotionNotify ) {  // if mouse has moved
+
+            cout << "move to: "<< xev.xmotion.x << "," << xev.xmotion.y << endl;
+         }
+            
          if(xev.type == ConfigureNotify){
             XConfigureEvent xce = xev.xconfigure;
             this->window_width = xce.width;
             this->window_height = xce.height;
             glViewport(0,0,window_width,window_height);
          }
+
+         /* use the XLookupString routine to convert the invent
+               KeyPress data into regular text.  Weird but necessary...
+            */
          if (xev.type==KeyPress&&
                XLookupString(&xev.xkey,text,255,&key,0)==1) {
             
