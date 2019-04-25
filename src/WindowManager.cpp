@@ -217,7 +217,7 @@ void WindowManager::check_events(){
          if ( xev.type == MotionNotify ) {  // if mouse has moved
 
             //cout << "move to: "<< xev.xmotion.x << "," << xev.xmotion.y << endl;
-            engine->input.move_camera = true;
+            //engine->input.move_camera = true;
             engine->input.mouse_movement(engine,xev.xmotion.x,xev.xmotion.y);
          }
             

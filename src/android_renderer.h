@@ -193,10 +193,10 @@ public:
         #ifdef ANDROID
             //load_shaders();
             //init_3d_model();
-            create_triangule();
+            //create_triangule();
             //create_texture();
         #endif
-        create_triangule();
+        //create_triangule();
 
     }
     void create_triangule(){

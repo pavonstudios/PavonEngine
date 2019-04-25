@@ -88,18 +88,18 @@ void Engine::init(){
 								
 				renderer.init_gl();   
 
-				#ifdef  ES2
-								for(EMesh* mesh : meshes){
-												if(mesh->data.vertex_shader_path == ""){
-														mesh->data = data;
-												}													
-												renderer.load_shaders(mesh);
-												mesh_manager.create_buffers(mesh);
-										#ifndef ANDROID
-												renderer.load_mesh_texture(mesh);
-										#endif
-								}
-				#endif
+
+                for(EMesh* mesh : meshes){
+                                if(mesh->data.vertex_shader_path == ""){
+                                        mesh->data = data;
+                                }
+                                renderer.load_shaders(mesh);
+                                mesh_manager.create_buffers(mesh);
+                        #ifndef ANDROID
+                                renderer.load_mesh_texture(mesh);
+                        #endif
+                }
+
 				//edit_mode = true;
     #endif
 
