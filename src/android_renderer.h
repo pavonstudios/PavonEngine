@@ -41,10 +41,13 @@ using namespace glm;
 class Renderer{
 public:
     bool bReady = false;
+
+    EMesh* triangle;
+     GLuint vertex_buffer;
 private:
 
 
-    GLuint vertex_buffer;
+   
     GLuint indices;
 
     GLuint textureid;
@@ -193,7 +196,7 @@ public:
             create_triangule();
             //create_texture();
         #endif
-
+        create_triangule();
 
     }
     void create_triangule(){
@@ -247,6 +250,8 @@ public:
         glEnableVertexAttribArray ( 1 );
         glVertexAttribPointer ( 2, 2, GL_FLOAT, false, sizeof(Vertex), (void*)offsetof(Vertex,texCoord) );
         glEnableVertexAttribArray ( 2 );
+
+        this->triangle = triangle;
     }
   
     void init_3d_model(){
@@ -398,8 +403,8 @@ void activate_vertex_attributes(EMesh* mesh){
     }
 
     void draw_mesh(){
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            glBindTexture(GL_TEXTURE_2D,textureid);
+            //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            //glBindTexture(GL_TEXTURE_2D,textureid);
            // int samplerid = glGetUniformLocation(shaderProgram, "texture_sampler");
             //glUniform1i(samplerid, 0);
             
@@ -412,7 +417,7 @@ void activate_vertex_attributes(EMesh* mesh){
     }
 
     void draw_gui(EMesh* mesh){
-        glUseProgram  ( mesh->shader_program );
+        
         glBindBuffer(GL_ARRAY_BUFFER,mesh->vertex_buffer);
         glDrawArrays(GL_TRIANGLES,0,6);
         glBindBuffer(GL_ARRAY_BUFFER,0);

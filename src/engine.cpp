@@ -114,7 +114,7 @@ void Engine::init(){
 								
 										}
 				#endif
-				//edit_mode = true;
+				edit_mode = true;
         #endif
 
 
@@ -155,12 +155,26 @@ void Engine::es2_loop() {
 					renderer.draw(mesh);
 				}					
 				if(mesh->bIsGUI){
+					glUseProgram  ( mesh->shader_program );
 					renderer.activate_vertex_attributes(mesh);
 					update_mvp(mesh);
 					//renderer.draw_gui(mesh);
 				}
 
 			}
+
+			glUseProgram(meshes.back()->shader_program);
+			glBindBuffer(GL_ARRAY_BUFFER,renderer.vertex_buffer);
+			//renderer.activate_vertex_attributes(meshes.back());
+			//update_mvp(meshes.back());
+			//renderer.draw_gui(meshes.back());
+			glVertexAttribPointer ( 0, 3, GL_FLOAT, false, sizeof(Vertex), (void*)0 );
+        glEnableVertexAttribArray ( 0 ); 
+        glVertexAttribPointer ( 1, 3, GL_FLOAT, false, sizeof(Vertex), (void*)offsetof(Vertex,color) );
+        glEnableVertexAttribArray ( 1 );
+        glVertexAttribPointer ( 2, 2, GL_FLOAT, false, sizeof(Vertex), (void*)offsetof(Vertex,texCoord) );
+        glEnableVertexAttribArray ( 2 );
+			renderer.draw_mesh();
 
 
     #endif
@@ -306,13 +320,18 @@ float Engine::get_time(){
 }
 
 void Engine::update_mvp(EMesh* mesh){
-		
+		glm::mat4 mat = glm::mat4(1.0);
 		if(mesh->bIsGUI){
 			glm::mat4 Projection = glm::ortho(0.0f, (float)800,(float)600,0.0f, 0.1f, 100.0f);
 			glm::mat4 model_view_inverse = mesh->model_matrix * glm::inverse(main_camera.View);
-			mesh->model_matrix = model_view_inverse;
+			//mesh->model_matrix = model_view_inverse;
+			//mat = Projection * main_camera.View * mesh->model_matrix;
+
+		}else{
+				mat  = main_camera.Projection * main_camera.View * mesh->model_matrix;
+
 		}
-		glm::mat4 mat = main_camera.Projection * main_camera.View * mesh->model_matrix;
+		mat  = main_camera.Projection * main_camera.View * mesh->model_matrix;
 		mesh->MVP = mat;
 
         #if defined(ES2) || defined(ANDROID)
