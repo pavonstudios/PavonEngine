@@ -87,16 +87,16 @@ EMesh::~EMesh(){
         vkFreeMemory(vulkan_device->logicalDevice, vertexBufferMemory, nullptr);
     #endif
 }
-void EMesh::create_buffers(){
+void MeshManager::create_buffers(EMesh* mesh){
     #if defined(ES2) || defined(ANDROID)
-        glGenBuffers(1,&vertex_buffer);
-        glBindBuffer(GL_ARRAY_BUFFER,vertex_buffer);
-        glBufferData(GL_ARRAY_BUFFER,vertices.size() * sizeof(Vertex),vertices.data(),GL_STATIC_DRAW);
+        glGenBuffers(1,&mesh->vertex_buffer);
+        glBindBuffer(GL_ARRAY_BUFFER,mesh->vertex_buffer);
+        glBufferData(GL_ARRAY_BUFFER,mesh->vertices.size() * sizeof(Vertex),mesh->vertices.data(),GL_STATIC_DRAW);
 
-        if(indices.size() > 0){
-                glGenBuffers(1,&indices_buffer);
-                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,indices_buffer);
-                glBufferData(GL_ELEMENT_ARRAY_BUFFER,indices.size() * sizeof(unsigned int),indices.data(), GL_STATIC_DRAW);
+        if(mesh->indices.size() > 0){
+                glGenBuffers(1,&mesh->indices_buffer);
+                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,mesh->indices_buffer);
+                glBufferData(GL_ELEMENT_ARRAY_BUFFER,mesh->indices.size() * sizeof(unsigned int),mesh->indices.data(), GL_STATIC_DRAW);
 
         }
         

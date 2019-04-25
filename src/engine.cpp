@@ -94,7 +94,7 @@ void Engine::init(){
 														mesh->data = data;
 												}													
 												renderer.load_shaders(mesh);
-												mesh->create_buffers();
+												mesh_manager.create_buffers(mesh);
 										#ifndef ANDROID
 												renderer.load_mesh_texture(mesh);
 										#endif

@@ -83,9 +83,7 @@ public:
     void init(vks::VulkanDevice* vulkan_device);
 #endif
     ~EMesh();
-
-    void create_buffers();
-    void clean_object();    
+    void clean_object();        
 
     //skeletal
     void load_joints_matrix();
@@ -153,6 +151,8 @@ public:
 class MeshManager{
     public:
         int load_model_gltf(EMesh* mesh, const char* path);
+        void create_buffers(EMesh* mesh);
+        
 };
 
 }//namespace engine
