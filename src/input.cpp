@@ -200,6 +200,12 @@ void Input::key_set(const char key, bool isPressed){
 	if(key == 'p'){
 		actual_key = &this->TAB;
 	}
+	if(key == 'z'){
+		actual_key = &this->Z;
+	}
+	if(key == 'x'){
+		actual_key = &this->X;
+	}
 
 	if(actual_key){
 		if(isPressed){

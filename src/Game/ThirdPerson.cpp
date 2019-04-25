@@ -34,7 +34,12 @@ void ThirdPerson::update(){
 	}
 	if(engine->input.Z.bIsPressed){
 		
-		this->mesh->model_matrix = glm::rotate(mesh->model_matrix,glm::radians(0.008f),glm::vec3(0,0,1));
+		this->mesh->model_matrix = glm::rotate(mesh->model_matrix,glm::radians(15.0f * engine->deltaTime),glm::vec3(0,0,1));
+		
+	}
+	if(engine->input.X.bIsPressed){
+		
+		this->mesh->model_matrix = glm::rotate(mesh->model_matrix,glm::radians(-15.0f * engine->deltaTime),glm::vec3(0,0,1));
 		
 	}
 	monse_control(engine->input.yaw, engine->input.pitch);
