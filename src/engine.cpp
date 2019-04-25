@@ -163,17 +163,19 @@ void Engine::es2_loop() {
 
     #endif
     #ifdef ANDROID
-        /*renderer.activate_vertex_attributes(meshes[0]);
+        glUseProgram  ( meshes[0]->shader_program );
+        renderer.activate_vertex_attributes(meshes[0]);
         update_mvp(meshes[0]);
         renderer.draw(meshes[0]);
-        renderer.activate_vertex_attributes(meshes[4]);
+        /* renderer.activate_vertex_attributes(meshes[4]);
         update_mvp(meshes[4]);
-        renderer.draw(meshes[4]);*/
-        for(EMesh* mesh : meshes){
+        renderer.draw(meshes[4]); */
+
+        /* for(EMesh* mesh : meshes){
             renderer.activate_vertex_attributes(mesh);
             update_mvp(mesh);
             renderer.draw(mesh);
-        }
+        } */
     #endif
 
 }

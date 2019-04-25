@@ -61,13 +61,13 @@
                 if(!pEngine->renderer.bReady){
                    pEngine->window_manager.create_window(pApp);
                    pEngine->init();
-                   //pEngine->renderer.init_gl();
                    pEngine->renderer.bReady = true;
                 }
                 if(pEngine->renderer.bReady){
-                    //pEngine->renderer.render();
-                    //pEngine->window_manager.swap_buffers();
+                    pEngine->renderer.render();
                     pEngine->es2_loop();
+                    pEngine->window_manager.swap_buffers();
+
                 }
 
             }
