@@ -29,7 +29,7 @@ void ThirdPerson::update(){
 #ifndef ANDROID
 	if(engine->input.W.bIsPressed == true){
 		
-		this->mesh->model_matrix = glm::translate(mesh->model_matrix,glm::vec3(0,-0.001,0));
+		this->mesh->model_matrix = glm::translate(mesh->model_matrix,glm::vec3(0,-2 * engine->deltaTime,0));
 		engine->print_debug("moving around",10,0);
 	}
 	if(engine->input.Z.bIsPressed){

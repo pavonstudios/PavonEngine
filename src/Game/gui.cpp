@@ -51,6 +51,6 @@ GUI::GUI(Engine* engine){
 		this->mesh = triangle;
 
 
-		engine->meshes.push_back(this->mesh);
+		//engine->meshes.push_back(this->mesh);
 
 }
