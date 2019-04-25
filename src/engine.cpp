@@ -100,22 +100,8 @@ void Engine::init(){
 										#endif
 								}
 				#endif
-				#ifdef  ANDROID
-								/* meshes[0]->data = data;
-								renderer.load_shaders(meshes[0]);
-								meshes[0]->create_buffers();
-								meshes[4]->data = data;
-								renderer.load_shaders(meshes[4]);
-								meshes[4]->create_buffers();*/
-										for(EMesh* mesh : meshes){
-												mesh->data = data;
-												renderer.load_shaders(mesh);
-												mesh->create_buffers();
-								
-										}
-				#endif
 				//edit_mode = true;
-        #endif
+    #endif
 
 
 				init_player();

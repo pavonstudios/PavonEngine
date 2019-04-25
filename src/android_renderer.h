@@ -441,21 +441,3 @@ void activate_vertex_attributes(EMesh* mesh){
 };
 
 #endif
-
-
-/*         AAsset* file = AAssetManager_open(super_asset_manager,"openme.txt", AASSET_MODE_BUFFER);
-
-        size_t file_length = AAsset_getLength(file);
-        char* fileContent = new char[file_length+1];
-
-        AAsset_read(file, fileContent,file_length);
-
-        __android_log_print(ANDROID_LOG_WARN,"native-activity","%s",fileContent);
-
-            EMesh * mesh = new EMesh();
-            if(mesh->load_model_gltf("skydome.gltf") == -1 ){
-                      __android_log_print(ANDROID_LOG_WARN,"native-activity","%s","error loading model");
-
-            }else{
-               __android_log_print(ANDROID_LOG_WARN,"native-activity","%s","OK GLTF object loaded");
-            } */
