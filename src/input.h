@@ -6,6 +6,7 @@
 #endif
 
 #include <iostream>
+class Engine;
 
 struct key_pressed{
 	bool bIsPressed = false;
@@ -43,9 +44,10 @@ public:
 
 	void key_verifier_pressed(char character);
 	void key_verifier_released(char character);
+	void mouse_movement(Engine* engine, float x, float y);
 private:
 	void key_set(const char key, bool isPressed);
-	static void mouse_movement(Engine* engine, float x, float y);
+	
 
 };
 #endif

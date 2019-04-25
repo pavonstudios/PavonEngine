@@ -107,41 +107,14 @@ void Input::mouse_callback(GLFWwindow* window, double xpos, double ypos){
 	#ifdef VULKAN
 	  auto engine = reinterpret_cast<Engine*>(glfwGetWindowUserPointer(window));
 	
-		mouse_movement(engine,xpos,ypos);
+		engine->input.mouse_movement(engine,xpos,ypos);
 	 
 	
 	#endif
 
 }
 
-void Input::mouse_movement(Engine* engine, float xpos, float ypos){
-	//std::cout << "move to: "<< xpos << "," << ypos << std::endl;
-	if(engine->input.move_camera){
-		if(engine->input.first_mouse){
-			engine->input.lastX = xpos;
-			engine->input.lastY = ypos;
-			engine->input.first_mouse = false;
-		}
 
-		float xoffset = xpos - engine->input.lastX ;
-		float yoffset = engine->input.lastY - ypos; // reversed since y-coordinates range from bottom to top
-		engine->input.lastX = xpos;
-		engine->input.lastY = ypos;
-
-		float sensitivity = 0.05f;
-		xoffset *= sensitivity;
-		yoffset *= sensitivity;
-
-		engine->input.yaw   += xoffset;
-		engine->input.pitch += yoffset;  
-
-		if(engine->input.pitch > 89.0f)
-			engine->input.pitch =  89.0f;
-		if(engine->input.pitch < -89.0f)
-			engine->input.pitch = -89.0f;		
-
-	}//end right click pressed
-}	
 
 void Input::mouse_button_callback(GLFWwindow* window, int button, int action, int mods){
 	#ifdef VULKAN
@@ -172,7 +145,34 @@ void Input::mouse_button_callback(GLFWwindow* window, int button, int action, in
 
 }
 #endif//end if define vulkan
+void Input::mouse_movement(Engine* engine, float xpos, float ypos){
+	//std::cout << "move to: "<< xpos << "," << ypos << std::endl;
+	if(engine->input.move_camera){
+		if(engine->input.first_mouse){
+			engine->input.lastX = xpos;
+			engine->input.lastY = ypos;
+			engine->input.first_mouse = false;
+		}
 
+		float xoffset = xpos - engine->input.lastX ;
+		float yoffset = engine->input.lastY - ypos; // reversed since y-coordinates range from bottom to top
+		engine->input.lastX = xpos;
+		engine->input.lastY = ypos;
+
+		float sensitivity = 0.05f;
+		xoffset *= sensitivity;
+		yoffset *= sensitivity;
+
+		engine->input.yaw   += xoffset;
+		engine->input.pitch += yoffset;  
+
+		if(engine->input.pitch > 89.0f)
+			engine->input.pitch =  89.0f;
+		if(engine->input.pitch < -89.0f)
+			engine->input.pitch = -89.0f;		
+
+	}//end right click pressed
+}	
 void Input::key_verifier_pressed(char character){	
 	key_set(character,true);
 }
