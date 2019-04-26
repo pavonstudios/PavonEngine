@@ -5,7 +5,7 @@ Library=-lglfw -lpthread -lm
 MAIN_OBJS = camera.cpp engine.cpp
 DEFINES= -DGLTF -DDEVELOPMENT
 
-OBJs= main.o engine.o camera.o asset_manager.o 3D_objects.o input.o
+OBJs= main.o engine.o camera.o asset_manager.o objects.o input.o
 
 
 COMPILE= $(CC) -c -DGLTF $(DEFINES) -DDEVELOPMENT
@@ -28,9 +28,9 @@ full: $(OBJs) game $(game) renderer.o WindowManager.o
 
 .ONESHELL:
 es2: DEFINES := -DES2
-es2: engine.o WindowManager.o 3D_objects.o asset_manager.o camera.o input.o game $(game)
+es2: engine.o WindowManager.o objects.o asset_manager.o camera.o input.o game $(game)
 	mkdir -p bin && cd src
-	$(CC) main.cpp -o ../renderer model_loader.o engine.o WindowManager.o 3D_objects.o asset_manager.o camera.o input.o $(GAME) $(Library) $(INCLUDE_OPENGL) -I./ $(DEFINES) -DGLTF -lEGL -lX11 -lGLESv2
+	$(CC) main.cpp -o ../renderer model_loader.o engine.o WindowManager.o objects.o asset_manager.o camera.o input.o $(GAME) $(Library) $(INCLUDE_OPENGL) -I./ $(DEFINES) -DGLTF -lEGL -lX11 -lGLESv2
 
 .ONESHELL:
 gl: DEFINES=-Dch 
@@ -55,9 +55,9 @@ model_loader.o:
 	$(CC) -c model_loader.cpp -DGLTF $(DEFINES)
 
 .ONESHELL:
-3D_objects.o:
+objects.o:
 	cd src
-	$(CC) -c 3D_objects.cpp -DGLTF $(DEFINES)
+	$(CC) -c objects.cpp -DGLTF $(DEFINES)
 
 .ONESHELL:
 game:

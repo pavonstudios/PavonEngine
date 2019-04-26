@@ -25,7 +25,7 @@
 #include "input.h"
 #include "asset_manager.h"
 #include "WindowManager.hpp"
-#include "3D_objects.h"
+#include "objects.h"
 #include "camera.h"
 
 class ThirdPerson;

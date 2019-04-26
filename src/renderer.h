@@ -26,7 +26,7 @@
 #include <set>
 
 
-#include "3D_objects.h"
+#include "objects.h"
 #include "camera.h"
 
 
