@@ -10,8 +10,8 @@ ThirdPerson::ThirdPerson(){
 
 }
 
-void ThirdPerson::move_forward(){
-	//this->engine->main_camera.MoveForward();
+void ThirdPerson::update_camera_postion(){
+	
 	glm::mat4 mat = glm::translate(glm::mat4(1.0),glm::vec3(0,0,0));
 	
 	glm::mat4 rotated = glm::rotate(mat,glm::radians(90.f),glm::vec3(0,1,0));
@@ -25,7 +25,7 @@ void ThirdPerson::move_forward(){
 	
 }
 void ThirdPerson::update(){
-	move_forward();
+	
 
 	if(engine->input.W.bIsPressed == true){
 		
@@ -54,6 +54,8 @@ void ThirdPerson::update(){
 		
 		this->mesh->model_matrix = glm::translate(mesh->model_matrix,glm::vec3(0,2 * engine->deltaTime,0));		
 	}
+
+	update_camera_postion();
 	monse_control(engine->input.yaw, engine->input.pitch);
 
 }

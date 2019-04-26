@@ -8,7 +8,7 @@ class ThirdPerson{
 		ThirdPerson();
 		Engine* engine;
 		EMesh* mesh;
-		void move_forward();
+		void update_camera_postion();
 		void monse_control(float yaw, float pitch);
 		void update();
 };
