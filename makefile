@@ -14,30 +14,21 @@ GAMEOBJs = $(wildcard /home/pavon/rt_renderer/src/Game/*.o)
 
 GAME = Game/*.o
 
-INCLUDE_OPENGL = -lGLEW -lGL
-
-DEFINES_OPENGL = D_OpenGL_Renderer_
+INCLUDE_OPENGL = -lGLEW -lGLESv2 -lEGL
 
 DEFINES :=
 
 .ONESHELL:
 full: DEFINES := -DVULKAN
-full: $(OBJs) game $(game) renderer.o 
+full: renderer.o  $(OBJs) game $(game) 
 	mkdir -p bin && cd src
-	$(CC) -o ../renderer renderer.o $(OBJs) model_loader.o $(GAME) $(Library) -I./ -lvulkan  -DVULKAN $(DEFINES)
+	$(CC) -o ../renderer renderer.o $(OBJs) model_loader.o $(GAME) $(Library) -I./ -lvulkan $(DEFINES)
 
 .ONESHELL:
 es2: DEFINES := -DES2
 es2: $(OBJs) game $(game)
 	mkdir -p bin && cd src
-	$(CC) -o ../renderer $(OBJs) model_loader.o $(GAME) $(Library) $(INCLUDE_OPENGL) -I./ $(DEFINES) -DGLTF -lEGL -lX11 -lGLESv2
-
-.ONESHELL:
-gl: DEFINES=-Dch 
-gl: main.o 
-	mkdir -p bin && cd src
-	$(CC) -o ../renderer main.o
-
+	$(CC) -o ../renderer $(OBJs) model_loader.o $(GAME) $(Library) $(INCLUDE_OPENGL) -I./ $(DEFINES) -DGLTF -lX11 
 
 .ONESHELL:
 WindowManager.o: 
@@ -67,7 +58,7 @@ objects.o:
 .ONESHELL:
 game:
 	cd src/Game
-	$(foreach chori,*.cpp,$(COMPILE) $(chori))
+	$(foreach file,*.cpp,$(COMPILE) $(file))
 
 .ONESHELL:
 main.o:
@@ -75,7 +66,7 @@ main.o:
 	$(CC) -c main.cpp -DGLTF $(DEFINES)
 
 .ONESHELL:
-renderer.o:
+renderer.o: ./src/renderer.cpp
 	cd src
 	$(CC) -c renderer.cpp -I./ -DGLTF $(DEFINES)
 
@@ -94,8 +85,3 @@ camera.o:
 	cd src
 	$(CC) -c camera.cpp -I./ -DGLTF $(DEFINES)
 
-
-.ONESHELL:
-clang:
-	mkdir -p bin && cd src
-	$(CLANG) $(MAIN_OBJS) renderer.cpp -o ../renderer $(Library) -I./ -lvulkan $(DEFINES)
