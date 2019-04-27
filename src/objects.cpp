@@ -246,51 +246,7 @@ int EMesh::load_mode_gltf_android(const char* path, AAssetManager* assetManager)
     return -1;
 }
 #endif//android gltf loader
-int MeshManager::load_model_gltf(EMesh* mesh, const char* path){    
-    
-    tinygltf::TinyGLTF loader;
-    std::string err;
-    std::string warn;
 
-    bool ret = loader.LoadASCIIFromFile(&mesh->gltf_model, &err, &warn, path);
-    //bool ret = loader.LoadBinaryFromFile(&model, &err, &warn, argv[1]); // for binary glTF(.glb)
-    if(!ret){
-        std::string error = "Failed to open " + std::string(path);
-        #ifndef ANDROID
-            std::cout << "ERROR: " << err << std::endl;
-            throw std::runtime_error(error);
-            return -1;
-        #else
-            std::cout << "error inlcoad file " << std::endl;
-            return -1;
-        #endif
-
-    }
-    
-    mesh->load_primitives_data();
-    mesh->load_textures_gltf();
-
-    int node_count = mesh->gltf_model.nodes.size();
-    for(size_t i = 0; i < node_count;i++){
-        mesh->load_node(nullptr,i,mesh->gltf_model.nodes[i]);
-    }
-
-    mesh->load_skins();
-    for(auto node : mesh->linear_nodes){
-       // if(node->skin_index > -1)
-         //   node->skin = skins[node->skin_index];
-        if(node->mesh){
-            if(mesh->skins.size()>0)
-                node->skin = mesh->skins[0];
-           //node->update(); //for some reason this not work, produce issues in vertices transformation
-        }
-    }   
-    //linear_nodes[4]->skin = skins[0];
-    //linear_nodes[4]->update();
-
-
-    return 1;
-}
 
 void EMesh::load_primitives_data(){
     for(int i = 0; i < gltf_model.meshes.size();i++){
@@ -394,4 +350,136 @@ void EMesh::clean_object(){
 }
 
 
+void Skeletal::load_node(EMesh* mesh, node_load_data& node_data) {
+    Node *new_node = new Node{};
+    new_node->parent = node_data.parent;
+    new_node->matrix = glm::mat4(1.0f);
+    new_node->skin_index = node_data.gltf_node->skin;
+    new_node->index = node_data.index;
+    new_node->name = node_data.gltf_node->name;
+    
+    //some nodes do not contain transform information
+    if(node_data.gltf_node->translation.size() == 3)
+        new_node->Translation = glm::make_vec3(node_data.gltf_node->translation.data());
 
+    if(node_data.gltf_node->rotation.size() == 4)
+        new_node->Rotation = glm::make_quat(node_data.gltf_node->rotation.data());
+
+    if(node_data.gltf_node->matrix.size() == 16)
+        new_node->matrix = glm::make_mat4x4(node_data.gltf_node->matrix.data());
+
+    int children_count = node_data.gltf_node->children.size();
+   
+
+    if( children_count > 0){
+        for(size_t i = 0;i < children_count ;i++){
+            //load_node(new_node,gltf_node.children[i],gltf_model.nodes[gltf_node.children[i]]);
+        }
+    }
+    if(node_data.gltf_node->mesh > -1){
+        new_node->mesh = mesh;
+    }
+}
+
+int MeshManager::load_model_gltf(EMesh* mesh, const char* path){    
+    
+    tinygltf::TinyGLTF loader;
+    std::string err;
+    std::string warn;
+
+    bool ret = loader.LoadASCIIFromFile(&mesh->gltf_model, &err, &warn, path);
+    //bool ret = loader.LoadBinaryFromFile(&model, &err, &warn, argv[1]); // for binary glTF(.glb)
+    if(!ret){
+        std::string error = "Failed to open " + std::string(path);
+        #ifndef ANDROID
+            std::cout << "ERROR: " << err << std::endl;
+            throw std::runtime_error(error);
+            return -1;
+        #else
+            std::cout << "error inlcoad file " << std::endl;
+            return -1;
+        #endif
+
+    }
+    
+    mesh->load_primitives_data();
+    mesh->load_textures_gltf();
+
+    load_skeletal_data(mesh);
+
+    return 1;
+}
+
+void MeshManager::load_skeletal_data(EMesh* mesh){
+    int node_count = mesh->gltf_model.nodes.size();
+    for(size_t i = 0; i < node_count;i++){
+        mesh->load_node(nullptr,i,mesh->gltf_model.nodes[i]);
+    }
+
+    mesh->load_skins();
+    for(auto node : mesh->linear_nodes){
+       // if(node->skin_index > -1)
+         //   node->skin = skins[node->skin_index];
+        if(node->mesh){
+            if(mesh->skins.size()>0)
+                node->skin = mesh->skins[0];
+           //node->update(); //for some reason this not work, produce issues in vertices transformation
+        }
+    }   
+    //linear_nodes[4]->skin = skins[0];
+    //linear_nodes[4]->update();
+
+}
+
+void Skeletal::load_skin(EMesh* mesh, tinygltf::Model &gltf_model){
+    for(tinygltf::Skin &source_skin: gltf_model.skins){
+        Skin *new_skin = new Skin{};
+        if(source_skin.skeleton > -1){
+            new_skin->skeleton_root = node_from_index(mesh, source_skin.skeleton);
+        }
+        for(int joint_index : source_skin.joints){
+            Node* node = node_from_index(mesh, joint_index);
+            if(node)
+                new_skin->joints.push_back(node);
+        }
+        if(source_skin.inverseBindMatrices > -1){
+            const tinygltf::Accessor &accessor = gltf_model.accessors[source_skin.inverseBindMatrices];
+
+            const tinygltf::BufferView &bufferView = gltf_model.bufferViews[accessor.bufferView];
+            
+            const tinygltf::Buffer &buffer = gltf_model.buffers[bufferView.buffer];
+            
+            new_skin->inverse_bind_matrix.resize(accessor.count);
+            
+            memcpy(new_skin->inverse_bind_matrix.data(),
+                     &buffer.data[accessor.byteOffset + bufferView.byteOffset],
+                     accessor.count * sizeof(glm::mat4));
+
+        }
+
+        mesh->skins.push_back(new_skin);
+    }
+    
+}
+
+Node* Skeletal::find_node(Node* parent, uint32_t index){
+    Node* node_found = nullptr;
+    if(parent->index == index)
+        return parent;
+    for(auto& child : parent->children){
+        node_found = find_node(child,index);
+        if(node_found)
+            break;
+    }
+    return node_found;
+}
+
+Node* Skeletal::node_from_index(EMesh* mesh, uint32_t index){
+    Node* node_found = nullptr;
+    for(auto &node : mesh->nodes){
+        node_found = find_node(node,index);
+        if(node_found)
+            break;
+    }
+    return node_found;
+}

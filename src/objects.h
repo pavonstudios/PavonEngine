@@ -88,10 +88,12 @@ public:
     //skeletal
     void load_joints_matrix();
     void load_node(engine::Node *parent, uint32_t index, const tinygltf::Node &gltf_node);
-    void load_skins();
+    
     Node* node_from_index(uint32_t index);
     Node* find_node(Node* parent, uint32_t index);      
 
+
+    void load_skins();
 #ifdef GLTF
     
     #ifdef ANDROID
@@ -148,11 +150,33 @@ public:
 };
 #include "Node.h"
 
+struct node_load_data{
+    tinygltf::Model* gltf_model;
+    engine::Node *parent; 
+    uint32_t index;
+    tinygltf::Node *gltf_node;
+};
+
+struct SkeletalMesh{
+    std::vector<Node*> nodes;
+    std::vector<Node*> linear_nodes;
+};
+
 class MeshManager{
     public:
         int load_model_gltf(EMesh* mesh, const char* path);
         void create_buffers(EMesh* mesh);
+        void load_skeletal_data(EMesh* mesh);
         
+         
+};
+
+class Skeletal{
+public:
+    static void load_node(EMesh* mesh, node_load_data& node_data);    
+    static Node* node_from_index(EMesh* mesh, uint32_t index);
+    static Node* find_node(Node* parent, uint32_t index);
+    static void load_skin(EMesh* mesh, tinygltf::Model &gltf_model);
 };
 
 }//namespace engine
