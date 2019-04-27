@@ -191,7 +191,7 @@ class NodeManager{
     public:
         static void update(Node* node);
         static glm::mat4 get_local_matrix(Node* node);
-        static glm::mat4 get_matrix(Node* node);
+        static glm::mat4 get_global_matrix(Node* node);
 
 };
 
