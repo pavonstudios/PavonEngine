@@ -79,8 +79,11 @@ void Engine::init(){
 		load_map(map_path);
 		gui = new GUI(this);
 
+		
 		#ifdef VULKAN
+				auto tStart = std::chrono::high_resolution_clock::now();
 				renderer.configure_objects();
+				calculate_time(tStart);
 		#endif
 
 
@@ -88,7 +91,7 @@ void Engine::init(){
 								
 				renderer.init_gl();   
 
-
+				auto tStart = std::chrono::high_resolution_clock::now();
                 for(EMesh* mesh : meshes){
                                 if(mesh->data.vertex_shader_path == ""){
                                         mesh->data = data;
@@ -99,6 +102,7 @@ void Engine::init(){
                                 renderer.load_mesh_texture(mesh);
                         #endif
                 }
+				calculate_time(tStart);
 
 				//edit_mode = true;
     #endif
@@ -201,18 +205,9 @@ void Engine::main_loop(){
 					#endif		
 
 					frames++;
-
-					auto tEnd = std::chrono::high_resolution_clock::now();
-					auto tDiff = std::chrono::duration<double, std::milli>(tEnd - tStart).count();
-					frame_time = (float)tDiff/1000.0f;
-
-					fps += (float)tDiff;
-					if(fps > 1000.0f){
-						last_fps = static_cast<uint32_t>((float)frames * (1000.0f / fps));
-						fps = 0;
-						frames = 0;
-					}			
-
+					
+					calculate_fps(tStart);
+					
 
 					window_manager.swap_buffers();
 					
@@ -279,6 +274,27 @@ void Engine::delete_meshes(){
 		printf(" Frame time: %f",frame_time);
 	}
 
+	void Engine::calculate_fps( std::chrono::time_point<std::chrono::system_clock> tStart){
+	auto tEnd = std::chrono::high_resolution_clock::now();
+	auto tDiff = std::chrono::duration<double, std::milli>(tEnd - tStart).count();
+	frame_time = (float)tDiff/1000.0f;
+
+	fps += (float)tDiff;
+	if(fps > 1000.0f){
+		last_fps = static_cast<uint32_t>((float)frames * (1000.0f / fps));
+		fps = 0;
+		frames = 0;
+	}			
+
+	}
+	void Engine::calculate_time( std::chrono::time_point<std::chrono::system_clock> tStart){
+		auto tEnd = std::chrono::high_resolution_clock::now();
+		auto tDiff = std::chrono::duration<double, std::milli>(tEnd - tStart).count();
+		float elapsed_time = (float)tDiff/1000.0f;	
+
+		std::cout << "Loading mesh time: "	<< elapsed_time << std::endl;	
+
+	}
 #endif
 
 float Engine::get_time(){
@@ -462,20 +478,21 @@ void Engine::load_map(std::string path){
 	for(uint i = 0; i < models_paths.size();i++){	
 	meshes[i]->texture_path = textures_paths[i];
 	}
-	
-	pipeline_data data_static_mesh = {};
+
 	#ifdef VULKAN
+	pipeline_data data_static_mesh = {};
+	
     data_static_mesh.draw_type = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
-    #endif
+    
 	data_static_mesh.mesh_type = MESH_TYPE_STATIC;
     data_static_mesh.fragment_shader_path = "Game/Assets/shaders/frag.spv";
     data_static_mesh.vertex_shader_path = "Game/Assets/shaders/vert.spv";
 
 
 	pipeline_data data_skinned_mesh = {};
-	#ifdef VULKAN
+	
     data_skinned_mesh.draw_type = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
-	#endif
+	
     data_skinned_mesh.mesh_type = MESH_TYPE_SKINNED;
     data_skinned_mesh.fragment_shader_path = "Game/Assets/shaders/frag.spv";
     data_skinned_mesh.vertex_shader_path = "Game/Assets/shaders/skin.spv";
@@ -487,6 +504,7 @@ void Engine::load_map(std::string path){
 		meshes[id]->data = data_skinned_mesh;
 		Skeletal::load_data(meshes[id]);
 	}
+	#endif
 
 
 }

@@ -79,34 +79,28 @@ public:
     void init();
     void es2_loop();
     void loop_data();
-    #ifdef VULKAN
-    void vulkan_loop();
-    #endif
-    void init_player();
+    void init_player();    
+
+    #ifdef DEVELOPMENT
+        void print_debug(const std::string text, int8_t posx, int8_t posy);
+        void print_fps();
+        void calculate_time(std::chrono::time_point<std::chrono::system_clock>);
+        void calculate_fps(std::chrono::time_point<std::chrono::system_clock>);
+    #endif 
 
 #ifndef ANDROID
     
     #ifdef VULKAN        
         VulkanData vkdata = {VK_NULL_HANDLE};
-        vks::VulkanDevice* vulkan_device;      
+        vks::VulkanDevice* vulkan_device; 
+        void vulkan_loop();     
     #endif
 
         GLFWwindow* window;
-        
-
-
- 
         GLFWwindow* get_window_pointer()
         {
             return window;
-        }
-
-
-        #ifdef DEVELOPMENT
-        void print_debug(const std::string text, int8_t posx, int8_t posy);
-        void print_fps();
-        #endif 
-    
+        }   
 	       
 
 #endif//end no define android
