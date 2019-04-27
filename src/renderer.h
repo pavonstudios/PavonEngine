@@ -98,12 +98,13 @@ public:
     class Engine* engine;
 
     void configure_objects(){
-        VulkanConfig();
         createSyncObjects();
+        createCommandBuffers();
     }
 
     void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, 
     VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
+    void load_mesh(EMesh* mesh);
 
 private:
     

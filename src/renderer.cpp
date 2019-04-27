@@ -61,16 +61,15 @@ void Renderer::VulkanConfig(){
         create_meshes_graphics_pipeline();
         
         createTextureSampler();
-        for (int i = 0; i< engine->meshes.size(); i++){
-            createVertexBuffer(engine->meshes[i]);
-            createIndexBuffer(engine->meshes[i]);
-            createUniformBuffers(engine->meshes[i]);
-            createDescriptorPool(engine->meshes[i]);
-            createDescriptorSets(engine->meshes[i]);
-            update_descriptor_set(engine->meshes[i]);
-        }       
-      
-        createCommandBuffers();
+            
+}
+void Renderer::load_mesh(EMesh* mesh){
+    createVertexBuffer(mesh);
+    createIndexBuffer(mesh);
+    createUniformBuffers(mesh);
+    createDescriptorPool(mesh);
+    createDescriptorSets(mesh);
+    update_descriptor_set(mesh);
 }
 void Renderer::createIndexBuffer(EMesh * mesh) {
         VkDeviceSize bufferSize = sizeof(mesh->indices[0]) * mesh->indices.size();

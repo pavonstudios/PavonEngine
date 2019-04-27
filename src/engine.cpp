@@ -79,11 +79,15 @@ void Engine::init(){
 		load_map(map_path);
 		gui = new GUI(this);
 
-		
+		auto tStart = std::chrono::high_resolution_clock::now();
+
 		#ifdef VULKAN
-				auto tStart = std::chrono::high_resolution_clock::now();
+				renderer.VulkanConfig();
+				for(EMesh* mesh : meshes){
+					renderer.load_mesh(mesh);
+				}
 				renderer.configure_objects();
-				calculate_time(tStart);
+				
 		#endif
 
 
@@ -91,7 +95,6 @@ void Engine::init(){
 								
 				renderer.init_gl();   
 
-				auto tStart = std::chrono::high_resolution_clock::now();
                 for(EMesh* mesh : meshes){
                                 if(mesh->data.vertex_shader_path == ""){
                                         mesh->data = data;
@@ -102,13 +105,14 @@ void Engine::init(){
                                 renderer.load_mesh_texture(mesh);
                         #endif
                 }
-				calculate_time(tStart);
+				
 
 				//edit_mode = true;
-    #endif
+    	#endif
 
+		calculate_time(tStart);
 
-				init_player();
+		init_player();
 }
 
 void Engine::loop_data(){
