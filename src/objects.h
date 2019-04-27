@@ -95,7 +95,6 @@ public:
     #ifdef ANDROID
     int load_mode_gltf_android(const char* path, AAssetManager* pAssetManager);
     #endif
-    void load_primitives_data();
     void load_textures_gltf();
     std::vector<Node*> nodes;
     std::vector<Node*> linear_nodes;
@@ -173,6 +172,7 @@ struct SkeletalMesh{
 class MeshManager{
     public:
         int load_model_gltf(EMesh* mesh, const char* path);
+        void load_primitives_data(EMesh* mesh, tinygltf::Model & gltf_model);
         void create_buffers(EMesh* mesh);
         void load_skeletal_data(EMesh* mesh);
         void update_joints_matrix(EMesh* mesh, Node* node);
