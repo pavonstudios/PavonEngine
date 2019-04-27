@@ -372,10 +372,13 @@ void MeshManager::load_skeletal_data(EMesh* mesh){
             }
                 
 
-           //NodeManager::update(node);
+           NodeManager::update(node);
             //for some reason this not work, produce issues in vertices transformation
         }
     }       
+    //update_joints_matrix(mesh);
+}
+void MeshManager::update_joints_matrix(EMesh* mesh){
     mesh->node_uniform.matrix = glm::mat4(1.0);
     mesh->node_uniform.joint_count = 2;
     mesh->node_uniform.joint_matrix[0] = glm::translate(glm::mat4(1.0),glm::vec3(3,0,0));

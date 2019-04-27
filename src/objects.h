@@ -162,7 +162,7 @@ class MeshManager{
         int load_model_gltf(EMesh* mesh, const char* path);
         void create_buffers(EMesh* mesh);
         void load_skeletal_data(EMesh* mesh);
-        
+        void update_joints_matrix(EMesh* mesh);
          
 };
 
@@ -177,6 +177,7 @@ public:
 class NodeManager{
     public:
         static void update(Node* node);
+
 };
 
 }//namespace engine
