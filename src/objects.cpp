@@ -443,7 +443,7 @@ void NodeManager::update(Node* node){
     if(node->name != "")
         std::cout << "update node: " << node->name << std::endl;
     if(node->mesh){
-                glm::mat4 new_matrix = node->get_matrix();
+                glm::mat4 new_matrix = get_matrix(node);
                 EMesh* mesh = node->mesh;
                 if(node->skin){
                     std::cout << "SKIN update" << std::endl;
@@ -457,13 +457,28 @@ void NodeManager::update(Node* node){
                     for(size_t i = 0; i< skin->joints.size();i++){
                         std::cout << "JOINT update" << std::endl;
                         Node* joint_node = skin->joints[i];
-                        glm::mat4 joint_mat = joint_node->get_matrix() * skin->inverse_bind_matrix[i];
+                        glm::mat4 joint_mat = get_matrix(joint_node) * skin->inverse_bind_matrix[i];
                         joint_mat = inverse_transform * joint_mat;
                         mesh->node_uniform.joint_matrix[i] = joint_mat;
                     }
                 }
             }
             for(auto& child : node->children){
-                //NodeManager::update(child);
+                NodeManager::update(child);
             }
+}
+
+glm::mat4 NodeManager::get_local_matrix(Node* node){
+    return glm::translate(glm::mat4(1.0f),node->Translation) * glm::mat4(node->Rotation) * node->matrix;
+}
+
+glm::mat4 NodeManager::get_matrix(Node* node){
+    glm::mat4 local_matrix = get_local_matrix(node);
+    Node* node_parent = node->parent;
+    while(node_parent){
+        local_matrix = get_local_matrix(node_parent) * local_matrix;
+        node_parent = node_parent->parent;
+    }
+    return local_matrix;
+
 }

@@ -16,8 +16,8 @@ m models/pavon_the_game/police_patrol.gltf 5 5 0 textures/car01.jpg
 m models/pavon_the_game/police_patrol.gltf 3 -6 0 textures/car01.jpg
 m models/pavon_the_game/police_patrolLOD3.gltf -8 -6 0 textures/car01.jpg
 
-s models/skinned.gltf 0 0 0 textures/car01.jpg
-#s models/pavon_the_game/fireman.gltf 0 0 0 textures/car01.jpg
+#s models/skinned.gltf 0 0 0 textures/car01.jpg
+s models/pavon_the_game/fireman.gltf 0 0 1 textures/car01.jpg
 
 #c models/pavon_the_game/mercedes_benz_sprinter.gltf 0 -10 0
 #c models/pavon_the_game/mercedes_benz_sprinter.gltf 0 -10 0

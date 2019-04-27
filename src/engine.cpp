@@ -524,10 +524,10 @@ void Engine::update_input(){
 			}
 			
 			if(input.Z.bIsPressed){
-				meshes[1]->nodes[2]->move_root();
+
 			}
 			if(input.X.bIsPressed){	
-				meshes[1]->nodes[2]->rotate();
+				
 			}
 
 			if(input.Q.bIsPressed){

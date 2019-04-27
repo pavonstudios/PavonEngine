@@ -52,6 +52,7 @@ namespace engine{
     };
     
     struct Node;
+
     struct Skin {
         Node *skeleton_root = nullptr;
         std::vector<glm::mat4> inverse_bind_matrix;
@@ -143,8 +144,20 @@ public:
     std::string texture_path;  
 		
 };
-#include "Node.h"
 
+struct Node{
+        Node *parent;
+        uint32_t index;
+        glm::vec3 Translation{};
+        glm::quat Rotation{};
+        glm::mat4 matrix;
+        std::vector<Node*> children;
+        EMesh* mesh;
+        Skin* skin;
+        int32_t skin_index = -1;
+        std::string name;       
+    
+};
 struct node_load_data{
     tinygltf::Model* gltf_model;
     engine::Node *parent; 
@@ -177,6 +190,8 @@ public:
 class NodeManager{
     public:
         static void update(Node* node);
+        static glm::mat4 get_local_matrix(Node* node);
+        static glm::mat4 get_matrix(Node* node);
 
 };
 
