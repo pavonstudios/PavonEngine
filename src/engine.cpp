@@ -390,6 +390,7 @@ void Engine::load_map(std::string path){
 		std::vector<std::string> textures_paths;
 		std::string line;
 		int counter = 0;
+		std::vector<int> skeletal_id;
 		while( std::getline(file,line) ) {		
 
 			if(line != ""){
@@ -409,6 +410,10 @@ void Engine::load_map(std::string path){
 					if(first_char == 'c'){
 						texture_path = "textures/car01.jpg";
 					}
+					if(first_char == 's'){
+						skeletal_id.push_back(counter);
+					}
+
 					models_paths.push_back(model_path);
 					textures_paths.push_back(texture_path);
 					locations.push_back(location);
@@ -425,8 +430,7 @@ void Engine::load_map(std::string path){
 					
 				}			
 			
-			}
-			
+			}		
 			
 		
 		}
@@ -452,11 +456,36 @@ void Engine::load_map(std::string path){
 		load_and_assing_location(models_paths[i],locations[i]);				
 	}
 
+	
+
 	//add textures path
 	for(uint i = 0; i < models_paths.size();i++){	
 	meshes[i]->texture_path = textures_paths[i];
 	}
 	
+	pipeline_data data_static_mesh = {};
+	#ifdef VULKAN
+    data_static_mesh.draw_type = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+    #endif
+	data_static_mesh.mesh_type = MESH_TYPE_STATIC;
+    data_static_mesh.fragment_shader_path = "Game/Assets/shaders/frag.spv";
+    data_static_mesh.vertex_shader_path = "Game/Assets/shaders/vert.spv";
+
+
+	pipeline_data data_skinned_mesh = {};
+	#ifdef VULKAN
+    data_skinned_mesh.draw_type = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+	#endif
+    data_skinned_mesh.mesh_type = MESH_TYPE_SKINNED;
+    data_skinned_mesh.fragment_shader_path = "Game/Assets/shaders/red.spv";
+    data_skinned_mesh.vertex_shader_path = "Game/Assets/shaders/skin.spv";
+
+	for(EMesh* mesh : meshes){
+		mesh->data = data_static_mesh;
+	}
+	for(int id : skeletal_id){//assing skinned shader
+		meshes[id]->data = data_skinned_mesh;
+	}
 }
 
 

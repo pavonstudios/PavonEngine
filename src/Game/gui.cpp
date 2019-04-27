@@ -40,7 +40,7 @@ GUI::GUI(Engine* engine){
             triangle->data.draw_type = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
             triangle->data.mesh_type = MESH_TYPE_STATIC;
 
-            triangle->init(engine->vulkan_device);
+            //triangle->init(engine->vulkan_device);
             triangle->texture.format = VK_FORMAT_R8G8B8A8_UNORM;	
 		#endif
         #ifdef ES2
