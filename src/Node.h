@@ -1,3 +1,4 @@
+
 struct Node{
         Node *parent;
         uint32_t index;
@@ -56,26 +57,6 @@ struct Node{
                 }
                 return local_matrix;
         }
-        void update(){
-            if(mesh){
-                glm::mat4 new_matrix = get_matrix();
-                if(skin){
-                    mesh->node_uniform.matrix = new_matrix;
-
-                    glm::mat4 inverse_transform = glm::inverse(new_matrix);
-                    size_t joints_number = skin->joints.size();
-                    mesh->node_uniform.joint_count = (float)joints_number;
-
-                    for(size_t i = 0; i< skin->joints.size();i++){
-                        Node* joint_node = skin->joints[i];
-                        glm::mat4 joint_mat = joint_node->get_matrix() * skin->inverse_bind_matrix[i];
-                        joint_mat = inverse_transform * joint_mat;
-                        mesh->node_uniform.joint_matrix[i] = joint_mat;
-                    }
-                }
-            }
-            for(auto& child : children){
-                child->update();
-            }
-        }
+        
 };
+

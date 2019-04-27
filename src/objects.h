@@ -174,5 +174,10 @@ public:
     static void load_skin(EMesh* mesh, tinygltf::Model &gltf_model);
 };
 
+class NodeManager{
+    public:
+        static void update(Node* node);
+};
+
 }//namespace engine
 #endif

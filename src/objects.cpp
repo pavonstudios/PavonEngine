@@ -350,9 +350,7 @@ int MeshManager::load_model_gltf(EMesh* mesh, const char* path){
     }
     
     mesh->load_primitives_data();
-    mesh->load_textures_gltf();
-
-    load_skeletal_data(mesh);
+    mesh->load_textures_gltf();    
 
     return 1;
 }
@@ -364,17 +362,24 @@ void MeshManager::load_skeletal_data(EMesh* mesh){
     }
 
     Skeletal::load_skin(mesh, mesh->gltf_model);
+
     for(auto node : mesh->linear_nodes){
        // if(node->skin_index > -1)
          //   node->skin = skins[node->skin_index];
         if(node->mesh){
-            if(mesh->skins.size()>0)
+            if(mesh->skins.size()>0){
                 node->skin = mesh->skins[0];
-           //node->update(); //for some reason this not work, produce issues in vertices transformation
+            }
+                
+
+           //NodeManager::update(node);
+            //for some reason this not work, produce issues in vertices transformation
         }
-    }   
-    //linear_nodes[4]->skin = skins[0];
-    //linear_nodes[4]->update();
+    }       
+    mesh->node_uniform.matrix = glm::mat4(1.0);
+    mesh->node_uniform.joint_count = 2;
+    mesh->node_uniform.joint_matrix[0] = glm::translate(glm::mat4(1.0),glm::vec3(3,0,0));
+    mesh->node_uniform.joint_matrix[1] = glm::translate(glm::mat4(1.0),glm::vec3(0,0,0));
 
 }
 
@@ -429,4 +434,33 @@ Node* Skeletal::node_from_index(EMesh* mesh, uint32_t index){
             break;
     }
     return node_found;
+}
+
+void NodeManager::update(Node* node){
+    if(node->name != "")
+        std::cout << "update node: " << node->name << std::endl;
+    if(node->mesh){
+                glm::mat4 new_matrix = node->get_matrix();
+                EMesh* mesh = node->mesh;
+                if(node->skin){
+                    std::cout << "SKIN update" << std::endl;
+                    Skin* skin = node->skin;
+                    mesh->node_uniform.matrix = new_matrix;
+
+                    glm::mat4 inverse_transform = glm::inverse(new_matrix);
+                    size_t joints_number = skin->joints.size();
+                    mesh->node_uniform.joint_count = (float)joints_number;
+
+                    for(size_t i = 0; i< skin->joints.size();i++){
+                        std::cout << "JOINT update" << std::endl;
+                        Node* joint_node = skin->joints[i];
+                        glm::mat4 joint_mat = joint_node->get_matrix() * skin->inverse_bind_matrix[i];
+                        joint_mat = inverse_transform * joint_mat;
+                        mesh->node_uniform.joint_matrix[i] = joint_mat;
+                    }
+                }
+            }
+            for(auto& child : node->children){
+                //NodeManager::update(child);
+            }
 }

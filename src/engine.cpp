@@ -485,7 +485,10 @@ void Engine::load_map(std::string path){
 	}
 	for(int id : skeletal_id){//assing skinned shader
 		meshes[id]->data = data_skinned_mesh;
+		mesh_manager.load_skeletal_data(meshes[id]);
 	}
+
+
 }
 
 
