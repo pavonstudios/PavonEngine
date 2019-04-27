@@ -9,7 +9,7 @@
         #include "VulkanData.hpp"
     #endif
     #include <GLFW/glfw3.h>
-    
+    #include <pthread.h>
 
 #else
     #include "android_renderer.h"
@@ -80,7 +80,7 @@ public:
     void es2_loop();
     void loop_data();
     void init_player();    
-
+    
     #ifdef DEVELOPMENT
         void print_debug(const std::string text, int8_t posx, int8_t posy);
         void print_fps();
@@ -101,7 +101,18 @@ public:
         {
             return window;
         }   
-	       
+    void load_meshes_async();
+    void * load_meshes(void* c);
+     void * load_meshes01(void* c);
+    static void * load_helper(void * context);
+    static void * load_helper1(void * context);
+    int loading_mesh01 = false;
+    int loading1 = false;
+    int loading2 = false;
+
+private:
+    std::vector<EMesh*> meshes_01;
+	std::vector<EMesh*> meshes_02;
 
 #endif//end no define android
 

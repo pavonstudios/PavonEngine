@@ -69,7 +69,7 @@ void Renderer::load_mesh(EMesh* mesh){
     createUniformBuffers(mesh);
     createDescriptorPool(mesh);
     createDescriptorSets(mesh);
-    update_descriptor_set(mesh);
+    
 }
 void Renderer::createIndexBuffer(EMesh * mesh) {
         VkDeviceSize bufferSize = sizeof(mesh->indices[0]) * mesh->indices.size();

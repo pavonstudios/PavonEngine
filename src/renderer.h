@@ -105,6 +105,7 @@ public:
     void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, 
     VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
     void load_mesh(EMesh* mesh);
+     void update_descriptor_set(EMesh* mesh);
 
 private:
     
@@ -162,7 +163,7 @@ private:
     void createDescriptorSets(EMesh *mesh);
     void createDescriptorSetLayout();
     void createPipelineLayout();
-    void update_descriptor_set(EMesh* mesh);
+   
     void createSurface();
     void cleanupSwapChain();
     void createLogicalDevice();
