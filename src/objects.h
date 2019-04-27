@@ -21,7 +21,15 @@
     #include "glm/gtc/quaternion.hpp"
     #include <android/asset_manager.h>
 #endif
-
+#ifdef ANDROID
+    #include "glm/glm.hpp"
+    #include "glm/gtc/matrix_transform.hpp"
+    #include "glm/gtc/type_ptr.hpp"
+#else
+    #include <glm/glm.hpp>
+    #include <glm/gtc/matrix_transform.hpp>
+    #include <glm/gtc/type_ptr.hpp>    
+#endif
 
 #include "tiny_class.h"
 #include "vertex.h"
