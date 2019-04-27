@@ -269,40 +269,8 @@ int MeshManager::load_model_gltf(EMesh* mesh, const char* path){
     return 1;
 }
 
-void MeshManager::load_skeletal_data(EMesh* mesh){
-    int node_count = mesh->gltf_model.nodes.size();
-    for(size_t i = 0; i < node_count;i++){
-        mesh->load_node(nullptr,i,mesh->gltf_model.nodes[i]);
-    }
 
-    Skeletal::load_skin(mesh, mesh->gltf_model);
-    bool isUpdated = false;
-    Node* node_with_mesh;
-    for(auto node : mesh->linear_nodes){
-        if(node->mesh){
-            if(mesh->skins.size()>0){
-                node->skin = mesh->skins[0];
-
-                if(!isUpdated){
-                //NodeManager::update(node);
-               // isUpdated = true;
-                }
-            //for some reason this not work, produce issues in vertices transformation
-                node_with_mesh = node;
-            }
-                
-        }
-    }     
-    //mesh->model_matrix = glm::rotate(mesh->model_matrix,glm::radians(90.0f),glm::vec3(1,0,0));  
-    update_joints_matrix(mesh, node_with_mesh);
-    for(Node* node : mesh->linear_nodes){
-        if(node->name == "lower_arm"){
-            NodeManager::update(mesh, node);
-        }
-    }
-}
-
-void MeshManager::update_joints_matrix(EMesh* mesh, Node* node){
+void Skeletal::update_joints_matrix(EMesh* mesh, Node* node){
     mesh->node_uniform.matrix = glm::mat4(1.0);
     mesh->node_uniform.joint_count = 4;
     mesh->node_uniform.joint_matrix[0] = glm::translate(glm::mat4(1.0),glm::vec3(0,0,0));
@@ -531,4 +499,37 @@ void MeshManager::load_primitives_data(EMesh* mesh, tinygltf::Model &gltf_model)
     }
 
 
+}
+
+void Skeletal::load_data(EMesh* mesh){
+    int node_count = mesh->gltf_model.nodes.size();
+    for(size_t i = 0; i < node_count;i++){
+        mesh->load_node(nullptr,i,mesh->gltf_model.nodes[i]);
+    }
+
+    Skeletal::load_skin(mesh, mesh->gltf_model);
+    bool isUpdated = false;
+    Node* node_with_mesh;
+    for(auto node : mesh->linear_nodes){
+        if(node->mesh){
+            if(mesh->skins.size()>0){
+                node->skin = mesh->skins[0];
+
+                if(!isUpdated){
+                //NodeManager::update(node);
+               // isUpdated = true;
+                }
+            //for some reason this not work, produce issues in vertices transformation
+                node_with_mesh = node;
+            }
+                
+        }
+    }     
+    //mesh->model_matrix = glm::rotate(mesh->model_matrix,glm::radians(90.0f),glm::vec3(1,0,0));  
+    update_joints_matrix(mesh, node_with_mesh);
+    for(Node* node : mesh->linear_nodes){
+        if(node->name == "lower_arm"){
+            NodeManager::update(mesh, node);
+        }
+    }
 }

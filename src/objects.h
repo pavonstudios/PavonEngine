@@ -173,9 +173,7 @@ class MeshManager{
     public:
         int load_model_gltf(EMesh* mesh, const char* path);
         void load_primitives_data(EMesh* mesh, tinygltf::Model & gltf_model);
-        void create_buffers(EMesh* mesh);
-        void load_skeletal_data(EMesh* mesh);
-        void update_joints_matrix(EMesh* mesh, Node* node);
+        void create_buffers(EMesh* mesh);     
          
 };
 
@@ -185,6 +183,8 @@ public:
     static Node* node_from_index(EMesh* mesh, uint32_t index);
     static Node* find_node(Node* parent, uint32_t index);
     static void load_skin(EMesh* mesh, tinygltf::Model &gltf_model);
+    static void load_data(EMesh* mesh);
+    static void update_joints_matrix(EMesh* mesh, Node* node);
 };
 
 class NodeManager{
