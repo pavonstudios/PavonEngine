@@ -363,29 +363,44 @@ void MeshManager::load_skeletal_data(EMesh* mesh){
 
     Skeletal::load_skin(mesh, mesh->gltf_model);
     bool isUpdated = false;
+    Node* node_with_mesh;
     for(auto node : mesh->linear_nodes){
-       // if(node->skin_index > -1)
-         //   node->skin = skins[node->skin_index];
         if(node->mesh){
             if(mesh->skins.size()>0){
                 node->skin = mesh->skins[0];
+
+                if(!isUpdated){
+                //NodeManager::update(node);
+               // isUpdated = true;
+                }
+            //for some reason this not work, produce issues in vertices transformation
+                node_with_mesh = node;
             }
                 
-            if(!isUpdated){
-                NodeManager::update(node);
-                isUpdated = true;
-            }
-            //for some reason this not work, produce issues in vertices transformation
         }
-    }       
-    //update_joints_matrix(mesh);
+    }     
+    //mesh->model_matrix = glm::rotate(mesh->model_matrix,glm::radians(90.0f),glm::vec3(1,0,0));  
+    update_joints_matrix(mesh, node_with_mesh);
+    for(Node* node : mesh->linear_nodes){
+        if(node->name == "lower_arm"){
+            NodeManager::update(mesh, node);
+        }
+    }
 }
-void MeshManager::update_joints_matrix(EMesh* mesh){
+
+void MeshManager::update_joints_matrix(EMesh* mesh, Node* node){
     mesh->node_uniform.matrix = glm::mat4(1.0);
-    mesh->node_uniform.joint_count = 2;
+    mesh->node_uniform.joint_count = 4;
     mesh->node_uniform.joint_matrix[0] = glm::translate(glm::mat4(1.0),glm::vec3(0,0,0));
     mesh->node_uniform.joint_matrix[1] = glm::translate(glm::mat4(1.0),glm::vec3(0,0,0));
+    mesh->node_uniform.joint_matrix[2] = glm::translate(glm::mat4(1.0),glm::vec3(0,0,0));
+    mesh->node_uniform.joint_matrix[3] = glm::translate(glm::mat4(1.0),glm::vec3(0,0,0));
 
+    glm::mat4 rot = glm::rotate(glm::mat4(1.0),glm::radians(15.f),glm::vec3(0,1,0));
+    mesh->node_uniform.joint_matrix[2] = mesh->node_uniform.joint_matrix[2] * rot;
+    //mesh->node_uniform.joint_matrix[3] = 
+    //glm::mat4 global_inverse = glm::inverse(NodeManager::get_global_matrix(node));
+    //mesh->node_uniform.joint_matrix[3] = mesh->skins[0]->inverse_bind_matrix[3];
 }
 
 void Skeletal::load_skin(EMesh* mesh, tinygltf::Model &gltf_model){
@@ -458,11 +473,11 @@ void NodeManager::update(Node* node){
             mesh->node_uniform.joint_count = (float)joints_number;
 
             for(size_t i = 0; i< joints_number ;i++){
-                std::cout << "JOINT update" << std::endl;
-                Node* joint_node = skin->joints[i];                
+                Node* joint_node = skin->joints[i];
+                std::cout << "Joint UPDATE: " << joint_node->name << std::endl;                
                 
                 glm::mat4 joint_mat = inverse_transform * 
-                                        get_global_matrix(joint_node)  * 
+                                        get_global_matrix(joint_node);//  * 
                                         skin->inverse_bind_matrix[i];
 
                 mesh->node_uniform.joint_matrix[i] = joint_mat;
@@ -474,6 +489,28 @@ void NodeManager::update(Node* node){
     }
 }
 
+void NodeManager::update(EMesh* mesh, Node* node){
+    
+   
+        glm::mat4 global_transform_mat = get_global_matrix(node);
+        Skin* skin = mesh->skins[0];
+
+            glm::mat4 inverse_transform = glm::inverse(global_transform_mat);           
+
+            int i = 3;
+                Node* joint_node = skin->joints[i];
+                std::cout << "Joint UPDATE: " << joint_node->name << std::endl;                
+                
+                glm::mat4 joint_mat = inverse_transform * 
+                                        get_global_matrix(joint_node) * 
+                                        skin->inverse_bind_matrix[i];
+
+                mesh->node_uniform.joint_matrix[i] = joint_mat;
+            
+        
+        
+}
+
 glm::mat4 NodeManager::get_local_matrix(Node* node){
     return glm::translate(glm::mat4(1.0f),node->Translation) * glm::mat4(node->Rotation) * node->matrix;
 }
@@ -481,7 +518,7 @@ glm::mat4 NodeManager::get_local_matrix(Node* node){
 glm::mat4 NodeManager::get_global_matrix(Node* node){
     glm::mat4 local_matrix = get_local_matrix(node);
     Node* node_parent = node->parent;
-    while(node_parent){
+    while(node_parent){        
         local_matrix = get_local_matrix(node_parent) * local_matrix;
         node_parent = node_parent->parent;
     }

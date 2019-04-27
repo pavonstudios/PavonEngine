@@ -175,7 +175,7 @@ class MeshManager{
         int load_model_gltf(EMesh* mesh, const char* path);
         void create_buffers(EMesh* mesh);
         void load_skeletal_data(EMesh* mesh);
-        void update_joints_matrix(EMesh* mesh);
+        void update_joints_matrix(EMesh* mesh, Node* node);
          
 };
 
@@ -190,6 +190,7 @@ public:
 class NodeManager{
     public:
         static void update(Node* node);
+        static void update(EMesh* mesh, Node*  node);
         static glm::mat4 get_local_matrix(Node* node);
         static glm::mat4 get_global_matrix(Node* node);
 

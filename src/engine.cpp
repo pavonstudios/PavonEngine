@@ -477,7 +477,7 @@ void Engine::load_map(std::string path){
     data_skinned_mesh.draw_type = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 	#endif
     data_skinned_mesh.mesh_type = MESH_TYPE_SKINNED;
-    data_skinned_mesh.fragment_shader_path = "Game/Assets/shaders/red.spv";
+    data_skinned_mesh.fragment_shader_path = "Game/Assets/shaders/frag.spv";
     data_skinned_mesh.vertex_shader_path = "Game/Assets/shaders/skin.spv";
 
 	for(EMesh* mesh : meshes){
@@ -527,7 +527,7 @@ void Engine::update_input(){
 
 			}
 			if(input.X.bIsPressed){	
-				
+
 			}
 
 			if(input.Q.bIsPressed){
