@@ -105,60 +105,7 @@ void MeshManager::create_buffers(EMesh* mesh){
 
     #endif
 }
-void EMesh::load_joints_matrix(){
-    
-}
-Node* EMesh::find_node(Node* parent, uint32_t index){
-    Node* node_found = nullptr;
-    if(parent->index == index)
-        return parent;
-    for(auto& child : parent->children){
-        node_found = find_node(child,index);
-        if(node_found)
-            break;
-    }
-    return node_found;
-}
 
-Node* EMesh::node_from_index(uint32_t index){
-    Node* node_found = nullptr;
-    for(auto &node : nodes){
-        node_found = find_node(node,index);
-        if(node_found)
-            break;
-    }
-    return node_found;
-}
-void EMesh::load_skins(){
-    for(tinygltf::Skin &source_skin: gltf_model.skins){
-        Skin *new_skin = new Skin{};
-        if(source_skin.skeleton > -1){
-            new_skin->skeleton_root = node_from_index(source_skin.skeleton);
-        }
-        for(int joint_index : source_skin.joints){
-            Node* node = node_from_index(joint_index);
-            if(node)
-                new_skin->joints.push_back(node);
-        }
-        if(source_skin.inverseBindMatrices > -1){
-            const tinygltf::Accessor &accessor = gltf_model.accessors[source_skin.inverseBindMatrices];
-
-            const tinygltf::BufferView &bufferView = gltf_model.bufferViews[accessor.bufferView];
-            
-            const tinygltf::Buffer &buffer = gltf_model.buffers[bufferView.buffer];
-            
-            new_skin->inverse_bind_matrix.resize(accessor.count);
-            
-            memcpy(new_skin->inverse_bind_matrix.data(),
-                     &buffer.data[accessor.byteOffset + bufferView.byteOffset],
-                     accessor.count * sizeof(glm::mat4));
-
-        }
-
-        skins.push_back(new_skin);
-    }
-    
-}
 void EMesh::load_textures_gltf(){
     EImageData image_data_struct = {};
     if(gltf_model.images.size() > 0){
@@ -416,7 +363,7 @@ void MeshManager::load_skeletal_data(EMesh* mesh){
         mesh->load_node(nullptr,i,mesh->gltf_model.nodes[i]);
     }
 
-    mesh->load_skins();
+    Skeletal::load_skin(mesh, mesh->gltf_model);
     for(auto node : mesh->linear_nodes){
        // if(node->skin_index > -1)
          //   node->skin = skins[node->skin_index];

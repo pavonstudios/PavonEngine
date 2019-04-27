@@ -86,14 +86,9 @@ public:
     void clean_object();        
 
     //skeletal
-    void load_joints_matrix();
+   
     void load_node(engine::Node *parent, uint32_t index, const tinygltf::Node &gltf_node);
     
-    Node* node_from_index(uint32_t index);
-    Node* find_node(Node* parent, uint32_t index);      
-
-
-    void load_skins();
 #ifdef GLTF
     
     #ifdef ANDROID
