@@ -230,6 +230,7 @@ int MeshManager::load_model_gltf(EMesh* mesh, const char* path){
     load_primitives_data(mesh, mesh->gltf_model);
     mesh->load_textures_gltf();    
 
+    
     return 1;
 }
 

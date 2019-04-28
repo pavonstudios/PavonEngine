@@ -7,6 +7,7 @@
 #include "Game/ThirdPerson.hpp"	
 #include "Game/gui.hpp"
 
+#include "collision.h"
 
 Engine::Engine(){
 
@@ -116,6 +117,13 @@ void Engine::init(){
 		calculate_time(tStart);
 
 		init_player();
+
+		//teset point collision
+		EMesh* mesh = meshes.back();
+		bool collision = Collision::detect_point(mesh->box,glm::vec3(1.2,0.2,0.5));
+		if(collision){
+			std::cout << "collision \n";
+		}
 }
 void Engine::load_meshes_async(){
 	int mesh_count = meshes.size();
@@ -459,6 +467,7 @@ void Engine::load_map(std::string path){
 		std::string line;
 		int counter = 0;
 		std::vector<int> skeletal_id;
+		int type = 0;
 		while( std::getline(file,line) ) {		
 
 			if(line != ""){
@@ -481,7 +490,10 @@ void Engine::load_map(std::string path){
 					if(first_char == 's'){
 						skeletal_id.push_back(counter);
 					}
-
+					if(first_char == 'a'){
+						//with collider
+						type = MESH_WITH_COLLIDER;
+					}
 					models_paths.push_back(model_path);
 					textures_paths.push_back(texture_path);
 					locations.push_back(location);
@@ -524,7 +536,18 @@ void Engine::load_map(std::string path){
 		load_and_assing_location(models_paths[i],locations[i]);				
 	}
 
-	
+	for(auto mesh : meshes){		
+		if(mesh->gltf_model.accessors[0].minValues.size() > -1){
+					mesh->box.m_vecMax.x = mesh->gltf_model.accessors[0].maxValues[0];
+		mesh->box.m_vecMax.y = mesh->gltf_model.accessors[0].maxValues[1];
+		mesh->box.m_vecMax.z = mesh->gltf_model.accessors[0].maxValues[2];
+
+			mesh->box.m_vecMin.x = mesh->gltf_model.accessors[0].minValues[0];
+		mesh->box.m_vecMin.y = mesh->gltf_model.accessors[0].minValues[1];
+		mesh->box.m_vecMin.z = mesh->gltf_model.accessors[0].minValues[2];
+
+		}
+	}
 
 	//add textures path
 	for(uint i = 0; i < models_paths.size();i++){	

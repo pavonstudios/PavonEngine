@@ -38,8 +38,13 @@
 
 #define MESH_TYPE_STATIC 0
 #define MESH_TYPE_SKINNED 1
+#define MESH_WITH_COLLIDER 5
 
 namespace engine{
+    struct AABB{
+        glm::vec3 m_vecMax;
+        glm::vec3 m_vecMin;
+    };
     struct EImageData{
         unsigned char* data;
         int size = 0;
@@ -149,6 +154,7 @@ public:
     glm::mat4 model_matrix = glm::mat4(1.0);
     glm::vec3 location_vector;
     std::string texture_path;  
+    AABB box;
 		
 };
 
