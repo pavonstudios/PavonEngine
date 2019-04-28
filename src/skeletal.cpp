@@ -32,6 +32,8 @@ void Skeletal::load_data(EMesh* mesh){
     Node* upper_arm_node = Skeletal::node_by_name(mesh, "upper_arm");
     upper_arm_node->matrix = glm::translate(glm::mat4(1.0),glm::vec3(0,0,2));
     Skeletal::update_joints_nodes(mesh);
+   // mesh->node_uniform.joint_matrix[2] = glm::translate(glm::mat4(1.0),glm::vec3(0,0,2));
+
 }
 
 void Skeletal::update_joint_matrix(Node* node){
@@ -60,12 +62,10 @@ void Skeletal::update_joints_nodes(EMesh* mesh){
     
     for(int i = 0; i < skin->joints.size(); i++){
         Node* joint = skin->joints[i];
-        joint->matrix = glm::mat4(1.0);
         Skeletal::update_joint_matrix(joint);
         mesh->node_uniform.joint_matrix[i] = joint->global_matrix;
     }
-    //mesh->node_uniform.joint_matrix[] = joint_mat;
-      
+     
 }
 
 void NodeManager::update(Node* node){
