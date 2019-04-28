@@ -30,7 +30,11 @@ void Skeletal::load_data(EMesh* mesh){
     NodeManager::create_nodes_index(mesh);
 
     Node* upper_arm_node = Skeletal::node_by_name(mesh, "upper_arm");
-    upper_arm_node->matrix = glm::translate(glm::mat4(1.0),glm::vec3(0,0,2));
+     Node* root = Skeletal::node_by_name(mesh, "Bone");
+    glm::mat4 move_up = glm::translate(glm::mat4(1.0),glm::vec3(0,0,2));
+     glm::mat4 rot = glm::rotate(glm::mat4(1.0),glm::radians(45.f),glm::vec3(0,1,0));
+    //upper_arm_node->matrix = move_up;
+    root->matrix = move_up;
     Skeletal::update_joints_nodes(mesh);
    // mesh->node_uniform.joint_matrix[2] = glm::translate(glm::mat4(1.0),glm::vec3(0,0,2));
 
@@ -39,7 +43,7 @@ void Skeletal::load_data(EMesh* mesh){
 void Skeletal::update_joint_matrix(Node* node){
     glm::mat4 joint_mat = glm::mat4(1.0);
     if(node->parent){
-        joint_mat = node->parent->matrix * node->matrix;
+        joint_mat = node->parent->global_matrix * node->matrix;
     }
     node->global_matrix = joint_mat;
 }
@@ -63,7 +67,15 @@ void Skeletal::update_joints_nodes(EMesh* mesh){
     for(int i = 0; i < skin->joints.size(); i++){
         Node* joint = skin->joints[i];
         Skeletal::update_joint_matrix(joint);
-        mesh->node_uniform.joint_matrix[i] = joint->global_matrix;
+    glm::mat4 rot = glm::rotate(skin->inverse_bind_matrix[i],glm::radians(90.f),glm::vec3(1,0,0));
+        glm::mat4 bind_mat = NodeManager::get_global_matrix(joint);
+        glm::mat joint_mat = 
+            //glm::inverse(mesh->model_matrix) *
+            //joint->matrix *
+            joint->global_matrix;// *
+            //glm::inverse(bind_mat);
+            rot;
+        mesh->node_uniform.joint_matrix[i] = joint_mat;
     }
      
 }

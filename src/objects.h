@@ -164,7 +164,7 @@ struct Node{
         int32_t skin_index = -1;
         std::string name;   
         uint32_t bone_index;   
-        glm::mat4 global_matrix; 
+        glm::mat4 global_matrix = glm::mat4(1.0); 
     
 };
 struct node_load_data{
