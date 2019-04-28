@@ -138,7 +138,7 @@ void * Engine::load_meshes(void* c){
 	
 	
 		for(auto mesh : this->meshes_02){
-		renderer.load_mesh(mesh);
+		//renderer.load_mesh(mesh);
 		}
 
 	
@@ -148,7 +148,7 @@ void * Engine::load_meshes(void* c){
 void * Engine::load_meshes01(void* c){
 		Engine* engine = (Engine*)c;
 		for(auto mesh : this->meshes_01){
-		renderer.load_mesh(mesh);
+		//renderer.load_mesh(mesh);
 		}
 	
 	this->loading1 = true;
