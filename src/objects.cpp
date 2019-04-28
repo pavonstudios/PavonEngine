@@ -153,8 +153,10 @@ void EMesh::load_node(engine::Node *parent, uint32_t index, const tinygltf::Node
 
     if( children_count > 0){
         for(size_t i = 0;i < children_count ;i++){
-            load_node(new_node,gltf_node.children[i],gltf_model.nodes[gltf_node.children[i]]);
+            //load_node(new_node,gltf_node.children[i],gltf_model.nodes[gltf_node.children[i]]);
+            nodes[gltf_node.children[i]]->parent = new_node;
         }
+        
     }
     if(gltf_node.mesh > -1){
         new_node->mesh = this;

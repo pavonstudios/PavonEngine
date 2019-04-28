@@ -6,7 +6,9 @@ void Skeletal::load_data(EMesh* mesh){
         mesh->load_node(nullptr,i,mesh->gltf_model.nodes[i]);
     }
 
+  
     Skeletal::load_skin(mesh, mesh->gltf_model);
+
     bool isUpdated = false;
     Node* node_with_mesh;
     for(auto node : mesh->linear_nodes){
@@ -15,24 +17,55 @@ void Skeletal::load_data(EMesh* mesh){
                 node->skin = mesh->skins[0];
 
                 if(!isUpdated){
-                    NodeManager::update(node);
+                    //NodeManager::update(node); //initial pose
                // isUpdated = true;
                 }
-            //for some reason this not work, produce issues in vertices transformation
+
+                //for some reason this not work, produce issues in vertices transformation
                 node_with_mesh = node;
             }
                 
         }
     }     
-    //mesh->model_matrix = glm::rotate(mesh->model_matrix,glm::radians(90.0f),glm::vec3(1,0,0)); 
+    NodeManager::create_nodes_index(mesh);
 
-    //update_joints_matrix(mesh, node_with_mesh);
+    Node* upper_arm_node = Skeletal::node_by_name(mesh, "upper_arm");
+    upper_arm_node->matrix = glm::translate(glm::mat4(1.0),glm::vec3(0,0,2));
+    Skeletal::update_joints_nodes(mesh);
+}
 
-    for(Node* node : mesh->linear_nodes){
-        if(node->name == "lower_arm"){
-            //NodeManager::update(mesh, node);
-        }
+void Skeletal::update_joint_matrix(Node* node){
+    glm::mat4 joint_mat = glm::mat4(1.0);
+    if(node->parent){
+        joint_mat = node->parent->matrix * node->matrix;
     }
+    node->global_matrix = joint_mat;
+}
+
+void NodeManager::create_nodes_index(EMesh* mesh){
+    int index = 0;
+    Skin* skin = mesh->skins[0];
+    int joint_count = skin->joints.size();
+    for(int i = 0;i<joint_count;i++){
+        Node* joint_node = skin->joints[i];
+        joint_node->bone_index = index;
+        index++;
+    }
+}
+void Skeletal::update_joints_nodes(EMesh* mesh){
+    
+    Skin* skin = mesh->skins[0];
+    size_t joints_number = skin->joints.size();
+    mesh->node_uniform.joint_count = (float)joints_number;
+    
+    for(int i = 0; i < skin->joints.size(); i++){
+        Node* joint = skin->joints[i];
+        joint->matrix = glm::mat4(1.0);
+        Skeletal::update_joint_matrix(joint);
+        mesh->node_uniform.joint_matrix[i] = joint->global_matrix;
+    }
+    //mesh->node_uniform.joint_matrix[] = joint_mat;
+      
 }
 
 void NodeManager::update(Node* node){
@@ -51,16 +84,7 @@ void NodeManager::update(Node* node){
             size_t joints_number = skin->joints.size();
             mesh->node_uniform.joint_count = (float)joints_number;
 
-            for(size_t i = 0; i< joints_number ;i++){
-                Node* joint_node = skin->joints[i];
-                std::cout << "Joint UPDATE: " << joint_node->name << std::endl;                
-                
-                glm::mat4 joint_mat = inverse_transform * 
-                                        get_global_matrix(joint_node);//  * 
-                                        skin->inverse_bind_matrix[i];
-
-                mesh->node_uniform.joint_matrix[i] = joint_mat;
-            }
+            Skeletal::update_joints_nodes(mesh);
         }
     }
     for(auto& child : node->children){
@@ -68,32 +92,22 @@ void NodeManager::update(Node* node){
     }
 }
 
-void NodeManager::update(EMesh* mesh, Node* node){
+void NodeManager::update(EMesh* mesh, Node* node){  
     
-   
-        glm::mat4 global_transform_mat = get_global_matrix(node);
-        Skin* skin = mesh->skins[0];
-
-            glm::mat4 inverse_transform = glm::inverse(global_transform_mat);           
-
-            int i = 3;
-                Node* joint_node = skin->joints[i];
-                std::cout << "Joint UPDATE: " << joint_node->name << std::endl;                
-                
-                glm::mat4 joint_mat = inverse_transform * 
-                                        get_global_matrix(joint_node) * 
-                                        skin->inverse_bind_matrix[i];
-
-                mesh->node_uniform.joint_matrix[i] = joint_mat;
-            
-        
+    
+    /* for(auto& child : node->children){
+        NodeManager::update(mesh,child);
+    } */
+    Skeletal::update_joints_nodes(mesh);
         
 }
 
 glm::mat4 NodeManager::get_local_matrix(Node* node){
     glm::mat4 local = glm::translate(glm::mat4(1.0f),node->Translation) * glm::mat4(node->Rotation) * node->matrix;
-    glm::mat4 reseted_local_position = glm::translate(glm::mat4(1.0),glm::vec3(0,0,0));
-    return reseted_local_position;
+    glm::mat4 local_location = glm::translate(glm::mat4(1.0f),node->Translation);
+    glm::mat4 reseted_local_position = glm::translate(node->matrix,glm::vec3(0,0,0));
+    node->matrix = reseted_local_position;
+    return node->matrix;
 }
 
 glm::mat4 NodeManager::get_global_matrix(Node* node){
@@ -106,6 +120,23 @@ glm::mat4 NodeManager::get_global_matrix(Node* node){
     return local_matrix;
 
 }
+glm::mat4 NodeManager::get_global_matrix_simple(Node* node){
+    glm::mat4 local_matrix = get_local_matrix(node);
+    Node* node_parent = node->parent;
+
+    glm::mat4 global_mat;
+    if(node_parent)       
+        global_mat = get_local_matrix(node_parent) * local_matrix;
+    else
+    {
+        global_mat = local_matrix;
+    }
+     
+   
+    return global_mat;
+
+}
+
 
 void Skeletal::update_joints_matrix(EMesh* mesh, Node* node){
     mesh->node_uniform.matrix = glm::mat4(1.0);
@@ -181,6 +212,20 @@ Node* Skeletal::node_from_index(EMesh* mesh, uint32_t index){
         if(node_found)
             break;
     }
+    return node_found;
+}
+
+Node* Skeletal::node_by_name(EMesh* mesh, const char* name ){
+    Node* node_found = nullptr;
+    for(auto node : mesh->nodes){
+        if(node->name == name){
+            node_found = node;
+        }        
+        if(node_found)
+            break;
+    }
+    if(!node_found)
+        std::cout << "node not found : " << std::string(name) << std::endl;
     return node_found;
 }
 

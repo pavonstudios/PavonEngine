@@ -146,7 +146,7 @@ void * Engine::load_meshes(void* c){
 	pthread_exit(NULL);
 }
 void * Engine::load_meshes01(void* c){
-		Engine* engine = (Engine*)c;
+			Engine* engine = (Engine*)c;
 		for(auto mesh : this->meshes_01){
 		//renderer.load_mesh(mesh);
 		}

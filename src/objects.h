@@ -162,7 +162,9 @@ struct Node{
         EMesh* mesh;
         Skin* skin;
         int32_t skin_index = -1;
-        std::string name;       
+        std::string name;   
+        uint32_t bone_index;   
+        glm::mat4 global_matrix; 
     
 };
 struct node_load_data{
@@ -193,15 +195,19 @@ public:
     static void load_skin(EMesh* mesh, tinygltf::Model &gltf_model);
     static void load_data(EMesh* mesh);
     static void update_joints_matrix(EMesh* mesh, Node* node);
+    static Node* node_by_name(EMesh* mesh, const char* name);
+    static void update_joints_nodes(EMesh* mesh);
+    static void update_joint_matrix(Node* node);
 };
 
 class NodeManager{
     public:
+        static void create_nodes_index(EMesh* mesh);
         static void update(Node* node);
         static void update(EMesh* mesh, Node*  node);
         static glm::mat4 get_local_matrix(Node* node);
         static glm::mat4 get_global_matrix(Node* node);
-
+        static glm::mat4 get_global_matrix_simple(Node* node);
 };
 
 }//namespace engine
