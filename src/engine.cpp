@@ -9,6 +9,8 @@
 
 #include "collision.h"
 
+#include <thread>
+
 Engine::Engine(){
 
 	#ifdef VULKAN 
@@ -43,6 +45,14 @@ void Engine::init_player(){
 		if(!player->mesh){
 			std::runtime_error("no player mesh pointer assigner");
 		}
+
+}
+void Engine::update_collision(EMesh* mesh){
+	std::cout << "start collision engine\n";
+	while(true){
+		Collision::detect_point(mesh->box,glm::vec3(0,0,0.1f));
+	}
+	std::cout << "finish thread\n";
 
 }
 
@@ -117,6 +127,10 @@ void Engine::init(){
 		calculate_time(tStart);
 
 		init_player();
+
+
+		std::thread col_thread(update_collision,player->mesh);
+		col_thread.detach();
 
 		//teset point collision
 		EMesh* mesh = meshes.back();
