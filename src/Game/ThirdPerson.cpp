@@ -25,12 +25,13 @@ void ThirdPerson::update_camera_postion(){
 	
 }
 void ThirdPerson::update(){
-	
-
+	std::string log_position = "position " + std::to_string(mesh->location_vector.x) + " " + std::to_string(mesh->location_vector.y) + " " + std::to_string(mesh->location_vector.z);
+	//engine->print_debug(log_position,10,0);
+	int movement_value = 0;
 	if(engine->input.W.bIsPressed == true){
-		
-		this->mesh->model_matrix = glm::translate(mesh->model_matrix,glm::vec3(0,-2 * engine->deltaTime,0));
-		//engine->print_debug("moving around",10,0);
+		glm::vec3 movement =  glm::vec3(0,-2 * engine->deltaTime,0);
+		this->mesh->model_matrix = glm::translate(mesh->model_matrix,movement);		
+		mesh->location_vector = mesh->location_vector + movement;
 	}
 	if(engine->input.Z.bIsPressed){
 		
@@ -44,15 +45,19 @@ void ThirdPerson::update(){
 	}
 	if(engine->input.D.bIsPressed){
 		
-		this->mesh->model_matrix = glm::translate(mesh->model_matrix,glm::vec3(-2 * engine->deltaTime,0,0));		
-	}
+		glm::vec3 movement =  glm::vec3(-2 * engine->deltaTime,0,0);
+		this->mesh->model_matrix = glm::translate(mesh->model_matrix,movement);		
+		mesh->location_vector = mesh->location_vector + movement;	}
 	if(engine->input.A.bIsPressed){
 		
-		this->mesh->model_matrix = glm::translate(mesh->model_matrix,glm::vec3(2 * engine->deltaTime,0,0));		
-	}
+		glm::vec3 movement =  glm::vec3(2 * engine->deltaTime,0,0);
+		this->mesh->model_matrix = glm::translate(mesh->model_matrix,movement);		
+		mesh->location_vector = mesh->location_vector + movement;	}
 	if(engine->input.S.bIsPressed){
 		
-		this->mesh->model_matrix = glm::translate(mesh->model_matrix,glm::vec3(0,2 * engine->deltaTime,0));		
+		glm::vec3 movement =  glm::vec3(0,2 * engine->deltaTime,0);
+		this->mesh->model_matrix = glm::translate(mesh->model_matrix,movement);		
+		mesh->location_vector = mesh->location_vector + movement;	
 	}
 
 	update_camera_postion();

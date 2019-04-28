@@ -49,8 +49,9 @@ void Engine::init_player(){
 }
 void Engine::update_collision(EMesh* mesh){
 	std::cout << "start collision engine\n";
-	while(true){
-		Collision::detect_point(mesh->box,glm::vec3(0,0,0.1f));
+	
+	while(1){
+		Collision::detect_point(mesh->box,mesh->location_vector);
 	}
 	std::cout << "finish thread\n";
 
@@ -433,6 +434,7 @@ void Engine::load_and_assing_location(std::string path, glm::vec3 location){
 
 	glm::mat4 model_matrix = glm::mat4(1.0f);
 	model_matrix = glm::translate(model_matrix, location);
+	model->location_vector = location;
 	model->model_matrix = model_matrix;
 	meshes.push_back(model);
 	
