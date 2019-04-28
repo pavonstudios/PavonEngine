@@ -1,3 +1,5 @@
+a models/cube_collision.gltf 0 0 0 textures/car01.jpg
+
 m models/pavon_the_game/police.gltf 3 6 0 textures/character2.jpg player
 m models/pavon_the_game/police_patrol.gltf 2 -5 0 textures/car01.jpg
 m models/pavon_the_game/lince.gltf -10 13 0 textures/pavon_the_game/lince.png 
@@ -21,7 +23,7 @@ m models/pavon_the_game/police_patrolLOD3.gltf -8 -6 0 textures/car01.jpg
 #s models/skinned.gltf 0 0 0 textures/car01.jpg
 s models/pavon_the_game/fireman.gltf 0 0 0 textures/pavon_the_game/fireman.png
 
-a models/cube_collision.gltf 0 0 0 textures/pavon_the_game/grass03.png
+
 
 
 #c models/pavon_the_game/mercedes_benz_sprinter.gltf 0 -10 0

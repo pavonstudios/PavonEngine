@@ -47,11 +47,11 @@ void Engine::init_player(){
 		}
 
 }
-void Engine::update_collision(EMesh* mesh){
+void Engine::update_collision(EMesh* mesh, EMesh* mesh2){
 	std::cout << "start collision engine\n";
 	
 	while(1){
-		Collision::detect_point(mesh->box,mesh->location_vector);
+		Collision::detect_point(mesh2->box,mesh->location_vector);
 	}
 	std::cout << "finish thread\n";
 
@@ -129,12 +129,13 @@ void Engine::init(){
 
 		init_player();
 
+		EMesh* mesh = meshes[0];
 
-		std::thread col_thread(update_collision,player->mesh);
+		std::thread col_thread(update_collision,player->mesh,mesh);
 		col_thread.detach();
 
 		//teset point collision
-		EMesh* mesh = meshes.back();
+		
 		bool collision = Collision::detect_point(mesh->box,glm::vec3(1.2,0.2,0.5));
 		if(collision){
 			std::cout << "collision \n";
@@ -553,12 +554,12 @@ void Engine::load_map(std::string path){
 	}
 
 	for(auto mesh : meshes){		
-		if(mesh->gltf_model.accessors[0].minValues.size() > -1){
-					mesh->box.m_vecMax.x = mesh->gltf_model.accessors[0].maxValues[0];
+		if(mesh->gltf_model.accessors[0].minValues.size() > 0){
+		mesh->box.m_vecMax.x = mesh->gltf_model.accessors[0].maxValues[0];
 		mesh->box.m_vecMax.y = mesh->gltf_model.accessors[0].maxValues[1];
 		mesh->box.m_vecMax.z = mesh->gltf_model.accessors[0].maxValues[2];
 
-			mesh->box.m_vecMin.x = mesh->gltf_model.accessors[0].minValues[0];
+		mesh->box.m_vecMin.x = mesh->gltf_model.accessors[0].minValues[0];
 		mesh->box.m_vecMin.y = mesh->gltf_model.accessors[0].minValues[1];
 		mesh->box.m_vecMin.z = mesh->gltf_model.accessors[0].minValues[2];
 

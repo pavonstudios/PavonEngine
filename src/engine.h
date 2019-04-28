@@ -110,7 +110,7 @@ public:
     int loading1 = false;
     int loading2 = false;
 
-    static void update_collision(EMesh* mesh);
+    static void update_collision(EMesh* mesh, EMesh* mesh2);
 
 private:
     std::vector<EMesh*> meshes_01;
