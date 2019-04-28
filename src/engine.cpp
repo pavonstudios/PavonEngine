@@ -82,18 +82,14 @@ void Engine::init(){
 		auto tStart = std::chrono::high_resolution_clock::now();
 
 		#ifdef VULKAN
-				renderer.VulkanConfig();
-				load_meshes_async();
-
-				while(!this->loading1 && !this->loading2){
-					std::cout<< "waiting" << std::endl;
-				}
-				
-				for(auto mesh : meshes){
-					renderer.update_descriptor_set(mesh);
-				}
-
-				renderer.configure_objects();
+			renderer.VulkanConfig();
+			
+			for(auto mesh : meshes){
+				renderer.load_mesh(mesh);
+				renderer.update_descriptor_set(mesh);
+			}			
+			
+			renderer.configure_objects();
 				
 		#endif
 
