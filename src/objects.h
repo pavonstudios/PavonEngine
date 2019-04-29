@@ -33,14 +33,22 @@
 
 #include "tiny_class.h"
 #include "vertex.h"
-
+class Engine;
 
 
 #define MESH_TYPE_STATIC 0
 #define MESH_TYPE_SKINNED 1
 #define MESH_WITH_COLLIDER 5
+using namespace glm;
 
 namespace engine{
+    struct Movement{
+        vec3 direction;
+        float value;
+    };
+
+        
+
     struct Collider{
         bool collision = false;
         bool positive_x = false;
@@ -166,6 +174,12 @@ public:
 		
 };
 
+struct TranslationUpdate{
+        std::vector<EMesh*> meshes;
+        std::vector<Movement> movements;
+};
+
+
 struct Node{
         Node *parent;
         uint32_t index;
@@ -203,6 +217,12 @@ class MeshManager{
         void create_buffers(EMesh* mesh); 
         void create_buffers(const std::vector<EMesh*> &meshes);    
          
+};
+class Objects{
+public:
+    static void translate(TranslationUpdate& update, EMesh* mesh, vec3 direction, float value);
+    static void update_positions(Engine* engine, const TranslationUpdate &translation);
+
 };
 
 class Skeletal{

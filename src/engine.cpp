@@ -145,6 +145,8 @@ void Engine::loop_data(){
 
 		get_time();
 		main_camera.cameraSpeed = main_camera.velocity * deltaTime;
+
+		Objects::update_positions(this,tranlation_update);
 		
 }
 void Engine::es2_loop() {
@@ -208,6 +210,9 @@ void Engine::main_loop(){
 		
 
 		window_manager.swap_buffers();
+
+		tranlation_update.movements.clear();
+		tranlation_update.movements.clear();
 		
 	}
 
@@ -512,4 +517,10 @@ void Engine::load_map(std::string path){
 	#endif
 
 
+}
+
+void Engine::translate_mesh(EMesh* mesh, vec3 direction, float value){
+	tranlation_update.meshes.push_back(mesh);
+    Movement movement = {direction, value};
+    tranlation_update.movements.push_back(movement);	
 }

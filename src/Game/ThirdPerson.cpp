@@ -39,10 +39,9 @@ void ThirdPerson::update(){
 	int movement_value = 0;
 
 	if(engine->input.W.bIsPressed == true){
-		glm::vec3 movement =  glm::vec3(0,-2 * engine->deltaTime,0);
-		this->mesh->model_matrix = glm::translate(mesh->model_matrix,movement);		
-		mesh->location_vector = mesh->location_vector + movement;
+		engine->translate_mesh(mesh,vec3(0,1,0),-2);
 	}
+
 	if(engine->input.Z.bIsPressed){
 		
 		this->mesh->model_matrix = glm::rotate(mesh->model_matrix,glm::radians(15.0f * engine->deltaTime),glm::vec3(0,0,1));
@@ -81,6 +80,8 @@ void ThirdPerson::update(){
 		this->mesh->model_matrix = glm::translate(mesh->model_matrix,movement);		
 		mesh->location_vector = mesh->location_vector + movement;	
 	}
+
+	
 
 	update_camera_postion();
 	monse_control(engine->input.yaw, engine->input.pitch);

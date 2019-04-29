@@ -2,6 +2,7 @@
 #include "objects.h"
 #include "iostream"
 
+#include "engine.h"
 
 #ifdef ES2
     #include <GLES2/gl2.h>
@@ -376,3 +377,15 @@ void MeshManager::load_primitives_data(EMesh* mesh, tinygltf::Model &gltf_model)
 
 }
 
+void Objects::translate(TranslationUpdate& update, EMesh* mesh, vec3 direction, float value){
+    update.meshes.push_back(mesh);
+    Movement movement = {direction, value};
+    update.movements.push_back(movement);	
+}
+void Objects::update_positions(Engine* engine, const TranslationUpdate &translation){
+    for(int i = 0; i < translation.movements.size(); i++){
+        glm::vec3 movement =  translation.movements[i].direction * translation.movements[i].value * engine->deltaTime;
+        translation.meshes[i]->model_matrix = glm::translate(translation.meshes[i]->model_matrix,movement);		
+        translation.meshes[i]->location_vector = translation.meshes[i]->location_vector + movement;
+    }
+}

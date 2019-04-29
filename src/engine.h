@@ -45,6 +45,8 @@ public:
     MeshManager mesh_manager;
     Input input;
 
+    TranslationUpdate tranlation_update;
+
     ThirdPerson * player;
     GUI* gui;
     
@@ -78,7 +80,10 @@ public:
     void init();
     void es2_loop();
     void loop_data();
-    void init_player();    
+    void init_player();   
+
+    void translate_mesh(EMesh* mesh, vec3 direction, float value);
+ 
     
     #ifdef DEVELOPMENT
         void print_debug(const std::string text, int8_t posx, int8_t posy);
