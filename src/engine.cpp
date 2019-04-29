@@ -82,8 +82,10 @@ void Engine::init(){
 
 		#ifdef VULKAN
 				init_renderer();
-		#endif
+				mesh_manager.vulkan_device = vulkan_device;
 
+		#endif
+		
 		#ifdef ANDROID
 			string map_path = "Maps/map01.map";
 		#else
@@ -94,7 +96,8 @@ void Engine::init(){
 		gui = new GUI(this);
 
 		auto tStart = std::chrono::high_resolution_clock::now();
-
+		mesh_manager.create_buffers(meshes);
+		
 		#ifdef VULKAN
 			renderer.VulkanConfig();
 			
@@ -117,7 +120,7 @@ void Engine::init(){
                                         mesh->data = data;
                                 }
                                 renderer.load_shaders(mesh);
-                                mesh_manager.create_buffers(mesh);
+                                //mesh_manager.create_buffers(mesh);
                         #ifndef ANDROID
                                 renderer.load_mesh_texture(mesh);
                         #endif
@@ -419,7 +422,7 @@ void Engine::configure_window_callback(){
 void Engine::load_and_assing_location(std::string path, glm::vec3 location){
 	#ifdef VULKAN
 		EMesh *model = new EMesh(vulkan_device);//vulkan device for create vertex buffers
-		model->texture.format = VK_FORMAT_R8G8B8A8_UNORM;		
+		model->texture.format = VK_FORMAT_R8G8B8A8_UNORM;			
 	#else
 		EMesh *model = new EMesh();
     #endif
