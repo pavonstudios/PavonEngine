@@ -32,21 +32,27 @@ public:
 	};
 
 	static bool detect_point(const AABB& tBox, EMesh* mesh){
-			//Check if the point is less than max and greater than min
+		//Check if the point is less than max and greater than min
 		bool y = false;
 		bool z = false;
 		bool x = false;
+
+		mesh->collider.collision = false;
+		mesh->collider.positive_x = false;
+		mesh->collider.negative_x = false;
 
 		glm::vec3 vecPoint = mesh->location_vector;
 
 		if(vecPoint.x + mesh->box.m_vecMax.x >= tBox.m_vecMin.x &&
 			vecPoint.x - mesh->box.m_vecMin.x <= tBox.m_vecMax.x){
 				x = true;
+				mesh->collider.positive_x = true;
 			}
 
 		if(vecPoint.x - mesh->box.m_vecMax.x >= tBox.m_vecMin.x &&
 		vecPoint.x + mesh->box.m_vecMin.x <= tBox.m_vecMax.x){
 			x = true;
+			mesh->collider.negative_x = true;
 		}
 
 		if(vecPoint.y + mesh->box.m_vecMax.y >= tBox.m_vecMin.y &&
@@ -79,12 +85,13 @@ public:
 				z = true;
 			}
 		}
-		
+
 		if(x & y & z){
+			mesh->collider.collision = true;
 			return true;
 		}
 		
-
+		mesh->collider.collision = false;
 		//If not, then return false
 		return false;
 	};

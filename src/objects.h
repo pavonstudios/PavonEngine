@@ -41,6 +41,12 @@
 #define MESH_WITH_COLLIDER 5
 
 namespace engine{
+    struct Collider{
+        bool collision = false;
+        bool positive_x = false;
+        bool negative_x = false;
+    };
+
     struct AABB{
         glm::vec3 m_vecMax;
         glm::vec3 m_vecMin;
@@ -153,8 +159,10 @@ public:
     
     glm::mat4 model_matrix = glm::mat4(1.0);
     glm::vec3 location_vector;
-    std::string texture_path;  
+    std::string texture_path; 
+
     AABB box;
+    Collider collider;
 		
 };
 
