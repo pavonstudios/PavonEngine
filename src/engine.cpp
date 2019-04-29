@@ -47,17 +47,6 @@ void Engine::init_player(){
 		}
 
 }
-void Engine::update_collision(EMesh* mesh, EMesh* mesh2){
-	std::cout << "start collision engine\n";
-	
-	while(1){
-		if(Collision::detect_point(mesh2->box,mesh->location_vector)){
-			std::cout << "collision\n";
-		}
-	}
-	std::cout << "finish thread\n";
-
-}
 
 void Engine::init(){
 		#ifndef ANDROID
@@ -136,7 +125,7 @@ void Engine::init(){
 
 		EMesh* mesh = meshes[0];
 
-		std::thread col_thread(update_collision,player->mesh,mesh);
+		std::thread col_thread(Collision::update_collision,player->mesh,mesh);
 		col_thread.detach();
 	
 }

@@ -100,10 +100,8 @@ public:
         GLFWwindow* get_window_pointer()
         {
             return window;
-        }   
-   
-
-    static void update_collision(EMesh* mesh, EMesh* mesh2);
+        }    
+    
 
 
 #endif//end no define android

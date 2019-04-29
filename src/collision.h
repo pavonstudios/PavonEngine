@@ -43,5 +43,16 @@ public:
 
 	//If not, it will return false
 	};
+
+	 static void update_collision(EMesh* mesh, EMesh* mesh2){
+		std::cout << "start collision engine\n";
+	
+		while(1){
+			if(Collision::detect_point(mesh2->box,mesh->location_vector)){
+				std::cout << "collision\n";
+			}
+		}
+		std::cout << "finish thread\n";
+	 }
 };
 #endif
