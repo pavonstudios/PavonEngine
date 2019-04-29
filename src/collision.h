@@ -40,6 +40,8 @@ public:
 		mesh->collider.collision = false;
 		mesh->collider.positive_x = false;
 		mesh->collider.negative_x = false;
+		mesh->collider.positive_y = false;
+		mesh->collider.negative_y = false;
 
 		glm::vec3 vecPoint = mesh->location_vector;
 
@@ -57,11 +59,13 @@ public:
 
 		if(vecPoint.y + mesh->box.m_vecMax.y >= tBox.m_vecMin.y &&
 		vecPoint.y - mesh->box.m_vecMin.y <= tBox.m_vecMax.y){
+			mesh->collider.positive_y = true;
 			y = true;
 		}
 
 		if(vecPoint.y - mesh->box.m_vecMax.y >= tBox.m_vecMin.y &&
 		vecPoint.y + mesh->box.m_vecMin.y <= tBox.m_vecMax.y){
+			mesh->collider.negative_y = true;
 			y = true;
 		}
 

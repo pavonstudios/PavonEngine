@@ -551,17 +551,25 @@ void Engine::translate_mesh(EMesh* mesh, uint direction, float value){
 		if(collider.positive_x){
 			collider.can_move_negative_x = false;
 		}
-	}else{
-		
+		if(collider.positive_y){
+			collider.can_move_negative_y = false;
+		}
+		if(collider.negative_y){
+			collider.can_move_positive_y = false;
+		}
 	}
 	
 	switch (direction)
 	{
 		case FORWARD:
+			if(collider.can_move_positive_y){
 			Objects::translate(this,mesh,movement);
+			}
 			break;
 		case BACKWARD:
+			if(collider.can_move_negative_y){
 			Objects::translate(this,mesh,movement);
+			}
 			break;
 		case LEFT:
 			if(collider.can_move_negative_x){
