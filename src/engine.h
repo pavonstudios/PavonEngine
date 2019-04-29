@@ -101,14 +101,7 @@ public:
         {
             return window;
         }   
-    void load_meshes_async();
-    void * load_meshes(void* c);
-     void * load_meshes01(void* c);
-    static void * load_helper(void * context);
-    static void * load_helper1(void * context);
-    int loading_mesh01 = false;
-    int loading1 = false;
-    int loading2 = false;
+   
 
     static void update_collision(EMesh* mesh, EMesh* mesh2);
 

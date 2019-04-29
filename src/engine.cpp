@@ -97,7 +97,7 @@ void Engine::init(){
 
 		auto tStart = std::chrono::high_resolution_clock::now();
 		mesh_manager.create_buffers(meshes);
-		
+
 		#ifdef VULKAN
 			renderer.VulkanConfig();
 			
@@ -140,51 +140,7 @@ void Engine::init(){
 		col_thread.detach();
 	
 }
-void Engine::load_meshes_async(){
-	int mesh_count = meshes.size();
-	
-	div_t s = std::div(mesh_count,2);
-	int i = 0;
-	for(i ; i < s.quot;i++){
-		meshes_01.push_back(meshes[i]);
-	}
-	int c = 0;
-	for(i ;i < meshes.size(); i++){
-		meshes_02.push_back(meshes[i]);
-	}
 
-	pthread_t threads[2];
-	pthread_create(&threads[0],NULL,load_helper1, this);
-	pthread_create(&threads[1],NULL,load_helper, this);
-}
-void * Engine::load_meshes(void* c){
-	
-	
-		for(auto mesh : this->meshes_02){
-		//renderer.load_mesh(mesh);
-		}
-
-	
-		this->loading2 = true;
-	pthread_exit(NULL);
-}
-void * Engine::load_meshes01(void* c){
-			Engine* engine = (Engine*)c;
-		for(auto mesh : this->meshes_01){
-		//renderer.load_mesh(mesh);
-		}
-	
-	this->loading1 = true;
-
-	pthread_exit(NULL);
-}
-
-void * Engine::load_helper(void* s){
-	return ((Engine*)s)->load_meshes(s);
-}
-void * Engine::load_helper1(void* s){
-	return ((Engine*)s)->load_meshes01(s);
-}
 
 void Engine::loop_data(){
 		#ifdef DEVELOPMENT
