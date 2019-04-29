@@ -219,3 +219,56 @@ void Input::key_set(const char key, bool isPressed){
 		}
 	}
 }
+
+void Input::update_input(Engine* engine){
+	if(TAB.Released){
+		if(!engine->edit_mode)
+			engine->edit_mode = true;
+		else
+		{
+			engine->edit_mode = false;
+		}
+		TAB.Released = false;
+#ifdef DEVELOPMENT
+		engine->print_debug("tab pressed or released",0,0);
+#endif
+	}
+
+	if(engine->edit_mode){
+		if(S.bIsPressed){
+			engine->main_camera.MoveBackward();				
+		}
+
+		if(W.bIsPressed){
+			engine->main_camera.MoveForward();
+		}
+
+		if(A.bIsPressed){		
+			engine->main_camera.MoveLeft();
+		}
+
+		if(D.bIsPressed){		
+			engine->main_camera.MoveRight();	
+		}
+		
+		if(Z.bIsPressed){
+
+		}
+		if(X.bIsPressed){	
+
+		}
+
+		if(Q.bIsPressed){
+			engine->main_camera.MoveDown();
+		}
+		if(E.bIsPressed){
+			engine->main_camera.MoveUp();
+		}
+
+		if(move_camera){
+			engine->main_camera.mouse_control_update(yaw, pitch);
+
+		}		
+
+	}
+}

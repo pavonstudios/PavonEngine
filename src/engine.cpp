@@ -188,7 +188,7 @@ void Engine::main_loop(){
 		window_manager.check_events();
 
 	#ifndef ANDROID
-		update_input();
+		input.update_input(this);
 	#endif
 		loop_data();
 
@@ -513,58 +513,3 @@ void Engine::load_map(std::string path){
 
 
 }
-
-
-void Engine::update_input(){
-		if(input.TAB.Released){
-					if(!edit_mode)
-						edit_mode = true;
-					else
-					{
-						edit_mode = false;
-					}
-					input.TAB.Released = false;
-#ifdef DEVELOPMENT
-					this->print_debug("tab pressed or released",0,0);
-#endif
-		}
-
-	if(edit_mode){
-			if(input.S.bIsPressed){
-				main_camera.MoveBackward();				
-			}
-
-			if(input.W.bIsPressed){
-				main_camera.MoveForward();
-			}
-
-			if(input.A.bIsPressed){		
-				main_camera.MoveLeft();
-			}
-
-			if(input.D.bIsPressed){		
-				main_camera.MoveRight();	
-			}
-			
-			if(input.Z.bIsPressed){
-
-			}
-			if(input.X.bIsPressed){	
-
-			}
-
-			if(input.Q.bIsPressed){
-				main_camera.MoveDown();
-			}
-			if(input.E.bIsPressed){
-				main_camera.MoveUp();
-			}
-
-			if(input.move_camera){
-				main_camera.mouse_control_update(input.yaw, input.pitch);
-
-			}		
-
-	}
-}
-

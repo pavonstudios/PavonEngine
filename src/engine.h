@@ -73,8 +73,7 @@ public:
     void init_renderer();
     void load_and_assing_location(std::string path, glm::vec3 location);
     void load_map(std::string path);
-    float get_time();
-    void update_input();
+    float get_time();    
     void update_mvp(EMesh* mesh);
     void init();
     void es2_loop();

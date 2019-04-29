@@ -45,6 +45,7 @@ public:
 	void key_verifier_pressed(char character);
 	void key_verifier_released(char character);
 	void mouse_movement(Engine* engine, float x, float y);
+	void update_input(Engine* engine);
 private:
 	void key_set(const char key, bool isPressed);
 	
