@@ -65,14 +65,13 @@ void Engine::init(){
 		#ifdef ANDROID
 			data.fragment_shader_path = "shaders/gles/frag_uv_color.glsl";
 			data.vertex_shader_path = "vert_mvp.glsl";
-    #endif
+    	#endif
 
 		configure_window_callback();
 
 		#ifdef VULKAN
 				init_renderer();
 				mesh_manager.vulkan_device = vulkan_device;
-
 		#endif
 		
 		#ifdef ANDROID
@@ -564,9 +563,7 @@ void Engine::update_input(){
 			if(input.move_camera){
 				main_camera.mouse_control_update(input.yaw, input.pitch);
 
-			}
-
-		
+			}		
 
 	}
 }
