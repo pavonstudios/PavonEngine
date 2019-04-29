@@ -15,6 +15,7 @@ class ThirdPerson{
 		void monse_control(float yaw, float pitch);
 		void update();
 		glm::vec3 position = glm::vec3(0,0,0);
+		float velocity = 2;
 };
 
 #endif

@@ -39,6 +39,14 @@ class Engine;
 #define MESH_TYPE_STATIC 0
 #define MESH_TYPE_SKINNED 1
 #define MESH_WITH_COLLIDER 5
+
+#define RIGTH   1
+#define LEFT    2
+#define UP      3
+#define DOWN    4
+#define FORWARD    5
+#define BACKWARD    6
+
 using namespace glm;
 
 namespace engine{
@@ -53,6 +61,10 @@ namespace engine{
         bool collision = false;
         bool positive_x = false;
         bool negative_x = false;
+        bool can_move_negative_x = true;
+        bool can_move_positive_x = true;
+        bool can_move_negative_y = true;
+        bool can_move_positive_y = true;
     };
 
     struct AABB{
@@ -222,7 +234,7 @@ class Objects{
 public:
     static void translate(TranslationUpdate& update, EMesh* mesh, vec3 direction, float value);
     static void update_positions(Engine* engine, const TranslationUpdate &translation);
-
+    static void translate(Engine* engine, EMesh* mesh, Movement& movement);
 };
 
 class Skeletal{

@@ -519,8 +519,66 @@ void Engine::load_map(std::string path){
 
 }
 
-void Engine::translate_mesh(EMesh* mesh, vec3 direction, float value){
-	tranlation_update.meshes.push_back(mesh);
-    Movement movement = {direction, value};
-    tranlation_update.movements.push_back(movement);	
+void Engine::translate_mesh(EMesh* mesh, uint direction, float value){
+	
+	
+	vec3 direction_vector;
+	switch (direction)
+	{
+		case FORWARD:
+			direction_vector = vec3(0,-1,0);
+			break;
+		case BACKWARD:
+			direction_vector = vec3(0,1,0);
+			break;
+		case LEFT:
+			direction_vector = vec3(1,0,0);
+			break;
+		case RIGTH:
+			direction_vector = vec3(-1,0,0);
+			break;	
+		
+	}
+
+	Movement movement = {direction_vector, value};	
+
+	Collider collider = mesh->collider;
+	if(collider.collision){
+		if(collider.negative_x){
+			collider.can_move_positive_x = false;
+		}
+
+		if(collider.positive_x){
+			collider.can_move_negative_x = false;
+		}
+	}else{
+		
+	}
+	
+	switch (direction)
+	{
+		case FORWARD:
+			Objects::translate(this,mesh,movement);
+			break;
+		case BACKWARD:
+			Objects::translate(this,mesh,movement);
+			break;
+		case LEFT:
+			if(collider.can_move_negative_x){
+				Objects::translate(this,mesh,movement);
+			}
+			break;
+		case RIGTH:
+			if(collider.can_move_positive_x){
+				Objects::translate(this,mesh,movement);
+			}
+			break;	
+		default:
+			Objects::translate(this,mesh,movement);
+			break;
+		
+	}
+
+	
+	
 }

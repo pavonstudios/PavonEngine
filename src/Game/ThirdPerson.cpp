@@ -39,7 +39,7 @@ void ThirdPerson::update(){
 	int movement_value = 0;
 
 	if(engine->input.W.bIsPressed == true){
-		engine->translate_mesh(mesh,vec3(0,1,0),-2);
+		engine->translate_mesh(mesh,FORWARD,velocity);
 	}
 
 	if(engine->input.Z.bIsPressed){
@@ -53,32 +53,15 @@ void ThirdPerson::update(){
 		
 	}
 	if(engine->input.D.bIsPressed){
-		if(movement_x){
-			glm::vec3 movement =  glm::vec3(-2 * engine->deltaTime,0,0);
-			this->mesh->model_matrix = glm::translate(mesh->model_matrix,movement);		
-			mesh->location_vector = mesh->location_vector + movement;
-		}
-			
-		
-			
+		engine->translate_mesh(mesh,RIGTH,velocity);
 	}
 
 	if(engine->input.A.bIsPressed){
-		
-			glm::vec3 movement =  glm::vec3(2 * engine->deltaTime,0,0);
-			this->mesh->model_matrix = glm::translate(mesh->model_matrix,movement);		
-			mesh->location_vector = mesh->location_vector + movement;
-			
-		
-		
-	
+		engine->translate_mesh(mesh,LEFT,velocity);
 	}
 
 	if(engine->input.S.bIsPressed){
-		
-		glm::vec3 movement =  glm::vec3(0,2 * engine->deltaTime,0);
-		this->mesh->model_matrix = glm::translate(mesh->model_matrix,movement);		
-		mesh->location_vector = mesh->location_vector + movement;	
+		engine->translate_mesh(mesh,BACKWARD,velocity);
 	}
 
 	

@@ -82,7 +82,7 @@ public:
     void loop_data();
     void init_player();   
 
-    void translate_mesh(EMesh* mesh, vec3 direction, float value);
+    void translate_mesh(EMesh* mesh, uint direction, float value);
  
     
     #ifdef DEVELOPMENT
