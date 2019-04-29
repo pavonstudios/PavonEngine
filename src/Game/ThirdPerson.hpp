@@ -4,9 +4,6 @@
 #include "../engine.h"
 
 class ThirdPerson{
-	private:
-		bool movement_x = true;
-		bool movement_x_negative = true;
 	public:
 		ThirdPerson();
 		Engine* engine;

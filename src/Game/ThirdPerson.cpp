@@ -26,17 +26,8 @@ void ThirdPerson::update_camera_postion(){
 }
 void ThirdPerson::update(){
 	std::string log_position = "position " + std::to_string(mesh->location_vector.x) + " " + std::to_string(mesh->location_vector.y) + " " + std::to_string(mesh->location_vector.z);
-	//engine->print_debug(log_position,10,0);
-	
-	if(mesh->collider.collision){
-			if(mesh->collider.negative_x){
-				movement_x = false;
-			}else{
-				movement_x = true;
-			}
-	}
+	//engine->print_debug(log_position,10,0);	
 
-	int movement_value = 0;
 
 	if(engine->input.W.bIsPressed == true){
 		engine->translate_mesh(mesh,FORWARD,velocity);
@@ -62,16 +53,11 @@ void ThirdPerson::update(){
 
 	if(engine->input.S.bIsPressed){
 		engine->translate_mesh(mesh,BACKWARD,velocity);
-	}
-
-	
+	}	
 
 	update_camera_postion();
 	monse_control(engine->input.yaw, engine->input.pitch);
 
-	if(!mesh->collider.collision){
-		movement_x = true;
-	}
 
 }
 void ThirdPerson::monse_control(float yaw, float pitch){

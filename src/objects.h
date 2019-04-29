@@ -53,9 +53,7 @@ namespace engine{
     struct Movement{
         vec3 direction;
         float value;
-    };
-
-        
+    };       
 
     struct Collider{
         bool collision = false;
@@ -232,7 +230,6 @@ class MeshManager{
 };
 class Objects{
 public:
-    static void translate(TranslationUpdate& update, EMesh* mesh, vec3 direction, float value);
     static void update_positions(Engine* engine, const TranslationUpdate &translation);
     static void translate(Engine* engine, EMesh* mesh, Movement& movement);
 };
