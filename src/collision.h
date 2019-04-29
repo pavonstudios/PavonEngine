@@ -6,16 +6,31 @@ class Collision{
 public:
 	static bool detect_point(const AABB& tBox, glm::vec3 vecPoint){
 			//Check if the point is less than max and greater than min
-		if(vecPoint.x >= tBox.m_vecMin.x && vecPoint.x <= tBox.m_vecMax.x &&
-		vecPoint.y >= tBox.m_vecMin.y && vecPoint.y <= tBox.m_vecMax.y &&
-		vecPoint.z >= tBox.m_vecMin.z && vecPoint.z <= tBox.m_vecMax.z)
-		{
+		bool y = false;
+		bool z = false;
+		bool x = false;
+
+		if(vecPoint.x >= tBox.m_vecMin.x && vecPoint.x <= tBox.m_vecMax.x){
+			//std::cout << "x aligment\n";
+			x = true;
+		} 
+		if(vecPoint.y >= tBox.m_vecMin.y && vecPoint.y <= tBox.m_vecMax.y){
+			//std::cout << "y aligment\n";
+			y = true;
+		}
+		if(vecPoint.z >= tBox.m_vecMin.z && vecPoint.z <= tBox.m_vecMax.z){
+			//std::cout << "z aligment\n";
+			z = true;
+		}
+		if(x & y & z){
 			return true;
 		}
+		
 
-	//If not, then return false
-	return false;
+		//If not, then return false
+		return false;
 	};
+	
 	static bool detect_aabbs(const AABB& tBox1, const AABB& tBox2){
 		//Check if Box1's max is greater than Box2's min and Box1's min is less than Box2's max
     return(

@@ -51,7 +51,9 @@ void Engine::update_collision(EMesh* mesh, EMesh* mesh2){
 	std::cout << "start collision engine\n";
 	
 	while(1){
-		Collision::detect_point(mesh2->box,mesh->location_vector);
+		if(Collision::detect_point(mesh2->box,mesh->location_vector)){
+			std::cout << "collision\n";
+		}
 	}
 	std::cout << "finish thread\n";
 
@@ -133,13 +135,7 @@ void Engine::init(){
 
 		std::thread col_thread(update_collision,player->mesh,mesh);
 		col_thread.detach();
-
-		//teset point collision
-		
-		bool collision = Collision::detect_point(mesh->box,glm::vec3(1.2,0.2,0.5));
-		if(collision){
-			std::cout << "collision \n";
-		}
+	
 }
 void Engine::load_meshes_async(){
 	int mesh_count = meshes.size();
