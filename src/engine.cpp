@@ -183,29 +183,8 @@ void Engine::es2_loop() {
 
 			}
 
-		/* 	glUseProgram(meshes.back()->shader_program);
-			glBindBuffer(GL_ARRAY_BUFFER,renderer.vertex_buffer);
-			glVertexAttribPointer ( 0, 3, GL_FLOAT, false, sizeof(Vertex), (void*)0 );
-      glEnableVertexAttribArray ( 0 );        
-			renderer.draw_mesh(); */
-
-
     #endif
-    #ifdef ANDROID
-       /*  glUseProgram  ( meshes[0]->shader_program );
-        renderer.activate_vertex_attributes(meshes[0]);
-        update_mvp(meshes[0]);
-        renderer.draw(meshes[0]); */
-        /* renderer.activate_vertex_attributes(meshes[4]);
-        update_mvp(meshes[4]);
-        renderer.draw(meshes[4]); */
 
-        /* for(EMesh* mesh : meshes){
-            renderer.activate_vertex_attributes(mesh);
-            update_mvp(mesh);
-            renderer.draw(mesh);
-        } */
-    #endif
 
 }
 #ifdef VULKAN
@@ -217,41 +196,41 @@ void Engine::vulkan_loop(){
 void Engine::main_loop(){	
 	
 		
-			while (!window_manager.window_should_close()) {
-					window_manager.check_events();
+	while (!window_manager.window_should_close()) {
+		window_manager.check_events();
 
-#ifndef ANDROID
-					update_input();
-#endif
-					loop_data();
-				
-					auto tStart = std::chrono::high_resolution_clock::now();
+	#ifndef ANDROID
+		update_input();
+	#endif
+		loop_data();
 
-					#ifdef VULKAN
-						vulkan_loop();
-					#endif
-					
-					#ifdef ES2
-						es2_loop();
-					#endif		
+		auto tStart = std::chrono::high_resolution_clock::now();
 
-					frames++;
-					
-					calculate_fps(tStart);
-					
+		#ifdef VULKAN
+			vulkan_loop();
+		#endif
+		
+		#ifdef ES2
+			es2_loop();
+		#endif		
 
-					window_manager.swap_buffers();
-					
-			}
+		frames++;
+		
+		calculate_fps(tStart);
+		
 
-			#ifdef VULKAN
-				renderer.finish();
-				glfwDestroyWindow(window);
+		window_manager.swap_buffers();
+		
+	}
 
-				glfwTerminate();
+	#ifdef VULKAN
+		renderer.finish();
+		glfwDestroyWindow(window);
 
-			#endif//end if define vulkan
-	
+		glfwTerminate();
+
+	#endif//end if define vulkan
+
 }
 
 
@@ -267,9 +246,6 @@ void Engine::update_window_size(){
 	main_camera.update_projection_matrix();
 }
 
-
-
-
 void Engine::init_renderer(){
 
       #ifdef VULKAN
@@ -278,17 +254,11 @@ void Engine::init_renderer(){
 			#endif
 }
 
-
-
 void Engine::delete_meshes(){
 	for(auto mesh : meshes){
 		delete mesh;
 	}
 }
-
-
-
-
 
 #endif//end if def vulkan
 
@@ -329,49 +299,49 @@ void Engine::delete_meshes(){
 #endif
 
 float Engine::get_time(){
-		static auto startTime = std::chrono::high_resolution_clock::now();
+	static auto startTime = std::chrono::high_resolution_clock::now();
 
-		auto currentTime = std::chrono::high_resolution_clock::now();
-		float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
+	auto currentTime = std::chrono::high_resolution_clock::now();
+	float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
-		deltaTime = time - lastFrame;
-		lastFrame = time;
-		
-		return time;
+	deltaTime = time - lastFrame;
+	lastFrame = time;
+	
+	return time;
 }
 
 void Engine::update_mvp(EMesh* mesh){
-		glm::mat4 mat = glm::mat4(1.0);
-		if(mesh->bIsGUI){
-			glm::mat4 Projection = glm::ortho(0.0f, (float)800,(float)600,0.0f, 0.1f, 100.0f);
-			glm::mat4 model_view_inverse = mesh->model_matrix * glm::inverse(main_camera.View);
-			//mesh->model_matrix = model_view_inverse;
-			//mat = Projection * main_camera.View * mesh->model_matrix;
+	glm::mat4 mat = glm::mat4(1.0);
+	if(mesh->bIsGUI){
+		glm::mat4 Projection = glm::ortho(0.0f, (float)800,(float)600,0.0f, 0.1f, 100.0f);
+		glm::mat4 model_view_inverse = mesh->model_matrix * glm::inverse(main_camera.View);
+		//mesh->model_matrix = model_view_inverse;
+		//mat = Projection * main_camera.View * mesh->model_matrix;
 
-		}else{
-				mat  = main_camera.Projection * main_camera.View * mesh->model_matrix;
+	}else{
+			mat  = main_camera.Projection * main_camera.View * mesh->model_matrix;
 
-		}
-		mat  = main_camera.Projection * main_camera.View * mesh->model_matrix;
-		mesh->MVP = mat;
+	}
+	mat  = main_camera.Projection * main_camera.View * mesh->model_matrix;
+	mesh->MVP = mat;
 
-        #if defined(ES2) || defined(ANDROID)
-		renderer.update_mvp(mesh);
-		#endif
+	#if defined(ES2) || defined(ANDROID)
+	renderer.update_mvp(mesh);
+	#endif
 
 }
 
 void Engine::configure_window_callback(){			
 	#ifdef VULKAN	
-			window = window_manager.get_window();
-			glfwSetWindowUserPointer(window, this);
-			   
-			glfwSetFramebufferSizeCallback(window, window_manager.framebufferResizeCallback);
-			glfwSetInputMode(window, GLFW_STICKY_KEYS, 1);
-			glfwSetKeyCallback(window, input.key_callback);
-			glfwSetCursorPosCallback(window, input.mouse_callback);
-			glfwSetMouseButtonCallback(window,input.mouse_button_callback);
-			glfwSetScrollCallback(window,input.scroll_callback);
+		window = window_manager.get_window();
+		glfwSetWindowUserPointer(window, this);
+			
+		glfwSetFramebufferSizeCallback(window, window_manager.framebufferResizeCallback);
+		glfwSetInputMode(window, GLFW_STICKY_KEYS, 1);
+		glfwSetKeyCallback(window, input.key_callback);
+		glfwSetCursorPosCallback(window, input.mouse_callback);
+		glfwSetMouseButtonCallback(window,input.mouse_button_callback);
+		glfwSetScrollCallback(window,input.scroll_callback);
 	#endif			
 }
 

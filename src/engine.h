@@ -105,9 +105,6 @@ public:
 
     static void update_collision(EMesh* mesh, EMesh* mesh2);
 
-private:
-    std::vector<EMesh*> meshes_01;
-	std::vector<EMesh*> meshes_02;
 
 #endif//end no define android
 
