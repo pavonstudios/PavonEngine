@@ -79,7 +79,7 @@ void WindowManager::create_window_xorg(){
    x_window  =  DefaultRootWindow( x_display );   // get the root window (usually the whole screen)
  
    XSetWindowAttributes  swa;
-   swa.event_mask  =  ExposureMask | PointerMotionMask | KeyPressMask | KeyReleaseMask | StructureNotifyMask;
+   swa.event_mask  =  ExposureMask | PointerMotionMask | KeyPressMask | KeyReleaseMask | StructureNotifyMask | ButtonPressMask;
  
    x_window  =  XCreateWindow (   // create a window with the provided parameters
               x_display, x_window,
@@ -263,6 +263,12 @@ void WindowManager::check_events(){
                engine->input.key_verifier_released(key_release_char[0]);
             }
 
+         if(xev.type == ButtonPress){
+            
+            if(xev.xbutton.button == Button1){
+               std::cout << "left click \n";
+            }
+         }
 
          if(xev.type == ClientMessage && xev.xclient.data.l[0] == wmDeleteMessage){
             std::cout << "close message\n";

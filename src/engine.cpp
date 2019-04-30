@@ -292,7 +292,7 @@ void Engine::update_mvp(EMesh* mesh){
 	glm::mat4 mat = glm::mat4(1.0);
 	if(mesh->bIsGUI){
 		mat  = mat4(1.0);
-		mat = translate(mat,vec3(0.5,0.5,0)) * scale(mat,vec3(0.25,0.25,1));
+		mat = translate(mat,vec3(-0.5,-0.5,0)) * scale(mat,vec3(0.1,0.1,1));
 	}else{
 		mat  = main_camera.Projection * main_camera.View * mesh->model_matrix;
 
