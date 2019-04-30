@@ -240,6 +240,9 @@ void WindowManager::check_events(){
             this->window_width = xce.width;
             this->window_height = xce.height;
             glViewport(0,0,window_width,window_height);
+            engine->main_camera.screen_width = window_width;
+            engine->main_camera.screen_height = window_height;
+            engine->main_camera.update_projection_matrix();
          }
 
          /* use the XLookupString routine to convert the invent
