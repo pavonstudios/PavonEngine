@@ -147,6 +147,9 @@ void Input::mouse_button_callback(GLFWwindow* window, int button, int action, in
 #endif//end if define vulkan
 void Input::mouse_movement(Engine* engine, float xpos, float ypos){
 	//std::cout << "move to: "<< xpos << "," << ypos << std::endl;
+	engine->input.mousex = xpos;
+	engine->input.mousey = ypos;
+
 	if(engine->input.move_camera){
 		if(engine->input.first_mouse){
 			engine->input.lastX = xpos;

@@ -22,7 +22,21 @@ GUI::GUI(Engine* engine){
     vert3.pos = glm::vec3(1.0,1.0,0.0);  
 
     Vertex vert4{};
-    vert4.pos = glm::vec3(1.0,-1.0,0.0);       
+    vert4.pos = glm::vec3(1.0,-1.0,0.0); 
+
+
+
+/* 
+    vert1.pos = glm::vec3(0.0,100.0,0.0);
+
+    
+    vert2.pos = glm::vec3(0.0,-200.0,0.0);
+
+   
+    vert3.pos = glm::vec3(1000.0,1000.0,0.0);  
+
+   
+    vert4.pos = glm::vec3(1000.0,0.0,0.0); */
 
             
     triangle->vertices.push_back(vert1);
@@ -50,4 +64,12 @@ GUI::GUI(Engine* engine){
     #ifdef ES2
     engine->meshes.push_back(this->mesh);
     #endif
+}
+
+void GUI::calculate_mouse_position(){
+    float x = engine->window_manager.window_width / engine->input.mousex;
+    float y = engine->window_manager.window_height / engine->input.mousey;
+    x = 1 - x;
+    std::cout << x << " " << y << std::endl;
+
 }

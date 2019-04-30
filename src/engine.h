@@ -2,6 +2,8 @@
 #ifndef _Engine_H_
 #define _Engine_H_
 
+#define GLM_FORCE_SWIZZLE
+
 #ifndef ANDROID
     #ifdef VULKAN
         #include "renderer.h"

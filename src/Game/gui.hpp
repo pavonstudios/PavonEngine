@@ -9,6 +9,7 @@ class GUI{
 		Engine* engine;
 		EMesh* mesh;
 		void update();
+		void calculate_mouse_position();
 };
 
 #endif

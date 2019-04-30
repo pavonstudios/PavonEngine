@@ -146,6 +146,10 @@ void Engine::loop_data(){
 		main_camera.cameraSpeed = main_camera.velocity * deltaTime;
 
 		Objects::update_positions(this,tranlation_update);
+
+		if(input.left_button_pressed){
+			gui->calculate_mouse_position();
+		}
 		
 }
 void Engine::es2_loop() {
@@ -292,6 +296,8 @@ void Engine::update_mvp(EMesh* mesh){
 	glm::mat4 mat = glm::mat4(1.0);
 	if(mesh->bIsGUI){
 		mat  = mat4(1.0);
+		mat4 projection = glm::ortho(0, 800, 0, 600);
+	
 		mat = translate(mat,vec3(-0.5,-0.5,0)) * scale(mat,vec3(0.1,0.1,1));
 	}else{
 		mat  = main_camera.Projection * main_camera.View * mesh->model_matrix;

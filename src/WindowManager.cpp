@@ -262,11 +262,13 @@ void WindowManager::check_events(){
 
                engine->input.key_verifier_released(key_release_char[0]);
             }
-
+         engine->input.left_button_pressed = false;
          if(xev.type == ButtonPress){
             
             if(xev.xbutton.button == Button1){
-               std::cout << "left click \n";
+               //std::cout << "left click \n";
+               //std::cout << xev.xbutton.x << " " << xev.xbutton.y << std::endl;
+               engine->input.left_button_pressed = true;
             }
          }
 
