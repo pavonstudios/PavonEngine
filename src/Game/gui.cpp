@@ -14,15 +14,19 @@ GUI::GUI(Engine* engine){
     
     Vertex vert1{};
     vert1.pos = glm::vec3(-1.0,1.0,0.0);
+    vert1.texCoord = vec2(0,1);
 
     Vertex vert2{};
     vert2.pos = glm::vec3(-1.0,-1.0,0.0);
+    vert2.texCoord = vec2(0,0);
 
     Vertex vert3{};
     vert3.pos = glm::vec3(1.0,1.0,0.0);  
+    vert3.texCoord = vec2(1,1);
 
     Vertex vert4{};
-    vert4.pos = glm::vec3(1.0,-1.0,0.0); 
+    vert4.pos = glm::vec3(1.0,-1.0,0.0);
+    vert4.texCoord = vec2(1,0); 
 
 
 
@@ -45,7 +49,9 @@ GUI::GUI(Engine* engine){
     triangle->vertices.push_back(vert4);
     
     
-    triangle->texture_path = "Game/Assets/textures/car01.jpg";
+    triangle->texture_path = "Game/Assets/textures/GUI/white_logo.jpg";
+    //triangle->texture_path = "Game/Assets/textures/character.jpg";
+
     #ifdef VULKAN
         triangle->data.fragment_shader_path = "Game/Assets/shaders/red.spv";
         triangle->data.vertex_shader_path = "Game/Assets/shaders/simple_vert.spv";

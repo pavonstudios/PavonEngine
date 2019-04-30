@@ -32,7 +32,7 @@ Engine::Engine(){
 
 void Engine::draw_loading_screen(){
 	#if defined(ES2) || defined(ANDROID)
-		glClearColor(0.2, 0.0, 0.0, 1.0);
+		glClearColor(0.0, 0.0, 0.0, 1.0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		GUI* loading = new GUI(this);
 		EMesh* mesh = meshes[0];
@@ -326,6 +326,7 @@ void Engine::update_mvp(EMesh* mesh){
 		mat = translate(mat,vec3(-0.5,-0.5,0)) * scale(mat,vec3(0.1,0.1,1));
 		if(loading){
 			mat = mat4(1.0);
+			mat = rotate(mat,radians(180.f),vec3(1,0,0)) * scale(mat,vec3(0.3,0.3,1));
 			loading = false;
 		}
 			
