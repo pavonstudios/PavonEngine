@@ -18,23 +18,24 @@ void Renderer::main_loop(){
 }
 
 VkExtent2D Renderer::chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities) {
-        if (capabilities.currentExtent.width != std::numeric_limits<uint32_t>::max()) {
-            return capabilities.currentExtent;
-        } else {
-            int width, height;
-            glfwGetFramebufferSize(engine->get_window_pointer(), &width, &height);
+    if (capabilities.currentExtent.width != std::numeric_limits<uint32_t>::max()) {
+        return capabilities.currentExtent;
+    } else {
+        int width, height;
+        glfwGetFramebufferSize(engine->get_window_pointer(), &width, &height);
 
-            VkExtent2D actualExtent = {
-                static_cast<uint32_t>(width),
-                static_cast<uint32_t>(height)
-            };
+        VkExtent2D actualExtent = {
+            static_cast<uint32_t>(width),
+            static_cast<uint32_t>(height)
+        };
 
-            actualExtent.width = std::max(capabilities.minImageExtent.width, std::min(capabilities.maxImageExtent.width, actualExtent.width));
-            actualExtent.height = std::max(capabilities.minImageExtent.height, std::min(capabilities.maxImageExtent.height, actualExtent.height));
+        actualExtent.width = std::max(capabilities.minImageExtent.width, std::min(capabilities.maxImageExtent.width, actualExtent.width));
+        actualExtent.height = std::max(capabilities.minImageExtent.height, std::min(capabilities.maxImageExtent.height, actualExtent.height));
 
-            return actualExtent;
-        }
+        return actualExtent;
     }
+}
+
 void Renderer::createSurface() {
     if (glfwCreateWindowSurface(instance, engine->get_window_pointer(), nullptr, &surface) != VK_SUCCESS) {
         throw std::runtime_error("failed to create window surface!");
@@ -453,6 +454,7 @@ void Renderer::cleanupSwapChain() {
         vkDestroySwapchainKHR(device, swapChain, nullptr);
     }
 void Renderer::recreateSwapChain() {
+        resized = true;
         engine->window_manager.update_window_size();
         vkDeviceWaitIdle(device);
 
@@ -470,9 +472,7 @@ void Renderer::recreateSwapChain() {
         createFramebuffers();
         createCommandBuffers();
     }
-void Renderer::create_meshes_graphics_pipeline(){    
-
-
+void Renderer::create_meshes_graphics_pipeline(){ 
 
     for (int i = 0; i< engine->meshes.size(); i++){
         if(engine->meshes[i]->data.vertex_shader_path != ""){
@@ -481,12 +481,10 @@ void Renderer::create_meshes_graphics_pipeline(){
         }else{
             std::runtime_error("ERROR: pipeline data need shaders paths");
         }
-        createTextureImage(engine->meshes[i]->texture_path, engine->meshes[i]);
+        if(!resized)
+            createTextureImage(engine->meshes[i]->texture_path, engine->meshes[i]);
         
     }
-    //vkDestroyPipeline(device,engine->meshes.back()->graphics_pipeline,nullptr);//before change the pipeline, it must be destroyed
-    
-   // createGraphicsPipeline(&data_skinned_mesh, &engine->meshes.back()->graphics_pipeline);//meshes basck() is gltf skinned model
 
 }
 void Renderer::createGraphicsPipeline( const struct pipeline_data * data, VkPipeline* out_pipeline ) {

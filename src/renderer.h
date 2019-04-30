@@ -92,6 +92,7 @@ public:
 
     
     bool framebufferResized = false;
+    bool resized = false;
     
     void main_loop();
     void finish();
@@ -769,7 +770,11 @@ private:
 
         if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || framebufferResized) {
             framebufferResized = false;
-            recreateSwapChain();
+            if(!resized){
+                recreateSwapChain();
+                resized = true;
+            }
+                
         } else if (result != VK_SUCCESS) {
             throw std::runtime_error("failed to present swap chain image!");
         }
