@@ -1,13 +1,14 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "engine.h"
 
+
 #ifndef ANDROID
     
    
         int main() {
             
             Engine engine;
-            engine.init();      
+            engine.init();           
             engine.main_loop();                  
 
             return EXIT_SUCCESS;      

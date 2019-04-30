@@ -417,7 +417,9 @@ void activate_vertex_attributes(EMesh* mesh){
     }
 
     void draw_gui(EMesh* mesh){
-        
+        #ifdef ES2
+                glBindTexture(GL_TEXTURE_2D,mesh->texture_id);
+        #endif
         glBindBuffer(GL_ARRAY_BUFFER,mesh->vertex_buffer);
         glDrawArrays(GL_TRIANGLE_STRIP,0,mesh->vertices.size());
         glBindBuffer(GL_ARRAY_BUFFER,0);

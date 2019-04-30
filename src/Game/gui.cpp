@@ -55,7 +55,13 @@ GUI::GUI(Engine* engine){
         triangle->texture.format = VK_FORMAT_R8G8B8A8_UNORM;	
     #endif
     #ifdef ES2
+    if(engine->loading)
+        triangle->data.fragment_shader_path = "android/app/src/main/assets/frag.glsl";
+    else{
         triangle->data.fragment_shader_path = "Game/Assets/shaders/gles/red.glsl";
+
+    }
+        
         triangle->data.vertex_shader_path = "Game/Assets/shaders/gles/triangle_vert_shader.glsl";
     #endif
     triangle->bIsGUI = true;

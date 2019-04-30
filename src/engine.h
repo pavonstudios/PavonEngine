@@ -51,6 +51,7 @@ public:
 
     ThirdPerson * player;
     GUI* gui;
+    bool loading = true;
     
     #ifdef ANDROID
         Engine(android_app * pApp);
@@ -86,7 +87,7 @@ public:
 
     void translate_mesh(EMesh* mesh, uint direction, float value);
  
-    
+    void draw_loading_screen();
     #ifdef DEVELOPMENT
         void print_debug(const std::string text, int8_t posx, int8_t posy);
         void print_fps();

@@ -12,6 +12,7 @@
 
 #include <thread>
 
+
 Engine::Engine(){
 
 	#ifdef VULKAN 
@@ -28,6 +29,25 @@ Engine::Engine(){
 
 	}
 #endif
+
+void Engine::draw_loading_screen(){
+	#if defined(ES2) || defined(ANDROID)
+		glClearColor(0.2, 0.0, 0.0, 1.0);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		GUI* loading = new GUI(this);
+		EMesh* mesh = meshes[0];
+		renderer.load_shaders(mesh);
+		mesh_manager.create_buffers(mesh);
+		renderer.load_mesh_texture(mesh);
+		glUseProgram  ( mesh->shader_program );
+		renderer.activate_vertex_attributes(mesh);
+		update_mvp(mesh);
+		renderer.draw_gui(mesh);
+		window_manager.swap_buffers();
+		meshes.clear();
+		delete loading;
+	#endif
+}
 void Engine::init_player(){
 
 		player = new ThirdPerson();
@@ -54,9 +74,10 @@ void Engine::init_player(){
 void Engine::init(){
 		#ifndef ANDROID
 		window_manager.create_window();
-		#endif
-		
+		#endif		
 		window_manager.engine = this;
+
+		draw_loading_screen();
 		
 		pipeline_data data = {};
 
@@ -87,6 +108,7 @@ void Engine::init(){
 		gui = new GUI(this);
 
 		auto tStart = std::chrono::high_resolution_clock::now();
+
 		mesh_manager.create_buffers(meshes);
 
 		#ifdef VULKAN
@@ -216,7 +238,7 @@ void Engine::main_loop(){
 		tranlation_update.movements.clear();
 		
 	}
-
+	delete gui;
 	#ifdef VULKAN
 		renderer.finish();
 		glfwDestroyWindow(window);
@@ -300,8 +322,13 @@ void Engine::update_mvp(EMesh* mesh){
 	if(mesh->bIsGUI){
 		mat  = mat4(1.0);
 		mat4 projection = glm::ortho(0, 800, 0, 600);
-	
+		
 		mat = translate(mat,vec3(-0.5,-0.5,0)) * scale(mat,vec3(0.1,0.1,1));
+		if(loading){
+			mat = mat4(1.0);
+			loading = false;
+		}
+			
 	}else{
 		mat  = main_camera.Projection * main_camera.View * mesh->model_matrix;
 
