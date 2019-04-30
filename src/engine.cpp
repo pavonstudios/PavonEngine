@@ -222,16 +222,7 @@ void Engine::main_loop(){
 
 
 #ifdef VULKAN
-void Engine::update_window_size(){
-	 int width = 0, height = 0;
-        while (width == 0 || height == 0) {
-            glfwGetFramebufferSize(window, &width, &height);
-            glfwWaitEvents();
-        }
-	main_camera.screen_width = width;
-	main_camera.screen_height = height;
-	main_camera.update_projection_matrix();
-}
+
 
 void Engine::init_renderer(){
 
@@ -302,7 +293,6 @@ void Engine::update_mvp(EMesh* mesh){
 	if(mesh->bIsGUI){
 		mat  = mat4(1.0);
 		mat = translate(mat,vec3(0.5,0.5,0)) * scale(mat,vec3(0.25,0.25,1));
-
 	}else{
 		mat  = main_camera.Projection * main_camera.View * mesh->model_matrix;
 

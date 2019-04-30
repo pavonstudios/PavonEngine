@@ -187,6 +187,20 @@ WindowManager::~WindowManager(){
    glfwTerminate();
    #endif
 }
+
+void WindowManager::update_window_size(){
+	int width = 0, height = 0;
+   #ifdef VULKAN
+        while (width == 0 || height == 0) {
+            glfwGetFramebufferSize(glfw_window, &width, &height);
+            glfwWaitEvents();
+        }
+   #endif
+	engine->main_camera.screen_width = width;
+	engine->main_camera.screen_height = height;
+	engine->main_camera.update_projection_matrix();
+}
+
 bool WindowManager::window_should_close(){
    bool value = false; 
    #ifdef VULKAN

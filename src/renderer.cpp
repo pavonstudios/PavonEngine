@@ -453,7 +453,7 @@ void Renderer::cleanupSwapChain() {
         vkDestroySwapchainKHR(device, swapChain, nullptr);
     }
 void Renderer::recreateSwapChain() {
-       engine->update_window_size();
+       engine->window_manager.update_window_size();
         vkDeviceWaitIdle(device);
 
         cleanupSwapChain();

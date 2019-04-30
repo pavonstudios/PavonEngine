@@ -47,7 +47,7 @@ GUI::GUI(Engine* engine){
     triangle->bIsGUI = true;
     this->mesh = triangle;
 
-
+    #ifdef ES2
     engine->meshes.push_back(this->mesh);
-
+    #endif
 }

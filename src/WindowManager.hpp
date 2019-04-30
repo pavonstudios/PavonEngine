@@ -35,11 +35,8 @@ public:
     bool window_should_close();
     void check_events();
     ~WindowManager();
-    #ifdef VULKAN
-        GLFWwindow* get_window(){
-            return glfw_window;
-        }
-    #endif
+    void update_window_size();
+   
     #ifdef ES2
        
         #ifdef ANDROID
@@ -61,6 +58,9 @@ public:
         #endif
     #endif
     #ifdef VULKAN
+    GLFWwindow* get_window(){
+        return glfw_window;
+    }
     public:
         static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
     private:
