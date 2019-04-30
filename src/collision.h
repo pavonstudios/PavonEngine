@@ -114,27 +114,30 @@ public:
 		mesh->collider.negative_y = false;
 
 		glm::vec3 vecPoint = mesh->location_vector;
+		glm::vec3 mesh2_vec = mesh2->location_vector;
 
-		if(vecPoint.x + mesh->box.m_vecMax.x >= tBox.m_vecMin.x &&
-			vecPoint.x - mesh->box.m_vecMin.x <= tBox.m_vecMax.x){
+		if(vecPoint.x + mesh->box.m_vecMax.x >= mesh2_vec.x + tBox.m_vecMin.x &&
+			vecPoint.x - mesh->box.m_vecMin.x <= mesh2_vec.x + tBox.m_vecMax.x){
 				x = true;
 				mesh->collider.positive_x = true;
+				std::cout << "x" << std::endl;
 			}
 
-		if(vecPoint.x - mesh->box.m_vecMax.x >= tBox.m_vecMin.x &&
-		vecPoint.x + mesh->box.m_vecMin.x <= tBox.m_vecMax.x){
+		if(vecPoint.x - mesh->box.m_vecMax.x >= mesh2_vec.x - tBox.m_vecMin.x &&
+		vecPoint.x + mesh->box.m_vecMin.x <= mesh2_vec.x - tBox.m_vecMax.x){
 			x = true;
 			mesh->collider.negative_x = true;
+			std::cout << "x2" << std::endl;
 		}
 
-		if(vecPoint.y + mesh->box.m_vecMax.y >= tBox.m_vecMin.y &&
-		vecPoint.y - mesh->box.m_vecMin.y <= tBox.m_vecMax.y){
+		if(vecPoint.y + mesh->box.m_vecMax.y >= mesh2_vec.y &&
+		vecPoint.y - mesh->box.m_vecMin.y <= mesh2_vec.y){
 			mesh->collider.positive_y = true;
 			y = true;
 		}
 
-		if(vecPoint.y - mesh->box.m_vecMax.y >= tBox.m_vecMin.y &&
-		vecPoint.y + mesh->box.m_vecMin.y <= tBox.m_vecMax.y){
+		if(vecPoint.y - mesh->box.m_vecMax.y >= mesh2_vec.y &&
+		vecPoint.y + mesh->box.m_vecMin.y <= mesh2_vec.y){
 			mesh->collider.negative_y = true;
 			y = true;
 		}
@@ -143,23 +146,7 @@ public:
 			vecPoint.z - mesh->box.m_vecMin.z <= tBox.m_vecMax.z){
 				z = true;
 			}
-
-
-		{//center point
-			if(vecPoint.x >= tBox.m_vecMin.x && vecPoint.x <= tBox.m_vecMax.x){
-				//std::cout << "x aligment\n";
-				x = true;
-			} 
-			if(vecPoint.y >= tBox.m_vecMin.y && vecPoint.y <= tBox.m_vecMax.y){
-				//std::cout << "y aligment\n";
-				y = true;
-			}
-			if(vecPoint.z >= tBox.m_vecMin.z && vecPoint.z <= tBox.m_vecMax.z){
-				//std::cout << "z aligment\n";
-				z = true;
-			}
-		}
-
+	
 		if(x & y & z){
 			mesh->collider.collision = true;
 			return true;

@@ -101,19 +101,18 @@ void Engine::init(){
 
 		#if defined(ES2) || defined(ANDROID)
 								
-				renderer.init_gl();   
+			renderer.init_gl();   
 
-                for(EMesh* mesh : meshes){
-                                if(mesh->data.vertex_shader_path == ""){
-                                        mesh->data = data;
-                                }
-                                renderer.load_shaders(mesh);
-                                //mesh_manager.create_buffers(mesh);
-                        #ifndef ANDROID
-                                renderer.load_mesh_texture(mesh);
-                        #endif
-                }
-				
+			for(EMesh* mesh : meshes){
+				if(mesh->data.vertex_shader_path == ""){
+						mesh->data = data;
+				}
+				renderer.load_shaders(mesh);
+							
+				#ifndef ANDROID
+					renderer.load_mesh_texture(mesh);
+				#endif
+			}				
 
 				//edit_mode = true;
     	#endif
@@ -151,35 +150,30 @@ void Engine::loop_data(){
 }
 void Engine::es2_loop() {
 
-		#if defined(ES2) || defined(ANDROID)
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		#endif
+	#if defined(ES2) || defined(ANDROID)
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		for(EMesh* mesh : meshes){
+			
+			glUseProgram  ( mesh->shader_program );
+			renderer.activate_vertex_attributes(mesh);
 
-		#if defined(ES2) || defined(ANDROID)
-
-			for(EMesh* mesh : meshes){
+			if(!mesh->bIsGUI){			
 				
-				if(!mesh->bIsGUI){
-					glUseProgram  ( mesh->shader_program );
-					renderer.activate_vertex_attributes(mesh);
-					update_mvp(mesh);
-					renderer.draw(mesh);
-				}					
-				if(mesh->bIsGUI){
-					glUseProgram  ( mesh->shader_program );
-					renderer.activate_vertex_attributes(mesh);
-					renderer.draw_gui(mesh);
-				}
+				update_mvp(mesh);
+				renderer.draw(mesh);
+
+			}					
+			if(mesh->bIsGUI){
+				
+				renderer.draw_gui(mesh);
 
 			}
-
-    #endif
-
-
+		}
+	#endif
 }
 #ifdef VULKAN
 void Engine::vulkan_loop(){										
-						renderer.main_loop();//draw frame
+	renderer.main_loop();//draw frame
 }
 #endif
 
