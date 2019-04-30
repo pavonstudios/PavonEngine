@@ -13,7 +13,7 @@ class Camera {
 public:
 	float screen_height = 600;
 	float screen_width = 800;
-	glm::vec3 cameraPos   = glm::vec3(0.0f, -25.0f,  0.0f);
+	glm::vec3 cameraPos   = glm::vec3(0.0f, -5.0f, 4.0f);
 	glm::vec3 cameraFront = glm::vec3(0.0f, 1.0f, 0.0f);
 	glm::vec3 cameraUp    = glm::vec3(0.0f, 0.0f,  1.0f);
 
