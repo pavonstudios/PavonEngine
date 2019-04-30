@@ -126,8 +126,8 @@ void WindowManager::create_window_glfw(){
 		}
 }
 void WindowManager::framebufferResizeCallback(GLFWwindow* window, int width, int height) {
-  Engine* engine = reinterpret_cast<Engine*>(glfwGetWindowUserPointer(window));
-            engine->renderer.framebufferResized = true;
+   Engine* engine = reinterpret_cast<Engine*>(glfwGetWindowUserPointer(window));
+   engine->renderer.framebufferResized = true;
 }
 
 #endif

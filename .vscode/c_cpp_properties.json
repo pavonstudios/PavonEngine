@@ -9,9 +9,8 @@
 			"defines": [
                 "VULKAN",
                 "GLTF",
-                "DEVELOPMENT",
-                "ES2"
-                
+                "DEVELOPMENT"
+                                
 			]
         }
     ],

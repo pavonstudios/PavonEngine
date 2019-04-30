@@ -303,6 +303,7 @@ private:
     }
 
     void createImageViews() {
+        swapChainImageViews.clear();
         swapChainImageViews.resize(swapChainImages.size());
 
         for (uint32_t i = 0; i < swapChainImages.size(); i++) {

@@ -453,13 +453,14 @@ void Renderer::cleanupSwapChain() {
         vkDestroySwapchainKHR(device, swapChain, nullptr);
     }
 void Renderer::recreateSwapChain() {
-       engine->window_manager.update_window_size();
+        engine->window_manager.update_window_size();
         vkDeviceWaitIdle(device);
 
         cleanupSwapChain();
         for(auto object : engine->meshes){
             object->clean_object();
         }
+        
         createPipelineLayout();
         createSwapChain();
         createImageViews();
@@ -705,15 +706,15 @@ void Renderer::createLogicalDevice() {
 void Renderer::cleanup() {
       
         cleanupSwapChain();
-         engine->delete_meshes();
+        engine->delete_meshes();
 
         vkDestroySampler(device, textureSampler, nullptr);
        
 
-      for(int i = 0; i < engine->meshes.size(); i++){  
-           vkDestroyImageView(device,  engine->meshes[i]->texture_image_view, nullptr);
-           vkDestroyImage(device, engine->meshes[i]->texture_image, nullptr);
-      }
+        for(int i = 0; i < engine->meshes.size(); i++){  
+            vkDestroyImageView(device,  engine->meshes[i]->texture_image_view, nullptr);
+            vkDestroyImage(device, engine->meshes[i]->texture_image, nullptr);
+        }
        
         
         for(int i = 0; i < engine->meshes.size(); i++){          
