@@ -164,7 +164,7 @@ void Engine::es2_loop() {
 
 			}					
 			if(mesh->bIsGUI){
-				
+				update_mvp(mesh);
 				renderer.draw_gui(mesh);
 
 			}
@@ -300,16 +300,14 @@ float Engine::get_time(){
 void Engine::update_mvp(EMesh* mesh){
 	glm::mat4 mat = glm::mat4(1.0);
 	if(mesh->bIsGUI){
-		glm::mat4 Projection = glm::ortho(0.0f, (float)800,(float)600,0.0f, 0.1f, 100.0f);
-		glm::mat4 model_view_inverse = mesh->model_matrix * glm::inverse(main_camera.View);
-		//mesh->model_matrix = model_view_inverse;
-		//mat = Projection * main_camera.View * mesh->model_matrix;
+		mat  = mat4(1.0);
+		mat = translate(mat,vec3(0.5,0.5,0)) * scale(mat,vec3(0.25,0.25,1));
 
 	}else{
-			mat  = main_camera.Projection * main_camera.View * mesh->model_matrix;
+		mat  = main_camera.Projection * main_camera.View * mesh->model_matrix;
 
 	}
-	mat  = main_camera.Projection * main_camera.View * mesh->model_matrix;
+	
 	mesh->MVP = mat;
 
 	#if defined(ES2) || defined(ANDROID)
