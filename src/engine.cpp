@@ -404,7 +404,9 @@ void Engine::load_map(std::string path){
 				
 
 				line_stream >> first_char >> model_path >> location.x >> location.y >> location.z >> texture_path >> type;				
-				
+				if(first_char == '/'){
+					break;
+				}
 				if(first_char != '#'){
 
 					if(first_char == 'c'){
