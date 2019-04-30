@@ -6,6 +6,7 @@
 
 #include "Game/ThirdPerson.hpp"	
 #include "Game/gui.hpp"
+#include "Game/vehicle.hpp"
 
 #include "collision.h"
 
@@ -31,8 +32,10 @@ void Engine::init_player(){
 
 		player = new ThirdPerson();
 		//input.W.bIsPressed = false;
+		player = new Vehicle();
 		player->engine = this;	
 		player->mesh = nullptr;
+		player->camera_position = vec3(0,-2.5,-8.5);
 		if(this->player_id == -1){
 			std::runtime_error("no player assigned from map file");
 		}else{

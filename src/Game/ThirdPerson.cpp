@@ -18,7 +18,7 @@ void ThirdPerson::update_camera_postion(){
 	glm::mat4 rotated2 = glm::rotate(rotated,glm::radians(90.f),glm::vec3(0,1,0));
 	glm::mat4 rotated3 = glm::rotate(rotated2,glm::radians(90.f),glm::vec3(-1,0,0));
 
-	glm::mat4 translated =glm::translate(glm::mat4(1.0),glm::vec3(0,-1.5,-2.5));
+	glm::mat4 translated =glm::translate(glm::mat4(1.0),camera_position);
 
 
 	this->engine->main_camera.View = translated * rotated3 * glm::inverse(this->mesh->model_matrix);
@@ -56,6 +56,7 @@ void ThirdPerson::update(){
 	}	
 
 	update_camera_postion();
+	
 	monse_control(engine->input.yaw, engine->input.pitch);
 
 

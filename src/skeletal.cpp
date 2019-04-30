@@ -66,8 +66,8 @@ void Skeletal::update_joints_nodes(EMesh* mesh){
         model_space = model_space * inverse(mesh->model_matrix);
         mat4 rot = rotate(mat4(1.0),radians(90.f),vec3(0,1,0));
         mat4 transform = move * rot;
-        model_space = transform * inverse(transform) * inverse(mesh->model_matrix);
-     mesh->node_uniform.joint_matrix[2] = model_space;
+        model_space = inverse(mesh->node_uniform.joint_matrix[2]) * transform;
+        mesh->node_uniform.joint_matrix[2] = model_space;
 }
 
 void NodeManager::update(Node* node){

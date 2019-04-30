@@ -13,6 +13,7 @@ class ThirdPerson{
 		void update();
 		glm::vec3 position = glm::vec3(0,0,0);
 		float velocity = 2;
+		vec3 camera_position = vec3(0,-1.5,-2.5);
 };
 
 #endif
