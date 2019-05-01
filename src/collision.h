@@ -175,9 +175,11 @@ public:
 		std::cout << "start collision engine\n";
 	
 		while(1){
-			if(Collision::collision_of(mesh,mesh2)){
-				std::cout << "collision\n";
-			}
+			if(mesh && mesh2){
+				if(Collision::collision_of(mesh,mesh2)){
+					std::cout << "collision\n";
+				}
+			}		
 		}
 		std::cout << "finish thread\n";
 	 }

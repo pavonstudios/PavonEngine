@@ -30,23 +30,26 @@ GUI::GUI(Engine* engine){
 
 
 
-/* 
-    vert1.pos = glm::vec3(0.0,100.0,0.0);
+    if(!engine->loading){
+        vert1.pos = glm::vec3(0.0,0.0,0.0);
+
+        
+        vert2.pos = glm::vec3(0.0,800.0,0.0);
 
     
-    vert2.pos = glm::vec3(0.0,-200.0,0.0);
+        vert3.pos = glm::vec3(800,600,0.0);  
 
-   
-    vert3.pos = glm::vec3(1000.0,1000.0,0.0);  
-
-   
-    vert4.pos = glm::vec3(1000.0,0.0,0.0); */
+    
+        //vert4.pos = glm::vec3(1000.0,0.0,0.0);
+    }
+    
 
             
     triangle->vertices.push_back(vert1);
     triangle->vertices.push_back(vert2);        
-    triangle->vertices.push_back(vert3); 
-    triangle->vertices.push_back(vert4);
+    triangle->vertices.push_back(vert3);
+    if(engine->loading) 
+        triangle->vertices.push_back(vert4);
     
     
     triangle->texture_path = "Game/Assets/textures/GUI/white_logo.jpg";

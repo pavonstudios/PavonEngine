@@ -50,7 +50,7 @@ void Engine::draw_loading_screen(){
 }
 void Engine::init_player(){
 
-		player = new ThirdPerson();
+		//player = new ThirdPerson();
 		//input.W.bIsPressed = false;
 		player = new Vehicle();
 		player->engine = this;	
@@ -107,7 +107,7 @@ void Engine::init(){
 		load_map(map_path);
 		gui = new GUI(this);
 
-		auto tStart = std::chrono::high_resolution_clock::now();
+	auto tStart = std::chrono::high_resolution_clock::now();
 
 		mesh_manager.create_buffers(meshes);
 
@@ -139,10 +139,10 @@ void Engine::init(){
 				#endif
 			}				
 
-				//edit_mode = true;
+				edit_mode = true;
     	#endif
 
-		calculate_time(tStart);
+	calculate_time(tStart);
 
 		init_player();
 
@@ -320,17 +320,34 @@ float Engine::get_time(){
 void Engine::update_mvp(EMesh* mesh){
 	glm::mat4 mat = glm::mat4(1.0);
 	if(mesh->bIsGUI){
-		mat  = mat4(1.0);
-		mat4 projection = glm::ortho(0, 800, 0, 600);
+		//TODO: 3d gui
+		if(input.Z.bIsPressed){
+			mat = translate(mat,vec3(-0.5,-0.5,0)) * scale(mat,vec3(0.1,0.1,1));
+			mat = rotate(mat, radians(90.f),vec3(1,0,0));
+			mat = rotate(mat, radians(90.f),vec3(0,0,1));
+			mat = translate(mat,vec3(0,0,-100));
 		
-		mat = translate(mat,vec3(-0.5,-0.5,0)) * scale(mat,vec3(0.1,0.1,1));
+			mat = main_camera.Projection * main_camera.View * mat;
+			
+		}
+		//orthographic
+		if(input.X.bIsPressed){
+			float scale = 0.01 / 1000.0 * .2;
+			glm::mat4 projection = glm::ortho(0.0f, 1.0f*800*scale, 1.0f*600*scale, 0.0f);
+
+			mat = projection;
+
+		}		
+		//loading screen
 		if(loading){
 			mat = mat4(1.0);
 			mat = rotate(mat,radians(180.f),vec3(1,0,0)) * scale(mat,vec3(0.3,0.3,1));
 			loading = false;
 		}
+		
 			
 	}else{
+		
 		mat  = main_camera.Projection * main_camera.View * mesh->model_matrix;
 
 	}
