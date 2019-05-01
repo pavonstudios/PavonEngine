@@ -196,9 +196,18 @@ void WindowManager::update_window_size(){
             glfwWaitEvents();
         }
    #endif
-	engine->main_camera.screen_width = width;
-	engine->main_camera.screen_height = height;
+   if(width != 0 && height != 0){
+      window_width = width;
+	   window_height = height;
+   }
+	
+   engine->main_camera.screen_width = window_width;
+   engine->main_camera.screen_height = window_height;
 	engine->main_camera.update_projection_matrix();
+   #if defined (ES2) || (ANDROID)
+   glViewport(0,0,window_width,window_height);
+   #endif        
+   engine->gui->update_elements_mvp();
 }
 
 bool WindowManager::window_should_close(){
@@ -239,10 +248,7 @@ void WindowManager::check_events(){
             XConfigureEvent xce = xev.xconfigure;
             this->window_width = xce.width;
             this->window_height = xce.height;
-            glViewport(0,0,window_width,window_height);
-            engine->main_camera.screen_width = window_width;
-            engine->main_camera.screen_height = window_height;
-            engine->main_camera.update_projection_matrix();
+            update_window_size();           
          }
 
          /* use the XLookupString routine to convert the invent

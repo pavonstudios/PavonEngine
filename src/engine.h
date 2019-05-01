@@ -31,7 +31,7 @@
 #include "camera.h"
 
 class ThirdPerson;
-class GUI;
+#include "Game/gui.hpp"
 
 using namespace engine;
 
