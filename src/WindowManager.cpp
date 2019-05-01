@@ -162,6 +162,20 @@ void WindowManager::create_window(){
 
 		surface = eglCreateWindowSurface(display, config, pApp->window, NULL);
 
+      EGLint w = 0;
+      EGLint h = 0;
+
+		eglQuerySurface(display, surface, EGL_WIDTH, &w);
+
+      eglQuerySurface(display, surface, EGL_HEIGHT, &h);
+
+        LOGW("windows size: %f %f",(float)w,(float)h);
+
+        this->window_width = float(w);
+        this->window_height = float(h);
+
+        this->update_window_size();
+
       eglMakeCurrent(display, surface, surface, context);
 
 	}
@@ -206,8 +220,9 @@ void WindowManager::update_window_size(){
 	engine->main_camera.update_projection_matrix();
    #if defined (ES2) || (ANDROID)
    glViewport(0,0,window_width,window_height);
-   #endif        
-   engine->gui->update_elements_mvp();
+   #endif
+   if(engine->gui)
+    engine->gui->update_elements_mvp();
 }
 
 bool WindowManager::window_should_close(){

@@ -279,6 +279,8 @@ void Input::update_input(Engine* engine){
 void Input::input_event(AInputEvent* event){
     float x =  AMotionEvent_getX(event,0);
     float y = AMotionEvent_getY(event,0);
+    this->mousex = x;
+    this->mousey = y;
     LOGW("touch in x = %f y = %f",x,y);
 }
 #endif

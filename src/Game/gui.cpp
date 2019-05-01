@@ -111,6 +111,14 @@ void GUI::calculate_mouse_position(){
             button->pressed = false;
         }
     }
+#ifdef ANDROID
+    if(minx <= x && maxy >= y){
+        if(miny <= y && maxx >= x)
+            button->pressed = true;
+    }else{
+        button->pressed = false;
+    }
+#endif
     
 }
 

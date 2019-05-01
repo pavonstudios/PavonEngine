@@ -177,7 +177,9 @@ void Engine::loop_data(){
 		gui->calculate_mouse_position();			
 		
 		if(gui->is_button_pressed("jump")){
+            LOGW("jump");
 			std::cout << "jump pressd\n";
+
 		}
 		
 }
