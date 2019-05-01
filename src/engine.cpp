@@ -50,9 +50,9 @@ void Engine::draw_loading_screen(){
 }
 void Engine::init_player(){
 
-		//player = new ThirdPerson();
+		player = new ThirdPerson();
 		//input.W.bIsPressed = false;
-		player = new Vehicle();
+		//player = new Vehicle();
 		player->engine = this;	
 		player->mesh = nullptr;
 		player->camera_position = vec3(0,-2.5,-8.5);
@@ -140,7 +140,7 @@ void Engine::init(){
 				#endif
 			}				
 
-				edit_mode = true;
+				//edit_mode = true;
     	#endif
 
 	calculate_time(tStart);
