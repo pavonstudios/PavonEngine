@@ -216,7 +216,7 @@ void Engine::main_loop(){
 		auto tStart = std::chrono::high_resolution_clock::now();
 
 		#ifdef VULKAN
-			renderer.repeat();//draw frame
+			renderer.draw_frame();
 		#endif
 		
 		#ifdef ES2
