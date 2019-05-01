@@ -42,7 +42,7 @@ public:
 
     Engine();
     WindowManager window_manager;
-    AssetManager objects_manager;
+    AssetManager assets;
     Camera main_camera;
     MeshManager mesh_manager;
     Input input;

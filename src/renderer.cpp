@@ -201,7 +201,7 @@ void Renderer::createTextureImage(std::string texture_path, EMesh* mesh) {
         size.width = mesh->texture.width;
 
        }else{
-            size = engine->objects_manager.load_and_get_size(texture_path);
+            size = engine->assets.load_and_get_size(texture_path);
         
             imageSize = size.heigth * size.width * 4;
        }
@@ -220,7 +220,7 @@ void Renderer::createTextureImage(std::string texture_path, EMesh* mesh) {
         vkUnmapMemory(device, stagingBufferMemory);
          
          if(!mesh->texture.hasTexture){
-            engine->objects_manager.free_image(size.pPixels);
+            engine->assets.free_image(size.pPixels);
          }
 
         VkFormat format = mesh->texture.format;

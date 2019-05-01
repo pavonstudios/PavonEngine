@@ -25,6 +25,7 @@ public:
     #ifdef ANDROID
     image_size load_bmp(const char* filename, AAssetManager * assetManager);
     #endif
+    std::string path(std::string path_to_convert);
 	
 };
 

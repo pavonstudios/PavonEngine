@@ -471,14 +471,14 @@ void Engine::load_map(std::string path){
 		//convert path to asset folder path
 		std::vector<std::string> new_paths;
 		for(std::string path : models_paths){
-			std::string new_path = objects_manager.convert_to_asset_folder_path(path);
+			std::string new_path = assets.path(path);
 			new_paths.push_back(new_path);
 		}
 		models_paths = new_paths;
 
 		new_paths.clear();
 		for(std::string path : textures_paths){
-			std::string new_path = objects_manager.convert_to_asset_folder_path(path);
+			std::string new_path = assets.path(path);
 			new_paths.push_back(new_path);
 		}
 		textures_paths = new_paths;

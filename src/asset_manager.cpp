@@ -10,6 +10,12 @@ void AssetManager::free_image(void * pixels){
 std::string AssetManager::convert_to_asset_folder_path(std::string path_to_convert){
     return AssetPath + path_to_convert;
 }
+std::string AssetManager::path(std::string path_to_convert){
+    #ifdef ANDROID
+    AssetPath = ""
+    #endif   
+    return AssetPath + path_to_convert;
+}
 
 image_size AssetManager::load_and_get_size(std::string texture_path){
     int texWidth, texHeight, texChannels;
@@ -46,15 +52,3 @@ image_size AssetManager::load_bmp( const char * filename ,AAssetManager * assetM
 }
 
 #endif
-/* int AssetManager::load_model_gltf(const char* path){    
-    tinygltf::Model gltf_model;
-    tinygltf::TinyGLTF loader;
-    std::string err;
-    std::string warn;
-
-    bool ret = loader.LoadASCIIFromFile(&gltf_model, &err, &warn, path);
-    //bool ret = loader.LoadBinaryFromFile(&model, &err, &warn, argv[1]); // for binary glTF(.glb)
-    
-   
-    return 1;
-} */
