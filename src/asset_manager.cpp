@@ -12,7 +12,7 @@ std::string AssetManager::convert_to_asset_folder_path(std::string path_to_conve
 }
 std::string AssetManager::path(std::string path_to_convert){
     #ifdef ANDROID
-    AssetPath = ""
+    AssetPath = "";
     #endif   
     return AssetPath + path_to_convert;
 }

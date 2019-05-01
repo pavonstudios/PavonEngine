@@ -70,13 +70,13 @@ GUI::GUI(Engine* engine){
     #endif
     #ifdef ES2
     if(engine->loading)
-        triangle->data.fragment_shader_path = "android/app/src/main/assets/frag.glsl";
+        triangle->data.fragment_shader_path = engine->assets.path("frag.glsl");
     else{
-        triangle->data.fragment_shader_path = "Game/Assets/shaders/gles/red.glsl";
+        triangle->data.fragment_shader_path = engine->assets.path("shaders/gles/red.glsl");
 
     }
         
-        triangle->data.vertex_shader_path = "Game/Assets/shaders/gles/triangle_vert_shader.glsl";
+    triangle->data.vertex_shader_path = engine->assets.path("shaders/gles/triangle_vert_shader.glsl");
     #endif
 
     triangle->bIsGUI = true;
@@ -87,7 +87,7 @@ GUI::GUI(Engine* engine){
     button->name = "jump";
     elements.push_back((UIElement*)button);
 
-    #ifdef ES2
+    #if defined (ES2) || defined (ANDROID) 
     engine->meshes.push_back(this->mesh);
     #endif
 }
