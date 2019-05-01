@@ -173,8 +173,12 @@ void Engine::loop_data(){
 
 		Objects::update_positions(this,tranlation_update);
 
-		if(input.left_button_pressed){
-			gui->calculate_mouse_position();
+		
+		gui->calculate_mouse_position();
+			
+		
+		if(gui->is_button_pressed("jump")){
+			std::cout << "jump pressd\n";
 		}
 		
 }

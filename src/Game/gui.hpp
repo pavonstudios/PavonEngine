@@ -3,6 +3,7 @@
 
 struct UIElement{
 public:
+	std::string name;
 	EMesh* mesh;
 	vec2 position;
 	vec2 size;	
@@ -28,6 +29,7 @@ class GUI{
 		void calculate_mouse_position();
 		std::vector<UIElement*> elements;
 		void update_elements_mvp();
+		bool is_button_pressed(std::string name);
 };
 
 #endif

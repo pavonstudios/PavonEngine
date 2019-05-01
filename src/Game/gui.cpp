@@ -78,11 +78,13 @@ GUI::GUI(Engine* engine){
         
         triangle->data.vertex_shader_path = "Game/Assets/shaders/gles/triangle_vert_shader.glsl";
     #endif
+
     triangle->bIsGUI = true;
     this->mesh = triangle;
     Button* button = new Button(mesh);
-    button->position = vec2(100,530);
+    button->position = vec2(100,100);
     button->size = vec2(30,15);
+    button->name = "jump";
     elements.push_back((UIElement*)button);
 
     #ifdef ES2
@@ -93,8 +95,23 @@ GUI::GUI(Engine* engine){
 void GUI::calculate_mouse_position(){
     float x = engine->input.mousex;
     float y = engine->input.mousey;
-    std::cout << x << " " << y << std::endl;
+    //std::cout << x << " " << y << std::endl;
+    Button* button = static_cast<Button*>(elements[0]);
+    float minx = button->position.x - button->size.x;
+    float maxx = button->position.x + button->size.x;
+    float miny = button->position.y - button->size.y;
+    float maxy = button->position.y + button->size.y;
 
+    button->pressed = false;
+    if(engine->input.left_button_pressed){ 
+        if(minx <= x && maxy >= y){
+            if(miny <= y && maxx >= x)
+                button->pressed = true;
+        }else{
+            button->pressed = false;
+        }
+    }
+    
 }
 
 void GUI::update_elements_mvp(){
@@ -107,4 +124,21 @@ void GUI::update_elements_mvp(){
         mat = projection * model_mat;
         element->mesh->MVP = mat;
     }
+}
+
+bool GUI::is_button_pressed(std::string name){
+    UIElement* ui;
+    for(auto element : elements){
+        if(element->name == name){
+            ui = element;
+            break;
+        }
+    }
+    if(ui){
+        Button* button = static_cast<Button*>(ui);
+        if(button->pressed){
+            return true;
+        }
+    }
+    return false;
 }
