@@ -330,19 +330,19 @@ void Engine::update_mvp(EMesh* mesh){
 			mat = main_camera.Projection * main_camera.View * mat;
 			
 		}
-		//orthographic
-		if(input.X.bIsPressed){
-			float scale = 0.01 / 1000.0 * .2;
-			glm::mat4 projection = glm::ortho(0.0f, 1.0f*800*scale, 1.0f*600*scale, 0.0f);
-
-			mat = projection;
-
-		}		
+			
+				
 		//loading screen
 		if(loading){
 			mat = mat4(1.0);
 			mat = rotate(mat,radians(180.f),vec3(1,0,0)) * scale(mat,vec3(0.3,0.3,1));
 			loading = false;
+		}else{
+			glm::mat4 projection = glm::ortho(0.0f, 1.0f*800, 1.0f*600, 0.0f);
+			mat4 image_scale = glm::scale(mat,vec3(50,50,0));
+			mat4 model_mat = translate(mat,vec3(400,300,0));
+			model_mat = model_mat * image_scale;
+			mat = projection * model_mat;
 		}
 		
 			

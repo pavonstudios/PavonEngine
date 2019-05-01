@@ -33,6 +33,7 @@
 
 #include "tiny_class.h"
 #include "vertex.h"
+
 class Engine;
 
 
@@ -172,7 +173,7 @@ public:
     pipeline_data data;
     glm::mat4 MVP;
     EImageData texture;
-    bool bIsGUI = false;
+    
 
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
@@ -183,6 +184,9 @@ public:
 
     AABB box;
     Collider collider;
+
+    bool bIsGUI = false;
+    
 		
 };
 

@@ -1,3 +1,4 @@
+#include "../engine.h"
 #include "gui.hpp"
 #ifndef ANDROID
     #include <glm/glm.hpp>
@@ -8,6 +9,11 @@
 #endif
 using namespace glm;
 using namespace engine;
+GUI::~GUI(){
+    for(auto element : elements){
+        delete element;
+    }
+}
 GUI::GUI(Engine* engine){
     this->engine = engine;
     EMesh* triangle = new EMesh();
@@ -31,7 +37,7 @@ GUI::GUI(Engine* engine){
 
 
     if(!engine->loading){
-        vert1.pos = glm::vec3(0.0,0.0,0.0);
+        /* vert1.pos = glm::vec3(0.0,0.0,0.0);
 
         
         vert2.pos = glm::vec3(0.0,800.0,0.0);
@@ -40,7 +46,7 @@ GUI::GUI(Engine* engine){
         vert3.pos = glm::vec3(800,600,0.0);  
 
     
-        //vert4.pos = glm::vec3(1000.0,0.0,0.0);
+        vert4.pos = glm::vec3(600.0,0.0,0.0); */
     }
     
 
@@ -48,8 +54,7 @@ GUI::GUI(Engine* engine){
     triangle->vertices.push_back(vert1);
     triangle->vertices.push_back(vert2);        
     triangle->vertices.push_back(vert3);
-    if(engine->loading) 
-        triangle->vertices.push_back(vert4);
+    triangle->vertices.push_back(vert4);
     
     
     triangle->texture_path = "Game/Assets/textures/GUI/white_logo.jpg";
@@ -75,6 +80,10 @@ GUI::GUI(Engine* engine){
     #endif
     triangle->bIsGUI = true;
     this->mesh = triangle;
+    Button* button = new Button(mesh);
+    button->position = vec2(50,750);
+    button->size = vec2(50,50);
+    elements.push_back(button);
 
     #ifdef ES2
     engine->meshes.push_back(this->mesh);
