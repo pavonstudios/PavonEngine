@@ -94,7 +94,7 @@ public:
     bool framebufferResized = false;
     bool resized = false;
     
-    void main_loop();
+    void repeat();
     void finish();
     class Engine* engine;
 

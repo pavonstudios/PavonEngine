@@ -12,7 +12,7 @@ void Renderer::run(VulkanData* vkdata) {
         this->pVkData = vkdata;      
         
 }
-void Renderer::main_loop(){
+void Renderer::repeat(){
             bIsRunnning = true;            
             drawFrame();
 }

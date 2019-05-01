@@ -245,7 +245,7 @@ int EMesh::load_mode_gltf_android(const char* path, AAssetManager* assetManager)
 
 void EMesh::clean_object(){
     #ifdef VULKAN
-        if(graphics_pipeline != VK_NULL_HANDLE)
+        if(graphics_pipeline != VK_NULL_HANDLE)           
             vkDestroyPipeline(vulkan_device->logicalDevice,graphics_pipeline,nullptr);  
        
     #endif

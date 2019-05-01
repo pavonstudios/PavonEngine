@@ -21,7 +21,6 @@ Engine::Engine(){
 
 }
 
-
 #ifdef ANDROID
 	Engine::Engine(android_app * pApp){
         renderer.app = pApp;
@@ -61,9 +60,7 @@ void Engine::init_player(){
 		}else{
 				
 			player->mesh = this->meshes[this->player_id];
-		}
-
-		
+		}		
 		
 		if(!player->mesh){
 			std::runtime_error("no player mesh pointer assigner");
@@ -77,24 +74,14 @@ void Engine::init(){
 		#endif		
 		window_manager.engine = this;
 
-		draw_loading_screen();
+		draw_loading_screen();		
 		
-		pipeline_data data = {};
-
-		#ifndef ANDROID
-			data.fragment_shader_path = "android/app/src/main/assets/frag.glsl";
-			data.vertex_shader_path = "android/app/src/main/assets/vert_mvp.glsl";
-		#endif
-
-		#ifdef ANDROID
-			data.fragment_shader_path = "shaders/gles/frag_uv_color.glsl";
-			data.vertex_shader_path = "vert_mvp.glsl";
-    	#endif
-
 		configure_window_callback();
 
 		#ifdef VULKAN
-				init_renderer();
+				
+				renderer.run(&vkdata);		
+	
 				mesh_manager.vulkan_device = vulkan_device;
 		#endif
 		
@@ -126,7 +113,18 @@ void Engine::init(){
 
 
 		#if defined(ES2) || defined(ANDROID)
-								
+			pipeline_data data = {};
+
+			#ifndef ANDROID
+				data.fragment_shader_path = "android/app/src/main/assets/frag.glsl";
+				data.vertex_shader_path = "android/app/src/main/assets/vert_mvp.glsl";
+			#endif
+
+			#ifdef ANDROID
+				data.fragment_shader_path = "shaders/gles/frag_uv_color.glsl";
+				data.vertex_shader_path = "vert_mvp.glsl";
+			#endif		
+
 			renderer.init_gl();   
 
 			for(EMesh* mesh : meshes){
@@ -147,7 +145,7 @@ void Engine::init(){
 
 		init_player();
 
-		EMesh* mesh = meshes[0];
+		EMesh* mesh = meshes[3];
 
 		std::thread col_thread(Collision::update_collision,mesh,player->mesh);
 		col_thread.detach();
@@ -165,17 +163,14 @@ void Engine::loop_data(){
 					player->update();	
 			}
 			
-		}
-				
+		}				
 
 		get_time();
 		main_camera.cameraSpeed = main_camera.velocity * deltaTime;
 
 		Objects::update_positions(this,tranlation_update);
-
 		
-		gui->calculate_mouse_position();
-			
+		gui->calculate_mouse_position();			
 		
 		if(gui->is_button_pressed("jump")){
 			std::cout << "jump pressd\n";
@@ -198,7 +193,7 @@ void Engine::es2_loop() {
 
 			}					
 			if(mesh->bIsGUI){
-				//update_mvp(mesh);
+				
 				renderer.update_mvp(mesh);
 				renderer.draw_gui(mesh);
 
@@ -206,27 +201,22 @@ void Engine::es2_loop() {
 		}
 	#endif
 }
-#ifdef VULKAN
-void Engine::vulkan_loop(){										
-	renderer.main_loop();//draw frame
-}
-#endif
 
 void Engine::main_loop(){	
-	
 		
 	while (!window_manager.window_should_close()) {
 		window_manager.check_events();
 
-	#ifndef ANDROID
-		input.update_input(this);
-	#endif
+		#ifndef ANDROID
+			input.update_input(this);
+		#endif
+
 		loop_data();
 
 		auto tStart = std::chrono::high_resolution_clock::now();
 
 		#ifdef VULKAN
-			vulkan_loop();
+			renderer.repeat();//draw frame
 		#endif
 		
 		#ifdef ES2
@@ -245,26 +235,13 @@ void Engine::main_loop(){
 		
 	}
 	delete gui;
+	
 	#ifdef VULKAN
 		renderer.finish();
-		glfwDestroyWindow(window);
+		//window manager clear ?
+	#endif
+	
 
-		glfwTerminate();
-
-	#endif//end if define vulkan
-
-}
-
-
-#ifdef VULKAN
-
-
-void Engine::init_renderer(){
-
-      #ifdef VULKAN
-				renderer.run(&vkdata);		
-			//	load_map("Game/map01.map");//vulkan device must initialized before load object(it's becouse buffer need vulkan device for creation)	
-			#endif
 }
 
 void Engine::delete_meshes(){
@@ -272,8 +249,6 @@ void Engine::delete_meshes(){
 		delete mesh;
 	}
 }
-
-#endif//end if def vulkan
 
 #ifdef DEVELOPMENT
     void Engine::print_debug(const std::string text, int8_t posx, int8_t posy){		
@@ -335,8 +310,7 @@ void Engine::update_mvp(EMesh* mesh){
 		
 			mat = main_camera.Projection * main_camera.View * mat;
 			
-		}
-			
+		}		
 				
 		//loading screen
 		if(loading){
@@ -344,14 +318,7 @@ void Engine::update_mvp(EMesh* mesh){
 			mat = rotate(mat,radians(180.f),vec3(1,0,0)) * scale(mat,vec3(0.3,0.3,1));
 			loading = false;
 			mesh->MVP = mat;
-		}else{
-			/* glm::mat4 projection = glm::ortho(0.0f, 1.0f*800, 1.0f*600, 0.0f);
-			mat4 image_scale = glm::scale(mat,vec3(50,50,0));
-			mat4 model_mat = translate(mat,vec3(400,300,0));
-			model_mat = model_mat * image_scale;
-			mat = projection * model_mat; */
-		}
-		
+		}		
 		
 	}else{
 		
