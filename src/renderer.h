@@ -33,13 +33,6 @@
 #include "VulkanData.hpp"
 #include "VulkanDevice.hpp"
 
-const int WIDTH = 800;
-const int HEIGHT = 600;
-
-const std::string MODEL_PATH = "models/character.obj";
-const std::string TEXTURE_PATH = "textures/character.jpg";
-
-const std::string FRAGMENT_RED_SHADER_PATH = "shaders/red.spv";
 
 const int MAX_FRAMES_IN_FLIGHT = 2;
 
@@ -86,10 +79,7 @@ public:
 
     void loadModel(std::string model_path);
 
-    float RotationValue = 90;
     bool bIsRunnning = false;
-    float move_y = 0;    
-
     
     bool framebufferResized = false;
     bool resized = false;
@@ -106,11 +96,9 @@ public:
     void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, 
     VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
     void load_mesh(EMesh* mesh);
-     void update_descriptor_set(EMesh* mesh);
+    void update_descriptor_set(EMesh* mesh);
 
-private:
-    
-    
+private: 
 
     VkInstance instance;
     VkDebugUtilsMessengerEXT debugMessenger;
@@ -118,7 +106,6 @@ private:
 
     VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
     VkDevice device;
-
 
     VkQueue graphicsQueue;
     VkQueue presentQueue;
@@ -149,7 +136,6 @@ private:
     std::vector<VkSemaphore> renderFinishedSemaphores;
     std::vector<VkFence> inFlightFences;
     size_t currentFrame = 0;
-
     
 
 	void cleanup();
@@ -168,9 +154,7 @@ private:
     void createSurface();
     void cleanupSwapChain();
     void createLogicalDevice();
-    void create_meshes_graphics_pipeline();
-
-    void update_meshes_model_matrix();
+    void create_meshes_graphics_pipeline(); 
 
     VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
    
@@ -183,14 +167,9 @@ private:
         createLogicalDevice();
         createSwapChain();
 	
-    }    
-   
+    }     
 
     
-
-  
-   
-
     void createInstance() {
         if (enableValidationLayers && !checkValidationLayerSupport()) {
             throw std::runtime_error("validation layers requested, but not available!");
@@ -729,7 +708,7 @@ private:
             throw std::runtime_error("failed to acquire swap chain image!");
         }
 
-        update_meshes_model_matrix();
+        
         updateUniformBuffer(imageIndex);
 
         VkSubmitInfo submitInfo = {};
