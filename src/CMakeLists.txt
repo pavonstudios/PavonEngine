@@ -30,6 +30,7 @@ add_library(maincode
         Game/ThirdPerson.cpp
         Game/gui.cpp
         camera.cpp
+        input.cpp
     )
 
 

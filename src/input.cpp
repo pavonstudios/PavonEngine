@@ -275,3 +275,10 @@ void Input::update_input(Engine* engine){
 
 	}
 }
+#ifdef ANDROID
+void Input::input_event(AInputEvent* event){
+    float x =  AMotionEvent_getX(event,0);
+    float y = AMotionEvent_getY(event,0);
+    LOGW("touch in x = %f y = %f",x,y);
+}
+#endif

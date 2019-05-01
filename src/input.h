@@ -12,16 +12,16 @@ struct key_pressed{
 	bool bIsPressed = false;
 	bool Released = false;
 };
-class Input{
+class Input {
 public:
-	
+
 	key_pressed D;
 	key_pressed A;
 	key_pressed E;
 	key_pressed Q;
 	key_pressed X;
 	key_pressed Z;
-	key_pressed W = {false,false};
+	key_pressed W = {false, false};
 	key_pressed S;
 	key_pressed TAB;
 
@@ -37,17 +37,24 @@ public:
 	bool left_button_pressed = false;
 
 	bool move_camera = false;
-	#ifdef VULKAN
-	static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
-	static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
-	static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
-	static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
-	#endif
+#ifdef VULKAN
+    static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
+    static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+    static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+    static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
+#endif
 
 	void key_verifier_pressed(char character);
+
 	void key_verifier_released(char character);
-	void mouse_movement(Engine* engine, float x, float y);
-	void update_input(Engine* engine);
+
+	void mouse_movement(Engine *engine, float x, float y);
+
+	void update_input(Engine *engine);
+
+#ifdef ANDROID
+	void input_event(AInputEvent* event);
+#endif
 private:
 	void key_set(const char key, bool isPressed);
 	

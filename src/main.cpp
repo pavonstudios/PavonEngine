@@ -33,10 +33,14 @@
                         int action = AKeyEvent_getAction(event) & AMOTION_EVENT_ACTION_MASK;
                         switch(action){
                             case AMOTION_EVENT_ACTION_DOWN:
-                                pEngine->input.W.bIsPressed = true;
+                                //float x =  AMotionEvent_getX(event,0);
+                                //float y = AMotionEvent_getY(event,0);
+                                //LOGW("touch in x = %f y = %f",x,y);
+                                //pEngine->input.W.bIsPressed = true;
+                                pEngine->input.input_event(event);
                                 break;
                             case AMOTION_EVENT_ACTION_UP:
-                                pEngine->input.W.bIsPressed = false;
+                                //pEngine->input.W.bIsPressed = false;
                                 break;
                             case AMOTION_EVENT_ACTION_MOVE:
                                 break;
