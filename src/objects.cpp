@@ -63,43 +63,68 @@ EMesh::~EMesh(){
         vkFreeMemory(vulkan_device->logicalDevice, vertexBufferMemory, nullptr);
     #endif
 }
-void MeshManager::create_buffers(const std::vector<EMesh*>& meshes){
+void MeshManager::create_buffers(Engine* engine, const std::vector<EMesh*>& meshes){
     for(EMesh* mesh : meshes){
         #if defined(ES2) || defined(ANDROID)
-        glGenBuffers(1,&mesh->vertex_buffer);
-        glBindBuffer(GL_ARRAY_BUFFER,mesh->vertex_buffer);
-        glBufferData(GL_ARRAY_BUFFER,mesh->vertices.size() * sizeof(Vertex),mesh->vertices.data(),GL_STATIC_DRAW);
+            glGenBuffers(1,&mesh->vertex_buffer);
+            glBindBuffer(GL_ARRAY_BUFFER,mesh->vertex_buffer);
+            glBufferData(GL_ARRAY_BUFFER,mesh->vertices.size() * sizeof(Vertex),mesh->vertices.data(),GL_STATIC_DRAW);
 
-        if(mesh->indices.size() > 0){
-                glGenBuffers(1,&mesh->indices_buffer);
-                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,mesh->indices_buffer);
-                glBufferData(GL_ELEMENT_ARRAY_BUFFER,mesh->indices.size() * sizeof(unsigned int),mesh->indices.data(), GL_STATIC_DRAW);
+            if(mesh->indices.size() > 0){
+                    glGenBuffers(1,&mesh->indices_buffer);
+                    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,mesh->indices_buffer);
+                    glBufferData(GL_ELEMENT_ARRAY_BUFFER,mesh->indices.size() * sizeof(unsigned int),mesh->indices.data(), GL_STATIC_DRAW);
 
-        }
-        
-        glBindBuffer(GL_ARRAY_BUFFER,0);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,0);
+            }
+            
+            glBindBuffer(GL_ARRAY_BUFFER,0);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,0);
 
         #endif
         #ifdef VULKAN
-        //node uniform buffer
-        mesh->node_uniform.matrix = glm::mat4(1.0);
-            
+            //node uniform buffer
+            mesh->node_uniform.matrix = glm::mat4(1.0);
+                
 
-        VkDeviceSize bufferSize = sizeof(NodeUniform);
+            VkDeviceSize bufferSize = sizeof(NodeUniform);
 
-        mesh->uniform_node_buffers.resize(3);
-        mesh->uniform_node_buffer_memory.resize(3);
+            mesh->uniform_node_buffers.resize(3);
+            mesh->uniform_node_buffer_memory.resize(3);
 
-        for (size_t i = 0; i < 3; i++) {
-            vulkan_device->createBuffer(
-                VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
-                VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-                sizeof(NodeUniform),
-                &mesh->uniform_node_buffers[i],
-                &mesh->uniform_node_buffer_memory[i],
-                &mesh->node_uniform);               
-        }
+            for (size_t i = 0; i < 3; i++) {
+                vulkan_device->createBuffer(
+                    VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+                    VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+                    sizeof(NodeUniform),
+                    &mesh->uniform_node_buffers[i],
+                    &mesh->uniform_node_buffer_memory[i],
+                    &mesh->node_uniform);               
+            }
+        #endif
+        #ifdef VULKAN //vertex buffer
+            EMesh* mesh_to_process = mesh;
+            bufferSize = sizeof(mesh_to_process->vertices[0]) * mesh_to_process->vertices.size();
+
+            VkBuffer stagingBuffer;
+            VkDeviceMemory stagingBufferMemory;
+            engine->renderer.createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, 
+            VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | 
+            VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
+
+            void* data;
+            vkMapMemory(engine->vulkan_device->logicalDevice, stagingBufferMemory, 0, bufferSize, 0, &data);
+                memcpy(data, mesh_to_process->vertices.data(), (size_t) bufferSize);
+            vkUnmapMemory(engine->vulkan_device->logicalDevice, stagingBufferMemory);
+
+            engine->renderer.createBuffer(bufferSize, 
+            VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, 
+            VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, mesh_to_process->vertices_buffer, mesh_to_process->vertexBufferMemory);
+
+            engine->renderer.copyBuffer(stagingBuffer, mesh_to_process->vertices_buffer, bufferSize);
+
+            vkDestroyBuffer(engine->vulkan_device->logicalDevice, stagingBuffer, nullptr);
+            vkFreeMemory(engine->vulkan_device->logicalDevice, stagingBufferMemory, nullptr);
+
         #endif
     }
     

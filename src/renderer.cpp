@@ -59,7 +59,7 @@ void Renderer::VulkanConfig(){
             
 }
 void Renderer::load_mesh(EMesh* mesh){
-    createVertexBuffer(mesh);
+    //createVertexBuffer(mesh);
     createIndexBuffer(mesh);
     createUniformBuffers(mesh);
     createDescriptorPool(mesh);
@@ -88,6 +88,15 @@ void Renderer::createIndexBuffer(EMesh * mesh) {
 
         vkDestroyBuffer(device, stagingBuffer, nullptr);
         vkFreeMemory(device, stagingBufferMemory, nullptr);
+}
+void Renderer::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size) {
+        VkCommandBuffer commandBuffer = beginSingleTimeCommands();
+
+        VkBufferCopy copyRegion = {};
+        copyRegion.size = size;
+        vkCmdCopyBuffer(commandBuffer, srcBuffer, dstBuffer, 1, &copyRegion);
+
+        endSingleTimeCommands(commandBuffer);
 }
 
 void Renderer::createVertexBuffer(EMesh *mesh_to_process) {

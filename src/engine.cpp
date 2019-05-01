@@ -97,10 +97,13 @@ void Engine::init(){
 
 	auto tStart = std::chrono::high_resolution_clock::now();
 
-		mesh_manager.create_buffers(meshes);
-
 		#ifdef VULKAN
 			renderer.VulkanConfig();
+		#endif
+
+		mesh_manager.create_buffers(this,meshes);
+
+		#ifdef VULKAN			
 			
 			for(auto mesh : meshes){
 				renderer.load_mesh(mesh);
