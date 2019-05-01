@@ -81,9 +81,9 @@ GUI::GUI(Engine* engine){
     triangle->bIsGUI = true;
     this->mesh = triangle;
     Button* button = new Button(mesh);
-    button->position = vec2(50,750);
-    button->size = vec2(50,50);
-    elements.push_back(button);
+    button->position = vec2(100,530);
+    button->size = vec2(30,15);
+    elements.push_back((UIElement*)button);
 
     #ifdef ES2
     engine->meshes.push_back(this->mesh);
@@ -91,9 +91,20 @@ GUI::GUI(Engine* engine){
 }
 
 void GUI::calculate_mouse_position(){
-    float x = engine->window_manager.window_width / engine->input.mousex;
-    float y = engine->window_manager.window_height / engine->input.mousey;
-    x = 1 - x;
+    float x = engine->input.mousex;
+    float y = engine->input.mousey;
     std::cout << x << " " << y << std::endl;
 
+}
+
+void GUI::update_elements_mvp(){
+    glm::mat4 mat = glm::mat4(1.0);
+    for(auto element : elements){
+        glm::mat4 projection = glm::ortho(0.0f, 1.0f*800, 1.0f*600, 0.0f);
+        mat4 image_scale = glm::scale(mat,vec3(element->size.x,element->size.y,0));
+        mat4 model_mat = translate(mat,vec3(element->position.x,element->position.y,0));
+        model_mat = model_mat * image_scale;
+        mat = projection * model_mat;
+        element->mesh->MVP = mat;
+    }
 }

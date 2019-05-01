@@ -106,6 +106,7 @@ void Engine::init(){
 
 		load_map(map_path);
 		gui = new GUI(this);
+		gui->update_elements_mvp();
 
 	auto tStart = std::chrono::high_resolution_clock::now();
 
@@ -193,7 +194,8 @@ void Engine::es2_loop() {
 
 			}					
 			if(mesh->bIsGUI){
-				update_mvp(mesh);
+				//update_mvp(mesh);
+				renderer.update_mvp(mesh);
 				renderer.draw_gui(mesh);
 
 			}
@@ -337,23 +339,26 @@ void Engine::update_mvp(EMesh* mesh){
 			mat = mat4(1.0);
 			mat = rotate(mat,radians(180.f),vec3(1,0,0)) * scale(mat,vec3(0.3,0.3,1));
 			loading = false;
+			mesh->MVP = mat;
 		}else{
-			glm::mat4 projection = glm::ortho(0.0f, 1.0f*800, 1.0f*600, 0.0f);
+			/* glm::mat4 projection = glm::ortho(0.0f, 1.0f*800, 1.0f*600, 0.0f);
 			mat4 image_scale = glm::scale(mat,vec3(50,50,0));
 			mat4 model_mat = translate(mat,vec3(400,300,0));
 			model_mat = model_mat * image_scale;
-			mat = projection * model_mat;
+			mat = projection * model_mat; */
 		}
 		
-			
+		
 	}else{
 		
 		mat  = main_camera.Projection * main_camera.View * mesh->model_matrix;
 
 	}
-	
-	mesh->MVP = mat;
 
+	if(!mesh->bIsGUI){
+		mesh->MVP = mat;
+	}
+		
 	#if defined(ES2) || defined(ANDROID)
 	renderer.update_mvp(mesh);
 	#endif

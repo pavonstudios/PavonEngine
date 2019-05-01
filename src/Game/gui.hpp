@@ -1,6 +1,12 @@
 #ifndef GUI_H
 #define GUI_H
 
+struct UIElement{
+public:
+	EMesh* mesh;
+	vec2 position;
+	vec2 size;	
+};
 
 struct Button : UIElement{	
 	Button(EMesh* mesh){
@@ -10,11 +16,7 @@ struct Button : UIElement{
 	bool released = false;
 };
 
-struct UIElement{
-	EMesh* mesh;
-	vec2 position;
-	vec2 size;	
-};
+
 
 class GUI{
 	public:
@@ -25,6 +27,7 @@ class GUI{
 		void update();
 		void calculate_mouse_position();
 		std::vector<UIElement*> elements;
+		void update_elements_mvp();
 };
 
 #endif
