@@ -59,7 +59,7 @@ void Renderer::VulkanConfig(){
             
 }
 void Renderer::load_mesh(EMesh* mesh){
-    //createVertexBuffer(mesh);
+    createVertexBuffer(mesh);
     createIndexBuffer(mesh);
     createUniformBuffers(mesh);
     createDescriptorPool(mesh);

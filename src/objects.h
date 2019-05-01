@@ -132,9 +132,7 @@ public:
     
 #ifdef GLTF
     
-    #ifdef ANDROID
-    int load_mode_gltf_android(const char* path, AAssetManager* pAssetManager);
-    #endif
+    
     void load_textures_gltf();
     std::vector<Node*> nodes;
     std::vector<Node*> linear_nodes;
@@ -231,7 +229,10 @@ class MeshManager{
         int load_model_gltf(EMesh* mesh, const char* path);
         void load_primitives_data(EMesh* mesh, tinygltf::Model & gltf_model);
         void create_buffers(EMesh* mesh); 
-        void create_buffers(Engine* engine, const std::vector<EMesh*> &meshes);    
+        void create_buffers(Engine* engine, const std::vector<EMesh*> &meshes); 
+        #ifdef ANDROID
+        int load_mode_gltf_android(EMesh* mesh, const char* path, AAssetManager* pAssetManager);
+        #endif   
          
 };
 class Objects{

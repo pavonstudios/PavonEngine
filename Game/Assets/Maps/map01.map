@@ -1,9 +1,9 @@
 
 a models/cube_collision.gltf -3 5 0 textures/car01.jpg
-m models/cube_collision.gltf 3 2 0 textures/character2.jpg player
+m models/cube_collision.gltf 3 2 0 textures/character2.jpg 
 
 
-m models/pavon_the_game/police.gltf 0 5 0 textures/character2.jpg 
+m models/pavon_the_game/police.gltf 0 5 0 textures/character2.jpg player
 m models/pavon_the_game/police_patrol.gltf 2 -5 0 textures/car01.jpg 
 m models/pavon_the_game/lince.gltf -10 13 0 textures/pavon_the_game/lince.png 
 

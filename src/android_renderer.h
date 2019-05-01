@@ -258,7 +258,7 @@ public:
         EMesh* mesh = new EMesh();
         int mesh_load_result;
         #ifdef ANDROID
-            mesh_load_result = mesh->load_mode_gltf_android("police_patrol.gltf",app->activity->assetManager);
+           // mesh_load_result = mesh->load_mode_gltf_android("police_patrol.gltf",app->activity->assetManager);
         #else//ES2
             //mesh_load_result = engine->mesh_manager.load_model_gltf(mesh, "android/app/src/main/assets/police_patrol.gltf");
         #endif
@@ -331,7 +331,7 @@ void activate_vertex_attributes(EMesh* mesh){
     #ifdef ANDROID
     struct android_app * app;
     #endif
-#ifdef ES2
+#if defined(ES2) || defined(ANDROID)
    public:
    void load_mesh_texture(EMesh* mesh){
 

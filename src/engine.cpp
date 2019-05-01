@@ -30,7 +30,7 @@ Engine::Engine(){
 #endif
 
 void Engine::draw_loading_screen(){
-	#if defined(ES2) || defined(ANDROID)
+	#if defined(ES2)
 		glClearColor(0.0, 0.0, 0.0, 1.0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		GUI* loading = new GUI(this);
@@ -144,8 +144,9 @@ void Engine::init(){
 				//edit_mode = true;
     	#endif
 
+#ifdef DEVELOPMENT
 	calculate_time(tStart);
-
+#endif
 		init_player();
 
 		EMesh* mesh = meshes[3];
@@ -227,10 +228,9 @@ void Engine::main_loop(){
 		#endif		
 
 		frames++;
-		
+#ifdef DEVELOPMENT
 		calculate_fps(tStart);
-		
-
+#endif
 		window_manager.swap_buffers();
 
 		tranlation_update.movements.clear();
@@ -361,7 +361,7 @@ void Engine::load_and_assing_location(std::string path, glm::vec3 location){
 		EMesh *model = new EMesh();
     #endif
 	#ifdef ANDROID
-		model->load_mode_gltf_android(path.c_str(),pAndroid_app->activity->assetManager);
+		mesh_manager.load_mode_gltf_android(model,path.c_str(),pAndroid_app->activity->assetManager);
 	#else
 		mesh_manager.load_model_gltf(model, path.c_str());
 	#endif

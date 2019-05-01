@@ -96,7 +96,7 @@
                 }
                 if(pEngine->renderer.bReady){
                     //pEngine->renderer.render();
-                    pEngine->update_input();
+                    //pEngine->update_input();
                     pEngine->loop_data();
                     pEngine->es2_loop();
                     pEngine->window_manager.swap_buffers();
