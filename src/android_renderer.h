@@ -399,7 +399,7 @@ void activate_vertex_attributes(EMesh* mesh){
                 AssetManager assets;
                 #ifdef ANDROID
                     
-                    image_size size = assets.load_bmp("textures/character2.jpg",app->activity->assetManager);    //TODO: load texture with android path
+                    image_size size = assets.load_bmp(mesh->texture_path.c_str(),app->activity->assetManager);    //TODO: load texture with android path
                     glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,size.width,size.heigth,0,GL_RGB,GL_UNSIGNED_BYTE,size.data);
                 #else
                     image_size size;
@@ -438,15 +438,14 @@ void activate_vertex_attributes(EMesh* mesh){
              AssetManager assets;
             #ifdef ANDROID
                 
-                image_size size = assets.load_bmp("police_patrol_image.pvn",app->activity->assetManager);    //TODO: load texture with android path        
+                image_size size = assets.load_bmp(assets.path(path).c_str(),app->activity->assetManager);    //TODO: load texture with android path
             #else                   
                 image_size size;
                 
                 size = assets.load_and_get_size(assets.path(path).c_str());
-                glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,size.width,size.heigth,0,GL_RGB,GL_UNSIGNED_BYTE,size.data); 
-               
                     
-            #endif                   
+            #endif
+            glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,size.width,size.heigth,0,GL_RGB,GL_UNSIGNED_BYTE,size.data);
             glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -520,9 +519,8 @@ void activate_vertex_attributes(EMesh* mesh){
 
     void draw(EMesh* mesh){        
         
-        #if defined (ES2) || defined (ANDROID)
-                glBindTexture(GL_TEXTURE_2D,mesh->texture_id);
-        #endif
+        glBindTexture(GL_TEXTURE_2D,mesh->texture_id);
+        
         //update_mvp(mesh);
         glBindBuffer(GL_ARRAY_BUFFER,mesh->vertex_buffer);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,mesh->indices_buffer);

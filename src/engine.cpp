@@ -107,7 +107,7 @@ void Engine::init(){
 			#endif
 
 			#ifdef ANDROID
-				data.fragment_shader_path = assets.path("shaders/gles/frag_uv_color.glsl");
+				data.fragment_shader_path = assets.path("shaders/gles/frag_sampler.glsl");
 				data.vertex_shader_path = assets.path("vert_mvp.glsl");
 			#endif		
 
