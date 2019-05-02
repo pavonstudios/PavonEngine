@@ -15,10 +15,12 @@ void MapManager::load_data_from_file(std::stringstream &file){
 
 		std::vector<load_data> meshes_load_data;
 		
+		
+
 		while( std::getline(file,line) ) {		
 
 			if(line != ""){
-					char first_char;
+				char first_char;
 				std::stringstream line_stream (line);
 			
 				std::string model_path;
@@ -27,11 +29,18 @@ void MapManager::load_data_from_file(std::stringstream &file){
 				std::string type;
 				int mesh_type = 0;
 
-				line_stream >> first_char >> model_path >> location.x >> location.y >> location.z >> texture_path >> type;				
+				line_stream >> first_char;			
 				if(first_char == '/'){
 					break;
 				}
-				if(first_char != '#'){
+				if(first_char == 'v'){
+					line_stream >> texture_path;
+					same_textures.push_back(texture_path);
+				}
+				if(first_char != '#' && first_char != 'v'){
+					load_data data = {};
+
+					line_stream >> model_path >> location.x >> location.y >> location.z >> texture_path >> type;
 					if(type == "LOD"){
 						mesh_type = MESH_LOD;
 					}
@@ -52,10 +61,17 @@ void MapManager::load_data_from_file(std::stringstream &file){
 							
 						}
 					}
+
+					if(first_char == 'b'){
+						texture_path = same_textures[0];
+						data.texture_id = 0;
+					}else{
+						data.texture_id = -1;
+					}
 					
 					counter++;
 
-					load_data data = {};
+					
 					data.model_path = model_path;
 					data.texture_path = texture_path;
 					data.location = location;
@@ -117,5 +133,6 @@ void MapManager::create_mesh_with_data(struct load_data data){
 		
 	}
 	model->texture_path = engine->assets.path(data.texture_path);
+	model->texture.texture_id = data.texture_id;
 	engine->linear_meshes.push_back(model);
 }

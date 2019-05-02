@@ -59,6 +59,7 @@ namespace engine{
         std::string texture_path;
         glm::vec3 location;
         int type;
+        int texture_id;
 
 	};
 
@@ -92,6 +93,7 @@ namespace engine{
         #ifdef VULKAN
         VkFormat format;
         #endif
+        int texture_id = -1;
     };
     struct pipeline_data{
         std::string vertex_shader_path;

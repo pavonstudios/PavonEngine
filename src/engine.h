@@ -62,7 +62,9 @@ public:
 
     std::vector<EMesh*> meshes;//mesh to draw
     std::vector<EMesh*> linear_meshes;//loaded mesh 
-
+    #ifdef ES2 
+    std::vector<GLuint> texture_ids;
+    #endif
     
     
     bool edit_mode = false;

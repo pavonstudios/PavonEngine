@@ -44,6 +44,7 @@ public:
 
     EMesh* triangle;
      GLuint vertex_buffer;
+     std::vector<GLuint> textures_ids;
 private:
 
 
@@ -383,9 +384,15 @@ void activate_vertex_attributes(EMesh* mesh){
         //glGenerateMipmap(GL_TEXTURE_2D);
    }
     void load_textures(const std::vector<EMesh*>& meshes){
+        GLuint texture_id;
+        glGenTextures(1, &texture_id);
+        glBindTexture(GL_TEXTURE_2D,texture_id);
 
-        for(EMesh* mesh: meshes){
-            glActiveTexture(GL_TEXTURE0);
+        
+        for(EMesh* mesh: meshes){ 
+            if(mesh->texture.texture_id == -1){
+
+          
             glGenTextures(1, &mesh->texture_id);
             glBindTexture(GL_TEXTURE_2D,mesh->texture_id);
 
@@ -413,7 +420,42 @@ void activate_vertex_attributes(EMesh* mesh){
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
             glGenerateMipmap(GL_TEXTURE_2D);
+
+            }else{
+                mesh->texture_id = textures_ids[mesh->texture.texture_id];
+            }
         }
+    }
+
+    void load_textures(std::vector<std::string> &textures_paths){
+        
+
+        for(auto path : textures_paths){
+            GLuint texture_id;
+            glGenTextures(1, &texture_id);
+            glBindTexture(GL_TEXTURE_2D,texture_id);
+
+             AssetManager assets;
+            #ifdef ANDROID
+                
+                image_size size = assets.load_bmp("police_patrol.pvn",app->activity->assetManager);    //TODO: load texture with android path        
+            #else                   
+                image_size size;
+                
+                size = assets.load_and_get_size(assets.path(path).c_str());
+                glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,size.width,size.heigth,0,GL_RGB,GL_UNSIGNED_BYTE,size.data); 
+               
+                    
+            #endif                   
+            glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+            textures_ids.push_back(texture_id);
+        }
+           
     }
 
        void render(){                    

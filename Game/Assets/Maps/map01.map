@@ -1,10 +1,12 @@
 
+v textures/car01.jpg
+
 a models/cube_collision.gltf -3 5 0 textures/car01.jpg
 m models/cube_collision.gltf 3 2 0 textures/character2.jpg 
 
 
 m models/pavon_the_game/police.gltf 3 5 0 textures/character2.jpg player
-m models/pavon_the_game/police_patrol.gltf 2 -5 0 textures/car01.jpg 
+b models/pavon_the_game/police_patrol.gltf 2 -5 0 textures/car01.jpg 
 m models/pavon_the_game/lince.gltf -10 13 0 textures/pavon_the_game/lince.png 
 
 
@@ -19,11 +21,11 @@ m models/pavon_the_game/big_poleLOD1.gltf 0 0 0 textures/pavon_the_game/modules_
 m models/pavon_the_game/back_bulding.gltf 0 0 0 textures/pavon_the_game/bakcbuilding02.png
 
 
-m models/pavon_the_game/police_patrol.gltf 0 12 0 textures/car01.jpg
+b models/pavon_the_game/police_patrol.gltf 0 12 0 
 
-m models/pavon_the_game/police_patrol.gltf 5 5 0 textures/car01.jpg
-m models/pavon_the_game/police_patrol.gltf 3 -6 0 textures/car01.jpg
-m models/pavon_the_game/police_patrolLOD3.gltf -8 -6 0 textures/car01.jpg
+b models/pavon_the_game/police_patrol.gltf 5 5 0 
+b models/pavon_the_game/police_patrol.gltf 3 -6 0 
+b models/pavon_the_game/police_patrolLOD3.gltf -8 -6 0 
 
 
 
