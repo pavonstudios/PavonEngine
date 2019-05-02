@@ -58,7 +58,9 @@ public:
         android_app * pAndroid_app;
     #endif
 
-    std::vector<EMesh*> meshes;
+    std::vector<EMesh*> meshes;//mesh to draw
+    std::vector<EMesh*> linear_meshes;//loaded mesh 
+
     
     
     bool edit_mode = false;
@@ -83,7 +85,8 @@ public:
     void init();
     void es2_loop();
     void loop_data();
-    void update_render_size(); 
+    void update_render_size();
+    void distance_object_from_camera(); 
 
     void translate_mesh(EMesh* mesh, uint direction, float value);
  

@@ -133,17 +133,16 @@ void Engine::init(){
 void Engine::loop_data(){
 		#ifdef DEVELOPMENT
 			//print_fps();
-		#endif
-			
+		#endif			
 
 		get_time();
 		main_camera.cameraSpeed = main_camera.velocity * deltaTime;
 
 		game->update();
 
+		distance_object_from_camera();
+
 		Objects::update_positions(this,tranlation_update);
-		
-		
 		
 }
 void Engine::es2_loop() {
@@ -344,6 +343,7 @@ void Engine::load_and_assing_location(std::string path, glm::vec3 location){
 	model->location_vector = location;
 	model->model_matrix = model_matrix;
 	meshes.push_back(model);
+	linear_meshes.push_back(model);
 	
 }
 //load objects paths
@@ -577,6 +577,31 @@ void Engine::translate_mesh(EMesh* mesh, uint direction, float value){
 		
 	}
 
+	
+	
+}
+
+void Engine::distance_object_from_camera(){
+	vec3 camera_position = main_camera.cameraPos;
+	int mesh_id = 9;
+	EMesh* mesh = meshes[9];
+	mesh->lod1 = meshes[10];
+	vec3 object_position = mesh->location_vector;
+
+	bool erased = false;
+	float distance;
+	if(!erased){
+		distance = glm::distance(camera_position,object_position);
+	
+		std::cout << "distance: " << distance <<std::endl;
+		if(distance > 15){
+			
+			erased = true;
+			std::cout << "erased" << std::endl;
+		}
+	}	
+	
+	
 	
 	
 }

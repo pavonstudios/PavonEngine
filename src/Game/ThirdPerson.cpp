@@ -22,6 +22,7 @@ void ThirdPerson::update_camera_postion(){
 
 
 	this->engine->main_camera.View = translated * rotated3 * glm::inverse(this->mesh->model_matrix);
+	engine->main_camera.cameraPos = camera_position + mesh->location_vector;
 	
 }
 void ThirdPerson::update(){

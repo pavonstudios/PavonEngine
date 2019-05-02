@@ -412,8 +412,9 @@ void activate_vertex_attributes(EMesh* mesh){
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-            }
+            glGenerateMipmap(GL_TEXTURE_2D);
         }
+    }
 
        void render(){                    
 

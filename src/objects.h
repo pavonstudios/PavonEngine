@@ -51,6 +51,7 @@ class Engine;
 using namespace glm;
 
 namespace engine{
+    
     struct Movement{
         vec3 direction;
         float value;
@@ -184,6 +185,8 @@ public:
     Collider collider;
 
     bool bIsGUI = false;
+
+    EMesh* lod1;
     
 		
 };
