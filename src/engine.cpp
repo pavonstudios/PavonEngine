@@ -346,6 +346,34 @@ void Engine::load_and_assing_location(std::string path, glm::vec3 location){
 	linear_meshes.push_back(model);
 	
 }
+
+void Engine::load_and_assing_location(struct load_data data){
+	std::string path = assets.path(data.model_path);
+	vec3 location = data.location;
+
+	#ifdef VULKAN
+		EMesh *model = new EMesh(vulkan_device);//vulkan device for create vertex buffers
+		model->texture.format = VK_FORMAT_R8G8B8A8_UNORM;			
+	#else
+		EMesh *model = new EMesh();
+    #endif
+	#ifdef ANDROID
+		mesh_manager.load_mode_gltf_android(model,path.c_str(),pAndroid_app->activity->assetManager);
+	#else
+		mesh_manager.load_model_gltf(model, path.c_str());
+	#endif
+
+	glm::mat4 model_matrix = glm::mat4(1.0f);
+	model_matrix = glm::translate(model_matrix, location);
+	model->location_vector = location;
+	model->model_matrix = model_matrix;
+	if(data.type != MESH_LOD){
+		meshes.push_back(model);
+		model->texture_path = assets.path(data.texture_path);
+	}
+		
+	linear_meshes.push_back(model);
+}
 //load objects paths
 
 void Engine::load_map(std::string path){
@@ -391,6 +419,11 @@ void Engine::load_map(std::string path){
 		int counter = 0;
 		std::vector<int> skeletal_id;
 		int type = 0;
+
+		
+
+		std::vector<load_data> meshes_load_data;
+		
 		while( std::getline(file,line) ) {		
 
 			if(line != ""){
@@ -401,14 +434,16 @@ void Engine::load_map(std::string path){
 				glm::vec3 location;
 				std::string texture_path;
 				std::string type;
-				
+				int mesh_type = 0;
 
 				line_stream >> first_char >> model_path >> location.x >> location.y >> location.z >> texture_path >> type;				
 				if(first_char == '/'){
 					break;
 				}
 				if(first_char != '#'){
-
+					if(type == "LOD"){
+						mesh_type = MESH_LOD;
+					}
 					if(first_char == 'c'){
 						texture_path = "textures/car01.jpg";
 					}
@@ -432,6 +467,14 @@ void Engine::load_map(std::string path){
 					}
 					
 					counter++;
+
+					load_data data = {};
+					data.model_path = model_path;
+					data.texture_path = texture_path;
+					data.location = location;
+					data.type = mesh_type;
+
+					meshes_load_data.push_back(data);
 					
 				}			
 			
@@ -458,7 +501,8 @@ void Engine::load_map(std::string path){
 	#endif
 	
 	for(uint i = 0; i < models_paths.size();i++){		
-		load_and_assing_location(models_paths[i],locations[i]);				
+		//load_and_assing_location(models_paths[i],locations[i]);
+		load_and_assing_location(meshes_load_data[i]);				
 	}
 
 	for(auto mesh : meshes){		
@@ -473,12 +517,7 @@ void Engine::load_map(std::string path){
 
 		}
 	}
-
-	//add textures path
-	for(uint i = 0; i < models_paths.size();i++){	
-	meshes[i]->texture_path = textures_paths[i];
-	}
-
+	
 	#ifdef VULKAN
 	pipeline_data data_static_mesh = {};
 	

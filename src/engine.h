@@ -79,6 +79,7 @@ public:
     void delete_meshes();
     void init_renderer();
     void load_and_assing_location(std::string path, glm::vec3 location);
+    void load_and_assing_location(struct load_data data);
     void load_map(std::string path);
     float get_time();    
     void update_mvp(EMesh* mesh);

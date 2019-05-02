@@ -40,6 +40,7 @@ class Engine;
 #define MESH_TYPE_STATIC 0
 #define MESH_TYPE_SKINNED 1
 #define MESH_WITH_COLLIDER 5
+#define MESH_LOD 8
 
 #define RIGTH   1
 #define LEFT    2
@@ -51,7 +52,16 @@ class Engine;
 using namespace glm;
 
 namespace engine{
-    
+
+    struct load_data
+	{
+        std::string model_path;
+        std::string texture_path;
+        glm::vec3 location;
+        int type;
+
+	};
+
     struct Movement{
         vec3 direction;
         float value;
