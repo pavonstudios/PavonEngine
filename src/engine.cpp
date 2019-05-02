@@ -66,7 +66,7 @@ void Engine::init(){
 
 		game = new Game(this);
 		load_map(map_path);
-		
+		game->init();
 
 	auto tStart = std::chrono::high_resolution_clock::now();
 
@@ -120,7 +120,7 @@ void Engine::init(){
 #ifdef DEVELOPMENT
 	calculate_time(tStart);
 #endif
-		game->init();
+		
 		
 		EMesh* mesh = meshes[3];
 
@@ -214,7 +214,7 @@ void Engine::main_loop(){
 void Engine::update_render_size(){
 	main_camera.update_projection_matrix();
    	#if defined (ES2) || (ANDROID)
-   	glViewport(0,0,window_width,window_height);
+   		glViewport(0,0,main_camera.screen_width,main_camera.screen_height);
    	#endif
 
    	if(game->gui)
