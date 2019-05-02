@@ -5,7 +5,7 @@ Library=-lglfw -lpthread -lm
 MAIN_OBJS = camera.cpp engine.cpp
 DEFINES= -DGLTF -DDEVELOPMENT
 
-OBJs= main.o engine.o camera.o asset_manager.o objects.o input.o skeletal.o WindowManager.o
+OBJs= main.o engine.o camera.o asset_manager.o objects.o input.o skeletal.o WindowManager.o game_map.o
 
 
 COMPILE= $(CC) -c -DGLTF $(DEFINES) -DDEVELOPMENT
@@ -42,6 +42,11 @@ game:
 WindowManager.o: 
 	cd src
 	$(CC) -c WindowManager.cpp -DGLTF $(DEFINES)
+
+.ONESHELL:
+game_map.o: 
+	cd src
+	$(CC) -c game_map.cpp -DGLTF $(DEFINES)
 
 .ONESHELL:
 skeletal.o: 

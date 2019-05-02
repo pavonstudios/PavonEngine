@@ -50,6 +50,7 @@ void Engine::init(){
 		window_manager.create_window();
 		#endif		
 		window_manager.engine = this;
+		maps.engine = this;
 
 		draw_loading_screen();		
 		
@@ -413,99 +414,8 @@ void Engine::load_map(std::string path){
 					#endif
 		}
 
+		maps.load_data_from_file(file);
 
-		std::vector<std::string> models_paths;
-		std::vector<glm::vec3> locations;
-		std::vector<std::string> textures_paths;
-		std::string line;
-		int counter = 0;
-		std::vector<int> skeletal_id;
-		int type = 0;
-
-		
-
-		std::vector<load_data> meshes_load_data;
-		
-		while( std::getline(file,line) ) {		
-
-			if(line != ""){
-					char first_char;
-				std::stringstream line_stream (line);
-			
-				std::string model_path;
-				glm::vec3 location;
-				std::string texture_path;
-				std::string type;
-				int mesh_type = 0;
-
-				line_stream >> first_char >> model_path >> location.x >> location.y >> location.z >> texture_path >> type;				
-				if(first_char == '/'){
-					break;
-				}
-				if(first_char != '#'){
-					if(type == "LOD"){
-						mesh_type = MESH_LOD;
-					}
-					if(first_char == 'c'){
-						texture_path = "textures/car01.jpg";
-					}
-					if(first_char == 's'){
-						skeletal_id.push_back(counter);
-					}
-					if(first_char == 'a'){
-						//with collider
-						type = MESH_WITH_COLLIDER;
-					}
-					models_paths.push_back(model_path);
-					textures_paths.push_back(texture_path);
-					locations.push_back(location);
-
-					
-					if(game->player_id == -1){
-						if(type == "player"){
-							game->player_id = counter;
-							
-						}
-					}
-					
-					counter++;
-
-					load_data data = {};
-					data.model_path = model_path;
-					data.texture_path = texture_path;
-					data.location = location;
-					data.type = mesh_type;
-
-					meshes_load_data.push_back(data);
-					
-				}			
-			
-			}		
-			
-		
-		}
-
-	#ifndef ANDROID
-		//convert path to asset folder path
-		std::vector<std::string> new_paths;
-		for(std::string path : models_paths){
-			std::string new_path = assets.path(path);
-			new_paths.push_back(new_path);
-		}
-		models_paths = new_paths;
-
-		new_paths.clear();
-		for(std::string path : textures_paths){
-			std::string new_path = assets.path(path);
-			new_paths.push_back(new_path);
-		}
-		textures_paths = new_paths;
-	#endif
-	
-	for(uint i = 0; i < models_paths.size();i++){		
-		//load_and_assing_location(models_paths[i],locations[i]);
-		load_and_assing_location(meshes_load_data[i]);				
-	}
 
 	for(auto mesh : meshes){		
 		if(mesh->gltf_model.accessors[0].minValues.size() > 0){
@@ -521,30 +431,18 @@ void Engine::load_map(std::string path){
 	}
 	
 	#ifdef VULKAN
-	pipeline_data data_static_mesh = {};
-	
-    data_static_mesh.draw_type = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
-    
-	data_static_mesh.mesh_type = MESH_TYPE_STATIC;
-    data_static_mesh.fragment_shader_path = "Game/Assets/shaders/frag.spv";
-    data_static_mesh.vertex_shader_path = "Game/Assets/shaders/vert.spv";
+		pipeline_data data_static_mesh = {};
+		
+		data_static_mesh.draw_type = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+		
+		data_static_mesh.mesh_type = MESH_TYPE_STATIC;
+		data_static_mesh.fragment_shader_path = "Game/Assets/shaders/frag.spv";
+		data_static_mesh.vertex_shader_path = "Game/Assets/shaders/vert.spv";		
 
-
-	pipeline_data data_skinned_mesh = {};
-	
-    data_skinned_mesh.draw_type = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
-	
-    data_skinned_mesh.mesh_type = MESH_TYPE_SKINNED;
-    data_skinned_mesh.fragment_shader_path = "Game/Assets/shaders/frag.spv";
-    data_skinned_mesh.vertex_shader_path = "Game/Assets/shaders/skin.spv";
-
-	for(EMesh* mesh : linear_meshes){
-		mesh->data = data_static_mesh;
-	}
-	for(int id : skeletal_id){//assing skinned shader
-		linear_meshes[id]->data = data_skinned_mesh;
-		Skeletal::load_data(linear_meshes[id]);
-	}
+		for(EMesh* mesh : linear_meshes){
+			mesh->data = data_static_mesh;
+		}
+		
 	#endif
 
 

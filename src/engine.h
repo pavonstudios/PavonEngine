@@ -29,6 +29,7 @@
 #include "WindowManager.hpp"
 #include "objects.h"
 #include "camera.h"
+#include "game_map.hpp"
 
 class Game;
 #include "Game/gui.hpp"
@@ -46,6 +47,7 @@ public:
     Camera main_camera;
     MeshManager mesh_manager;
     Input input;
+    MapManager maps;
 
     TranslationUpdate tranlation_update;
 
