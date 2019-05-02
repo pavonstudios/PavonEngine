@@ -634,7 +634,7 @@ void Engine::distance_object_from_camera(){
 	if(!erased){
 		distance = glm::distance(camera_position,object_position);
 	
-		std::cout << "distance: " << distance <<std::endl;
+		//std::cout << "distance: " << distance <<std::endl;
 		if(distance > 15){
 			meshes[9] = linear_meshes[11];
 			erased = true;

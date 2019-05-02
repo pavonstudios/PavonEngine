@@ -206,6 +206,7 @@ void Input::key_set(const char key, bool isPressed){
 	}
 	if(key == 'p'){
 		actual_key = &this->TAB;
+		std::cout << "ptab\n";
 	}
 	if(key == 'z'){
 		actual_key = &this->Z;
@@ -236,6 +237,19 @@ void Input::update_input(Engine* engine){
 		engine->print_debug("tab pressed or released",0,0);
 #endif
 	}
+
+	#ifdef ES2
+	if(TAB.bIsPressed){
+		if(engine->edit_mode){
+			
+		}
+			//engine->edit_mode = false;
+		else{
+				engine->edit_mode = true;
+				std::cout << "edidt mode \n";
+		}
+	}
+	#endif
 
 	if(engine->edit_mode){
 		if(S.bIsPressed){
