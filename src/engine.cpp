@@ -92,8 +92,11 @@ void Engine::init(){
 			pipeline_data data = {};
 
 			#ifndef ANDROID
-				data.fragment_shader_path = assets.path("frag.glsl");
-				data.vertex_shader_path = assets.path("vert_mvp.glsl");
+				//data.fragment_shader_path = assets.path("frag.glsl");
+				//data.vertex_shader_path = assets.path("vert_mvp.glsl");
+
+				data.fragment_shader_path = "Game/Assets/frag.glsl";
+				data.vertex_shader_path = "Game/Assets/vert_mvp.glsl";
 			#endif
 
 			#ifdef ANDROID
@@ -107,13 +110,10 @@ void Engine::init(){
 				if(mesh->data.vertex_shader_path == ""){
 						mesh->data = data;
 				}
-				renderer.load_shaders(mesh);
-							
-				#ifndef ANDROID
-					renderer.load_mesh_texture(mesh);
-				#endif
-			}				
-
+			}
+			renderer.load_shaders(meshes);
+			renderer.load_textures(meshes);
+			
 				//edit_mode = true;
     	#endif
 
@@ -199,7 +199,7 @@ void Engine::main_loop(){
 		window_manager.swap_buffers();
 
 		tranlation_update.movements.clear();
-		tranlation_update.movements.clear();
+		
 		
 	}
 	

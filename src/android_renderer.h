@@ -160,7 +160,7 @@ private:
     }
      
 public:
-#if defined(ES2) || defined(ANDROID)
+
     void load_shaders(EMesh* mesh){
 
         char* vertex_shader_src = load_shader_file(mesh->data.vertex_shader_path.c_str());
@@ -179,7 +179,25 @@ public:
        
     }
 
-#endif
+    void load_shaders(const std::vector<EMesh*>& meshes){
+        for(EMesh* mesh : meshes){
+             char* vertex_shader_src = load_shader_file(mesh->data.vertex_shader_path.c_str());
+            char* fragment_shader_src = load_shader_file(mesh->data.fragment_shader_path.c_str());
+            
+
+            GLuint vertexShader   = load_shader ( vertex_shader_src , GL_VERTEX_SHADER  );     // load vertex shader
+            GLuint fragmentShader = load_shader ( fragment_shader_src , GL_FRAGMENT_SHADER );  // load fragment shader
+
+            
+            mesh->shader_program = glCreateProgram ();                 // create program object
+            glAttachShader ( mesh->shader_program, vertexShader );             // and attach both...
+            glAttachShader ( mesh->shader_program, fragmentShader );           // ... shaders to it
+
+            glLinkProgram ( mesh->shader_program  );    // link the program
+        }
+    }
+
+
     void init_gl(){
         //glViewport(0,0,800,600);
 
@@ -331,7 +349,7 @@ void activate_vertex_attributes(EMesh* mesh){
     #ifdef ANDROID
     struct android_app * app;
     #endif
-#if defined(ES2) || defined(ANDROID)
+
    public:
    void load_mesh_texture(EMesh* mesh){
 
@@ -364,8 +382,39 @@ void activate_vertex_attributes(EMesh* mesh){
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         //glGenerateMipmap(GL_TEXTURE_2D);
    }
+    void load_textures(const std::vector<EMesh*>& meshes){
 
-#endif
+        for(EMesh* mesh: meshes){
+            glActiveTexture(GL_TEXTURE0);
+            glGenTextures(1, &mesh->texture_id);
+            glBindTexture(GL_TEXTURE_2D,mesh->texture_id);
+
+
+            AssetManager assets;
+            #ifdef ANDROID
+                
+                image_size size = assets.load_bmp("police_patrol.pvn",app->activity->assetManager);    //TODO: load texture with android path        
+            #else                   
+                image_size size;
+                if(mesh->texture.hasTexture){
+                    size.heigth = mesh->texture.height;
+                    size.width = mesh->texture.width;
+                    size.data = mesh->texture.data;
+                    glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,size.width,size.heigth,0,GL_RGBA,GL_UNSIGNED_BYTE,size.data);
+                }else{
+                    size = assets.load_and_get_size(mesh->texture_path.c_str());
+                    glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,size.width,size.heigth,0,GL_RGB,GL_UNSIGNED_BYTE,size.data); 
+                }
+                    
+            #endif                   
+            glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            }
+        }
+
        void render(){                    
 
             #ifdef ANDROID
