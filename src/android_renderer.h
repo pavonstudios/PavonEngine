@@ -399,8 +399,9 @@ void activate_vertex_attributes(EMesh* mesh){
                 AssetManager assets;
                 #ifdef ANDROID
                     
-                    image_size size = assets.load_bmp("police_patrol_image.pvn",app->activity->assetManager);    //TODO: load texture with android path        
-                #else                   
+                    image_size size = assets.load_bmp("textures/character2.jpg",app->activity->assetManager);    //TODO: load texture with android path
+                    glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,size.width,size.heigth,0,GL_RGB,GL_UNSIGNED_BYTE,size.data);
+                #else
                     image_size size;
                     if(mesh->texture.hasTexture){
                         size.heigth = mesh->texture.height;

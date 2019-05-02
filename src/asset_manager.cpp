@@ -45,9 +45,13 @@ image_size AssetManager::load_bmp( const char * filename ,AAssetManager * assetM
 
     AAsset_read(file, content,size);
 
+     int w, h, comp, req_comp;
+    req_comp = 3;
+
+    unsigned char* decoded = stbi_load_from_memory(content, (int)size, &w, &h, &comp, req_comp);
     //free( data );
 
-    image_size image_Data = {width, height, content, content};
+    image_size image_Data = {width, height, decoded, decoded};
     return image_Data;
 }
 
