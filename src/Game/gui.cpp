@@ -33,23 +33,7 @@ GUI::GUI(Engine* engine){
     Vertex vert4{};
     vert4.pos = glm::vec3(1.0,-1.0,0.0);
     vert4.texCoord = vec2(1,0); 
-
-
-
-    if(!engine->loading){
-        /* vert1.pos = glm::vec3(0.0,0.0,0.0);
-
-        
-        vert2.pos = glm::vec3(0.0,800.0,0.0);
-
-    
-        vert3.pos = glm::vec3(800,600,0.0);  
-
-    
-        vert4.pos = glm::vec3(600.0,0.0,0.0); */
-    }
-    
-
+   
             
     triangle->vertices.push_back(vert1);
     triangle->vertices.push_back(vert2);        
@@ -57,8 +41,7 @@ GUI::GUI(Engine* engine){
     triangle->vertices.push_back(vert4);
     
     
-    triangle->texture_path = "Game/Assets/textures/GUI/white_logo.jpg";
-    //triangle->texture_path = "Game/Assets/textures/character.jpg";
+    triangle->texture_path = engine->assets.path("textures/GUI/white_logo.jpg");
 
     #ifdef VULKAN
         triangle->data.fragment_shader_path = "Game/Assets/shaders/red.spv";
@@ -78,18 +61,25 @@ GUI::GUI(Engine* engine){
         
     triangle->data.vertex_shader_path = engine->assets.path("shaders/gles/triangle_vert_shader.glsl");
     #endif
+    #ifdef ANDROID
+    triangle->data.fragment_shader_path = engine->assets.path("shaders/gles/frag_sampler.glsl");
+    //data.fragment_shader_path = assets.path("shaders/gles/frag_uv_color.glsl");
+
+
+    triangle->data.vertex_shader_path = engine->assets.path("vert_mvp.glsl");
+    #endif
 
     triangle->bIsGUI = true;
     this->mesh = triangle;
     Button* button = new Button(mesh);
-    button->position = vec2(100,100);
-    button->size = vec2(30,15);
+    button->position = vec2(600,500);
+    button->size = vec2(100,100);
     button->name = "jump";
     elements.push_back((UIElement*)button);
 
     #if defined (ES2) || defined (ANDROID) 
-    engine->linear_meshes.push_back(this->mesh);
-    engine->meshes.push_back(this->mesh);
+        engine->linear_meshes.push_back(this->mesh);
+        engine->meshes.push_back(this->mesh);
     #endif
 }
 

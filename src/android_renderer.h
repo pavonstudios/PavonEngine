@@ -320,7 +320,7 @@ void activate_vertex_attributes(EMesh* mesh){
 
         #ifdef ANDROID
             AssetManager assets;
-            image_size size = assets.load_bmp("police_patrol.pvn",app->activity->assetManager);            
+            image_size size = assets.load_bmp("police_patrol_image.pvn",app->activity->assetManager);            
         #else                   
             AssetManager assets;
             image_size size = assets.load_and_get_size("textures/skydome.jpg");      
@@ -362,7 +362,7 @@ void activate_vertex_attributes(EMesh* mesh){
         AssetManager assets;
         #ifdef ANDROID
             
-            image_size size = assets.load_bmp("police_patrol.pvn",app->activity->assetManager);    //TODO: load texture with android path        
+            image_size size = assets.load_bmp("police_patrol_image.pvn",app->activity->assetManager);    //TODO: load texture with android path        
         #else                   
             image_size size;
             if(mesh->texture.hasTexture){
@@ -399,7 +399,7 @@ void activate_vertex_attributes(EMesh* mesh){
                 AssetManager assets;
                 #ifdef ANDROID
                     
-                    image_size size = assets.load_bmp("police_patrol.pvn",app->activity->assetManager);    //TODO: load texture with android path        
+                    image_size size = assets.load_bmp("police_patrol_image.pvn",app->activity->assetManager);    //TODO: load texture with android path        
                 #else                   
                     image_size size;
                     if(mesh->texture.hasTexture){
@@ -418,7 +418,7 @@ void activate_vertex_attributes(EMesh* mesh){
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-                glGenerateMipmap(GL_TEXTURE_2D);
+                //glGenerateMipmap(GL_TEXTURE_2D);
 
             }else{
                 mesh->texture_id = textures_ids[mesh->texture.texture_id];
@@ -437,7 +437,7 @@ void activate_vertex_attributes(EMesh* mesh){
              AssetManager assets;
             #ifdef ANDROID
                 
-                image_size size = assets.load_bmp("police_patrol.pvn",app->activity->assetManager);    //TODO: load texture with android path        
+                image_size size = assets.load_bmp("police_patrol_image.pvn",app->activity->assetManager);    //TODO: load texture with android path        
             #else                   
                 image_size size;
                 
@@ -496,8 +496,8 @@ void activate_vertex_attributes(EMesh* mesh){
     void draw_mesh(){
             //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             //glBindTexture(GL_TEXTURE_2D,textureid);
-           // int samplerid = glGetUniformLocation(shaderProgram, "texture_sampler");
-            //glUniform1i(samplerid, 0);
+            int samplerid = glGetUniformLocation(shaderProgram, "texture_sampler");
+            glUniform1i(samplerid, 0);
             
             
            // glDrawElements(GL_TRIANGLES,meshes[0]->indices.size(),GL_UNSIGNED_INT,(void*)0);
@@ -508,9 +508,9 @@ void activate_vertex_attributes(EMesh* mesh){
     }
 
     void draw_gui(EMesh* mesh){
-        #ifdef ES2
-                glBindTexture(GL_TEXTURE_2D,mesh->texture_id);
-        #endif
+        
+        glBindTexture(GL_TEXTURE_2D,mesh->texture_id);
+        
         glBindBuffer(GL_ARRAY_BUFFER,mesh->vertex_buffer);
         glDrawArrays(GL_TRIANGLE_STRIP,0,mesh->vertices.size());
         glBindBuffer(GL_ARRAY_BUFFER,0);
@@ -519,7 +519,7 @@ void activate_vertex_attributes(EMesh* mesh){
 
     void draw(EMesh* mesh){        
         
-        #ifdef ES2
+        #if defined (ES2) || defined (ANDROID)
                 glBindTexture(GL_TEXTURE_2D,mesh->texture_id);
         #endif
         //update_mvp(mesh);
