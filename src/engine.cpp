@@ -49,9 +49,9 @@ void Engine::draw_loading_screen(){
 }
 void Engine::init_player(){
 
-		player = new ThirdPerson();
+		//player = new ThirdPerson();
 		//input.W.bIsPressed = false;
-		//player = new Vehicle();
+		player = new Vehicle();
 		player->engine = this;	
 		player->mesh = nullptr;
 		player->camera_position = vec3(0,-2.5,-8.5);
@@ -151,8 +151,8 @@ void Engine::init(){
 
 		EMesh* mesh = meshes[3];
 
-		std::thread col_thread(Collision::update_collision,mesh,player->mesh);
-		col_thread.detach();
+		//std::thread col_thread(Collision::update_collision,mesh,player->mesh);
+		//col_thread.detach();
 	
 }
 
@@ -177,7 +177,9 @@ void Engine::loop_data(){
 		gui->calculate_mouse_position();			
 		
 		if(gui->is_button_pressed("jump")){
-            LOGW("jump");
+			#ifdef ANDROID
+            	LOGW("jump");
+			#endif
 			std::cout << "jump pressd\n";
 
 		}
