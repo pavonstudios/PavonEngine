@@ -74,11 +74,11 @@ void Engine::init(){
 			renderer.VulkanConfig();
 		#endif
 
-		mesh_manager.create_buffers(this,meshes);
+		mesh_manager.create_buffers(this,linear_meshes);
 
 		#ifdef VULKAN			
 			
-			for(auto mesh : meshes){
+			for(auto mesh : linear_meshes){
 				renderer.load_mesh(mesh);
 				renderer.update_descriptor_set(mesh);
 			}			
@@ -106,13 +106,13 @@ void Engine::init(){
 
 			renderer.init_gl();   
 
-			for(EMesh* mesh : meshes){
+			for(EMesh* mesh : linear_meshes){
 				if(mesh->data.vertex_shader_path == ""){
 						mesh->data = data;
 				}
 			}
-			renderer.load_shaders(meshes);
-			renderer.load_textures(meshes);
+			renderer.load_shaders(linear_meshes);
+			renderer.load_textures(linear_meshes);
 			
 				//edit_mode = true;
     	#endif
@@ -363,15 +363,17 @@ void Engine::load_and_assing_location(struct load_data data){
 		mesh_manager.load_model_gltf(model, path.c_str());
 	#endif
 
+	model->name = data.model_path;
+
 	glm::mat4 model_matrix = glm::mat4(1.0f);
 	model_matrix = glm::translate(model_matrix, location);
 	model->location_vector = location;
 	model->model_matrix = model_matrix;
 	if(data.type != MESH_LOD){
 		meshes.push_back(model);
-		model->texture_path = assets.path(data.texture_path);
-	}
 		
+	}
+	model->texture_path = assets.path(data.texture_path);
 	linear_meshes.push_back(model);
 }
 //load objects paths
@@ -536,12 +538,12 @@ void Engine::load_map(std::string path){
     data_skinned_mesh.fragment_shader_path = "Game/Assets/shaders/frag.spv";
     data_skinned_mesh.vertex_shader_path = "Game/Assets/shaders/skin.spv";
 
-	for(EMesh* mesh : meshes){
+	for(EMesh* mesh : linear_meshes){
 		mesh->data = data_static_mesh;
 	}
 	for(int id : skeletal_id){//assing skinned shader
-		meshes[id]->data = data_skinned_mesh;
-		Skeletal::load_data(meshes[id]);
+		linear_meshes[id]->data = data_skinned_mesh;
+		Skeletal::load_data(linear_meshes[id]);
 	}
 	#endif
 
@@ -623,8 +625,8 @@ void Engine::translate_mesh(EMesh* mesh, uint direction, float value){
 void Engine::distance_object_from_camera(){
 	vec3 camera_position = main_camera.cameraPos;
 	int mesh_id = 9;
-	EMesh* mesh = meshes[9];
-	mesh->lod1 = meshes[10];
+	EMesh* mesh = linear_meshes[9];
+	mesh->lod1 = linear_meshes[10];
 	vec3 object_position = mesh->location_vector;
 
 	bool erased = false;
@@ -634,7 +636,7 @@ void Engine::distance_object_from_camera(){
 	
 		std::cout << "distance: " << distance <<std::endl;
 		if(distance > 15){
-			
+			meshes[9] = linear_meshes[11];
 			erased = true;
 			std::cout << "erased" << std::endl;
 		}

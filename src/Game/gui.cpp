@@ -88,6 +88,7 @@ GUI::GUI(Engine* engine){
     elements.push_back((UIElement*)button);
 
     #if defined (ES2) || defined (ANDROID) 
+    engine->linear_meshes.push_back(this->mesh);
     engine->meshes.push_back(this->mesh);
     #endif
 }

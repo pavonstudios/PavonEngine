@@ -143,7 +143,7 @@ public:
     
 #ifdef GLTF
     
-    
+    std::string name;
     void load_textures_gltf();
     std::vector<Node*> nodes;
     std::vector<Node*> linear_nodes;

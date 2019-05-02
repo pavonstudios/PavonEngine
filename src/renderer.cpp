@@ -467,15 +467,15 @@ void Renderer::recreateSwapChain() {
     }
 void Renderer::create_meshes_graphics_pipeline(){ 
 
-    for (int i = 0; i< engine->meshes.size(); i++){
-        if(engine->meshes[i]->data.vertex_shader_path != ""){
-            createGraphicsPipeline(&engine->meshes[i]->data,&engine->meshes[i]->graphics_pipeline);
+    for (int i = 0; i< engine->linear_meshes.size(); i++){
+        if(engine->linear_meshes[i]->data.vertex_shader_path != ""){
+            createGraphicsPipeline(&engine->linear_meshes[i]->data,&engine->linear_meshes[i]->graphics_pipeline);
 
         }else{
             std::runtime_error("ERROR: pipeline data need shaders paths");
         }
         if(!resized)
-            createTextureImage(engine->meshes[i]->texture_path, engine->meshes[i]);
+            createTextureImage(engine->linear_meshes[i]->texture_path, engine->linear_meshes[i]);
         
     }
 
