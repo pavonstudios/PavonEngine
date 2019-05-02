@@ -214,10 +214,12 @@ void WindowManager::update_window_size(){
       window_width = width;
 	   window_height = height;
    }
-	
-   engine->main_camera.screen_width = window_width;
-   engine->main_camera.screen_height = window_height;
-	engine->update_render_size();
+
+    engine->main_camera.screen_width = window_width;
+    engine->main_camera.screen_height = window_height;
+    engine->update_render_size();
+
+
    
 }
 

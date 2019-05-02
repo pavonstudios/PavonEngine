@@ -1,5 +1,5 @@
 
-v textures/car01.jpg
+v textures/car01.jpg models/pavon_the_game/police_patrol.gltf
 
 a models/cube_collision.gltf -3 5 0 textures/car01.jpg
 m models/cube_collision.gltf 3 2 0 textures/character2.jpg 
@@ -26,15 +26,7 @@ b models/pavon_the_game/police_patrol.gltf 0 12 0
 b models/pavon_the_game/police_patrol.gltf 5 5 0 
 b models/pavon_the_game/police_patrol.gltf 3 -6 0 
 b models/pavon_the_game/police_patrolLOD3.gltf -8 -6 0 
-b models/pavon_the_game/police_patrol.gltf 5 5 0 
-b models/pavon_the_game/police_patrol.gltf 3 -6 0 
-b models/pavon_the_game/police_patrolLOD3.gltf -8 -6 7 
-b models/pavon_the_game/police_patrol.gltf 5 5 3 
-b models/pavon_the_game/police_patrol.gltf 3 -8 4 
-b models/pavon_the_game/police_patrolLOD3.gltf -8 -6 0 
-b models/pavon_the_game/police_patrol.gltf 13 5 0 
-b models/pavon_the_game/police_patrol.gltf 3 -15 0 
-b models/pavon_the_game/police_patrolLOD3.gltf -8 -6 0 
+
 
 
 

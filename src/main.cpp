@@ -94,9 +94,9 @@
                 auto *pEngine = reinterpret_cast<Engine *>(pApp->userData);
                 //init gl and window
                 if(!pEngine->renderer.bReady){
-                   pEngine->window_manager.engine = pEngine;
-                   pEngine->window_manager.create_window(pApp);
-                   pEngine->init();
+
+                    pEngine->init();
+
                    pEngine->renderer.bReady = true;
                 }
                 if(pEngine->renderer.bReady){

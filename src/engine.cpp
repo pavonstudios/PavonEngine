@@ -8,6 +8,7 @@
 #include <thread>
 
 #include "Game/game.hpp"
+#include <unistd.h>
 
 Engine::Engine(){
 
@@ -46,10 +47,15 @@ void Engine::draw_loading_screen(){
 
 
 void Engine::init(){
+        window_manager.engine = this;
 		#ifndef ANDROID
 		window_manager.create_window();
-		#endif		
-		window_manager.engine = this;
+        #endif
+        #ifdef ANDROID
+           window_manager.create_window(pAndroid_app);
+        #endif
+
+
 		maps.engine = this;
 
 		draw_loading_screen();		
@@ -135,7 +141,7 @@ void Engine::init(){
 
 void Engine::loop_data(){
 		#ifdef DEVELOPMENT
-			//print_fps();
+			print_fps();
 		#endif			
 
 		get_time();
@@ -187,7 +193,7 @@ void Engine::main_loop(){
 		auto tStart = std::chrono::high_resolution_clock::now();
 
 		#ifdef VULKAN
-			renderer.draw_frame();
+			renderer.draw_frame();			
 		#endif
 		
 		#ifdef ES2
@@ -219,8 +225,11 @@ void Engine::update_render_size(){
    		glViewport(0,0,main_camera.screen_width,main_camera.screen_height);
    	#endif
 
-   	if(game->gui)
-    	game->gui->update_elements_mvp();
+    if(game){
+        if(game->gui)
+            game->gui->update_elements_mvp();
+    }
+
 }
 void Engine::delete_meshes(){
 	for(auto mesh : meshes){
@@ -538,7 +547,12 @@ void Engine::distance_object_from_camera(){
 		if(distance > 15){
 			meshes[9] = linear_meshes[11];
 			erased = true;
-			std::cout << "erased" << std::endl;
+			//std::cout << "erased" << std::endl;
+		}
+		if(distance < 15){
+			meshes[9] = linear_meshes[10];
+			erased = true;
+			//std::cout << "erased" << std::endl;
 		}
 	}	
 	

@@ -31,6 +31,8 @@ add_library(maincode
         Game/gui.cpp
         camera.cpp
         input.cpp
+        Game/game.cpp
+        game_map.cpp
     )
 
 
