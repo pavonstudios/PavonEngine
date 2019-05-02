@@ -30,7 +30,7 @@
 #include "objects.h"
 #include "camera.h"
 
-class ThirdPerson;
+class Game;
 #include "Game/gui.hpp"
 
 using namespace engine;
@@ -49,8 +49,8 @@ public:
 
     TranslationUpdate tranlation_update;
 
-    ThirdPerson * player;
-    GUI* gui;
+    Game * game;
+  
     bool loading = true;
     
     #ifdef ANDROID
@@ -59,7 +59,7 @@ public:
     #endif
 
     std::vector<EMesh*> meshes;
-    int player_id = -1;
+    
     
     bool edit_mode = false;
 
@@ -83,7 +83,7 @@ public:
     void init();
     void es2_loop();
     void loop_data();
-    void init_player();   
+    void update_render_size(); 
 
     void translate_mesh(EMesh* mesh, uint direction, float value);
  

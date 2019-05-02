@@ -217,12 +217,8 @@ void WindowManager::update_window_size(){
 	
    engine->main_camera.screen_width = window_width;
    engine->main_camera.screen_height = window_height;
-	engine->main_camera.update_projection_matrix();
-   #if defined (ES2) || (ANDROID)
-   glViewport(0,0,window_width,window_height);
-   #endif
-   if(engine->gui)
-    engine->gui->update_elements_mvp();
+	engine->update_render_size();
+   
 }
 
 bool WindowManager::window_should_close(){

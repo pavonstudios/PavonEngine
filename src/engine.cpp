@@ -3,15 +3,11 @@
 #include <iostream>
 #include <fstream>
 
-
-#include "Game/ThirdPerson.hpp"	
-#include "Game/gui.hpp"
-#include "Game/vehicle.hpp"
-
 #include "collision.h"
 
 #include <thread>
 
+#include "Game/game.hpp"
 
 Engine::Engine(){
 
@@ -47,26 +43,7 @@ void Engine::draw_loading_screen(){
 		delete loading;
 	#endif
 }
-void Engine::init_player(){
 
-		//player = new ThirdPerson();
-		//input.W.bIsPressed = false;
-		player = new Vehicle();
-		player->engine = this;	
-		player->mesh = nullptr;
-		player->camera_position = vec3(0,-2.5,-8.5);
-		if(this->player_id == -1){
-			std::runtime_error("no player assigned from map file");
-		}else{
-				
-			player->mesh = this->meshes[this->player_id];
-		}		
-		
-		if(!player->mesh){
-			std::runtime_error("no player mesh pointer assigner");
-		}
-
-}
 
 void Engine::init(){
 		#ifndef ANDROID
@@ -85,15 +62,11 @@ void Engine::init(){
 				mesh_manager.vulkan_device = vulkan_device;
 		#endif
 		
-		#ifdef ANDROID
-			string map_path = "Maps/map01.map";
-		#else
-			std::string map_path = "Game/Assets/Maps/map01.map";
-		#endif
+		std::string map_path = assets.path("Maps/map01.map");
 
+		game = new Game(this);
 		load_map(map_path);
-		gui = new GUI(this);
-		gui->update_elements_mvp();
+		
 
 	auto tStart = std::chrono::high_resolution_clock::now();
 
@@ -119,13 +92,13 @@ void Engine::init(){
 			pipeline_data data = {};
 
 			#ifndef ANDROID
-				data.fragment_shader_path = "android/app/src/main/assets/frag.glsl";
-				data.vertex_shader_path = "android/app/src/main/assets/vert_mvp.glsl";
+				data.fragment_shader_path = assets.path("frag.glsl");
+				data.vertex_shader_path = assets.path("vert_mvp.glsl");
 			#endif
 
 			#ifdef ANDROID
-				data.fragment_shader_path = "shaders/gles/frag_uv_color.glsl";
-				data.vertex_shader_path = "vert_mvp.glsl";
+				data.fragment_shader_path = assets.path("shaders/gles/frag_uv_color.glsl");
+				data.vertex_shader_path = assets.path("vert_mvp.glsl");
 			#endif		
 
 			renderer.init_gl();   
@@ -147,12 +120,12 @@ void Engine::init(){
 #ifdef DEVELOPMENT
 	calculate_time(tStart);
 #endif
-		init_player();
-
+		game->init();
+		
 		EMesh* mesh = meshes[3];
 
-		//std::thread col_thread(Collision::update_collision,mesh,player->mesh);
-		//col_thread.detach();
+		std::thread col_thread(Collision::update_collision,mesh,game->player->mesh);
+		col_thread.detach();
 	
 }
 
@@ -161,28 +134,16 @@ void Engine::loop_data(){
 		#ifdef DEVELOPMENT
 			//print_fps();
 		#endif
-
-		if(!edit_mode){
-			if(player->mesh){
-					player->update();	
-			}
 			
-		}				
 
 		get_time();
 		main_camera.cameraSpeed = main_camera.velocity * deltaTime;
 
+		game->update();
+
 		Objects::update_positions(this,tranlation_update);
 		
-		gui->calculate_mouse_position();			
 		
-		if(gui->is_button_pressed("jump")){
-			#ifdef ANDROID
-            	LOGW("jump");
-			#endif
-			std::cout << "jump pressd\n";
-
-		}
 		
 }
 void Engine::es2_loop() {
@@ -241,8 +202,8 @@ void Engine::main_loop(){
 		tranlation_update.movements.clear();
 		
 	}
-	delete gui;
 	
+	delete game;
 	#ifdef VULKAN
 		renderer.finish();
 		//window manager clear ?
@@ -250,7 +211,15 @@ void Engine::main_loop(){
 	
 
 }
+void Engine::update_render_size(){
+	main_camera.update_projection_matrix();
+   	#if defined (ES2) || (ANDROID)
+   	glViewport(0,0,window_width,window_height);
+   	#endif
 
+   	if(game->gui)
+    	game->gui->update_elements_mvp();
+}
 void Engine::delete_meshes(){
 	for(auto mesh : meshes){
 		delete mesh;
@@ -455,9 +424,9 @@ void Engine::load_map(std::string path){
 					locations.push_back(location);
 
 					
-					if(player_id == -1){
+					if(game->player_id == -1){
 						if(type == "player"){
-							this->player_id = counter;
+							game->player_id = counter;
 							
 						}
 					}
