@@ -6,6 +6,12 @@
     #include "../glm/glm.hpp"
     #include "../glm/gtc/matrix_transform.hpp"
 #endif
+
+#include <sys/socket.h>
+#include <unistd.h>
+#include <netinet/in.h> 
+#include <arpa/inet.h>
+
 ThirdPerson::ThirdPerson(){
 
 }
@@ -37,7 +43,7 @@ void ThirdPerson::update(){
 	if(engine->input.Z.bIsPressed){
 		
 		this->mesh->model_matrix = glm::rotate(mesh->model_matrix,glm::radians(15.0f * engine->deltaTime),glm::vec3(0,0,1));
-		
+		connect_to_game_server();
 	}
 	if(engine->input.X.bIsPressed){
 		
@@ -64,4 +70,23 @@ void ThirdPerson::update(){
 }
 void ThirdPerson::monse_control(float yaw, float pitch){
 	this->mesh->model_matrix = glm::rotate(mesh->model_matrix,glm::radians(-yaw * (2.f * engine->deltaTime)),glm::vec3(0,0,1));
+}
+
+void ThirdPerson::connect_to_game_server(){
+
+	int new_socket;
+
+	new_socket = socket(AF_INET, SOCK_STREAM,0);
+
+	struct sockaddr_in ipOfServer;
+
+	ipOfServer.sin_family = AF_INET;
+    ipOfServer.sin_port = htons(6000);
+    ipOfServer.sin_addr.s_addr = inet_addr("127.0.0.1");
+
+	int connected = connect(new_socket, (struct sockaddr *)&ipOfServer, sizeof(ipOfServer));
+	if(connected < 0){
+		std::cout << "not connected\n";
+	}
+
 }

@@ -37,7 +37,7 @@ void wait_conectiions(){
 	while(!quit){
 		std::cout << "waiting connections\n";
 		client_conection = accept(socket_server_file_descriptor,(struct sockaddr *)&address,(socklen_t*)&addrlen);
-		
+		std::cout << "someone connected\n";
 	}
 }
 int main(){
