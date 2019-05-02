@@ -17,18 +17,26 @@ GAME = Game/*.o
 INCLUDE_OPENGL = -lGLEW -lGLESv2 -lEGL
 
 DEFINES :=
+TYPE :=
 
 .ONESHELL:
 full: DEFINES := -DVULKAN
-full: renderer.o  $(OBJs) game $(game) 
+full: TYPE := vk
+full: renderer.o  $(OBJs) game
 	mkdir -p bin && cd src
 	$(CC) -o ../renderer renderer.o $(OBJs) model_loader.o $(GAME) $(Library) -I./ -lvulkan $(DEFINES)
 
 .ONESHELL:
 es2: DEFINES := -DES2
-es2: $(OBJs) game $(game)
+es2: TYPE := es2
+es2: $(OBJs) game
 	mkdir -p bin && cd src
 	$(CC) -o ../renderer $(OBJs) model_loader.o $(GAME) $(Library) $(INCLUDE_OPENGL) -I./ $(DEFINES) -DGLTF -lX11 
+
+.ONESHELL:
+game:
+	cd src/Game
+	$(MAKE) $(TYPE) -j8
 
 .ONESHELL:
 WindowManager.o: 
@@ -55,10 +63,6 @@ objects.o:
 	cd src
 	$(CC) -c objects.cpp -DGLTF $(DEFINES)
 
-.ONESHELL:
-game:
-	cd src/Game
-	$(foreach file,*.cpp,$(COMPILE) $(file))
 
 .ONESHELL:
 main.o:
