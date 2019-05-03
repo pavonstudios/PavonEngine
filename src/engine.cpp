@@ -99,8 +99,7 @@ void Engine::init(){
 			renderer.init_gl();
 			renderer.load_shaders(linear_meshes);
 			renderer.load_textures(maps.same_textures);
-			renderer.load_textures(linear_meshes);
-			
+			renderer.load_textures(linear_meshes);	
 			
 				//edit_mode = true;
     	#endif

@@ -74,7 +74,7 @@ GUI::GUI(Engine* engine){
     Button* button = new Button(mesh);
     button->relative_position = vec2(100,100);
     button->relative_to = POSITION_RELATIVE_LEFT_BOTTON;
-    button->size = vec2(50,50);
+    button->size = vec2(30,30);
     button->name = "jump";
     elements.push_back((UIElement*)button);
 
@@ -95,10 +95,16 @@ void GUI::calculate_mouse_position(){
     float maxy = button->position.y + button->size.y;
 
     button->pressed = false;
+    
     if(engine->input.left_button_pressed){ 
         if(minx <= x && maxy >= y){
-            if(miny <= y && maxx >= x)
+            if(miny <= y && maxx >= x){
                 button->pressed = true;
+                if(!button->move)
+                    button->saved_position = button->position;
+                button->move = true;
+            }
+                
         }else{
             button->pressed = false;
         }
@@ -112,8 +118,36 @@ void GUI::calculate_mouse_position(){
     }
 #endif
     
-}
+     if(engine->input.left_button_pressed){ 
+        if(button->move){
+            button->position.x = x;
+            button->position.y = y;
+            this->update_elemete_position((UIElement*)button);
 
+        }
+     }
+    if(engine->input.left_button_release){
+        if(button->move){
+            engine->input.left_button_release = false;
+            button->move = false;
+            button->position = button->saved_position;
+            this->update_elemete_position((UIElement*)button);
+        }
+        
+    }
+}
+void GUI::update_elemete_position(UIElement* element){
+     glm::mat4 mat = glm::mat4(1.0);
+     mat4 projection = glm::ortho(   0.0f, 1.0f*engine->window_manager.window_width, 
+                                        1.0f*engine->window_manager.window_height, 0.0f);
+                                        
+    mat4 image_scale = glm::scale(mat,vec3(element->size.x,element->size.y,0));
+    mat4 model_mat = translate(mat,vec3(element->position.x,element->position.y,0));
+
+    model_mat = model_mat * image_scale;
+    mat = projection * model_mat;
+    element->mesh->MVP = mat;
+}
 void GUI::update_elements_mvp(){
     glm::mat4 mat = glm::mat4(1.0);
     for(auto element : elements){

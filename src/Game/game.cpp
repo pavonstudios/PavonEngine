@@ -47,7 +47,7 @@ void Game::update(){
 		#ifdef ANDROID
 			LOGW("jump");
 		#endif
-		std::cout << "jump pressd\n";
+		//std::cout << "jump pressd\n";
 
 	}
 }

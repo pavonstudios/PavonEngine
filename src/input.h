@@ -35,6 +35,7 @@ public:
 	float lastX = 400, lastY = 300;
 	float mousex, mousey;
 	bool left_button_pressed = false;
+	bool left_button_release = false;
 
 	bool move_camera = false;
 #ifdef VULKAN

@@ -11,7 +11,8 @@ public:
 	vec2 position;
 	vec2 relative_position;
 	vec2 size;
-	int relative_to = -1;	
+	int relative_to = -1;
+	vec2 saved_position;	
 
 };
 
@@ -21,6 +22,7 @@ struct Button : UIElement{
 	}
 	bool pressed = false;
 	bool released = false;
+	bool move = false;
 };
 
 
@@ -36,6 +38,7 @@ class GUI{
 		std::vector<UIElement*> elements;
 		void update_elements_mvp();
 		bool is_button_pressed(std::string name);
+		void update_elemete_position(UIElement* element);
 };
 
 #endif
