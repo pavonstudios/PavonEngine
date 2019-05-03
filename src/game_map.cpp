@@ -101,6 +101,7 @@ void MapManager::load_data_from_file(std::stringstream &file){
 
 			for(int id : skeletal_id){//assing skinned shader
 				engine->linear_meshes[id]->data_shader = data_skinned_mesh;
+				engine->linear_meshes[id]->type = MESH_TYPE_SKINNED;
 				Skeletal::load_data(engine->linear_meshes[id]);
 			}
 		#endif

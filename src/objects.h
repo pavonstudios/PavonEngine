@@ -130,6 +130,7 @@ struct UniformBufferObject {
 namespace engine{
 class EMesh {
 public:
+    int type = -1;
     EMesh();
 #ifdef VULKAN
     EMesh(vks::VulkanDevice* vulkan_device);

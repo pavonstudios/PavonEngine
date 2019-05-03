@@ -364,13 +364,15 @@ void Renderer::update_descriptor_set(EMesh* mesh){
             imageInfo.imageView = mesh->texture_image_view;
             imageInfo.sampler = textureSampler;
 
-            VkDescriptorBufferInfo node_buffer_info = {}; 
-            node_buffer_info.buffer = mesh->uniform_node_buffers[0];        
-            node_buffer_info.offset = 0;
-            node_buffer_info.range = sizeof(NodeUniform);
             
-            std::array<VkWriteDescriptorSet, 3> descriptorWrites = {};
-
+            //std::array<VkWriteDescriptorSet, 3> descriptorWrites = {};
+            std::vector<VkWriteDescriptorSet> descriptorWrites;
+            if(mesh->type == MESH_TYPE_SKINNED){
+                descriptorWrites.resize(3);
+            }else{
+                descriptorWrites.resize(2);
+            }
+            
             descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
             descriptorWrites[0].dstSet = mesh->descriptorSets[0];
             descriptorWrites[0].dstBinding = 0;
@@ -387,13 +389,21 @@ void Renderer::update_descriptor_set(EMesh* mesh){
             descriptorWrites[1].descriptorCount = 1;
             descriptorWrites[1].pImageInfo = &imageInfo;
 
-            descriptorWrites[2].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-            descriptorWrites[2].dstSet = mesh->descriptorSets[1];
-            descriptorWrites[2].dstBinding = 0;
-            descriptorWrites[2].dstArrayElement = 0;
-            descriptorWrites[2].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-            descriptorWrites[2].descriptorCount = 1;
-            descriptorWrites[2].pBufferInfo = &node_buffer_info;            
+            if(mesh->type == MESH_TYPE_SKINNED){
+                 VkDescriptorBufferInfo node_buffer_info = {}; 
+                node_buffer_info.buffer = mesh->uniform_node_buffers[0];        
+                node_buffer_info.offset = 0;
+                node_buffer_info.range = sizeof(NodeUniform);
+
+                descriptorWrites[2].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+                descriptorWrites[2].dstSet = mesh->descriptorSets[1];
+                descriptorWrites[2].dstBinding = 0;
+                descriptorWrites[2].dstArrayElement = 0;
+                descriptorWrites[2].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+                descriptorWrites[2].descriptorCount = 1;
+                descriptorWrites[2].pBufferInfo = &node_buffer_info;    
+            }
+                   
 
             vkUpdateDescriptorSets(device, static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
        
@@ -415,12 +425,18 @@ void Renderer::updateUniformBuffer(uint32_t currentImage) {
             vkUnmapMemory(device, engine->meshes[i]->uniformBuffersMemory[currentImage]);
             
 
-            //skinned
-            void* node_data;
-            vkMapMemory(device, engine->meshes[i]->uniform_node_buffer_memory[currentImage], 0, sizeof(engine->meshes[i]->node_uniform), 0, &node_data);
-                memcpy(node_data, &engine->meshes[i]->node_uniform, sizeof(engine->meshes[i]->node_uniform));
-            vkUnmapMemory(device, engine->meshes[i]->uniform_node_buffer_memory[currentImage]);
+            
+       
 
+          }
+              //skinned
+          for(EMesh* mesh : engine->meshes){
+                if(mesh->uniform_node_buffers.size() > 0){
+                    void* node_data;
+                    vkMapMemory(device, mesh->uniform_node_buffer_memory[currentImage], 0, sizeof(mesh->node_uniform), 0, &node_data);
+                    memcpy(node_data, &mesh->node_uniform, sizeof(mesh->node_uniform));
+                    vkUnmapMemory(device, mesh->uniform_node_buffer_memory[currentImage]);
+                }           
           }
  
     }
