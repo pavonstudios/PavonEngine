@@ -96,28 +96,7 @@ void Engine::init(){
 
 
 		#if defined(ES2) || defined(ANDROID)
-			pipeline_data data = {};
-
-			#ifndef ANDROID
-				//data.fragment_shader_path = assets.path("frag.glsl");
-				//data.vertex_shader_path = assets.path("vert_mvp.glsl");
-
-				data.fragment_shader_path = "Game/Assets/frag.glsl";
-				data.vertex_shader_path = "Game/Assets/vert_mvp.glsl";
-			#endif
-
-			#ifdef ANDROID
-				data.fragment_shader_path = assets.path("shaders/gles/frag_sampler.glsl");
-				data.vertex_shader_path = assets.path("vert_mvp.glsl");
-			#endif		
-
-			renderer.init_gl();   
-
-			for(EMesh* mesh : linear_meshes){
-				if(mesh->data.vertex_shader_path == ""){
-						mesh->data = data;
-				}
-			}
+			renderer.init_gl();
 			renderer.load_shaders(linear_meshes);
 			renderer.load_textures(maps.same_textures);
 			renderer.load_textures(linear_meshes);

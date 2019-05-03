@@ -164,8 +164,8 @@ public:
 
     void load_shaders(EMesh* mesh){
 
-        char* vertex_shader_src = load_shader_file(mesh->data.vertex_shader_path.c_str());
-        char* fragment_shader_src = load_shader_file(mesh->data.fragment_shader_path.c_str());
+        char* vertex_shader_src = load_shader_file(mesh->data_shader.vertex_shader_path.c_str());
+        char* fragment_shader_src = load_shader_file(mesh->data_shader.fragment_shader_path.c_str());
          
 
         GLuint vertexShader   = load_shader ( vertex_shader_src , GL_VERTEX_SHADER  );     // load vertex shader
@@ -182,8 +182,8 @@ public:
 
     void load_shaders(const std::vector<EMesh*>& meshes){
         for(EMesh* mesh : meshes){
-             char* vertex_shader_src = load_shader_file(mesh->data.vertex_shader_path.c_str());
-            char* fragment_shader_src = load_shader_file(mesh->data.fragment_shader_path.c_str());
+             char* vertex_shader_src = load_shader_file(mesh->data_shader.vertex_shader_path.c_str());
+            char* fragment_shader_src = load_shader_file(mesh->data_shader.fragment_shader_path.c_str());
             
 
             GLuint vertexShader   = load_shader ( vertex_shader_src , GL_VERTEX_SHADER  );     // load vertex shader

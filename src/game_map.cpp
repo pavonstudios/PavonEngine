@@ -90,7 +90,7 @@ void MapManager::load_data_from_file(std::stringstream &file){
 			create_mesh_with_data(data);
 		}
 
-
+		//assign shaders paths
 
 		#ifdef VULKAN
 		pipeline_data data_static_mesh = {};
@@ -124,6 +124,29 @@ void MapManager::load_data_from_file(std::stringstream &file){
 				Skeletal::load_data(engine->linear_meshes[id]);
 			}
 		#endif
+
+		pipeline_data data = {};
+
+			#ifndef ANDROID
+				//data.fragment_shader_path = assets.path("frag.glsl");
+				//data.vertex_shader_path = assets.path("vert_mvp.glsl");
+
+				data.fragment_shader_path = "Game/Assets/frag.glsl";
+				data.vertex_shader_path = "Game/Assets/vert_mvp.glsl";
+			#endif
+
+			#ifdef ANDROID
+				data.fragment_shader_path = assets.path("shaders/gles/frag_sampler.glsl");
+				data.vertex_shader_path = assets.path("vert_mvp.glsl");
+			#endif		
+
+			
+
+			for(EMesh* mesh : engine->linear_meshes){
+				if(mesh->data_shader.vertex_shader_path == ""){
+						mesh->data_shader = data;
+				}
+			}
 }
 
 void MapManager::create_mesh_with_data(struct load_data data){

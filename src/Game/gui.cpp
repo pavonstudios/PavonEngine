@@ -53,20 +53,20 @@ GUI::GUI(Engine* engine){
     #endif
     #ifdef ES2
     if(engine->loading)
-        triangle->data.fragment_shader_path = engine->assets.path("frag.glsl");
+        triangle->data_shader.fragment_shader_path = engine->assets.path("frag.glsl");
     else{
-        triangle->data.fragment_shader_path = engine->assets.path("shaders/gles/red.glsl");
+        triangle->data_shader.fragment_shader_path = engine->assets.path("shaders/gles/red.glsl");
 
     }
         
-    triangle->data.vertex_shader_path = engine->assets.path("shaders/gles/triangle_vert_shader.glsl");
+    triangle->data_shader.vertex_shader_path = engine->assets.path("shaders/gles/triangle_vert_shader.glsl");
     #endif
     #ifdef ANDROID
-    triangle->data.fragment_shader_path = engine->assets.path("shaders/gles/frag_sampler.glsl");
+    triangle->data_shader.fragment_shader_path = engine->assets.path("shaders/gles/frag_sampler.glsl");
     //data.fragment_shader_path = assets.path("shaders/gles/frag_uv_color.glsl");
 
 
-    triangle->data.vertex_shader_path = engine->assets.path("vert_mvp.glsl");
+    triangle->data_shader.vertex_shader_path = engine->assets.path("vert_mvp.glsl");
     #endif
 
     triangle->bIsGUI = true;
