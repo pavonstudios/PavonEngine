@@ -159,14 +159,15 @@ void Engine::es2_loop() {
 	#endif
 }
 
-void Engine::main_loop(){	
-		
+void Engine::main_loop(){
+
+
 	while (!window_manager.window_should_close()) {
 		window_manager.check_events();
 
-		#ifndef ANDROID
-			input.update_input(this);
-		#endif
+
+		input.update_input(this);
+
 
 		loop_data();
 
@@ -176,7 +177,7 @@ void Engine::main_loop(){
 			renderer.draw_frame();			
 		#endif
 		
-		#ifdef ES2
+		#if defined (ES2) || defined(ANDROID)
 			es2_loop();
 		#endif		
 
@@ -195,8 +196,9 @@ void Engine::main_loop(){
 	#ifdef VULKAN
 		renderer.finish();
 		//window manager clear ?
-	#endif
-	
+    #endif
+
+
 
 }
 void Engine::update_render_size(){

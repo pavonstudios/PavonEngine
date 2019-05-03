@@ -82,39 +82,20 @@
 
         int events;
         android_poll_source *pSource;
+        while(!pApp->userData){
 
-        do {
-            if (ALooper_pollAll(0, nullptr, &events, (void **) &pSource) >= 0) {
-                if (pSource) {
-                    pSource->process(pApp, pSource);
+                if (ALooper_pollAll(0, nullptr, &events, (void **) &pSource) >= 0) {
+                    if (pSource) {
+                        pSource->process(pApp, pSource);
+                    }
                 }
-            }
+        }
+        if (pApp->userData) {
+            auto *engine = reinterpret_cast<Engine *>(pApp->userData);
+            engine->init();
+            engine->main_loop();
+        }
 
-
-            if (pApp->userData) {
-                auto *pEngine = reinterpret_cast<Engine *>(pApp->userData);
-                //init gl and window
-                if(!pEngine->renderer.bReady){
-
-                    pEngine->init();
-
-                   pEngine->renderer.bReady = true;
-                }
-                if(pEngine->renderer.bReady){
-                    //pEngine->renderer.render();
-                    //pEngine->update_input();
-                    pEngine->loop_data();
-                    pEngine->es2_loop();
-                    pEngine->window_manager.swap_buffers();
-                    pEngine->tranlation_update.movements.clear();
-
-                }
-
-            }
-
-
-
-        } while (!pApp->destroyRequested);
     }
     }
 #endif

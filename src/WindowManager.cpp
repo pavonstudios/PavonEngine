@@ -262,6 +262,18 @@ void WindowManager::check_events(){
    #ifdef VULKAN
       	glfwPollEvents();
    #endif
+
+#ifdef  ANDROID
+    int events;
+    android_poll_source *pSource;
+    if (ALooper_pollAll(0, nullptr, &events, (void **) &pSource) >= 0) {
+        if (pSource) {
+            pSource->process(engine->pAndroid_app, pSource);
+        }
+    }
+#endif
+
+
 }
 
 
@@ -314,5 +326,9 @@ bool WindowManager::window_should_close(){
    #if defined(ES2)
       value = false;
    #endif
+
+#ifdef ANDROID
+    value = engine->pAndroid_app->destroyRequested;
+#endif
    return value;
 }
