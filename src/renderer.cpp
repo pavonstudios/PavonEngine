@@ -422,21 +422,16 @@ void Renderer::updateUniformBuffer(uint32_t currentImage) {
             void* data;
             vkMapMemory(device, engine->meshes[i]->uniformBuffersMemory[currentImage], 0, sizeof(engine->meshes[i]->ubo), 0, &data);
                 memcpy(data, &engine->meshes[i]->ubo, sizeof(engine->meshes[i]->ubo));
-            vkUnmapMemory(device, engine->meshes[i]->uniformBuffersMemory[currentImage]);
-            
-
-            
-       
-
+            vkUnmapMemory(device, engine->meshes[i]->uniformBuffersMemory[currentImage]);           
           }
               //skinned
-          for(EMesh* mesh : engine->meshes){
-                if(mesh->uniform_node_buffers.size() > 0){
-                    void* node_data;
-                    vkMapMemory(device, mesh->uniform_node_buffer_memory[currentImage], 0, sizeof(mesh->node_uniform), 0, &node_data);
-                    memcpy(node_data, &mesh->node_uniform, sizeof(mesh->node_uniform));
-                    vkUnmapMemory(device, mesh->uniform_node_buffer_memory[currentImage]);
-                }           
+          for(EMesh* mesh : engine->skeletal_meshes){
+                
+            void* node_data;
+            vkMapMemory(device, mesh->uniform_node_buffer_memory[currentImage], 0, sizeof(mesh->node_uniform), 0, &node_data);
+            memcpy(node_data, &mesh->node_uniform, sizeof(mesh->node_uniform));
+            vkUnmapMemory(device, mesh->uniform_node_buffer_memory[currentImage]);
+                    
           }
  
     }
