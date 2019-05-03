@@ -100,7 +100,7 @@ void MapManager::load_data_from_file(std::stringstream &file){
 			data_skinned_mesh.vertex_shader_path = "Game/Assets/shaders/skin.spv";
 
 			for(int id : skeletal_id){//assing skinned shader
-				engine->linear_meshes[id]->data = data_skinned_mesh;
+				engine->linear_meshes[id]->data_shader = data_skinned_mesh;
 				Skeletal::load_data(engine->linear_meshes[id]);
 			}
 		#endif

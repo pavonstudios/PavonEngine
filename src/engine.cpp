@@ -451,7 +451,7 @@ void Engine::load_map(std::string path){
 		data_static_mesh.vertex_shader_path = "Game/Assets/shaders/vert.spv";		
 
 		for(EMesh* mesh : linear_meshes){
-			mesh->data = data_static_mesh;
+			mesh->data_shader = data_static_mesh;
 		}
 		
 	#endif

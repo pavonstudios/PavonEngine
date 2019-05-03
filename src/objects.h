@@ -181,7 +181,7 @@ public:
     GLuint texture_id;
 #endif
     UniformBufferObject ubo;
-    pipeline_data data;
+    pipeline_data data_shader;
     glm::mat4 MVP;
     EImageData texture;
     

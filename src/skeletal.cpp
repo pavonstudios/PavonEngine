@@ -47,6 +47,10 @@ void Skeletal::update_joints_nodes(EMesh* mesh){
     size_t joints_number = skin->joints.size();
     mesh->node_uniform.joint_count = (float)joints_number;
     
+
+    mat4 model_space = mat4(1.0);
+        mat4 move = translate(model_space,vec3(0,0,2));
+
     for(int i = 0; i < skin->joints.size(); i++){
         Node* joint = skin->joints[i];
         Skeletal::update_joint_matrix(joint);
@@ -58,16 +62,15 @@ void Skeletal::update_joints_nodes(EMesh* mesh){
             joint->global_matrix;//* glm::inverse(mesh->model_matrix);// * skin->inverse_bind_matrix[i];
             //glm::inverse(bind_mat);
             rot;
-        mesh->node_uniform.joint_matrix[i] = joint_mat;
+        mesh->node_uniform.joint_matrix[i] = move;
     } 
 
-        mat4 model_space = mat4(1.0);
-        mat4 move = translate(model_space,vec3(0,0,2));
+        
         model_space = model_space * inverse(mesh->model_matrix);
         mat4 rot = rotate(mat4(1.0),radians(90.f),vec3(0,1,0));
         mat4 transform = move * rot;
         model_space = inverse(mesh->node_uniform.joint_matrix[2]) * transform;
-        //mesh->node_uniform.joint_matrix[2] = model_space;
+        mesh->node_uniform.joint_matrix[2] = move;
 }
 
 void NodeManager::update(Node* node){
