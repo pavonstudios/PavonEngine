@@ -1,48 +1,5 @@
 #include "objects.h"
 using namespace engine;
-void Skeletal::load_data(EMesh* mesh){
-    int node_count = mesh->gltf_model.nodes.size();
-    for(size_t i = 0; i < node_count;i++){
-        mesh->load_node(nullptr,i,mesh->gltf_model.nodes[i]);
-    }
-
-  
-    Skeletal::load_skin(mesh, mesh->gltf_model);
-
- 
-    NodeManager::create_nodes_index(mesh);
-
-    Node* upper_arm_node = Skeletal::node_by_name(mesh, "upper_arm");
-     Node* root = Skeletal::node_by_name(mesh, "Bone");
-    glm::mat4 move_up = glm::translate(glm::mat4(1.0),glm::vec3(0,0,2));
-     glm::mat4 rot = glm::rotate(glm::mat4(1.0),glm::radians(90.f),glm::vec3(0,1,0));
-    upper_arm_node->matrix = rot * inverse(mesh->model_matrix);
-    //root->matrix = move_up;
-
-
-     Skeletal::update_joints_nodes(mesh);
-   // mesh->node_uniform.joint_matrix[2] = glm::translate(glm::mat4(1.0),glm::vec3(0,0,2));
-
-}
-
-void Skeletal::update_joint_matrix(Node* node){
-    glm::mat4 joint_mat = glm::mat4(1.0);
-    if(node->parent){
-        joint_mat = node->parent->global_matrix * node->matrix;
-    }
-    node->global_matrix = joint_mat;
-}
-
-void NodeManager::create_nodes_index(EMesh* mesh){
-    int index = 0;
-    Skin* skin = mesh->skins[0];
-    int joint_count = skin->joints.size();
-    for(int i = 0;i<joint_count;i++){
-        Node* joint_node = skin->joints[i];
-        joint_node->bone_index = index;
-        index++;
-    }
-}
 void Skeletal::update_joints_nodes(EMesh* mesh){
     
     Skin* skin = mesh->skins[0];
@@ -72,8 +29,53 @@ void Skeletal::update_joints_nodes(EMesh* mesh){
         mat4 rot = rotate(mat4(1.0),radians(90.f),vec3(0,1,0));
         mat4 transform = move * rot;
         model_space = inverse(mesh->node_uniform.joint_matrix[2]) * transform;
-        mesh->node_uniform.joint_matrix[2] = move;
+        //mesh->node_uniform.joint_matrix[2] = move;
 }
+
+void Skeletal::load_data(EMesh* mesh){
+    int node_count = mesh->gltf_model.nodes.size();
+    for(size_t i = 0; i < node_count;i++){
+        mesh->load_node(nullptr,i,mesh->gltf_model.nodes[i]);
+    }
+
+  
+    Skeletal::load_skin(mesh, mesh->gltf_model);
+
+ 
+    NodeManager::create_nodes_index(mesh);
+
+    Node* upper_arm_node = Skeletal::node_by_name(mesh, "upper_arm");
+     Node* root = Skeletal::node_by_name(mesh, "Bone");
+    glm::mat4 move_up = glm::translate(glm::mat4(1.0),glm::vec3(0,0,2));
+     glm::mat4 rot = glm::rotate(glm::mat4(1.0),glm::radians(90.f),glm::vec3(0,1,0));
+    //upper_arm_node->matrix = rot * inverse(mesh->model_matrix);
+    //root->matrix = move_up;
+
+
+     Skeletal::update_joints_nodes(mesh);
+   // mesh->node_uniform.joint_matrix[2] = glm::translate(glm::mat4(1.0),glm::vec3(0,0,2));
+
+}
+
+void Skeletal::update_joint_matrix(Node* node){
+    glm::mat4 joint_mat = glm::mat4(1.0);
+    if(node->parent){
+        joint_mat = node->parent->global_matrix * node->matrix;
+    }
+    node->global_matrix = joint_mat;
+}
+
+void NodeManager::create_nodes_index(EMesh* mesh){
+    int index = 0;
+    Skin* skin = mesh->skins[0];
+    int joint_count = skin->joints.size();
+    for(int i = 0;i<joint_count;i++){
+        Node* joint_node = skin->joints[i];
+        joint_node->bone_index = index;
+        index++;
+    }
+}
+
 
 void NodeManager::update(Node* node){
     if(node->name != "")
