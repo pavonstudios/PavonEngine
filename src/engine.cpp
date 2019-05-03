@@ -131,10 +131,12 @@ void Engine::init(){
 #endif
 		
 		
-		EMesh* mesh = meshes[3];
+	
 
-		std::thread col_thread(Collision::update_collision,mesh,game->player->mesh);
+		std::thread col_thread(Collision::update_collision_engine,(Engine*)this);
 		col_thread.detach();
+
+		
 	
 }
 

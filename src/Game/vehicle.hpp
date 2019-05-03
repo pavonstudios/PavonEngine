@@ -12,6 +12,7 @@ class Vehicle : public ThirdPerson{
 		virtual void update();
 		void update_velocity();
 		bool gas = false;
+		Trigger* door_trigger;
 };
 
 #endif

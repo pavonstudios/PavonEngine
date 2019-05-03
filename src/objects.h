@@ -52,7 +52,14 @@ class Engine;
 using namespace glm;
 
 namespace engine{
-
+    struct Trigger{
+        bool collision = false;
+        bool positive_x = false;
+        bool negative_x = false;
+        bool positive_y = false;
+        bool negative_y = false;
+    };
+    
     struct load_data
 	{
         std::string model_path;
