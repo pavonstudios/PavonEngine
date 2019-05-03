@@ -20,9 +20,8 @@ set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -u ANativeActivity_o
 add_library(maincode
     SHARED
 
-    main.cpp
-    #opengl_renderer.cpp
-    objects.cpp
+        main.cpp
+        objects.cpp
         model_loader.cpp
         asset_manager.cpp
         engine.cpp
@@ -33,6 +32,7 @@ add_library(maincode
         input.cpp
         Game/game.cpp
         game_map.cpp
+        collision.cpp
     )
 
 
