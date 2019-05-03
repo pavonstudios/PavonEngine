@@ -1,12 +1,18 @@
 #ifndef GUI_H
 #define GUI_H
 
+#define POSITION_RELATIVE_LEFT_BOTTON 0
+#define POSITION_RELATIVE_LEFT_TOP 1
+
 struct UIElement{
 public:
 	std::string name;
 	EMesh* mesh;
 	vec2 position;
-	vec2 size;	
+	vec2 relative_position;
+	vec2 size;
+	int relative_to = -1;	
+
 };
 
 struct Button : UIElement{	

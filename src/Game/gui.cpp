@@ -72,8 +72,9 @@ GUI::GUI(Engine* engine){
     triangle->bIsGUI = true;
     this->mesh = triangle;
     Button* button = new Button(mesh);
-    button->position = vec2(600,500);
-    button->size = vec2(100,100);
+    button->relative_position = vec2(100,100);
+    button->relative_to = POSITION_RELATIVE_LEFT_BOTTON;
+    button->size = vec2(50,50);
     button->name = "jump";
     elements.push_back((UIElement*)button);
 
@@ -121,6 +122,14 @@ void GUI::update_elements_mvp(){
                                         
         mat4 image_scale = glm::scale(mat,vec3(element->size.x,element->size.y,0));
         mat4 model_mat = translate(mat,vec3(element->position.x,element->position.y,0));
+        if(element->relative_to == POSITION_RELATIVE_LEFT_BOTTON){
+            float x = element->relative_position.x;
+            float y = engine->window_manager.window_height - element->relative_position.y;
+            element->position.x = x;
+            element->position.y = y;
+            model_mat = translate(mat,vec3(x,y,0));
+        }
+       
         model_mat = model_mat * image_scale;
         mat = projection * model_mat;
         element->mesh->MVP = mat;
