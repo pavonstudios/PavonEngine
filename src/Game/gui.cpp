@@ -62,7 +62,7 @@ GUI::GUI(Engine* engine){
     triangle->data_shader.vertex_shader_path = engine->assets.path("shaders/gles/triangle_vert_shader.glsl");
     #endif
     #ifdef ANDROID
-    triangle->data_shader.fragment_shader_path = engine->assets.path("shaders/gles/frag_sampler.glsl");
+    triangle->data_shader.fragment_shader_path = engine->assets.path("shaders/gles/frag_uv_color.glsl");
     //data.fragment_shader_path = assets.path("shaders/gles/frag_uv_color.glsl");
 
 
@@ -72,7 +72,7 @@ GUI::GUI(Engine* engine){
     triangle->bIsGUI = true;
     this->mesh = triangle;
     Button* button = new Button(mesh);
-    button->relative_position = vec2(100,100);
+    button->relative_position = vec2(250,250);
     button->relative_to = POSITION_RELATIVE_LEFT_BOTTON;
     button->size = vec2(30,30);
     button->name = "jump";
@@ -117,24 +117,49 @@ void GUI::calculate_mouse_position(){
         button->pressed = false;
     }
 #endif
-    
+        
      if(engine->input.left_button_pressed){ 
         if(button->move){
             button->position.x = x;
             button->position.y = y;
             this->update_elemete_position((UIElement*)button);
 
+            float diff_x = button->saved_position.x - x;
+            float diff_y = button->saved_position.y - y;
+
+            
+            if(diff_y < 0){
+                engine->input.S.bIsPressed = true;
+            }
+            if(diff_y > 0){
+                 engine->input.W.bIsPressed = true;
+            }
+            if(diff_x < 0){
+                engine->input.D.bIsPressed = true;
+            }
+            if(diff_x > 0){
+                 engine->input.A.bIsPressed = true;
+            }
+
         }
      }
+
     if(engine->input.left_button_release){
         if(button->move){
             engine->input.left_button_release = false;
             button->move = false;
             button->position = button->saved_position;
             this->update_elemete_position((UIElement*)button);
+            engine->input.S.bIsPressed = false;
+            engine->input.W.bIsPressed = false;
+            engine->input.D.bIsPressed = false;
+            engine->input.A.bIsPressed = false;
         }
         
     }
+
+
+
 }
 void GUI::update_elemete_position(UIElement* element){
      glm::mat4 mat = glm::mat4(1.0);

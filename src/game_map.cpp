@@ -128,15 +128,12 @@ void MapManager::load_data_from_file(std::stringstream &file){
 		pipeline_data data = {};
 
 			#ifndef ANDROID
-				//data.fragment_shader_path = assets.path("frag.glsl");
-				//data.vertex_shader_path = assets.path("vert_mvp.glsl");
-
-				data.fragment_shader_path = "Game/Assets/frag.glsl";
-				data.vertex_shader_path = "Game/Assets/vert_mvp.glsl";
+				data.fragment_shader_path = engine->assets.path("frag.glsl");
+				data.vertex_shader_path = engine->assets.path("vert_mvp.glsl");			
 			#endif
 
 			#ifdef ANDROID
-				data.fragment_shader_path = engine->assets.path("shaders/gles/frag_sampler.glsl");
+				data.fragment_shader_path = engine->assets.path("shaders/gles/frag_uv_color.glsl");
 				data.vertex_shader_path = engine->assets.path("vert_mvp.glsl");
 			#endif		
 

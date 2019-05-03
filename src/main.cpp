@@ -23,7 +23,7 @@
     extern "C" {
 
     int32_t handle_input(android_app* app, AInputEvent* event) {
-        auto *pEngine = reinterpret_cast<Engine *>(app->userData);
+        auto *engine = reinterpret_cast<Engine *>(app->userData);
 
         int32_t eventType = AInputEvent_getType(event);
         switch(eventType){
@@ -33,16 +33,17 @@
                         int action = AKeyEvent_getAction(event) & AMOTION_EVENT_ACTION_MASK;
                         switch(action){
                             case AMOTION_EVENT_ACTION_DOWN:
-                                //float x =  AMotionEvent_getX(event,0);
-                                //float y = AMotionEvent_getY(event,0);
-                                //LOGW("touch in x = %f y = %f",x,y);
-                                //pEngine->input.W.bIsPressed = true;
-                                pEngine->input.input_event(event);
+                                engine->input.left_button_pressed = true;
+                                engine->input.input_event(event);
                                 break;
                             case AMOTION_EVENT_ACTION_UP:
-                                //pEngine->input.W.bIsPressed = false;
+                                engine->input.left_button_pressed = false;
+                                engine->input.left_button_release = true;
+
                                 break;
                             case AMOTION_EVENT_ACTION_MOVE:
+                                engine->input.left_button_pressed = true;
+                                engine->input.input_event(event);
                                 break;
                         }
                         break;
@@ -105,6 +106,7 @@
                     pEngine->loop_data();
                     pEngine->es2_loop();
                     pEngine->window_manager.swap_buffers();
+                    pEngine->tranlation_update.movements.clear();
 
                 }
 

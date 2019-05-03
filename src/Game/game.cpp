@@ -45,7 +45,7 @@ void Game::update(){
 	
 	if(gui->is_button_pressed("jump")){
 		#ifdef ANDROID
-			LOGW("jump");
+			//LOGW("jump");
 		#endif
 		//std::cout << "jump pressd\n";
 

@@ -32,22 +32,15 @@ void ThirdPerson::update_camera_postion(){
 	
 }
 void ThirdPerson::update(){
+
 	std::string log_position = "position " + std::to_string(mesh->location_vector.x) + " " + std::to_string(mesh->location_vector.y) + " " + std::to_string(mesh->location_vector.z);
 	//engine->print_debug(log_position,10,0);	
 
-
+	
 	if(engine->input.W.bIsPressed == true){
 		engine->translate_mesh(mesh,FORWARD,velocity);
 	}
 
-	if(engine->input.Z.bIsPressed){		
-	
-	}
-	if(engine->input.X.bIsPressed){
-		
-		//this->mesh->model_matrix = glm::rotate(mesh->model_matrix,glm::radians(-15.0f * engine->deltaTime),glm::vec3(0,0,1));
-		 		
-	}
 	if(engine->input.D.bIsPressed){
 		engine->translate_mesh(mesh,RIGTH,velocity);
 	}
@@ -59,6 +52,16 @@ void ThirdPerson::update(){
 	if(engine->input.S.bIsPressed){
 		engine->translate_mesh(mesh,BACKWARD,velocity);
 	}	
+
+	if(engine->input.Z.bIsPressed){		
+	
+	}
+	if(engine->input.X.bIsPressed){
+		
+		//this->mesh->model_matrix = glm::rotate(mesh->model_matrix,glm::radians(-15.0f * engine->deltaTime),glm::vec3(0,0,1));
+		 		
+	}
+	
 
 	update_camera_postion();
 	
