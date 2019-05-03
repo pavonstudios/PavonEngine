@@ -48,9 +48,10 @@ void ThirdPerson::update(){
 	if(engine->input.X.bIsPressed){
 		
 		//this->mesh->model_matrix = glm::rotate(mesh->model_matrix,glm::radians(-15.0f * engine->deltaTime),glm::vec3(0,0,1));
+		 
 		 mat4 model_space = mat4(1.0);
-        mat4 move = translate(model_space,vec3(0,0,2));
-		engine->skeletal_meshes[0]->node_uniform.joint_matrix[3] = move;
+        mat4 move = translate(model_space,vec3(0,0,0.01));
+		engine->skeletal_meshes[0]->node_uniform.joint_matrix[3] = engine->skeletal_meshes[0]->node_uniform.joint_matrix[3]  * move;
 	}
 	if(engine->input.D.bIsPressed){
 		engine->translate_mesh(mesh,RIGTH,velocity);

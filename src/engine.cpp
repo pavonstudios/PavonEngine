@@ -149,7 +149,7 @@ void Engine::loop_data(){
 
 		game->update();
 
-		distance_object_from_camera();
+		//distance_object_from_camera();
 
 		Objects::update_positions(this,tranlation_update);
 		
@@ -440,22 +440,6 @@ void Engine::load_map(std::string path){
 
 		}
 	}
-	
-	#ifdef VULKAN
-		pipeline_data data_static_mesh = {};
-		
-		data_static_mesh.draw_type = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
-		
-		data_static_mesh.mesh_type = MESH_TYPE_STATIC;
-		data_static_mesh.fragment_shader_path = "Game/Assets/shaders/frag.spv";
-		data_static_mesh.vertex_shader_path = "Game/Assets/shaders/vert.spv";		
-
-		for(EMesh* mesh : linear_meshes){
-			mesh->data_shader = data_static_mesh;
-		}
-		
-	#endif
-
 
 }
 
