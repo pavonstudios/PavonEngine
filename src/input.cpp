@@ -267,7 +267,7 @@ void Input::update_input(Engine* engine){
 		if(D.bIsPressed){		
 			engine->main_camera.MoveRight();	
 		}
-		
+#ifndef  ANDROID
 		if(Z.bIsPressed){
 						mat4 model_space = mat4(1.0);       
 			mat4 rot = rotate(model_space,radians(0.009f),vec3(0,0,1));
@@ -300,7 +300,7 @@ void Input::update_input(Engine* engine){
 			
 			smesh->node_uniform.joint_matrix[3] = inverse(smesh->model_matrix) * smesh->skins[0]->joints[3]->global_matrix;
 		}
-
+#endif
 		if(Q.bIsPressed){
 			engine->main_camera.MoveDown();
 		}
