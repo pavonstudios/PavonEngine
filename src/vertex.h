@@ -5,7 +5,7 @@
 #include <array>
 
 #ifndef ANDROID
-    #ifndef _OpenGL_Renderer_
+    #ifdef VULKAN
         #include <vulkan/vulkan.h>
     #else
        // #include <GL/gl.h>

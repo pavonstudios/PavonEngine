@@ -20,9 +20,9 @@ DEFINES :=
 TYPE :=
 
 .ONESHELL:
-full: DEFINES := -DVULKAN
-full: TYPE := vk
-full: renderer.o  $(OBJs) game
+vk: DEFINES := -DVULKAN
+vk: TYPE := vk
+vk: renderer.o  $(OBJs) game
 	mkdir -p bin && cd src
 	$(CC) -o ../renderer renderer.o $(OBJs) model_loader.o $(GAME) $(Library) -I./ -lvulkan $(DEFINES)
 

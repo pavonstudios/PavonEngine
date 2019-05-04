@@ -9,8 +9,8 @@
         #include "renderer.h"
         #define GLFW_INCLUDE_VULKAN
         #include "VulkanData.hpp"
+        #include <GLFW/glfw3.h>
     #endif
-    #include <GLFW/glfw3.h>
     #include <pthread.h>
 
 #else
@@ -119,13 +119,14 @@ public:
         VulkanData vkdata = {VK_NULL_HANDLE};
         vks::VulkanDevice* vulkan_device; 
         void vulkan_loop();     
-    #endif
-
+	   
         GLFWwindow* window;
         GLFWwindow* get_window_pointer()
         {
             return window;
         }    
+    #endif
+
     
 
 
