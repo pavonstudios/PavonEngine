@@ -9,7 +9,7 @@ uniform mat4 MVP;
 void main(){
 	gl_Position = MVP * vec4(position,1.0);
 	v_TexCoord = inUV;
-	color = inColor;
+	color = vec3(position.x, position.y, position.z);
 }
 
 //end

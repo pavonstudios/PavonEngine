@@ -133,8 +133,8 @@ void MapManager::load_data_from_file(std::stringstream &file){
 			#endif
 
 			#ifdef ANDROID
-				data.fragment_shader_path = engine->assets.path("shaders/gles/frag_uv_color.glsl");
-				data.vertex_shader_path = engine->assets.path("vert_mvp.glsl");
+				data.fragment_shader_path = engine->assets.path("shaders/gles/uv.glsl");
+				data.vertex_shader_path = engine->assets.path("shaders/gles/triangle_vert_shader.glsl");
 			#endif		
 
 			
