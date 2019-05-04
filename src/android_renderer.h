@@ -302,9 +302,9 @@ public:
     }
 
 void activate_vertex_attributes(EMesh* mesh){
-        #if defined(ES2) || defined(ANDROID)
-            glBindBuffer(GL_ARRAY_BUFFER,mesh->vertex_buffer);
-        #endif
+
+        glBindBuffer(GL_ARRAY_BUFFER,mesh->vertex_buffer);
+
         glVertexAttribPointer ( 0, 3, GL_FLOAT, false, sizeof(Vertex), (void*)0 );
         glEnableVertexAttribArray ( 0 ); 
 
@@ -362,7 +362,7 @@ void activate_vertex_attributes(EMesh* mesh){
         AssetManager assets;
         #ifdef ANDROID
             
-            image_size size = assets.load_bmp("police_patrol_image.pvn",app->activity->assetManager);    //TODO: load texture with android path        
+            image_size size = assets.load_bmp("textures/GUI/white_logo.jpg",app->activity->assetManager);    //TODO: load texture with android path
         #else                   
             image_size size;
             if(mesh->texture.hasTexture){
@@ -508,7 +508,9 @@ void activate_vertex_attributes(EMesh* mesh){
     }
 
     void draw_gui(EMesh* mesh){
-        
+        int samplerid = glGetUniformLocation(shaderProgram, "texture_sampler");
+        glUniform1i(samplerid, 0);
+
         glBindTexture(GL_TEXTURE_2D,mesh->texture_id);
         
         glBindBuffer(GL_ARRAY_BUFFER,mesh->vertex_buffer);
