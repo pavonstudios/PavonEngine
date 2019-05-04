@@ -253,8 +253,9 @@ public:
         AssetManager assets;
         #ifdef ANDROID
             
-            image_size size = assets.load_bmp("textures/GUI/white_logo.jpg",app->activity->assetManager);    //TODO: load texture with android path
-        #else                   
+            image_size size = assets.load_bmp("textures/GUI/white_logo.jpg",app->activity->assetManager);
+            glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,size.width,size.heigth,0,GL_RGB,GL_UNSIGNED_BYTE,size.data);
+        #else
             image_size size;
             if(mesh->texture.hasTexture){
                 size.heigth = mesh->texture.height;
@@ -267,12 +268,12 @@ public:
             }
                 
         #endif                   
-        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+        
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        //glGenerateMipmap(GL_TEXTURE_2D);
+      
    }
     void load_textures(const std::vector<EMesh*>& meshes){
         GLuint texture_id;
@@ -337,7 +338,7 @@ public:
                     
             #endif
             glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,size.width,size.heigth,0,GL_RGB,GL_UNSIGNED_BYTE,size.data);
-            glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+            //glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -364,34 +365,14 @@ public:
 
     }
 
-       void render(){                    
-
-            #ifdef ANDROID
-                glUseProgram  ( shaderProgram );
-                draw_mesh();   
-//                engine.window_manager.swap_buffers();
-            #endif
-
-    };
-
-
+   
     void update_mvp(EMesh* mesh){
                                 
                 glUniformMatrix4fv(0,1,GL_FALSE,&mesh->MVP[0][0]);
     }
 
-    void draw_mesh(){
-            //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            //glBindTexture(GL_TEXTURE_2D,textureid);
-            //int samplerid = glGetUniformLocation(shaderProgram, "texture_sampler");
-            //glUniform1i(samplerid, 0);
-            
-            
-           // glDrawElements(GL_TRIANGLES,meshes[0]->indices.size(),GL_UNSIGNED_INT,(void*)0);
-
-            glDrawArrays(GL_TRIANGLE_STRIP,0,3);
-            //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
+    void draw_mesh(){          
+            glDrawArrays(GL_TRIANGLE_STRIP,0,3);        
     }
 
     void draw_gui(EMesh* mesh){
@@ -408,14 +389,11 @@ public:
 
     void draw(EMesh* mesh){        
         
-        glBindTexture(GL_TEXTURE_2D,mesh->texture_id);
-        
-        //update_mvp(mesh);
+        glBindTexture(GL_TEXTURE_2D,mesh->texture_id);        
+ 
         glBindBuffer(GL_ARRAY_BUFFER,mesh->vertex_buffer);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,mesh->indices_buffer);
         glDrawElements(GL_TRIANGLES,mesh->indices.size(),GL_UNSIGNED_INT,(void*)0);
-        //glBindBuffer(GL_ARRAY_BUFFER,0);
-        //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,0);
 
     }
 

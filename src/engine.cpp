@@ -29,7 +29,7 @@ Engine::Engine(){
 #endif
 
 void Engine::draw_loading_screen(){
-
+	#if defined (ES2) || defined (ANDROID) 
 		glClearColor(0.0, 1.0, 0.0, 1.0);
 		glClear(GL_COLOR_BUFFER_BIT);
 		GUI* loading = new GUI(this);
@@ -44,7 +44,7 @@ void Engine::draw_loading_screen(){
 		window_manager.swap_buffers();
 		meshes.clear();
 		delete loading;
-
+	#endif
 }
 
 

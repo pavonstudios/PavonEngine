@@ -41,7 +41,7 @@ GUI::GUI(Engine* engine){
     triangle->vertices.push_back(vert4);
     
     
-    triangle->texture_path = engine->assets.path("textures/GUI/white_logo.jpg");
+    triangle->texture_path = engine->assets.path("textures/car01.jpg");
 
     #ifdef VULKAN
         triangle->data_shader.fragment_shader_path = "Game/Assets/shaders/red.spv";
@@ -59,14 +59,14 @@ GUI::GUI(Engine* engine){
 
     }
         
-    triangle->data_shader.vertex_shader_path = engine->assets.path("shaders/gles/triangle_vert_shader.glsl");
+    triangle->data_shader.vertex_shader_path = engine->assets.path("vert_mvp.glsl");
     #endif
     #ifdef ANDROID
-    triangle->data_shader.fragment_shader_path = engine->assets.path("shaders/gles/uv.glsl");
+    triangle->data_shader.fragment_shader_path = engine->assets.path("shaders/gles/frag.glsl");
     //data.fragment_shader_path = assets.path("shaders/gles/frag_uv_color.glsl");
 
 
-    triangle->data_shader.vertex_shader_path = engine->assets.path("shaders/gles/triangle_vert_shader.glsl");
+    triangle->data_shader.vertex_shader_path = engine->assets.path("vert_mvp.glsl");
     #endif
 
     triangle->bIsGUI = true;
