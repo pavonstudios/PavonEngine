@@ -8,7 +8,9 @@
 #include <thread>
 
 #include "Game/game.hpp"
+
 #include <unistd.h>
+
 
 Engine::Engine(){
 
@@ -107,6 +109,7 @@ void Engine::init(){
 #ifdef DEVELOPMENT
 	calculate_time(tStart);
 #endif
+
 		
 		
 	
@@ -161,7 +164,11 @@ void Engine::es2_loop() {
 
 void Engine::main_loop(){
 
-
+	
+	
+	gettimeofday ( &t1 , &tz );
+	
+	
 	while (!window_manager.window_should_close()) {
 		window_manager.check_events();
 
@@ -183,7 +190,7 @@ void Engine::main_loop(){
 
 		frames++;
 #ifdef DEVELOPMENT
-		calculate_fps(tStart);
+		calculate_fps(tStart);	 
 #endif
 		window_manager.swap_buffers();
 
@@ -233,17 +240,30 @@ void Engine::delete_meshes(){
 	}
 
 	void Engine::calculate_fps( std::chrono::time_point<std::chrono::system_clock> tStart){
-	auto tEnd = std::chrono::high_resolution_clock::now();
-	auto tDiff = std::chrono::duration<double, std::milli>(tEnd - tStart).count();
-	frame_time = (float)tDiff/1000.0f;
+		auto tEnd = std::chrono::high_resolution_clock::now();
+		auto tDiff = std::chrono::duration<double, std::milli>(tEnd - tStart).count();
+		frame_time = (float)tDiff/1000.0f;
 
-	fps += (float)tDiff;
-	if(fps > 1000.0f){
-		last_fps = static_cast<uint32_t>((float)frames * (1000.0f / fps));
-		fps = 0;
-		frames = 0;
-	}			
+		fps += (float)tDiff;
+		if(fps > 1000.0f){
+			last_fps = static_cast<uint32_t>((float)frames * (1000.0f / fps));
+			fps = 0;
+			frames = 0;
+		}			
 
+		if ( ++num_frames % 60 == 0 ) {
+				gettimeofday( &t2, &tz );
+				float dt  =  t2.tv_sec - t1.tv_sec + (t2.tv_usec - t1.tv_usec) * 1e-6;
+				//cout << "fps: " << num_frames / dt << endl;
+				print_debug("",0,15);
+				printf("FPS: ");
+				float fps = num_frames / dt;
+				std::cout << fps << std::endl;
+
+				num_frames = 0;
+				t1 = t2;
+			}
+		      usleep( 1000* 32);//32 limit miliseconds per frame
 	}
 	void Engine::calculate_time( std::chrono::time_point<std::chrono::system_clock> tStart){
 		auto tEnd = std::chrono::high_resolution_clock::now();

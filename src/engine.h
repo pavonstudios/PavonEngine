@@ -34,6 +34,9 @@
 class Game;
 #include "Game/gui.hpp"
 
+
+#include  <sys/time.h>
+
 using namespace engine;
 
 class Engine {
@@ -77,6 +80,9 @@ public:
     float fps = 0;
     int last_fps = 0;
     float frame_time = 0;
+    struct  timezone  tz;
+	timeval  t1, t2;
+    int  num_frames = 0;
 
     void configure_window_callback();
     void main_loop();
