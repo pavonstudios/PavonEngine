@@ -6,3 +6,4 @@ void main(){
     float z = float(15) + v_TexCoord.x;
     gl_FragColor = vec4(v_TexCoord.x,v_TexCoord.y,z,1.0);
 }
+//end

@@ -289,9 +289,9 @@ public:
 
                 AssetManager assets;
                 #ifdef ANDROID
-                    
-                    image_size size = assets.load_bmp(mesh->texture_path.c_str(),app->activity->assetManager);    //TODO: load texture with android path
-                    glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,size.width,size.heigth,0,GL_RGB,GL_UNSIGNED_BYTE,size.data);
+                    if(mesh->texture_path != "")
+                        image_size size = assets.load_bmp(mesh->texture_path.c_str(),app->activity->assetManager);
+                    //glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,size.width,size.heigth,0,GL_RGB,GL_UNSIGNED_BYTE,size.data);
                 #else
                     image_size size;
                     if(mesh->texture.hasTexture){
@@ -383,8 +383,8 @@ public:
     void draw_mesh(){
             //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             //glBindTexture(GL_TEXTURE_2D,textureid);
-            int samplerid = glGetUniformLocation(shaderProgram, "texture_sampler");
-            glUniform1i(samplerid, 0);
+            //int samplerid = glGetUniformLocation(shaderProgram, "texture_sampler");
+            //glUniform1i(samplerid, 0);
             
             
            // glDrawElements(GL_TRIANGLES,meshes[0]->indices.size(),GL_UNSIGNED_INT,(void*)0);
@@ -395,8 +395,8 @@ public:
     }
 
     void draw_gui(EMesh* mesh){
-        int samplerid = glGetUniformLocation(shaderProgram, "texture_sampler");
-        glUniform1i(samplerid, 0);
+       // int samplerid = glGetUniformLocation(shaderProgram, "texture_sampler");
+      //  glUniform1i(samplerid, 0);
 
         glBindTexture(GL_TEXTURE_2D,mesh->texture_id);
         
