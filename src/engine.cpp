@@ -255,10 +255,10 @@ void Engine::delete_meshes(){
 				gettimeofday( &t2, &tz );
 				float dt  =  t2.tv_sec - t1.tv_sec + (t2.tv_usec - t1.tv_usec) * 1e-6;
 				//cout << "fps: " << num_frames / dt << endl;
-				print_debug("",0,15);
-				printf("FPS: ");
+				//print_debug("",0,15);
+				//printf("FPS: ");
 				float fps = num_frames / dt;
-				std::cout << fps << std::endl;
+				//std::cout << fps << std::endl;
 
 				num_frames = 0;
 				t1 = t2;

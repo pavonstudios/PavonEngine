@@ -70,7 +70,11 @@ void ThirdPerson::update(){
 
 }
 void ThirdPerson::monse_control(float yaw, float pitch){
-	this->mesh->model_matrix = glm::rotate(mesh->model_matrix,glm::radians(-yaw * (2.f * engine->deltaTime)),glm::vec3(0,0,1));
+	
+	float rotation = (yaw * -5.f) * engine->deltaTime;
+	if(yaw != 0){
+		this->mesh->model_matrix = glm::rotate(mesh->model_matrix,glm::radians(rotation),glm::vec3(0,0,1));
+	}
 }
 
 void ThirdPerson::connect_to_game_server(){

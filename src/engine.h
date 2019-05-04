@@ -83,7 +83,7 @@ public:
     struct  timezone  tz;
 	timeval  t1, t2;
     int  num_frames = 0;
-    float LIMIT_FPS = 16;
+    float LIMIT_FPS = 8;
 
 
     void configure_window_callback();
