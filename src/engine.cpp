@@ -263,7 +263,10 @@ void Engine::delete_meshes(){
 				num_frames = 0;
 				t1 = t2;
 			}
-		      usleep( 1000* 32);//32 limit miliseconds per frame
+				#ifdef ANDROID
+					LIMIT_FPS = 32;
+				#endif
+		      usleep( 1000* LIMIT_FPS);
 	}
 	void Engine::calculate_time( std::chrono::time_point<std::chrono::system_clock> tStart){
 		auto tEnd = std::chrono::high_resolution_clock::now();
