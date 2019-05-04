@@ -87,6 +87,8 @@ GUI::GUI(Engine* engine){
 void GUI::calculate_mouse_position(){
     float x = engine->input.mousex;
     float y = engine->input.mousey;
+
+    
     //std::cout << x << " " << y << std::endl;
     Button* button = static_cast<Button*>(elements[0]);
     float minx = button->position.x - button->size.x;
@@ -97,6 +99,8 @@ void GUI::calculate_mouse_position(){
     button->pressed = false;
     
     if(engine->input.left_button_pressed){ 
+        engine->input.move_camera = true;
+        engine->input.mouse_movement(engine,x,y);
         if(minx <= x && maxy >= y){
             if(miny <= y && maxx >= x){
                 button->pressed = true;
@@ -108,6 +112,8 @@ void GUI::calculate_mouse_position(){
         }else{
             button->pressed = false;
         }
+    }else{
+        engine->input.move_camera = false;
     }
 #ifdef ANDROID
     if(minx <= x && maxy >= y){

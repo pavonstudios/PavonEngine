@@ -211,7 +211,7 @@ void Engine::main_loop(){
 void Engine::update_render_size(){
 	main_camera.update_projection_matrix();
    	#if defined (ES2) || (ANDROID)
-   		glViewport(0,0,main_camera.screen_width,main_camera.screen_height);
+	    glViewport(0,0,main_camera.screen_width,main_camera.screen_height);
    	#endif
 
     if(game){

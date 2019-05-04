@@ -171,14 +171,16 @@ void WindowManager::create_window(){
 
       eglQuerySurface(display, surface, EGL_HEIGHT, &h);
 
-        LOGW("windows size: %f %f",(float)w,(float)h);
+        eglMakeCurrent(display, surface, surface, context);
+      LOGW("windows size: %f %f",(float)w,(float)h);
+
 
         this->window_width = float(w);
         this->window_height = float(h);
 
         this->update_window_size();
 
-      eglMakeCurrent(display, surface, surface, context);
+
 
 	}
 	
