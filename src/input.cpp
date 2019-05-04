@@ -146,7 +146,7 @@ void Input::mouse_button_callback(GLFWwindow* window, int button, int action, in
 }
 #endif//end if define vulkan
 void Input::mouse_movement(Engine* engine, float xpos, float ypos){
-	//std::cout << "move to: "<< xpos << "," << ypos << std::endl;
+	
 	engine->input.mousex = xpos;
 	engine->input.mousey = ypos;
 
@@ -156,38 +156,42 @@ void Input::mouse_movement(Engine* engine, float xpos, float ypos){
 			engine->input.lastY = ypos;
 			engine->input.first_mouse = false;
 		}
-		std::cout << xpos << std::endl;
+	//	std::cout << xpos << std::endl;
 
 		float xoffset = xpos - engine->input.lastX ;
 
-		std::cout << xoffset << std::endl;
+//		std::cout << xoffset << std::endl;
 
 		float yoffset = engine->input.lastY - ypos; // reversed since y-coordinates range from bottom to top
 	
-		if(engine->input.lastX != xpos && engine->input.lastY != ypos ){
-
+		if(engine->edit_mode){
+				xoffset *= 0.05;
+				yoffset *= 0.05;
+				engine->input.yaw   += xoffset;
+				engine->input.pitch += yoffset;  
+		}else{
+			if(engine->input.lastX != xpos && engine->input.lastY != ypos ){	
 				engine->input.yaw   = xoffset;
 				engine->input.pitch = yoffset;  
 
-				if(engine->input.pitch > 89.0f)
-					engine->input.pitch =  89.0f;
-				if(engine->input.pitch < -89.0f)
-					engine->input.pitch = -89.0f;	
-				
-				
-		}else{
+
+			if(engine->input.pitch > 89.0f)
+				engine->input.pitch =  89.0f;
+			if(engine->input.pitch < -89.0f)
+				engine->input.pitch = -89.0f;	
+
+
+			}else{
 				engine->input.yaw   = 0;
 				engine->input.pitch = 0;  
+			}
 		}
+		
 
 		engine->input.lastX = xpos;
 		engine->input.lastY = ypos;
 
-		
-
 	
-		
-
 	}//end right click pressed
 }	
 void Input::key_verifier_pressed(char character){	
