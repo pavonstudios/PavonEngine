@@ -10,7 +10,7 @@
         android:theme="@style/AppTheme">
         <activity android:name="android.app.NativeActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:label="Engine">
+            android:label="Pavon El Juego">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="maincode" />

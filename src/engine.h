@@ -55,7 +55,8 @@ public:
     TranslationUpdate tranlation_update;
 
     Game * game;
-  
+
+    bool ready_to_game = false;
     bool loading = true;
     
     #ifdef ANDROID

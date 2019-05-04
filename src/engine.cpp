@@ -29,9 +29,9 @@ Engine::Engine(){
 #endif
 
 void Engine::draw_loading_screen(){
-	#if defined(ES2)
-		glClearColor(0.0, 0.0, 0.0, 1.0);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		glClearColor(0.0, 1.0, 0.0, 1.0);
+		glClear(GL_COLOR_BUFFER_BIT);
 		GUI* loading = new GUI(this);
 		EMesh* mesh = meshes[0];
 		renderer.load_shaders(mesh);
@@ -44,7 +44,7 @@ void Engine::draw_loading_screen(){
 		window_manager.swap_buffers();
 		meshes.clear();
 		delete loading;
-	#endif
+
 }
 
 
@@ -77,6 +77,7 @@ void Engine::init(){
 		load_map(map_path);
 		game->init();
 
+		ready_to_game = true;
 	auto tStart = std::chrono::high_resolution_clock::now();
 
 		#ifdef VULKAN
@@ -214,10 +215,13 @@ void Engine::update_render_size(){
 	    glViewport(0,0,main_camera.screen_width,main_camera.screen_height);
    	#endif
 
-    if(game){
-        if(game->gui)
-            game->gui->update_elements_mvp();
-    }
+	    if(ready_to_game){
+            if(game){
+                if(game->gui)
+                    game->gui->update_elements_mvp();
+            }
+	    }
+
 
 }
 void Engine::delete_meshes(){
@@ -433,17 +437,20 @@ void Engine::load_map(std::string path){
 		maps.load_data_from_file(file);
 
 
-	for(auto mesh : meshes){		
-		if(mesh->gltf_model.accessors[0].minValues.size() > 0){
-		mesh->box.m_vecMax.x = mesh->gltf_model.accessors[0].maxValues[0];
-		mesh->box.m_vecMax.y = mesh->gltf_model.accessors[0].maxValues[1];
-		mesh->box.m_vecMax.z = mesh->gltf_model.accessors[0].maxValues[2];
+	for(auto mesh : meshes){
 
-		mesh->box.m_vecMin.x = mesh->gltf_model.accessors[0].minValues[0];
-		mesh->box.m_vecMin.y = mesh->gltf_model.accessors[0].minValues[1];
-		mesh->box.m_vecMin.z = mesh->gltf_model.accessors[0].minValues[2];
+            if(mesh->gltf_model.accessors[0].minValues.size() > 0){
+                mesh->box.m_vecMax.x = mesh->gltf_model.accessors[0].maxValues[0];
+                mesh->box.m_vecMax.y = mesh->gltf_model.accessors[0].maxValues[1];
+                mesh->box.m_vecMax.z = mesh->gltf_model.accessors[0].maxValues[2];
 
-		}
+                mesh->box.m_vecMin.x = mesh->gltf_model.accessors[0].minValues[0];
+                mesh->box.m_vecMin.y = mesh->gltf_model.accessors[0].minValues[1];
+                mesh->box.m_vecMin.z = mesh->gltf_model.accessors[0].minValues[2];
+
+            }
+
+
 	}
 
 }
