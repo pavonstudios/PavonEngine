@@ -66,19 +66,26 @@ EMesh::~EMesh(){
 void MeshManager::create_buffers(Engine* engine, const std::vector<EMesh*>& meshes){
     for(EMesh* mesh : meshes){
         #if defined(ES2) || defined(ANDROID)
-            glGenBuffers(1,&mesh->vertex_buffer);
-            glBindBuffer(GL_ARRAY_BUFFER,mesh->vertex_buffer);
-            glBufferData(GL_ARRAY_BUFFER,mesh->vertices.size() * sizeof(Vertex),mesh->vertices.data(),GL_STATIC_DRAW);
+            if(mesh->model_id == -1){
+                glGenBuffers(1,&mesh->vertex_buffer);
+                glBindBuffer(GL_ARRAY_BUFFER,mesh->vertex_buffer);
+                glBufferData(GL_ARRAY_BUFFER,mesh->vertices.size() * sizeof(Vertex),mesh->vertices.data(),GL_STATIC_DRAW);
 
-            if(mesh->indices.size() > 0){
-                    glGenBuffers(1,&mesh->indices_buffer);
-                    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,mesh->indices_buffer);
-                    glBufferData(GL_ELEMENT_ARRAY_BUFFER,mesh->indices.size() * sizeof(unsigned int),mesh->indices.data(), GL_STATIC_DRAW);
+                if(mesh->indices.size() > 0){
+                        glGenBuffers(1,&mesh->indices_buffer);
+                        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,mesh->indices_buffer);
+                        glBufferData(GL_ELEMENT_ARRAY_BUFFER,mesh->indices.size() * sizeof(unsigned int),mesh->indices.data(), GL_STATIC_DRAW);
+
+                }
+                
+                glBindBuffer(GL_ARRAY_BUFFER,0);
+                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,0);
+            }
+            else{
+                mesh->vertex_buffer = engine->unique_meshes[0]->vertex_buffer;
+                mesh->vertex_buffer = engine->unique_meshes[0]->indices_buffer;
 
             }
-            
-            glBindBuffer(GL_ARRAY_BUFFER,0);
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,0);
 
         #endif
         #ifdef VULKAN

@@ -60,14 +60,14 @@ namespace engine{
         bool negative_y = false;
     };
     
-    struct load_data
+    struct MapDataToLoad
 	{
         std::string model_path;
         std::string texture_path;
         glm::vec3 location;
         int type;
-        int texture_id;
-
+        int texture_id = -1;
+        int model_id = -1;
 	};
 
     struct Movement{
@@ -192,6 +192,7 @@ public:
     pipeline_data data_shader;
     glm::mat4 MVP;
     EImageData texture;
+    int model_id = -1;
     
 
     std::vector<Vertex> vertices;

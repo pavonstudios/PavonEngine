@@ -84,7 +84,9 @@ void Engine::init(){
 			renderer.VulkanConfig();
 		#endif
 
+		mesh_manager.create_buffers(this,unique_meshes);
 		mesh_manager.create_buffers(this,linear_meshes);
+
 
 		#ifdef VULKAN			
 			
@@ -368,7 +370,7 @@ void Engine::load_and_assing_location(std::string path, glm::vec3 location){
 	
 }
 
-void Engine::load_and_assing_location(struct load_data data){
+void Engine::load_and_assing_location(struct MapDataToLoad data){
 	std::string path = assets.path(data.model_path);
 	vec3 location = data.location;
 
@@ -434,7 +436,7 @@ void Engine::load_map(std::string path){
 					#endif
 		}
 
-		maps.load_data_from_file(file);
+		maps.parse_map_file(file);
 
 
 	for(auto mesh : meshes){

@@ -2,20 +2,11 @@
 #include "engine.h"
 #include "Game/game.hpp"
 
-
-void MapManager::load_data_from_file(std::stringstream &file){
-
-
+void MapManager::parse_map_file(std::stringstream &file){
 		std::string line;
-		int counter = 0;
-		std::vector<int> skeletal_id;
-		int type = 0;
-
-		
-
-		std::vector<load_data> meshes_load_data;
-		
-		
+		int counter = 0;		
+		int type = 0;		
+	
 
 		while( std::getline(file,line) ) {		
 
@@ -28,17 +19,22 @@ void MapManager::load_data_from_file(std::stringstream &file){
 				std::string texture_path;
 				std::string type;
 				int mesh_type = 0;
+				MapDataToLoad data = {};
 
 				line_stream >> first_char;			
 				if(first_char == '/'){
 					break;
 				}
 				if(first_char == 'v'){
-					line_stream >> texture_path;
+					line_stream >> texture_path >> model_path;					
 					same_textures.push_back(texture_path);
+					meshes_paths.push_back(model_path);
+					data.model_path = model_path;
+					data.texture_path = texture_path;
+					unique_model_data.push_back(data);
 				}
 				if(first_char != '#' && first_char != 'v'){
-					load_data data = {};
+					
 
 					line_stream >> model_path >> location.x >> location.y >> location.z >> texture_path >> type;
 					if(type == "LOD"){
@@ -62,35 +58,99 @@ void MapManager::load_data_from_file(std::stringstream &file){
 						}
 					}
 
-					if(first_char == 'b'){
-						texture_path = same_textures[0];
-						data.texture_id = 0;
-					}else{
-						data.texture_id = -1;
-					}
+					counter++;								
 					
-					counter++;
-
-					
-					data.model_path = model_path;
-					data.texture_path = texture_path;
 					data.location = location;
 					data.type = mesh_type;
 
+					if(first_char == 'b'){
+						texture_path = same_textures[0];
+						data.texture_id = 0;
+						data.model_id = 0;
+						
+					}else{
+						data.texture_id = -1;
+						data.model_path = model_path;
+						data.texture_path = texture_path;						
+					}		
+
 					meshes_load_data.push_back(data);
-					
 				}			
 			
-			}		
-			
+			}				
 		
 		}
 
-		for(auto &data : meshes_load_data){
-			create_mesh_with_data(data);
-		}
+		create_meshes_with_map_loaded_data();
+}
+void MapManager::load_meshes_for_instance(struct MapDataToLoad &data){
+	std::string path = engine->assets.path(data.model_path);
 
-		//assign shaders paths
+	#ifdef VULKAN
+		EMesh *model = new EMesh(engine->vulkan_device);//vulkan device for create vertex buffers
+		model->texture.format = VK_FORMAT_R8G8B8A8_UNORM;			
+	#else
+		EMesh *model = new EMesh();
+    #endif
+	#ifdef ANDROID
+		engine->mesh_manager.load_mode_gltf_android(model,path.c_str(),engine->pAndroid_app->activity->assetManager);
+	#else
+		engine->mesh_manager.load_model_gltf(model, path.c_str());
+	#endif
+
+	model->name = data.model_path;
+
+	engine->unique_meshes.push_back(model);
+}
+
+void MapManager::create_mesh_with_data(struct MapDataToLoad &data){
+	std::string path;
+	bool load_vertices = true;
+	if(data.model_path != "")
+		path = engine->assets.path(data.model_path);
+	else
+	{
+		load_vertices = false;
+		data.model_path  = unique_model_data[0].model_path;
+	}
+	
+	vec3 location = data.location;
+
+	#ifdef VULKAN
+		EMesh *model = new EMesh(engine->vulkan_device);//vulkan device for create vertex buffers
+		model->texture.format = VK_FORMAT_R8G8B8A8_UNORM;			
+	#else
+		EMesh *model = new EMesh();
+    #endif
+
+	if(load_vertices){
+			#ifdef ANDROID
+				engine->mesh_manager.load_mode_gltf_android(model,path.c_str(),engine->pAndroid_app->activity->assetManager);
+			#else
+				engine->mesh_manager.load_model_gltf(model, path.c_str());
+			#endif	
+	}
+
+	model->name = data.model_path;
+
+	glm::mat4 model_matrix = glm::mat4(1.0f);
+	model_matrix = glm::translate(model_matrix, location);
+	model->location_vector = location;
+	model->model_matrix = model_matrix;
+
+	if(data.type != MESH_LOD){
+		engine->meshes.push_back(model);
+		
+	}
+	model->texture_path = engine->assets.path(data.texture_path);
+	model->texture.texture_id = data.texture_id;
+	model->model_id = data.model_id;
+	engine->linear_meshes.push_back(model);
+
+}
+
+void MapManager::assign_shader_path(){
+	//assign shaders paths
 
 		#ifdef VULKAN
 		pipeline_data data_static_mesh = {};
@@ -146,33 +206,15 @@ void MapManager::load_data_from_file(std::stringstream &file){
 			}
 }
 
-void MapManager::create_mesh_with_data(struct load_data data){
-	std::string path = engine->assets.path(data.model_path);
-	vec3 location = data.location;
-
-	#ifdef VULKAN
-		EMesh *model = new EMesh(engine->vulkan_device);//vulkan device for create vertex buffers
-		model->texture.format = VK_FORMAT_R8G8B8A8_UNORM;			
-	#else
-		EMesh *model = new EMesh();
-    #endif
-	#ifdef ANDROID
-		engine->mesh_manager.load_mode_gltf_android(model,path.c_str(),engine->pAndroid_app->activity->assetManager);
-	#else
-		engine->mesh_manager.load_model_gltf(model, path.c_str());
-	#endif
-
-	model->name = data.model_path;
-
-	glm::mat4 model_matrix = glm::mat4(1.0f);
-	model_matrix = glm::translate(model_matrix, location);
-	model->location_vector = location;
-	model->model_matrix = model_matrix;
-	if(data.type != MESH_LOD){
-		engine->meshes.push_back(model);
+void MapManager::create_meshes_with_map_loaded_data(){
 		
-	}
-	model->texture_path = engine->assets.path(data.texture_path);
-	model->texture.texture_id = data.texture_id;
-	engine->linear_meshes.push_back(model);
+		for(auto &data : unique_model_data){
+			load_meshes_for_instance(data);
+		}
+		for(auto &data : meshes_load_data){
+			create_mesh_with_data(data);
+		}
+
+		assign_shader_path();
 }
+

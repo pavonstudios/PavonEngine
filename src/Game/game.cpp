@@ -14,7 +14,7 @@ void Game::init_player(){
 			player->mesh = engine->meshes[this->player_id];
 		}		
 		
-		if(!player->mesh){
+		if(player->mesh == nullptr){
 			std::runtime_error("no player mesh pointer assigner");
 		}
 

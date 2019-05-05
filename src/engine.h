@@ -66,6 +66,7 @@ public:
 
     std::vector<EMesh*> meshes;//mesh to draw
     std::vector<EMesh*> linear_meshes;//loaded mesh 
+    std::vector<EMesh*> unique_meshes;
     std::vector<EMesh*> skeletal_meshes;//loaded mesh 
     #ifdef ES2 
     std::vector<GLuint> texture_ids;
@@ -93,7 +94,7 @@ public:
     void delete_meshes();
     void init_renderer();
     void load_and_assing_location(std::string path, glm::vec3 location);
-    void load_and_assing_location(struct load_data data);
+    void load_and_assing_location(struct MapDataToLoad data);
     void load_map(std::string path);
     float get_time();    
     void update_mvp(EMesh* mesh);
