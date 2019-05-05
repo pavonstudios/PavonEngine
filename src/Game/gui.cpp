@@ -70,6 +70,7 @@ GUI::GUI(Engine* engine){
     #endif
 
     triangle->bIsGUI = true;
+    triangle->name = "gui button";
     this->mesh = triangle;
     Button* button = new Button(mesh);
     button->relative_position = vec2(250,250);

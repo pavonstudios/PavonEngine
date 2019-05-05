@@ -163,11 +163,8 @@ void MapManager::assign_shader_path(){
 
 		for(EMesh* mesh : engine->linear_meshes){
 			mesh->data_shader = data_static_mesh;
-		}
-			
-		#endif
-
-		#ifdef VULKAN
+		}		
+	
 
 			pipeline_data data_skinned_mesh = {};
 		
@@ -187,7 +184,7 @@ void MapManager::assign_shader_path(){
 
 		pipeline_data data = {};
 
-			#ifndef ANDROID
+			#ifdef ES2				
 				data.fragment_shader_path = engine->assets.path("frag.glsl");
 				data.vertex_shader_path = engine->assets.path("vert_mvp.glsl");			
 			#endif
@@ -201,7 +198,14 @@ void MapManager::assign_shader_path(){
 
 			for(EMesh* mesh : engine->linear_meshes){
 				if(mesh->data_shader.vertex_shader_path == ""){
+					if(mesh->model_id == -1)
 						mesh->data_shader = data;
+					else
+					{
+						mesh->data_shader = data;
+						mesh->data_shader.fragment_shader_path = engine->assets.path("shaders/gles/red.glsl");
+					}
+						
 				}
 			}
 }

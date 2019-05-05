@@ -138,6 +138,7 @@ namespace engine{
 class EMesh {
 public:
     int type = -1;
+    std::string name;
     EMesh();
 #ifdef VULKAN
     EMesh(vks::VulkanDevice* vulkan_device);
@@ -151,16 +152,7 @@ public:
    
     void load_node(engine::Node *parent, uint32_t index, const tinygltf::Node &gltf_node);
     
-#ifdef GLTF
-    
-    std::string name;
-    void load_textures_gltf();
-    std::vector<Node*> nodes;
-    std::vector<Node*> linear_nodes;
-    std::vector<Skin*> skins;
-    tinygltf::Model gltf_model;
-    struct NodeUniform node_uniform;             
-#endif
+
 
 #ifdef VULKAN
     VkBuffer vertices_buffer;
@@ -183,10 +175,10 @@ public:
 #endif
 
 #if defined(ES2) || defined(ANDROID)
-    GLuint vertex_buffer;
-	GLuint indices_buffer;
-    GLuint shader_program;
-    GLuint texture_id;
+    GLuint vertex_buffer = -1;
+	GLuint indices_buffer = -1;
+    GLuint shader_program = -1;
+    GLuint texture_id = -1;
 #endif
     UniformBufferObject ubo;
     pipeline_data data_shader;
@@ -207,7 +199,18 @@ public:
 
     bool bIsGUI = false;
 
-    EMesh* lod1;
+    EMesh* lod1 = nullptr;
+
+    #ifdef GLTF
+    
+
+    void load_textures_gltf();
+    std::vector<Node*> nodes;
+    std::vector<Node*> linear_nodes;
+    std::vector<Skin*> skins;
+    tinygltf::Model gltf_model;
+    struct NodeUniform node_uniform;             
+    #endif
     
 		
 };

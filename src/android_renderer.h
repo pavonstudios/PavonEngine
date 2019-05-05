@@ -202,20 +202,20 @@ public:
 
     void load_shaders(const std::vector<EMesh*>& meshes){
         for(EMesh* mesh : meshes){
-             char* vertex_shader_src = load_shader_file(mesh->data_shader.vertex_shader_path.c_str());
+            char* vertex_shader_src = load_shader_file(mesh->data_shader.vertex_shader_path.c_str());
             char* fragment_shader_src = load_shader_file(mesh->data_shader.fragment_shader_path.c_str());
-            
-        shader_src shader;
+
+            shader_src shader;
             shader.vertex_shader_path = mesh->data_shader.vertex_shader_path;
             shader.fragment_shader_path = mesh->data_shader.fragment_shader_path;
-                shader.vertex_code = vertex_shader_src;
-                shader.fragment_code = fragment_shader_src;
+            shader.vertex_code = vertex_shader_src;
+            shader.fragment_code = fragment_shader_src;
 
 
-        GLuint vertexShader   = load_shader ( shader , GL_VERTEX_SHADER  );     // load vertex shader
-        GLuint fragmentShader = load_shader ( shader , GL_FRAGMENT_SHADER );  // load fragment shader
+            GLuint vertexShader   = load_shader ( shader , GL_VERTEX_SHADER  );     // load vertex shader
+            GLuint fragmentShader = load_shader ( shader , GL_FRAGMENT_SHADER );  // load fragment shader
 
-            
+
             mesh->shader_program = glCreateProgram ();                 // create program object
             glAttachShader ( mesh->shader_program, vertexShader );             // and attach both...
             glAttachShader ( mesh->shader_program, fragmentShader );           // ... shaders to it

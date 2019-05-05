@@ -83,7 +83,7 @@ void MeshManager::create_buffers(Engine* engine, const std::vector<EMesh*>& mesh
             }
             else{
                 mesh->vertex_buffer = engine->unique_meshes[0]->vertex_buffer;
-                mesh->vertex_buffer = engine->unique_meshes[0]->indices_buffer;
+                mesh->indices_buffer = engine->unique_meshes[0]->indices_buffer;
 
             }
 
