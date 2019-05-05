@@ -68,6 +68,8 @@ public:
     std::vector<EMesh*> linear_meshes;//loaded mesh 
     std::vector<EMesh*> unique_meshes;
     std::vector<EMesh*> skeletal_meshes;//loaded mesh 
+
+    std::vector<Model*> models_to_draw;
     #ifdef ES2 
     std::vector<GLuint> texture_ids;
     #endif

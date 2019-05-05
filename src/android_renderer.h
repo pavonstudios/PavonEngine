@@ -354,14 +354,15 @@ public:
 
         glBindBuffer(GL_ARRAY_BUFFER,mesh->vertex_buffer);
 
-        glVertexAttribPointer ( 0, 3, GL_FLOAT, false, sizeof(Vertex), (void*)0 );
         glEnableVertexAttribArray ( 0 );
-
-        glVertexAttribPointer ( 1, 3, GL_FLOAT, false, sizeof(Vertex), (void*)offsetof(Vertex,color) );
+        glVertexAttribPointer ( 0, 3, GL_FLOAT, false, sizeof(Vertex), (void*)0 );
+        
         glEnableVertexAttribArray ( 1 );
-
-        glVertexAttribPointer ( 2, 2, GL_FLOAT, false, sizeof(Vertex), (void*)offsetof(Vertex,texCoord) );
+        glVertexAttribPointer ( 1, 3, GL_FLOAT, false, sizeof(Vertex), (void*)offsetof(Vertex,color) );
+        
         glEnableVertexAttribArray ( 2 );
+        glVertexAttribPointer ( 2, 2, GL_FLOAT, false, sizeof(Vertex), (void*)offsetof(Vertex,texCoord) );
+        
 
     }
 

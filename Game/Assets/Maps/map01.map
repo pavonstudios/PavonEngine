@@ -1,8 +1,6 @@
 
 v textures/car01.jpg models/pavon_the_game/police_patrol.gltf
-b sasdf 0 0 0 asdfs 
 
-/
 a models/cube_collision.gltf -3 5 0 textures/car01.jpg
 m models/cube_collision.gltf 3 2 0 textures/character2.jpg 
 

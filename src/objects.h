@@ -172,7 +172,9 @@ public:
 
     VkDeviceMemory vertexBufferMemory;
     VkDeviceMemory indexBufferMemory;
-    VkDeviceMemory textureImageMemory;   
+    VkDeviceMemory textureImageMemory;
+
+    UniformBufferObject ubo;   
 #endif
 
 #if defined(ES2) || defined(ANDROID)
@@ -181,7 +183,7 @@ public:
     GLuint shader_program = -1;
     GLuint texture_id = -1;
 #endif
-    UniformBufferObject ubo;
+   
     pipeline_data data_shader;
     glm::mat4 MVP;
     EImageData texture;
@@ -202,8 +204,7 @@ public:
 
     EMesh* lod1 = nullptr;
 
-    #ifdef GLTF
-    
+    #ifdef GLTF   
 
     void load_textures_gltf();
     std::vector<Node*> nodes;
@@ -221,6 +222,13 @@ struct TranslationUpdate{
         std::vector<Movement> movements;
 };
 
+struct Model{
+    EMesh* mesh;
+    #if defined(ES2) || defined(ANDROID)   
+    GLuint shader_program = -1;
+    GLuint texture_id = -1;
+    #endif
+};
 
 struct Node{
         Node *parent;

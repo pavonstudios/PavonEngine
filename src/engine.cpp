@@ -99,12 +99,12 @@ void Engine::init(){
 				
 		#endif
 
-
+	
 		#if defined(ES2) || defined(ANDROID)
 			renderer.init_gl();
 			renderer.load_shaders(linear_meshes);
-			//renderer.load_textures(maps.same_textures);
-			//renderer.load_textures(linear_meshes);	
+			renderer.load_textures(maps.same_textures);
+			renderer.load_textures(linear_meshes);	
 			
 				//edit_mode = true;
     	#endif
@@ -144,6 +144,7 @@ void Engine::es2_loop() {
 
 	#if defined(ES2) || defined(ANDROID)
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	
 		for(EMesh* mesh : meshes){
 			
 			glUseProgram  ( mesh->shader_program );
@@ -162,6 +163,15 @@ void Engine::es2_loop() {
 
 			}
 		}
+
+		for(Model* model : models_to_draw){
+			glUseProgram  ( model->shader_program );
+			renderer.activate_vertex_attributes(model->mesh);
+			update_mvp(model->mesh);
+			renderer.draw(model->mesh);
+		}			
+		
+				
 	#endif
 }
 
