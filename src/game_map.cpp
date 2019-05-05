@@ -153,17 +153,17 @@ void MapManager::assign_shader_path(){
 	//assign shaders paths
 
 		#ifdef VULKAN
-		pipeline_data data_static_mesh = {};
-		
-		data_static_mesh.draw_type = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
-		
-		data_static_mesh.mesh_type = MESH_TYPE_STATIC;
-		data_static_mesh.fragment_shader_path = "Game/Assets/shaders/frag.spv";
-		data_static_mesh.vertex_shader_path = "Game/Assets/shaders/vert.spv";		
+			pipeline_data data_static_mesh = {};
+			
+			data_static_mesh.draw_type = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+			
+			data_static_mesh.mesh_type = MESH_TYPE_STATIC;
+			data_static_mesh.fragment_shader_path = "Game/Assets/shaders/frag.spv";
+			data_static_mesh.vertex_shader_path = "Game/Assets/shaders/vert.spv";		
 
-		for(EMesh* mesh : engine->linear_meshes){
-			mesh->data_shader = data_static_mesh;
-		}		
+			for(EMesh* mesh : engine->linear_meshes){
+				mesh->data_shader = data_static_mesh;
+			}		
 	
 
 			pipeline_data data_skinned_mesh = {};
@@ -180,6 +180,7 @@ void MapManager::assign_shader_path(){
 				engine->skeletal_meshes.push_back(engine->linear_meshes[id]);
 				Skeletal::load_data(engine->linear_meshes[id]);
 			}
+			
 		#endif
 
 		pipeline_data data = {};

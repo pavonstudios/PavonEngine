@@ -126,13 +126,15 @@ void Collision::update_collision_engine(const Engine* engine){
 
 		EMesh* cube = engine->meshes[0];
 		while(1){
-			
-				if(Collision::collision_of(vehicle,player)){
+				if(player){
+					if(Collision::collision_of(vehicle,player)){
 					std::cout << "collision\n";
-				} 
-				if(Collision::trigger_on(cube,player)){
-					std::cout << "triiger\n";
-				} 
+					} 
+					if(Collision::trigger_on(cube,player)){
+						std::cout << "triiger\n";
+					} 
+				}
+				
 			
 		}
 		std::cout << "finish thread\n";

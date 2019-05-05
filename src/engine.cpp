@@ -103,8 +103,8 @@ void Engine::init(){
 		#if defined(ES2) || defined(ANDROID)
 			renderer.init_gl();
 			renderer.load_shaders(linear_meshes);
-			renderer.load_textures(maps.same_textures);
-			renderer.load_textures(linear_meshes);	
+			//renderer.load_textures(maps.same_textures);
+			//renderer.load_textures(linear_meshes);	
 			
 				//edit_mode = true;
     	#endif
@@ -200,17 +200,15 @@ void Engine::main_loop(){
 		tranlation_update.movements.clear();
 		
 		
-	}
-	
+	}	
 	delete game;
 	#ifdef VULKAN
 		renderer.finish();
 		//window manager clear ?
     #endif
-
-
-
+	
 }
+
 void Engine::update_render_size(){
 	main_camera.update_projection_matrix();
    	#if defined (ES2) || (ANDROID)

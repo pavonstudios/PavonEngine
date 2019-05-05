@@ -138,6 +138,7 @@ namespace engine{
 class EMesh {
 public:
     int type = -1;
+    int model_id = -1;
     std::string name;
     EMesh();
 #ifdef VULKAN
@@ -184,7 +185,7 @@ public:
     pipeline_data data_shader;
     glm::mat4 MVP;
     EImageData texture;
-    int model_id = -1;
+    
     
 
     std::vector<Vertex> vertices;
