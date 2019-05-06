@@ -114,7 +114,9 @@ void GUI::calculate_mouse_position(){
             button->pressed = false;
         }
     }else{
+        #if defined(ES2) || defined (ANDROID)
         engine->input.move_camera = false;
+        #endif
     }
 #ifdef ANDROID
     if(minx <= x && maxy >= y){

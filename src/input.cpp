@@ -5,13 +5,19 @@
 
 #ifdef VULKAN
 void Input::scroll_callback(GLFWwindow* window, double xoffset, double yoffset){
-			#ifdef VULKAN
-	  			auto engine = reinterpret_cast<Engine*>(glfwGetWindowUserPointer(window));
+		
+	  	auto engine = reinterpret_cast<Engine*>(glfwGetWindowUserPointer(window));
 			
 			if(engine){
-				engine->main_camera.velocity += yoffset;
+				float velocity = engine->main_camera.velocity;
+				float value = yoffset;
+				if(velocity <= 0.3){	
+						value -= 0.5;
+				}
+				engine->main_camera.velocity += value;
 			}
-			#endif
+
+			
 }
 
 void Input::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods){
@@ -26,13 +32,6 @@ void Input::key_callback(GLFWwindow* window, int key, int scancode, int action, 
 				if(action == GLFW_RELEASE){
 					engine->input.TAB.bIsPressed = false;
 					engine->input.TAB.Released = true;
-					/* if(!engine->edit_mode)
-						engine->edit_mode = true;
-					else
-					{
-						engine->edit_mode = false;
-					} */
-					
 				}
 			}
 			if(key == GLFW_KEY_S){
@@ -156,11 +155,8 @@ void Input::mouse_movement(Engine* engine, float xpos, float ypos){
 			engine->input.lastY = ypos;
 			engine->input.first_mouse = false;
 		}
-	//	std::cout << xpos << std::endl;
 
 		float xoffset = xpos - engine->input.lastX ;
-
-//		std::cout << xoffset << std::endl;
 
 		float yoffset = engine->input.lastY - ypos; // reversed since y-coordinates range from bottom to top
 	
@@ -288,7 +284,7 @@ void Input::update_input(Engine* engine){
 #ifndef  ANDROID
 		if(Z.bIsPressed){
 						mat4 model_space = mat4(1.0);       
-			mat4 rot = rotate(model_space,radians(0.009f),vec3(0,0,1));
+			mat4 rot = rotate(model_space,radians(0.09f),vec3(0,0,1));
 			EMesh* smesh = engine->skeletal_meshes[0];
 
 				Node* joint = smesh->skins[0]->joints[2];
@@ -304,7 +300,7 @@ void Input::update_input(Engine* engine){
 		}
 		if(X.bIsPressed){	
 						mat4 model_space = mat4(1.0);       
-			mat4 rot = rotate(model_space,radians(-0.009f),vec3(0,0,1));
+			mat4 rot = rotate(model_space,radians(-0.09f),vec3(0,0,1));
 			EMesh* smesh = engine->skeletal_meshes[0];
 
 				Node* joint = smesh->skins[0]->joints[2];
