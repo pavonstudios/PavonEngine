@@ -213,44 +213,6 @@ void EMesh::load_textures_gltf(){
     
 }
 
-void EMesh::load_node(engine::Node *parent, uint32_t index, const tinygltf::Node &gltf_node){
-    Node *new_node = new Node{};
-    new_node->parent = parent;
-    new_node->matrix = glm::mat4(1.0f);
-    new_node->skin_index = gltf_node.skin;
-    new_node->index = index;
-    new_node->name = gltf_node.name;
-    
-    //some nodes do not contain transform information
-    if(gltf_node.translation.size() == 3)
-        new_node->Translation = glm::make_vec3(gltf_node.translation.data());
-
-    if(gltf_node.rotation.size() == 4)
-        new_node->Rotation = glm::make_quat(gltf_node.rotation.data());
-
-    if(gltf_node.matrix.size() == 16)
-        new_node->matrix = glm::make_mat4x4(gltf_node.matrix.data());
-
-    int children_count = gltf_node.children.size();
-
-    if( children_count > 0){
-        for(size_t i = 0;i < children_count ;i++){
-            //load_node(new_node,gltf_node.children[i],gltf_model.nodes[gltf_node.children[i]]);
-            nodes[gltf_node.children[i]]->parent = new_node;
-        }
-        
-    }
-    if(gltf_node.mesh > -1){
-        new_node->mesh = this;
-    }
-    if(parent){
-        parent->children.push_back(new_node);       
-    }else{
-         nodes.push_back(new_node);
-    }
-
-    linear_nodes.push_back(new_node);
-}
 #ifdef ANDROID
 int MeshManager::load_mode_gltf_android(EMesh* mesh, const char* path, AAssetManager* assetManager){
         
@@ -423,3 +385,5 @@ void Objects::translate(Engine* engine, EMesh* mesh, Movement& movement){
     engine->tranlation_update.meshes.push_back(mesh);
     engine->tranlation_update.movements.push_back(movement);
 }
+
+

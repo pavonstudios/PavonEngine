@@ -147,13 +147,7 @@ public:
     void init(vks::VulkanDevice* vulkan_device);
 #endif
     ~EMesh();
-    void clean_object();        
-
-    //skeletal
-   
-    void load_node(engine::Node *parent, uint32_t index, const tinygltf::Node &gltf_node);
-    
-
+    void clean_object();
 
 #ifdef VULKAN
     VkBuffer vertices_buffer;

@@ -35,7 +35,13 @@ void Skeletal::update_joints_nodes(EMesh* mesh){
 void Skeletal::load_data(EMesh* mesh){
     int node_count = mesh->gltf_model.nodes.size();
     for(size_t i = 0; i < node_count;i++){
-        mesh->load_node(nullptr,i,mesh->gltf_model.nodes[i]);
+        //mesh->load_node(nullptr,i,mesh->gltf_model.nodes[i]);
+        node_load_data load_data = {};
+        load_data.gltf_model = &mesh->gltf_model;
+        load_data.gltf_node = &mesh->gltf_model.nodes[i];
+        load_data.index = i;
+        load_data.parent = nullptr;
+        Skeletal::load_node(mesh,load_data);
     }
 
   
@@ -238,8 +244,8 @@ Node* Skeletal::node_by_name(EMesh* mesh, const char* name ){
     return node_found;
 }
 
-
-void Skeletal::load_node(EMesh* mesh, node_load_data& node_data) {
+ void Skeletal::load_node(EMesh* mesh, node_load_data& node_data){
+     
     Node *new_node = new Node{};
     new_node->parent = node_data.parent;
     new_node->matrix = glm::mat4(1.0f);
@@ -258,14 +264,21 @@ void Skeletal::load_node(EMesh* mesh, node_load_data& node_data) {
         new_node->matrix = glm::make_mat4x4(node_data.gltf_node->matrix.data());
 
     int children_count = node_data.gltf_node->children.size();
-   
 
     if( children_count > 0){
         for(size_t i = 0;i < children_count ;i++){
-            //load_node(new_node,gltf_node.children[i],gltf_model.nodes[gltf_node.children[i]]);
+            mesh->nodes[node_data.gltf_node->children[i]]->parent = new_node;
         }
+        
     }
     if(node_data.gltf_node->mesh > -1){
         new_node->mesh = mesh;
     }
-}
+    if(node_data.parent){
+        node_data.parent->children.push_back(new_node);       
+    }else{
+         mesh->nodes.push_back(new_node);
+    }
+
+    mesh->linear_nodes.push_back(new_node);
+ }
