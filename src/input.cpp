@@ -187,6 +187,10 @@ void Input::mouse_movement(Engine* engine, float xpos, float ypos){
 		engine->input.lastX = xpos;
 		engine->input.lastY = ypos;
 
+		#ifdef ES2
+
+		#endif
+
 	
 	}//end right click pressed
 }	
@@ -232,6 +236,12 @@ void Input::key_set(const char key, bool isPressed){
 	if(key == 'x'){
 		actual_key = &this->X;
 	}
+	if(key == 'c'){
+		actual_key = &this->C;
+	}
+	if(key == 'v'){
+		actual_key = &this->V;
+	}
 
 	if(actual_key){
 		if(isPressed){
@@ -273,39 +283,49 @@ void Input::update_input(Engine* engine){
 			engine->main_camera.MoveRight();	
 		}
 #ifndef  ANDROID
+	float rotation_velocity = 0.2f;
 		if(Z.bIsPressed){
-						mat4 model_space = mat4(1.0);       
-			mat4 rot = rotate(model_space,radians(0.09f),vec3(0,0,1));
+			mat4 model_space = mat4(1.0);       
+			mat4 rot = rotate(model_space,radians(rotation_velocity),vec3(0,0,1));
 			EMesh* smesh = engine->skeletal_meshes[0];
 
-				Node* joint = smesh->skins[0]->joints[2];
+			Node* joint = smesh->skins[0]->joints[2];
 			joint->matrix = translate(joint->matrix,vec3(0,0,0.0000)) * rot;
-					Skeletal::update_joint_matrix(joint);
-			
+			Skeletal::update_joint_matrix(joint);
+
 			smesh->node_uniform.joint_matrix[2] = inverse(smesh->model_matrix) * smesh->skins[0]->joints[2]->global_matrix;
-				Node* joint2 = smesh->skins[0]->joints[3];
-			
-					Skeletal::update_joint_matrix(joint2);
-			
+			Node* joint2 = smesh->skins[0]->joints[3];
+
+			Skeletal::update_joint_matrix(joint2);
+
 			smesh->node_uniform.joint_matrix[3] = inverse(smesh->model_matrix) * smesh->skins[0]->joints[3]->global_matrix;
 		}
 		if(X.bIsPressed){	
-						mat4 model_space = mat4(1.0);       
-			mat4 rot = rotate(model_space,radians(-0.09f),vec3(0,0,1));
+			mat4 model_space = mat4(1.0);       
+			mat4 rot = rotate(model_space,radians(-rotation_velocity),vec3(0,0,1));
 			EMesh* smesh = engine->skeletal_meshes[0];
 
-				Node* joint = smesh->skins[0]->joints[2];
+			Node* joint = smesh->skins[0]->joints[2];
 			joint->matrix = translate(joint->matrix,vec3(0,0,0.0000)) * rot;
-					Skeletal::update_joint_matrix(joint);
-			
+			Skeletal::update_joint_matrix(joint);
+
 			smesh->node_uniform.joint_matrix[2] = inverse(smesh->model_matrix) * smesh->skins[0]->joints[2]->global_matrix;
-				Node* joint2 = smesh->skins[0]->joints[3];
-			
-					Skeletal::update_joint_matrix(joint2);
-			
+			Node* joint2 = smesh->skins[0]->joints[3];
+
+			Skeletal::update_joint_matrix(joint2);
+
 			smesh->node_uniform.joint_matrix[3] = inverse(smesh->model_matrix) * smesh->skins[0]->joints[3]->global_matrix;
 		}
 #endif
+		if(C.bIsPressed){
+			this->pitch += 0.4;
+			engine->main_camera.mouse_control_update(yaw, pitch);
+		}
+		if(V.bIsPressed){
+			this->pitch -= 0.4;
+			engine->main_camera.mouse_control_update(yaw, pitch);
+		}
+
 		if(Q.bIsPressed){
 			engine->main_camera.MoveDown();
 		}

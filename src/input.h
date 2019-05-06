@@ -23,6 +23,8 @@ public:
 	key_pressed Z;
 	key_pressed W = {false, false};
 	key_pressed S;
+	key_pressed C;
+	key_pressed V;
 	key_pressed TAB;
 
 	float pitch = 0;
