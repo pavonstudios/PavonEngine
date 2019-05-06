@@ -255,6 +255,7 @@ class MeshManager{
     public:
     #ifdef VULKAN
         vks::VulkanDevice* vulkan_device;
+        void clean_pipeline_from_meshes(std::vector<EMesh*> meshes);
     #endif
         int load_model_gltf(EMesh* mesh, const char* path);
         void load_primitives_data(EMesh* mesh, tinygltf::Model & gltf_model);

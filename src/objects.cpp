@@ -246,7 +246,14 @@ void EMesh::clean_object(){
        
     #endif
 }
+#ifdef VULKAN
+void MeshManager::clean_pipeline_from_meshes(std::vector<EMesh*> meshes){
+    for(EMesh* mesh : meshes){
+        vkDestroyPipeline(vulkan_device->logicalDevice,mesh->graphics_pipeline,nullptr);  
 
+    }
+}
+#endif
 
 
 int MeshManager::load_model_gltf(EMesh* mesh, const char* path){    
