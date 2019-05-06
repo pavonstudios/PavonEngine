@@ -186,8 +186,8 @@ void MapManager::assign_shader_path(){
 		pipeline_data data = {};
 
 			#ifdef ES2				
-				data.fragment_shader_path = engine->assets.path("frag.glsl");
-				data.vertex_shader_path = engine->assets.path("vert_mvp.glsl");			
+				data.fragment_shader_path = engine->assets.path("shaders/gles/frag.glsl");
+				data.vertex_shader_path = engine->assets.path("shaders/gles/vert_mvp.glsl");			
 			#endif
 
 			#ifdef ANDROID
