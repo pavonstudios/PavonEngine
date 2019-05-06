@@ -198,7 +198,11 @@ void Input::key_verifier_pressed(char character){
 void Input::key_verifier_released(char character){	
 	key_set(character,false);
 }
+void Input::key_code_verifier_pressed(int key_code){
+	//printf( "KeyPress: %x\n", key_code );
+		key_pressed *actual_key;
 
+}
 void Input::key_set(const char key, bool isPressed){
 	key_pressed *actual_key;
 	if(key == 'w'){
@@ -220,8 +224,7 @@ void Input::key_set(const char key, bool isPressed){
 		actual_key = &this->E;
 	}
 	if(key == 'p'){
-		actual_key = &this->TAB;
-		std::cout << "ptab\n";
+		actual_key = &this->TAB;	
 	}
 	if(key == 'z'){
 		actual_key = &this->Z;
@@ -235,36 +238,23 @@ void Input::key_set(const char key, bool isPressed){
 		actual_key->bIsPressed = true;
 		}else{
 			actual_key->bIsPressed = false;
+			actual_key->Released = true;
 		}
 	}
 }
 #endif
 void Input::update_input(Engine* engine){
+
+
 	if(TAB.Released){
-		if(!engine->edit_mode)
-			engine->edit_mode = true;
-		else
-		{
+		if(!engine->edit_mode){
+				engine->edit_mode = true;				
+		}else{
 			engine->edit_mode = false;
 		}
-		TAB.Released = false;
-#ifdef DEVELOPMENT
-		engine->print_debug("tab pressed or released",0,0);
-#endif
+		this->TAB.Released = false;
 	}
 
-	#ifdef ES2
-	if(TAB.bIsPressed){
-		if(engine->edit_mode){
-			
-		}
-			//engine->edit_mode = false;
-		else{
-				engine->edit_mode = true;
-				std::cout << "edidt mode \n";
-		}
-	}
-	#endif
 
 	if(engine->edit_mode){
 		if(S.bIsPressed){

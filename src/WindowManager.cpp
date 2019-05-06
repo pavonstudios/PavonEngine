@@ -197,7 +197,7 @@ void WindowManager::check_events(){
          XNextEvent( x_display, &xev );
 
          if ( xev.type == KeyPress ){
-            //std::cout << "key pressed \n";
+           //  printf( "KeyPress: %x\n", xev.xkey.keycode );
          } 
          if (xev.type == KeyRelease){
          // std::cout << "key realease from window manager \n";
@@ -221,7 +221,11 @@ void WindowManager::check_events(){
                if (text[0]=='q') {
                   
                }
-               engine->input.key_verifier_pressed(text[0]);
+               if(text[0] == '\t')
+                   engine->input.key_code_verifier_pressed(xev.xkey.keycode);
+               else
+                  engine->input.key_verifier_pressed(text[0]);
+                 
 
             }
          if (xev.type==KeyRelease &&
@@ -231,9 +235,6 @@ void WindowManager::check_events(){
             }
 
          if ( xev.type == MotionNotify ) {  // if mouse has moved
-
-            //cout << "move to: "<< xev.xmotion.x << "," << xev.xmotion.y << endl;
-            //engine->input.move_camera = true;
             engine->input.mouse_movement(engine,xev.xmotion.x,xev.xmotion.y);
          }
          

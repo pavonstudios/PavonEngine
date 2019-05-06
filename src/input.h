@@ -45,6 +45,7 @@ public:
     static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 #endif
 #ifdef ES2
+	void key_code_verifier_pressed(int key_code);
 	void key_verifier_pressed(char character);
 
 	void key_verifier_released(char character);
