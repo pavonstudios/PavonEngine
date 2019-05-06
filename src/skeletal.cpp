@@ -35,7 +35,6 @@ void Skeletal::update_joints_nodes(EMesh* mesh){
 void Skeletal::load_data(EMesh* mesh){
     int node_count = mesh->gltf_model.nodes.size();
     for(size_t i = 0; i < node_count;i++){
-        //mesh->load_node(nullptr,i,mesh->gltf_model.nodes[i]);
         node_load_data load_data = {};
         load_data.gltf_model = &mesh->gltf_model;
         load_data.gltf_node = &mesh->gltf_model.nodes[i];
@@ -48,7 +47,7 @@ void Skeletal::load_data(EMesh* mesh){
     Skeletal::load_skin(mesh, mesh->gltf_model);
 
  
-    NodeManager::create_nodes_index(mesh);
+    //NodeManager::create_nodes_index(mesh);
 
     Node* upper_arm_node = Skeletal::node_by_name(mesh, "upper_arm");
      Node* root = Skeletal::node_by_name(mesh, "Bone");

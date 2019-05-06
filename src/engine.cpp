@@ -43,6 +43,7 @@ void Engine::draw_loading_screen(){
 		renderer.draw_gui(mesh);
 		window_manager.swap_buffers();
 		meshes.clear();
+		linear_meshes.clear();
 		delete loading;
 	#endif
 }

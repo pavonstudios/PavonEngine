@@ -166,20 +166,7 @@ void MapManager::assign_shader_path(){
 			}		
 	
 
-			pipeline_data data_skinned_mesh = {};
-		
-			data_skinned_mesh.draw_type = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 			
-			data_skinned_mesh.mesh_type = MESH_TYPE_SKINNED;
-			data_skinned_mesh.fragment_shader_path = "Game/Assets/shaders/frag.spv";
-			data_skinned_mesh.vertex_shader_path = "Game/Assets/shaders/skin.spv";
-
-			for(int id : skeletal_id){//assing skinned shader
-				engine->linear_meshes[id]->data_shader = data_skinned_mesh;
-				engine->linear_meshes[id]->type = MESH_TYPE_SKINNED;
-				engine->skeletal_meshes.push_back(engine->linear_meshes[id]);
-				Skeletal::load_data(engine->linear_meshes[id]);
-			}
 			
 		#endif
 
@@ -209,6 +196,27 @@ void MapManager::assign_shader_path(){
 						
 				}
 			}
+
+			pipeline_data data_skinned_mesh = {};
+			#ifdef VULKAN		
+			data_skinned_mesh.draw_type = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+			data_skinned_mesh.fragment_shader_path = "Game/Assets/shaders/frag.spv";
+			data_skinned_mesh.vertex_shader_path = "Game/Assets/shaders/skin.spv";
+			#endif
+			#ifdef ES2
+			data_skinned_mesh.fragment_shader_path = engine->assets.path("shaders/gles/blue.glsl");
+			data_skinned_mesh.vertex_shader_path = engine->assets.path("shaders/gles/vert_mvp.glsl");
+			#endif
+
+			data_skinned_mesh.mesh_type = MESH_TYPE_SKINNED;	
+
+			for(int id : skeletal_id){//assing skinned shader
+				engine->linear_meshes[id]->data_shader = data_skinned_mesh;
+				engine->linear_meshes[id]->type = MESH_TYPE_SKINNED;
+				engine->skeletal_meshes.push_back(engine->linear_meshes[id]);
+				Skeletal::load_data(engine->linear_meshes[id]);
+			}
+			
 }
 
 void MapManager::create_meshes_with_map_loaded_data(){

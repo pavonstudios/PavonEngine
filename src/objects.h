@@ -134,7 +134,11 @@ struct UniformBufferObject {
 
 
 
+
 namespace engine{
+
+struct SkeletalMesh;
+
 class EMesh {
 public:
     int type = -1;
@@ -200,12 +204,17 @@ public:
 
     #ifdef GLTF   
 
-    void load_textures_gltf();
+    SkeletalMesh* skeletal = nullptr;
+
     std::vector<Node*> nodes;
     std::vector<Node*> linear_nodes;
     std::vector<Skin*> skins;
+    struct NodeUniform node_uniform;  
+
+
+     void load_textures_gltf();
     tinygltf::Model gltf_model;
-    struct NodeUniform node_uniform;             
+               
     #endif
     
 		
@@ -225,18 +234,18 @@ struct Model{
 };
 
 struct Node{
-        Node *parent;
-        uint32_t index;
-        glm::vec3 Translation{};
-        glm::quat Rotation{};
-        glm::mat4 matrix;
-        std::vector<Node*> children;
-        EMesh* mesh;
-        Skin* skin;
-        int32_t skin_index = -1;
-        std::string name;   
-        uint32_t bone_index;   
-        glm::mat4 global_matrix = glm::mat4(1.0); 
+    Node *parent;
+    uint32_t index;
+    glm::vec3 Translation{};
+    glm::quat Rotation{};
+    glm::mat4 matrix;
+    std::vector<Node*> children;
+    EMesh* mesh;
+    Skin* skin;
+    int32_t skin_index = -1;
+    std::string name;   
+    uint32_t bone_index;   
+    glm::mat4 global_matrix = glm::mat4(1.0); 
     
 };
 struct node_load_data{
@@ -249,6 +258,8 @@ struct node_load_data{
 struct SkeletalMesh{
     std::vector<Node*> nodes;
     std::vector<Node*> linear_nodes;
+    Skin* skin;
+    struct NodeUniform node_uniform;
 };
 
 class MeshManager{
