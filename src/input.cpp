@@ -190,6 +190,7 @@ void Input::mouse_movement(Engine* engine, float xpos, float ypos){
 	
 	}//end right click pressed
 }	
+#ifdef ES2
 void Input::key_verifier_pressed(char character){	
 	key_set(character,true);
 }
@@ -237,7 +238,7 @@ void Input::key_set(const char key, bool isPressed){
 		}
 	}
 }
-
+#endif
 void Input::update_input(Engine* engine){
 	if(TAB.Released){
 		if(!engine->edit_mode)
