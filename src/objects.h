@@ -122,7 +122,7 @@ namespace engine{
     struct NodeUniform{
         alignas(16) glm::mat4 matrix;
         alignas(16) glm::mat4 joint_matrix[5];
-        float joint_count;;
+        float joint_count;
     };
    
 }
@@ -170,9 +170,7 @@ public:
 
     VkDeviceMemory vertexBufferMemory;
     VkDeviceMemory indexBufferMemory;
-    VkDeviceMemory textureImageMemory;
-
-    UniformBufferObject ubo;   
+    VkDeviceMemory textureImageMemory;      
 #endif
 
 #if defined(ES2) || defined(ANDROID)
@@ -181,7 +179,8 @@ public:
     GLuint shader_program = -1;
     GLuint texture_id = -1;
 #endif
-   
+
+    UniformBufferObject ubo; 
     pipeline_data data_shader;
     glm::mat4 MVP;
     EImageData texture;

@@ -68,7 +68,7 @@ GUI::GUI(Engine* engine){
 
     triangle->data_shader.vertex_shader_path = engine->assets.path("shaders/gles/vert_mvp.glsl");
     #endif
-
+    triangle->type = -1;
     triangle->bIsGUI = true;
     triangle->name = "gui button";
     this->mesh = triangle;

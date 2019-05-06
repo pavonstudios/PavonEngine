@@ -351,7 +351,7 @@ public:
 
 
     void activate_vertex_attributes(EMesh* mesh){
-
+        
         glBindBuffer(GL_ARRAY_BUFFER,mesh->vertex_buffer);
 
         glEnableVertexAttribArray ( 0 );
@@ -363,13 +363,33 @@ public:
         glEnableVertexAttribArray ( 2 );
         glVertexAttribPointer ( 2, 2, GL_FLOAT, false, sizeof(Vertex), (void*)offsetof(Vertex,texCoord) );
         
+        if(mesh->type == MESH_TYPE_SKINNED){
+            glEnableVertexAttribArray ( 3 );
+            glVertexAttribPointer ( 3, 4, GL_FLOAT, false, sizeof(Vertex), (void*)offsetof(Vertex,joint0) );
 
+            glEnableVertexAttribArray ( 4 );
+            glVertexAttribPointer ( 4, 4, GL_FLOAT, false, sizeof(Vertex), (void*)offsetof(Vertex,weight0) );
+
+        }
     }
 
    
-    void update_mvp(EMesh* mesh){
-                                
-                glUniformMatrix4fv(0,1,GL_FALSE,&mesh->MVP[0][0]);
+    void update_mvp(EMesh* mesh){                                
+        
+        if(mesh->type == MESH_TYPE_SKINNED){
+            GLint view = glGetUniformLocation(mesh->shader_program, "view" );
+            GLint model = glGetUniformLocation(mesh->shader_program, "model" );
+            GLint proj = glGetUniformLocation(mesh->shader_program, "projection" );
+            GLint joints_matrix_id = glGetUniformLocation(mesh->shader_program, "joint_matrix" );
+
+            glUniformMatrix4fv(view,1,GL_FALSE,&mesh->ubo.view[0][0]);
+            glUniformMatrix4fv(model,1,GL_FALSE,&mesh->ubo.model[0][0]);
+            glUniformMatrix4fv(proj,1,GL_FALSE,&mesh->ubo.proj[0][0]);
+
+            glUniformMatrix4fv(joints_matrix_id,mesh->node_uniform.joint_count,GL_FALSE,&mesh->node_uniform.joint_matrix[0][0][0]);
+        }else{
+            glUniformMatrix4fv(0,1,GL_FALSE,&mesh->MVP[0][0]);
+        }
     }
 
     void draw_mesh(){          

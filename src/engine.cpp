@@ -336,6 +336,13 @@ void Engine::update_mvp(EMesh* mesh){
 	if(!mesh->bIsGUI){
 		mesh->MVP = mat;
 	}
+	#if defined (ES2) || defined (ANDROID)
+		if(mesh->type == MESH_TYPE_SKINNED){
+			mesh->ubo.proj = main_camera.Projection;
+			mesh->ubo.view = main_camera.View;
+			mesh->ubo.model = mesh->model_matrix;
+		}
+	#endif
 		
 	#if defined(ES2) || defined(ANDROID)
 	renderer.update_mvp(mesh);
