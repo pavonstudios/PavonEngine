@@ -258,14 +258,14 @@ void Skeletal::load_animation(SkeletalMesh* skeletal, tinygltf::Model &gltf_mode
 
             {
                 //inputs
-                const tinygltf::Accessor &accessor = gltf_model.accessors[sampler.input];
-                const tinygltf::BufferView &bufferView = gltf_model.bufferViews[accessor.bufferView];
-                const tinygltf::Buffer &buffer = gltf_model.buffers[bufferView.buffer];
+                const tinygltf::Accessor &input_accessor = gltf_model.accessors[sampler.input];
+                const tinygltf::BufferView &input_bufferView = gltf_model.bufferViews[input_accessor.bufferView];
+                const tinygltf::Buffer &input_buffer = gltf_model.buffers[input_bufferView.buffer];
 
                 
-                const void *dataPtr = &buffer.data[accessor.byteOffset + bufferView.byteOffset];
+                const void *dataPtr = &input_buffer.data[input_accessor.byteOffset + input_bufferView.byteOffset];
                 const float *buf = static_cast<const float*>(dataPtr);
-                for (size_t index = 0; index < accessor.count; index++) {
+                for (size_t index = 0; index < input_accessor.count; index++) {
                     new_sampler.inputs.push_back(buf[index]);
                 }
             }
@@ -320,13 +320,9 @@ void Skeletal::play_animations(std::vector<SkeletalMesh*> skeletals, float time)
     //std::cout << "play\n";
     for(auto* skeletal : skeletals){
         mat4 model_space = mat4(1.0);
-        glm::quat quat1;
+       
         AnimationSampler sampler = skeletal->animations[0].samplers[0];
 
-        quat1.x = skeletal->animations[0].samplers[0].outputs_vec4[4].x;
-        quat1.y = skeletal->animations[0].samplers[0].outputs_vec4[4].y;
-        quat1.z = skeletal->animations[0].samplers[0].outputs_vec4[4].z;
-        quat1.w = skeletal->animations[0].samplers[0].outputs_vec4[4].w;     
        
         EMesh* mesh = skeletal->mesh;
         			
@@ -337,6 +333,13 @@ void Skeletal::play_animations(std::vector<SkeletalMesh*> skeletals, float time)
            if( (time >= sampler.inputs[i])  && ( time <= sampler.inputs[i + 1] ) ){
 
                 Node* node = Skeletal::node_by_name(mesh,"bone2");
+
+
+                glm::quat quat1;
+                quat1.x = sampler.outputs_vec4[i+1].x;
+                quat1.y = sampler.outputs_vec4[i+1].y;
+                quat1.z = sampler.outputs_vec4[i+1].z;
+                quat1.w = sampler.outputs_vec4[i+1].w;     
 
                 node->Rotation = quat1;
            }
