@@ -344,7 +344,16 @@ void Skeletal::create_bones_vertices(Engine* engine){
    
     EMesh* triangle = new EMesh();
 
-    mat4 local1 = mat4(1.0);
+    for(auto* node : engine->skeletal_meshes[0]->skins[0]->joints){
+        mat4 local = NodeManager::get_global_matrix(node);
+        local = engine->skeletal_meshes[0]->model_matrix * local;
+        Vertex vert {};
+        vec3 position =  vec3(local[3]);
+        vert.pos = position;
+        triangle->vertices.push_back(vert);
+
+    }
+   /*  mat4 local1 = mat4(1.0);
     mat4 local2 = translate(mat4(1.0),vec3(0,0,1));
 
     mat4 mat1 = engine->skeletal_meshes[0]->model_matrix;
@@ -358,7 +367,7 @@ void Skeletal::create_bones_vertices(Engine* engine){
     vec3 position2 =  vec3(mat2[3]);
     std::cout << position2.x << " " << position2.y << " " << position2.z << std::endl;
     vert2.pos = position2;
-    triangle->vertices.push_back(vert2);
+    triangle->vertices.push_back(vert2); */
 
 
     
