@@ -143,6 +143,21 @@ void Engine::loop_data(){
 		//distance_object_from_camera();
 
 		Objects::update_positions(this,tranlation_update);
+
+		if(play_animations){
+			animation_time += deltaTime;
+			std::vector<SkeletalMesh*> skeletals;
+			skeletals.push_back(skeletal_meshes[0]->skeletal);
+			Skeletal::play_animations(skeletals,animation_time);
+
+			std::cout << "time: " << animation_time << std::endl;
+			if(animation_time >= 3){
+				animation_time = 0;
+				Skeletal::reset_animations(skeletals);
+				play_animations = false;
+			}
+		}
+		
 		
 }
 void Engine::es2_draw_frame() {

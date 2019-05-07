@@ -58,6 +58,8 @@ public:
 
     bool ready_to_game = false;
     bool loading = true;
+    bool play_animations = false;
+    float animation_time = 0.0f;
     
     #ifdef ANDROID
         Engine(android_app * pApp);

@@ -21,7 +21,7 @@ m models/pavon_the_game/road_plus_border_coast.gltf 0 0 0 textures/pavon_the_gam
 
 m models/pavon_the_game/back_bulding.gltf 0 0 0 textures/pavon_the_game/bakcbuilding02.png
 
-s models/pavon_the_game/fireman_full.gltf -4 -2 0 textures/pavon_the_game/fireman.png
+s models/simple_bones.gltf -4 -2 0 textures/pavon_the_game/fireman.png
 
 /
 b models/pavon_the_game/police_patrol.gltf 0 12 0 

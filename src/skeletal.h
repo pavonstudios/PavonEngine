@@ -39,6 +39,7 @@ namespace engine{
 	};
 
 	struct AnimationSampler{
+		std::vector<float> inputs;
 		std::vector<glm::vec4> outputs_vec4;
 	};
 
@@ -74,11 +75,14 @@ namespace engine{
 		static void update_joint_matrix(Node* node);
 		static void load_animation(SkeletalMesh* skeletal, tinygltf::Model &gltf_model);
 
-		static void play_animations(std::vector<SkeletalMesh*> skeletals);
+		static void play_animations(std::vector<SkeletalMesh*> skeletals, float time);
 
 		static void create_bones_vertices(Engine*);
 
 		static void update_joint_vertices_data(Engine*);
+
+		static void reset_animations(std::vector<SkeletalMesh*> skeletals);
+
 	};
 
 	class NodeManager{

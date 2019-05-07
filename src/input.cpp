@@ -318,9 +318,7 @@ void Input::update_input(Engine* engine){
 			//this->pitch -= 0.4;
 			//engine->main_camera.mouse_control_update(yaw, pitch);
 
-			std::vector<SkeletalMesh*> skeletals;
-			skeletals.push_back(engine->skeletal_meshes[0]->skeletal);
-			Skeletal::play_animations(skeletals);
+			engine->play_animations = true;
 		}
 
 		if(Q.bIsPressed){
