@@ -1,4 +1,5 @@
 #include "objects.h"
+#include "engine.h"
 using namespace engine;
 void Skeletal::update_joints_nodes(EMesh* mesh){
     
@@ -357,4 +358,36 @@ void Skeletal::play_animations(std::vector<SkeletalMesh*> skeletals){
 
        // Skeletal::update_joints_nodes(skeletal->mesh);
     }
+}
+
+void Skeletal::create_bones_vertices(Engine* engine){
+   
+    EMesh* triangle = new EMesh();
+    
+    Vertex vert1{};
+    vert1.pos = glm::vec3(0.0,0.0,0.0);
+
+    Vertex vert2{};
+    vert2.pos = glm::vec3(0.0,0.0,1.0);  
+   
+            
+    triangle->vertices.push_back(vert1);
+    triangle->vertices.push_back(vert2);     
+    
+    
+    
+    triangle->data_shader.fragment_shader_path = "Game/Assets/shaders/gles/blue.glsl";
+
+    
+    triangle->data_shader.vertex_shader_path = "Game/Assets/shaders/gles/vert_mvp.glsl";
+   
+    triangle->type = -1;
+    triangle->bIsGUI = false;
+    triangle->name = "joint";   
+    
+
+    #if defined (ES2) || defined (ANDROID) 
+        engine->linear_meshes.push_back(triangle);
+        engine->helpers.push_back(triangle);        
+    #endif
 }

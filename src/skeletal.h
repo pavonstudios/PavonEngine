@@ -74,6 +74,8 @@ namespace engine{
 		static void load_animation(SkeletalMesh* skeletal, tinygltf::Model &gltf_model);
 
 		static void play_animations(std::vector<SkeletalMesh*> skeletals);
+
+		static void create_bones_vertices(Engine* engine);
 	};
 
 	class NodeManager{

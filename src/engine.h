@@ -67,7 +67,9 @@ public:
     std::vector<EMesh*> meshes;//mesh to draw
     std::vector<EMesh*> linear_meshes;//loaded mesh 
     std::vector<EMesh*> unique_meshes;
-    std::vector<EMesh*> skeletal_meshes;//loaded mesh 
+    std::vector<EMesh*> skeletal_meshes;//loaded mesh
+
+    std::vector<EMesh*> helpers; 
 
     std::vector<Model*> models_to_draw;
     #ifdef ES2 
@@ -101,7 +103,7 @@ public:
     float get_time();    
     void update_mvp(EMesh* mesh);
     void init();
-    void es2_loop();
+    void es2_draw_frame();
     void loop_data();
     void update_render_size();
     void distance_object_from_camera(); 

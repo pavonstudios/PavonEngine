@@ -301,8 +301,10 @@ public:
                         size.data = mesh->texture.data;
                         glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,size.width,size.heigth,0,GL_RGBA,GL_UNSIGNED_BYTE,size.data);
                     }else{
-                        size = assets.load_and_get_size(mesh->texture_path.c_str());
-                        glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,size.width,size.heigth,0,GL_RGB,GL_UNSIGNED_BYTE,size.data); 
+                        if(mesh->texture_path != ""){
+                            size = assets.load_and_get_size(mesh->texture_path.c_str());
+                            glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,size.width,size.heigth,0,GL_RGB,GL_UNSIGNED_BYTE,size.data);
+                        }
                     }
                         
                 #endif                   

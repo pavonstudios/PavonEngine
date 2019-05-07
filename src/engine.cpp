@@ -78,6 +78,8 @@ void Engine::init(){
 		load_map(map_path);
 		game->init();
 
+		Skeletal::create_bones_vertices(this);
+
 		ready_to_game = true;
 	auto tStart = std::chrono::high_resolution_clock::now();
 
@@ -141,7 +143,7 @@ void Engine::loop_data(){
 		Objects::update_positions(this,tranlation_update);
 		
 }
-void Engine::es2_loop() {
+void Engine::es2_draw_frame() {
 
 	#if defined(ES2) || defined(ANDROID)
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -172,6 +174,18 @@ void Engine::es2_loop() {
 			renderer.draw(model->mesh);
 		}			
 		
+		glClear(GL_DEPTH_BUFFER_BIT);
+		for(auto* mesh : helpers){
+			glUseProgram  ( mesh->shader_program );
+			renderer.activate_vertex_attributes(mesh);					
+				
+			update_mvp(mesh);
+			glBindBuffer(GL_ARRAY_BUFFER,mesh->vertex_buffer);
+			glDrawArrays( GL_POINTS,0,mesh->vertices.size());
+			glLineWidth(3);
+        	glDrawArrays( GL_LINES,0,mesh->vertices.size());
+		}
+
 				
 	#endif
 }
@@ -199,7 +213,7 @@ void Engine::main_loop(){
 		#endif
 		
 		#if defined (ES2) || defined(ANDROID)
-			es2_loop();
+			es2_draw_frame();
 		#endif		
 
 		frames++;
