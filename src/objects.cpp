@@ -180,7 +180,7 @@ void MeshManager::create_buffers(EMesh* mesh){
 
 
 
-void EMesh::load_textures_gltf(){
+void MeshManager::load_textures_gltf(EMesh* mesh, tinygltf::Model & gltf_model){
     EImageData image_data_struct = {};
     if(gltf_model.images.size() > 0){
         tinygltf::Image tiny_image = gltf_model.images[0];
@@ -207,7 +207,7 @@ void EMesh::load_textures_gltf(){
         #endif
 
 
-        this->texture = image_data_struct;
+        mesh->texture = image_data_struct;
     }
     
     
@@ -278,7 +278,7 @@ int MeshManager::load_model_gltf(EMesh* mesh, const char* path){
     }   
    
     load_primitives_data(mesh, mesh->gltf_model);
-    mesh->load_textures_gltf();    
+    load_textures_gltf(mesh, mesh->gltf_model);    
 
     
     return 1;

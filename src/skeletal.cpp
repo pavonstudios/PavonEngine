@@ -8,29 +8,21 @@ void Skeletal::update_joints_nodes(EMesh* mesh){
     mesh->node_uniform.joint_count = (float)joints_number;
     
 
-    mat4 model_space = mat4(1.0);
-        mat4 move = translate(model_space,vec3(0,0,2));
+
 
     for(int i = 0; i < skin->joints.size(); i++){
         Node* joint = skin->joints[i];
         Skeletal::update_joint_matrix(joint);
-        glm::mat4 rot = glm::rotate(skin->inverse_bind_matrix[i],glm::radians(90.f),glm::vec3(1,0,0));
+        
         glm::mat4 bind_mat = NodeManager::get_global_matrix(joint);
         glm::mat joint_mat = 
-            //glm::inverse(mesh->model_matrix) *
-            //joint->matrix *
-            joint->global_matrix;//* glm::inverse(mesh->model_matrix);// * skin->inverse_bind_matrix[i];
-            //glm::inverse(bind_mat);
-            rot;
+
+            joint->global_matrix; //* skin->inverse_bind_matrix[i];
+
+
         mesh->node_uniform.joint_matrix[i] = joint_mat;
     } 
 
-        
-       /*  model_space = model_space * inverse(mesh->model_matrix);
-        mat4 rot = rotate(mat4(1.0),radians(90.f),vec3(0,1,0));
-        mat4 transform = move * rot;
-        model_space = inverse(mesh->node_uniform.joint_matrix[3]) * transform; */
-        //mesh->node_uniform.joint_matrix[2] = move;
 }
 
 void Skeletal::load_data(EMesh* mesh){
@@ -51,21 +43,11 @@ void Skeletal::load_data(EMesh* mesh){
     Skeletal::load_animation(mesh->skeletal,mesh->gltf_model);
     mesh->skeletal->nodes = mesh->nodes;
     mesh->skeletal->linear_nodes = mesh->linear_nodes;
-    mesh->skeletal->mesh = mesh;
+    mesh->skeletal->mesh = mesh; 
 
 
-    //NodeManager::create_nodes_index(mesh);
+    Skeletal::update_joints_nodes(mesh);
 
-    Node* upper_arm_node = Skeletal::node_by_name(mesh, "upper_arm");
-     Node* root = Skeletal::node_by_name(mesh, "Bone");
-    glm::mat4 move_up = glm::translate(glm::mat4(1.0),glm::vec3(0,0,2));
-     glm::mat4 rot = glm::rotate(glm::mat4(1.0),glm::radians(90.f),glm::vec3(0,1,0));
-    //upper_arm_node->matrix = rot * inverse(mesh->model_matrix);
-    //root->matrix = move_up;
-
-
-     Skeletal::update_joints_nodes(mesh);
-   // mesh->node_uniform.joint_matrix[2] = glm::translate(glm::mat4(1.0),glm::vec3(0,0,2));
 
 }
 
@@ -124,11 +106,8 @@ void NodeManager::update(EMesh* mesh, Node* node){
 }
 
 glm::mat4 NodeManager::get_local_matrix(Node* node){
-    glm::mat4 local = glm::translate(glm::mat4(1.0f),node->Translation) * glm::mat4(node->Rotation) * node->matrix;
-    glm::mat4 local_location = glm::translate(glm::mat4(1.0f),node->Translation);
-    glm::mat4 reseted_local_position = glm::translate(node->matrix,glm::vec3(0,0,0));
-    node->matrix = reseted_local_position;
-    return node->matrix;
+    glm::mat4 local = glm::translate(glm::mat4(1.0f),node->Translation) * glm::mat4(node->Rotation);
+    return local;
 }
 
 glm::mat4 NodeManager::get_global_matrix(Node* node){
@@ -365,32 +344,23 @@ void Skeletal::create_bones_vertices(Engine* engine){
    
     EMesh* triangle = new EMesh();
 
-    for(auto* node : engine->skeletal_meshes[0]->skins[0]->joints){
-       Vertex vert {};
-       vec3 position =  vec3(node->global_matrix[3]);
-        vert.pos = position;
-        triangle->vertices.push_back(vert);
-    }
+    mat4 local1 = mat4(1.0);
+    mat4 local2 = translate(mat4(1.0),vec3(0,0,1));
 
-    /* Node* node = Skeletal::node_by_name(engine->skeletal_meshes[0],"root");
+    mat4 mat1 = engine->skeletal_meshes[0]->model_matrix;
+    mat4 mat2 = local2 * mat1;
     Vertex vert {};
-    mat4 mat1 = 
-    vec3 position =  vec3(node->global_matrix[3]);
-    vert.pos = position; */
+    vec3 position =  vec3(mat1[3]);
+    vert.pos = position;
+    triangle->vertices.push_back(vert);
+
+    Vertex vert2 {};
+    vec3 position2 =  vec3(mat2[3]);
+    std::cout << position2.x << " " << position2.y << " " << position2.z << std::endl;
+    vert2.pos = position2;
+    triangle->vertices.push_back(vert2);
 
 
-/*     
-    Vertex vert1{};
-    vert1.pos = glm::vec3(0.0,0.0,0.0);
-
-    Vertex vert2{};
-    vert2.pos = glm::vec3(0.0,0.0,1.0);  
-   
-            
-    triangle->vertices.push_back(vert1);
-    triangle->vertices.push_back(vert2);     
-     */
-    
     
     triangle->data_shader.fragment_shader_path = "Game/Assets/shaders/gles/blue.glsl";
 

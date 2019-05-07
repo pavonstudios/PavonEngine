@@ -176,12 +176,7 @@ public:
     UniformBufferObject ubo; 
     pipeline_data data_shader;
     glm::mat4 MVP;
-    EImageData texture;
-    
-    
-
-    std::vector<Vertex> vertices;
-    std::vector<unsigned int> indices;
+    EImageData texture; 
     
     glm::mat4 model_matrix = glm::mat4(1.0);
     glm::vec3 location_vector;
@@ -202,13 +197,13 @@ public:
     std::vector<Node*> linear_nodes;
     std::vector<Skin*> skins;
     struct NodeUniform node_uniform;  
-
-
-    void load_textures_gltf();
+    
     tinygltf::Model gltf_model;
                
     #endif
     
+    std::vector<Vertex> vertices;
+    std::vector<unsigned int> indices;
 		
 };
 
@@ -239,7 +234,7 @@ public:
             #ifdef ANDROID
             int load_mode_gltf_android(EMesh* mesh, const char* path, AAssetManager* pAssetManager);
             #endif   
-            
+            void load_textures_gltf(EMesh* mesh, tinygltf::Model & gltf_model);
     };
 
     class Objects{
