@@ -154,7 +154,7 @@ void Engine::loop_data(){
 			if(animation_time >= 3){
 				animation_time = 0;
 				Skeletal::reset_animations(skeletals);
-				play_animations = false;
+				//play_animations = false;
 			}
 		}
 		
