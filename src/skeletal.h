@@ -25,20 +25,12 @@ namespace engine{
 			std::vector<Node*> joints;
 	};
 	
-	struct node_load_data{
+	struct NodeLoadData{
 		tinygltf::Model* gltf_model;
 		engine::Node *parent; 
 		uint32_t index;
 		tinygltf::Node *gltf_node;
 	};
-
-	struct SkeletalMesh{
-		std::vector<Node*> nodes;
-		std::vector<Node*> linear_nodes;
-		Skin* skin;
-		struct NodeUniform node_uniform;
-	};
-	
 
 	struct AnimationChannel {
 		Node* node;
@@ -46,17 +38,31 @@ namespace engine{
 	};
 
 	struct AnimationSampler{
-		
+		std::vector<glm::vec4> outputs_vec4;
 	};
 
 	struct Animation{
 		AnimationChannel channels;
+		std::vector<AnimationSampler> samplers;
 	};
+
+	struct SkeletalMesh{
+		EMesh* mesh;
+		std::vector<Node*> nodes;
+		std::vector<Node*> linear_nodes;
+		Skin* skin;
+		struct NodeUniform node_uniform;
+		std::vector<Animation> animations;
+		
+	};
+	
+
+	
 
 
 	class Skeletal{
 	public:
-		static void load_node(EMesh* mesh, node_load_data& node_data);    
+		static void load_node(EMesh* mesh, NodeLoadData& node_data);    
 		static Node* node_from_index(EMesh* mesh, uint32_t index);
 		static Node* find_node(Node* parent, uint32_t index);
 		static void load_skin(EMesh* mesh, tinygltf::Model &gltf_model);
@@ -65,6 +71,9 @@ namespace engine{
 		static Node* node_by_name(EMesh* mesh, const char* name);
 		static void update_joints_nodes(EMesh* mesh);
 		static void update_joint_matrix(Node* node);
+		static void load_animation(SkeletalMesh* skeletal, tinygltf::Model &gltf_model);
+
+		static void play_animations(std::vector<SkeletalMesh*> skeletals);
 	};
 
 	class NodeManager{

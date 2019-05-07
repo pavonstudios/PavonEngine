@@ -99,7 +99,15 @@ void Input::key_callback(GLFWwindow* window, int key, int scancode, int action, 
 					engine->input.X.bIsPressed = false;
 				}
 			}
-           #endif
+			if(key == GLFW_KEY_V){
+				if(action == GLFW_PRESS){
+					engine->input.V.bIsPressed = true;
+				}
+				if(action == GLFW_RELEASE){
+					engine->input.V.bIsPressed = false;
+				}
+			}
+  #endif
            
 }
 void Input::mouse_callback(GLFWwindow* window, double xpos, double ypos){
@@ -324,6 +332,10 @@ void Input::update_input(Engine* engine){
 		if(V.bIsPressed){
 			this->pitch -= 0.4;
 			engine->main_camera.mouse_control_update(yaw, pitch);
+
+			std::vector<SkeletalMesh*> skeletals;
+			skeletals.push_back(engine->skeletal_meshes[0]->skeletal);
+			Skeletal::play_animations(skeletals);
 		}
 
 		if(Q.bIsPressed){

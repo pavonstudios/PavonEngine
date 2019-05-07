@@ -25,17 +25,17 @@ void Skeletal::update_joints_nodes(EMesh* mesh){
     } 
 
         
-        model_space = model_space * inverse(mesh->model_matrix);
+       /*  model_space = model_space * inverse(mesh->model_matrix);
         mat4 rot = rotate(mat4(1.0),radians(90.f),vec3(0,1,0));
         mat4 transform = move * rot;
-        model_space = inverse(mesh->node_uniform.joint_matrix[2]) * transform;
+        model_space = inverse(mesh->node_uniform.joint_matrix[3]) * transform; */
         //mesh->node_uniform.joint_matrix[2] = move;
 }
 
 void Skeletal::load_data(EMesh* mesh){
     int node_count = mesh->gltf_model.nodes.size();
     for(size_t i = 0; i < node_count;i++){
-        node_load_data load_data = {};
+        NodeLoadData load_data = {};
         load_data.gltf_model = &mesh->gltf_model;
         load_data.gltf_node = &mesh->gltf_model.nodes[i];
         load_data.index = i;
@@ -46,7 +46,13 @@ void Skeletal::load_data(EMesh* mesh){
   
     Skeletal::load_skin(mesh, mesh->gltf_model);
 
- 
+    mesh->skeletal = new SkeletalMesh;
+    Skeletal::load_animation(mesh->skeletal,mesh->gltf_model);
+    mesh->skeletal->nodes = mesh->nodes;
+    mesh->skeletal->linear_nodes = mesh->linear_nodes;
+    mesh->skeletal->mesh = mesh;
+
+
     //NodeManager::create_nodes_index(mesh);
 
     Node* upper_arm_node = Skeletal::node_by_name(mesh, "upper_arm");
@@ -243,7 +249,7 @@ Node* Skeletal::node_by_name(EMesh* mesh, const char* name ){
     return node_found;
 }
 
- void Skeletal::load_node(EMesh* mesh, node_load_data& node_data){
+ void Skeletal::load_node(EMesh* mesh, NodeLoadData& node_data){
      
     Node *new_node = new Node{};
     new_node->parent = node_data.parent;
@@ -281,3 +287,74 @@ Node* Skeletal::node_by_name(EMesh* mesh, const char* name ){
 
     mesh->linear_nodes.push_back(new_node);
  }
+
+
+void Skeletal::load_animation(SkeletalMesh* skeletal, tinygltf::Model &gltf_model){
+    for(auto& anim : gltf_model.animations){
+        Animation new_animation;
+
+        for(auto& sampler : anim.samplers){
+            AnimationSampler new_sampler{};
+
+            const tinygltf::Accessor &accessor = gltf_model.accessors[sampler.output];
+            const tinygltf::BufferView &bufferView = gltf_model.bufferViews[accessor.bufferView];
+            const tinygltf::Buffer &buffer = gltf_model.buffers[bufferView.buffer];
+
+            const void *dataPtr = &buffer.data[accessor.byteOffset + bufferView.byteOffset];
+
+            switch (accessor.type) {
+                case TINYGLTF_TYPE_VEC3: {
+                    const glm::vec3 *buf = static_cast<const glm::vec3*>(dataPtr);
+                    for (size_t index = 0; index < accessor.count; index++) {
+                        new_sampler.outputs_vec4.push_back(glm::vec4(buf[index], 0.0f));
+                    }
+                    break;
+                }
+                case TINYGLTF_TYPE_VEC4: {
+                    const glm::vec4 *buf = static_cast<const glm::vec4*>(dataPtr);
+                    for (size_t index = 0; index < accessor.count; index++) {
+                        new_sampler.outputs_vec4.push_back(buf[index]);
+                    }
+                    break;
+                }
+                default: {
+                    std::cout << "unknown type" << std::endl;
+                    break;
+                }
+            }
+            new_animation.samplers.push_back(new_sampler);
+
+        }
+
+        skeletal->animations.push_back(new_animation);
+    }
+}
+
+void Skeletal::play_animations(std::vector<SkeletalMesh*> skeletals){
+    std::cout << "play\n";
+    for(auto* skeletal : skeletals){
+        mat4 model_space = mat4(1.0);
+        glm::quat quat1;
+        quat1.x = skeletal->animations[0].samplers[0].outputs_vec4[0].x;
+        quat1.y = skeletal->animations[0].samplers[0].outputs_vec4[0].y;
+        quat1.z = skeletal->animations[0].samplers[0].outputs_vec4[0].z;
+        quat1.w = skeletal->animations[0].samplers[0].outputs_vec4[0].w;     
+        mat4 rot = glm::mat4(quat1);
+        EMesh* smesh = skeletal->mesh;
+
+        Node* joint = smesh->skins[0]->joints[2];
+        joint->matrix = translate(glm::mat4(1.0),vec3(0,0,0.0000)) * rot;
+        Skeletal::update_joint_matrix(joint);
+
+        smesh->node_uniform.joint_matrix[2] = inverse(smesh->model_matrix) * smesh->skins[0]->joints[2]->global_matrix * smesh->skins[0]->inverse_bind_matrix[2];
+        
+        
+        Node* joint2 = smesh->skins[0]->joints[3];
+
+        Skeletal::update_joint_matrix(joint2);
+
+        smesh->node_uniform.joint_matrix[3] = inverse(smesh->model_matrix) * smesh->skins[0]->joints[3]->global_matrix * smesh->skins[0]->inverse_bind_matrix[3];
+
+       // Skeletal::update_joints_nodes(skeletal->mesh);
+    }
+}

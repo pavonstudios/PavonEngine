@@ -131,7 +131,6 @@ struct UniformBufferObject {
 
 namespace engine{
 
-struct SkeletalMesh;
 
 struct EMesh {
 public:
@@ -205,7 +204,7 @@ public:
     struct NodeUniform node_uniform;  
 
 
-     void load_textures_gltf();
+    void load_textures_gltf();
     tinygltf::Model gltf_model;
                
     #endif
