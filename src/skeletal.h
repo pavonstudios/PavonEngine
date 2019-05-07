@@ -16,6 +16,7 @@ namespace engine{
 		std::string name;   
 		uint32_t bone_index;   
 		glm::mat4 global_matrix = glm::mat4(1.0); 
+		mat4 rot_mat = mat4(1.0); 
 		
 	};
 
@@ -76,6 +77,8 @@ namespace engine{
 		static void play_animations(std::vector<SkeletalMesh*> skeletals);
 
 		static void create_bones_vertices(Engine*);
+
+		static void update_joint_vertices_data(Engine*);
 	};
 
 	class NodeManager{

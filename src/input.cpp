@@ -309,20 +309,11 @@ void Input::update_input(Engine* engine){
 			smesh->node_uniform.joint_matrix[3] = inverse(smesh->model_matrix) * smesh->skins[0]->joints[3]->global_matrix;
 		}
 		if(X.bIsPressed){	
-			mat4 model_space = mat4(1.0);       
-			mat4 rot = rotate(model_space,radians(-rotation_velocity),vec3(0,0,1));
-			EMesh* smesh = engine->skeletal_meshes[0];
 
-			Node* joint = smesh->skins[0]->joints[2];
-			joint->matrix = translate(joint->matrix,vec3(0,0,0.0000)) * rot;
-			Skeletal::update_joint_matrix(joint);
+			EMesh* mesh = engine->skeletal_meshes[0];
+			Node* node = Skeletal::node_by_name(mesh,"bone2");
+			node->rot_mat = rotate(node->rot_mat,radians(15*engine->deltaTime),vec3(1,0,0));
 
-			smesh->node_uniform.joint_matrix[2] = inverse(smesh->model_matrix) * smesh->skins[0]->joints[2]->global_matrix;
-			Node* joint2 = smesh->skins[0]->joints[3];
-
-			Skeletal::update_joint_matrix(joint2);
-
-			smesh->node_uniform.joint_matrix[3] = inverse(smesh->model_matrix) * smesh->skins[0]->joints[3]->global_matrix;
 		}
 #endif
 		if(C.bIsPressed){

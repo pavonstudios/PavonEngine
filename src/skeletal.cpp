@@ -106,7 +106,7 @@ void NodeManager::update(EMesh* mesh, Node* node){
 }
 
 glm::mat4 NodeManager::get_local_matrix(Node* node){
-    glm::mat4 local = glm::translate(glm::mat4(1.0f),node->Translation) * glm::mat4(node->Rotation);
+    glm::mat4 local = glm::translate(glm::mat4(1.0f),node->Translation) * glm::mat4(node->Rotation) * node->rot_mat;
     return local;
 }
 
@@ -139,27 +139,7 @@ glm::mat4 NodeManager::get_global_matrix_simple(Node* node){
 
 
 void Skeletal::update_joints_matrix(EMesh* mesh, Node* node){
-    mesh->node_uniform.matrix = glm::mat4(1.0);
-    mesh->node_uniform.joint_count = 4;
-    mesh->node_uniform.joint_matrix[0] = glm::translate(glm::mat4(1.0),glm::vec3(0,0,2));
-    mesh->node_uniform.joint_matrix[1] = glm::translate(glm::mat4(1.0),glm::vec3(0,0,0));
-    mesh->node_uniform.joint_matrix[2] = glm::translate(glm::mat4(1.0),glm::vec3(0,0,0));
-    mesh->node_uniform.joint_matrix[3] = glm::translate(glm::mat4(1.0),glm::vec3(0,0,0));
 
-    glm::mat4 rot = glm::rotate(glm::mat4(1.0),glm::radians(-45.f),glm::vec3(0,1,0));
-    glm::mat4 rot2 = glm::rotate(glm::mat4(1.0),glm::radians(45.f),glm::vec3(0,1,0));
-    //mesh->node_uniform.joint_matrix[2] = mesh->node_uniform.joint_matrix[2] * rot;
-
-    mesh->node_uniform.joint_matrix[1] = mesh->node_uniform.joint_matrix[0] * mesh->node_uniform.joint_matrix[1];
-     //mesh->node_uniform.joint_matrix[2] = mesh->node_uniform.joint_matrix[2] * rot;
-     mesh->node_uniform.joint_matrix[2] = mesh->node_uniform.joint_matrix[1] * mesh->node_uniform.joint_matrix[2];
-     //mesh->node_uniform.joint_matrix[2] = glm::translate(mesh->node_uniform.joint_matrix[2],glm::vec3(0,0,2));
-      mesh->node_uniform.joint_matrix[3] = mesh->node_uniform.joint_matrix[2] * mesh->node_uniform.joint_matrix[3];
-    // mesh->node_uniform.joint_matrix[2] = mesh->node_uniform.joint_matrix[2] * rot2;
-      //mesh->node_uniform.joint_matrix[3] = glm::inverse(mesh->node_uniform.joint_matrix[2] * mesh->node_uniform.joint_matrix[3]) * mesh->node_uniform.joint_matrix[2] * mesh->node_uniform.joint_matrix[3] * mesh->skins[0]->inverse_bind_matrix[3];
-      
-    //glm::mat4 global_inverse = glm::inverse(NodeManager::get_global_matrix(node));
-    //mesh->node_uniform.joint_matrix[3] = mesh->skins[0]->inverse_bind_matrix[3];
 }
 
 void Skeletal::load_skin(EMesh* mesh, tinygltf::Model &gltf_model){
@@ -340,6 +320,26 @@ void Skeletal::play_animations(std::vector<SkeletalMesh*> skeletals){
     }
 }
 
+void Skeletal::update_joint_vertices_data(Engine* engine){
+    EMesh* mesh = engine->helpers[0];
+    mesh->vertices.clear();
+    for(auto* node : engine->skeletal_meshes[0]->skins[0]->joints){
+        mat4 local = NodeManager::get_global_matrix(node);
+        local = engine->skeletal_meshes[0]->model_matrix * local;
+        Vertex vert {};
+        vec3 position =  vec3(local[3]);
+        vert.pos = position;
+        mesh->vertices.push_back(vert);
+    }
+   
+    #ifdef ES2
+    glBindBuffer(GL_ARRAY_BUFFER,mesh->vertex_buffer);
+    //glBufferSubData(mesh->vertex_buffer,0,mesh->vertices.size() * sizeof(Vertex),mesh->vertices.data());
+    glBufferData(GL_ARRAY_BUFFER,mesh->vertices.size() * sizeof(Vertex),mesh->vertices.data(),GL_STATIC_DRAW);
+
+    #endif
+}
+
 void Skeletal::create_bones_vertices(Engine* engine){
    
     EMesh* triangle = new EMesh();
@@ -353,22 +353,6 @@ void Skeletal::create_bones_vertices(Engine* engine){
         triangle->vertices.push_back(vert);
 
     }
-   /*  mat4 local1 = mat4(1.0);
-    mat4 local2 = translate(mat4(1.0),vec3(0,0,1));
-
-    mat4 mat1 = engine->skeletal_meshes[0]->model_matrix;
-    mat4 mat2 = local2 * mat1;
-    Vertex vert {};
-    vec3 position =  vec3(mat1[3]);
-    vert.pos = position;
-    triangle->vertices.push_back(vert);
-
-    Vertex vert2 {};
-    vec3 position2 =  vec3(mat2[3]);
-    std::cout << position2.x << " " << position2.y << " " << position2.z << std::endl;
-    vert2.pos = position2;
-    triangle->vertices.push_back(vert2); */
-
 
     
     triangle->data_shader.fragment_shader_path = "Game/Assets/shaders/gles/blue.glsl";

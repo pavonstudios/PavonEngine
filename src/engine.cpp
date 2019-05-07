@@ -178,6 +178,7 @@ void Engine::es2_draw_frame() {
 		
 		glClear(GL_DEPTH_BUFFER_BIT);
 		for(auto* mesh : helpers){
+			Skeletal::update_joint_vertices_data(this);
 			glUseProgram  ( mesh->shader_program );
 			renderer.activate_vertex_attributes(mesh);					
 				

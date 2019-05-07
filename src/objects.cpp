@@ -143,6 +143,10 @@ void MeshManager::create_buffers(EMesh* mesh){
     #if defined(ES2) || defined(ANDROID)
         glGenBuffers(1,&mesh->vertex_buffer);
         glBindBuffer(GL_ARRAY_BUFFER,mesh->vertex_buffer);
+        
+        if(mesh->type == MESH_TYPE_SKINNED)
+        glBufferData(GL_ARRAY_BUFFER,mesh->vertices.size() * sizeof(Vertex),mesh->vertices.data(),GL_DYNAMIC_DRAW);
+        else
         glBufferData(GL_ARRAY_BUFFER,mesh->vertices.size() * sizeof(Vertex),mesh->vertices.data(),GL_STATIC_DRAW);
 
         if(mesh->indices.size() > 0){
