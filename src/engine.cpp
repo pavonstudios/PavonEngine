@@ -78,8 +78,10 @@ void Engine::init(){
 		load_map(map_path);
 		game->init();
 
+		#ifdef ES2
 		Skeletal::create_bones_vertices(this);
-
+		#endif
+		
 		ready_to_game = true;
 	auto tStart = std::chrono::high_resolution_clock::now();
 

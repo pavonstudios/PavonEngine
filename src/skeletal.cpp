@@ -343,18 +343,19 @@ void Skeletal::play_animations(std::vector<SkeletalMesh*> skeletals){
         mat4 rot = glm::mat4(quat1);
         EMesh* smesh = skeletal->mesh;
 
+
         Node* joint = smesh->skins[0]->joints[2];
         joint->matrix = translate(glm::mat4(1.0),vec3(0,0,0.0000)) * rot;
         Skeletal::update_joint_matrix(joint);
 
-        smesh->node_uniform.joint_matrix[2] = inverse(smesh->model_matrix) * smesh->skins[0]->joints[2]->global_matrix * smesh->skins[0]->inverse_bind_matrix[2];
+        smesh->node_uniform.joint_matrix[2] = inverse(smesh->model_matrix) * (smesh->skins[0]->joints[2]->global_matrix * smesh->skins[0]->inverse_bind_matrix[2]);
         
         
         Node* joint2 = smesh->skins[0]->joints[3];
 
         Skeletal::update_joint_matrix(joint2);
 
-        smesh->node_uniform.joint_matrix[3] = inverse(smesh->model_matrix) * smesh->skins[0]->joints[3]->global_matrix * smesh->skins[0]->inverse_bind_matrix[3];
+        smesh->node_uniform.joint_matrix[3] = inverse(smesh->model_matrix) * (smesh->skins[0]->joints[3]->global_matrix * smesh->skins[0]->inverse_bind_matrix[3]);
 
        // Skeletal::update_joints_nodes(skeletal->mesh);
     }
@@ -363,7 +364,22 @@ void Skeletal::play_animations(std::vector<SkeletalMesh*> skeletals){
 void Skeletal::create_bones_vertices(Engine* engine){
    
     EMesh* triangle = new EMesh();
-    
+
+    for(auto* node : engine->skeletal_meshes[0]->skins[0]->joints){
+       Vertex vert {};
+       vec3 position =  vec3(node->global_matrix[3]);
+        vert.pos = position;
+        triangle->vertices.push_back(vert);
+    }
+
+    /* Node* node = Skeletal::node_by_name(engine->skeletal_meshes[0],"root");
+    Vertex vert {};
+    mat4 mat1 = 
+    vec3 position =  vec3(node->global_matrix[3]);
+    vert.pos = position; */
+
+
+/*     
     Vertex vert1{};
     vert1.pos = glm::vec3(0.0,0.0,0.0);
 
@@ -373,7 +389,7 @@ void Skeletal::create_bones_vertices(Engine* engine){
             
     triangle->vertices.push_back(vert1);
     triangle->vertices.push_back(vert2);     
-    
+     */
     
     
     triangle->data_shader.fragment_shader_path = "Game/Assets/shaders/gles/blue.glsl";
@@ -383,7 +399,7 @@ void Skeletal::create_bones_vertices(Engine* engine){
    
     triangle->type = -1;
     triangle->bIsGUI = false;
-    triangle->name = "joint";   
+    triangle->name = "joints";   
     
 
     #if defined (ES2) || defined (ANDROID) 

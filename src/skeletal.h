@@ -75,7 +75,7 @@ namespace engine{
 
 		static void play_animations(std::vector<SkeletalMesh*> skeletals);
 
-		static void create_bones_vertices(Engine* engine);
+		static void create_bones_vertices(Engine*);
 	};
 
 	class NodeManager{
