@@ -9,7 +9,7 @@ varying mediump vec2 v_TexCoord;
 varying mediump vec3 color;
 
 uniform mat4          MVP;
-uniform mat4	joint_matrix[10];
+uniform mat4	joint_matrix[125];
 uniform mat4 view;
 uniform mat4 model;
 uniform mat4 projection;

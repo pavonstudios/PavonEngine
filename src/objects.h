@@ -115,7 +115,7 @@ namespace engine{
     
     struct NodeUniform{
         alignas(16) glm::mat4 matrix;
-        alignas(16) glm::mat4 joint_matrix[10];
+        alignas(16) glm::mat4 joint_matrix[125];
         float joint_count;
     };
    
