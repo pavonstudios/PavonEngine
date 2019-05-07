@@ -295,34 +295,29 @@ void Skeletal::play_animations(std::vector<SkeletalMesh*> skeletals){
     for(auto* skeletal : skeletals){
         mat4 model_space = mat4(1.0);
         glm::quat quat1;
-        quat1.x = skeletal->animations[0].samplers[0].outputs_vec4[0].x;
-        quat1.y = skeletal->animations[0].samplers[0].outputs_vec4[0].y;
-        quat1.z = skeletal->animations[0].samplers[0].outputs_vec4[0].z;
-        quat1.w = skeletal->animations[0].samplers[0].outputs_vec4[0].w;     
-        mat4 rot = glm::mat4(quat1);
-        EMesh* smesh = skeletal->mesh;
+        quat1.x = skeletal->animations[0].samplers[0].outputs_vec4[4].x;
+        quat1.y = skeletal->animations[0].samplers[0].outputs_vec4[4].y;
+        quat1.z = skeletal->animations[0].samplers[0].outputs_vec4[4].z;
+        quat1.w = skeletal->animations[0].samplers[0].outputs_vec4[4].w;     
+       
+        EMesh* mesh = skeletal->mesh;
+        			
+		Node* node = Skeletal::node_by_name(mesh,"bone2");
 
+        node->Rotation = quat1;
+        //node->Translation = vec3(skeletal->animations[0].samplers[0].outputs_vec4[4]);
 
-        Node* joint = smesh->skins[0]->joints[2];
-        joint->matrix = translate(glm::mat4(1.0),vec3(0,0,0.0000)) * rot;
-        Skeletal::update_joint_matrix(joint);
+       
 
-        smesh->node_uniform.joint_matrix[2] = inverse(smesh->model_matrix) * (smesh->skins[0]->joints[2]->global_matrix * smesh->skins[0]->inverse_bind_matrix[2]);
-        
-        
-        Node* joint2 = smesh->skins[0]->joints[3];
-
-        Skeletal::update_joint_matrix(joint2);
-
-        smesh->node_uniform.joint_matrix[3] = inverse(smesh->model_matrix) * (smesh->skins[0]->joints[3]->global_matrix * smesh->skins[0]->inverse_bind_matrix[3]);
-
-       // Skeletal::update_joints_nodes(skeletal->mesh);
+      //   mat4 rot = glm::mat4(quat1);
+        //node->rot_mat = rot;
     }
 }
 
 void Skeletal::update_joint_vertices_data(Engine* engine){
     EMesh* mesh = engine->helpers[0];
     mesh->vertices.clear();
+
     for(auto* node : engine->skeletal_meshes[0]->skins[0]->joints){
         mat4 local = NodeManager::get_global_matrix(node);
         local = engine->skeletal_meshes[0]->model_matrix * local;

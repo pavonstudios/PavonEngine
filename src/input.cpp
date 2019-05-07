@@ -291,23 +291,16 @@ void Input::update_input(Engine* engine){
 			engine->main_camera.MoveRight();	
 		}
 #ifndef  ANDROID
-	float rotation_velocity = 0.2f;
+		float rotation_velocity = 0.2f;
+
 		if(Z.bIsPressed){
-			mat4 model_space = mat4(1.0);       
-			mat4 rot = rotate(model_space,radians(rotation_velocity),vec3(0,0,1));
-			EMesh* smesh = engine->skeletal_meshes[0];
 
-			Node* joint = smesh->skins[0]->joints[2];
-			joint->matrix = translate(joint->matrix,vec3(0,0,0.0000)) * rot;
-			Skeletal::update_joint_matrix(joint);
+			EMesh* mesh = engine->skeletal_meshes[0];
+			Node* node = Skeletal::node_by_name(mesh,"bone2.003");
+			node->rot_mat = rotate(node->rot_mat,radians(-15*engine->deltaTime),vec3(1,0,0));
 
-			smesh->node_uniform.joint_matrix[2] = inverse(smesh->model_matrix) * smesh->skins[0]->joints[2]->global_matrix;
-			Node* joint2 = smesh->skins[0]->joints[3];
-
-			Skeletal::update_joint_matrix(joint2);
-
-			smesh->node_uniform.joint_matrix[3] = inverse(smesh->model_matrix) * smesh->skins[0]->joints[3]->global_matrix;
 		}
+
 		if(X.bIsPressed){	
 
 			EMesh* mesh = engine->skeletal_meshes[0];
@@ -315,14 +308,15 @@ void Input::update_input(Engine* engine){
 			node->rot_mat = rotate(node->rot_mat,radians(15*engine->deltaTime),vec3(1,0,0));
 
 		}
+
 #endif
 		if(C.bIsPressed){
 			this->pitch += 0.4;
 			engine->main_camera.mouse_control_update(yaw, pitch);
 		}
 		if(V.bIsPressed){
-			this->pitch -= 0.4;
-			engine->main_camera.mouse_control_update(yaw, pitch);
+			//this->pitch -= 0.4;
+			//engine->main_camera.mouse_control_update(yaw, pitch);
 
 			std::vector<SkeletalMesh*> skeletals;
 			skeletals.push_back(engine->skeletal_meshes[0]->skeletal);
