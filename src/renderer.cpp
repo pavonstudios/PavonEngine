@@ -491,7 +491,7 @@ void Renderer::create_meshes_graphics_pipeline(){
     }
 
 }
-void Renderer::createGraphicsPipeline( const struct pipeline_data * data, VkPipeline* out_pipeline ) {
+void Renderer::createGraphicsPipeline( const struct PipelineData * data, VkPipeline* out_pipeline ) {
                                             
         auto vertShaderCode = readFile(data->vertex_shader_path);
         auto fragShaderCode = readFile(data->fragment_shader_path);

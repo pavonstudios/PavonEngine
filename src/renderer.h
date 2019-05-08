@@ -145,7 +145,7 @@ private:
     void createVertexBuffer(EMesh *mesh_to_process);
     void createCommandBuffers();
     void createIndexBuffer(EMesh *mesh);
-    void createGraphicsPipeline(const struct pipeline_data * data, VkPipeline* out_pipeline);
+    void createGraphicsPipeline(const struct PipelineData * data, VkPipeline* out_pipeline);
     void createDescriptorPool(EMesh *mesh);
     void createDescriptorSets(EMesh *mesh);
     void createDescriptorSetLayout();

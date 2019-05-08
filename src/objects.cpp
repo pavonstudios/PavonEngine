@@ -1,8 +1,9 @@
 
 #include "objects.h"
+#include "engine.h"
 #include "iostream"
 
-#include "engine.h"
+
 
 #ifdef ES2
     #include <GLES2/gl2.h>
@@ -14,7 +15,7 @@ EMesh::EMesh(){
     
 }
 
-using namespace engine;
+
 #ifdef VULKAN
 EMesh::EMesh(vks::VulkanDevice* vulkan_device){
     this->vulkan_device = vulkan_device;    

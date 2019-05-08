@@ -1,5 +1,12 @@
+#include "engine.h"
 #include "collision.h"
 #include "Game/game.hpp"
+using namespace engine;
+
+
+void Collision::create_collision_helper_vertices(Engine* engine){
+
+}
 
 bool Collision::collision_of(EMesh* mesh2 , EMesh* mesh){
 

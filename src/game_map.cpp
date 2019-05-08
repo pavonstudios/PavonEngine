@@ -153,7 +153,7 @@ void MapManager::assign_shader_path(){
 	//assign shaders paths
 
 		#ifdef VULKAN
-			pipeline_data data_static_mesh = {};
+			PipelineData data_static_mesh = {};
 			
 			data_static_mesh.draw_type = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 			
@@ -170,7 +170,7 @@ void MapManager::assign_shader_path(){
 			
 		#endif
 
-		pipeline_data data = {};
+		PipelineData data = {};
 
 			#ifdef ES2				
 				data.fragment_shader_path = engine->assets.path("shaders/gles/frag.glsl");
@@ -197,7 +197,7 @@ void MapManager::assign_shader_path(){
 				}
 			}
 
-			pipeline_data data_skinned_mesh = {};
+			PipelineData data_skinned_mesh = {};
 			#ifdef VULKAN		
 			data_skinned_mesh.draw_type = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 			data_skinned_mesh.fragment_shader_path = "Game/Assets/shaders/frag.spv";
