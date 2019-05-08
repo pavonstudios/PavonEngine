@@ -8,7 +8,7 @@ struct Trigger{
 
 struct SphereCollider{
 	vec3 center;
-	vec3 radius;
+	float radius;
 };
 
 struct AABB{
@@ -26,4 +26,6 @@ struct Collider{
 	bool can_move_positive_x = true;
 	bool can_move_negative_y = true;
 	bool can_move_positive_y = true;
+	AABB* box = nullptr;
+	SphereCollider* sphere = nullptr;
 };

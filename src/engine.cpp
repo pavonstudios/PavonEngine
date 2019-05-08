@@ -524,8 +524,13 @@ void Engine::translate_mesh(EMesh* mesh, uint direction, float value){
 			break;
 		case RIGTH:
 			direction_vector = vec3(-1,0,0);
+			break;
+		case UP:
+			direction_vector = vec3(0,0,-1);
 			break;	
-		
+		case DOWN:
+			direction_vector = vec3(0,0,1);
+			break;
 	}
 
 	Movement movement = {direction_vector, value};	
@@ -568,7 +573,8 @@ void Engine::translate_mesh(EMesh* mesh, uint direction, float value){
 			if(collider.can_move_positive_x){
 				Objects::translate(this,mesh,movement);
 			}
-			break;	
+			break;
+			
 		default:
 			Objects::translate(this,mesh,movement);
 			break;

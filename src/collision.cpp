@@ -5,8 +5,36 @@ using namespace engine;
 
 
 void Collision::create_collision_helper_vertices(Engine* engine){
-
+	
 }
+bool Collision::sphere_collision_of(EMesh* mesh2 , EMesh* mesh){
+
+		bool y = false;
+		bool z = false;
+		bool x = false;
+
+		AABB tBox = mesh2->box;
+		mesh->collider.collision = false;
+		mesh->collider.positive_x = false;
+		mesh->collider.negative_x = false;
+		mesh->collider.positive_y = false;
+		mesh->collider.negative_y = false;
+
+		glm::vec3 vecPoint = mesh->location_vector;
+		glm::vec3 mesh2_vec = mesh2->location_vector;
+
+		
+
+	
+		if(x & y & z){
+			mesh->collider.collision = true;
+			return true;
+		}
+		
+		mesh->collider.collision = false;
+		
+		return false;
+};
 
 bool Collision::collision_of(EMesh* mesh2 , EMesh* mesh){
 

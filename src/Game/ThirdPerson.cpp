@@ -61,6 +61,14 @@ void ThirdPerson::update(){
 		//this->mesh->model_matrix = glm::rotate(mesh->model_matrix,glm::radians(-15.0f * engine->deltaTime),glm::vec3(0,0,1));
 		 		
 	}
+	#ifdef DEVELOPMENT
+	if(engine->input.Q.bIsPressed){		
+		engine->translate_mesh(mesh,UP,velocity);		
+	}
+	if(engine->input.E.bIsPressed){
+		engine->translate_mesh(mesh,DOWN,velocity);
+	}
+	#endif
 	
 
 	update_camera_postion();
