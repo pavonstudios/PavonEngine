@@ -20,6 +20,11 @@ DEFINES :=
 TYPE :=
 
 .ONESHELL:
+link:
+	cd ./src
+	$(CC) -o ../renderer $(OBJs) model_loader.o $(GAME) $(Library) $(INCLUDE_OPENGL) -I./ $(DEFINES) -DGLTF -lX11 
+
+.ONESHELL:
 vk: DEFINES := -DVULKAN
 vk: TYPE := vk
 vk: renderer.o  $(OBJs) game
@@ -67,6 +72,7 @@ input.o:
 model_loader.o: 
 	cd src
 	$(CC) -c model_loader.cpp -DGLTF $(DEFINES)
+
 
 .ONESHELL:
 objects.o:
