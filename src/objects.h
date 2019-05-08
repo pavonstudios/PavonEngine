@@ -37,6 +37,8 @@
 class Engine;
 
 
+
+
 #define MESH_TYPE_STATIC 0
 #define MESH_TYPE_SKINNED 1
 #define MESH_WITH_COLLIDER 5
@@ -52,6 +54,7 @@ class Engine;
 using namespace glm;
 
 namespace engine{
+   
     struct Trigger{
         bool collision = false;
         bool positive_x = false;
@@ -59,6 +62,7 @@ namespace engine{
         bool positive_y = false;
         bool negative_y = false;
     };
+
     
     struct MapDataToLoad
 	{
@@ -87,6 +91,12 @@ namespace engine{
         bool can_move_positive_y = true;
     };
 
+    struct SphereCollider{
+        vec3 center;
+        vec3 radius;
+    };
+
+
     struct AABB{
         glm::vec3 m_vecMax;
         glm::vec3 m_vecMin;
@@ -110,15 +120,9 @@ namespace engine{
         #endif
         int mesh_type;
     };
+       
     
-    
-    
-    struct NodeUniform{
-        alignas(16) glm::mat4 matrix;
-        alignas(16) glm::mat4 joint_matrix[125];
-        float joint_count;
-    };
-   
+
 }
 struct UniformBufferObject {
     alignas(16) glm::mat4 model;
@@ -129,7 +133,9 @@ struct UniformBufferObject {
 
 #include "skeletal.h"
 
+
 namespace engine{
+
 
 
 struct EMesh {

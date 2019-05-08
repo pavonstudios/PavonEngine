@@ -23,6 +23,8 @@ m models/pavon_the_game/back_bulding.gltf 0 0 0 textures/pavon_the_game/bakcbuil
 
 s models/simple_bones.gltf -4 -2 0 textures/pavon_the_game/fireman.png
 
+m models/sphere.gltf 0 0 0.5 textures/character2.jpg
+
 /
 b models/pavon_the_game/police_patrol.gltf 0 12 0 
 

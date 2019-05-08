@@ -48,6 +48,12 @@ namespace engine{
 		std::vector<AnimationSampler> samplers;
 	};
 
+	struct NodeUniform{
+        alignas(16) glm::mat4 matrix;
+        alignas(16) glm::mat4 joint_matrix[125];
+        float joint_count;
+    };
+   
 	struct SkeletalMesh{
 		EMesh* mesh;
 		std::vector<Node*> nodes;

@@ -1,8 +1,10 @@
 #ifndef COLLISION
 #define COLLISION
+
 #include "engine.h"
 
-using namespace engine;
+
+
 class Collision{
 public:
 	static bool collision_of(EMesh* mesh2 , EMesh* mesh);
