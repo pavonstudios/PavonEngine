@@ -24,7 +24,14 @@ bool Collision::sphere_collision_of(EMesh* mesh2 , EMesh* mesh){
 		glm::vec3 mesh2_vec = mesh2->location_vector;
 
 		
-
+		float distance = glm::distance(mesh->location_vector, mesh2->collider.sphere->center);
+		float sum_of_radius = mesh->collider.sphere->radius + mesh2->collider.sphere->radius;
+		
+		if(distance < sum_of_radius){
+			x =true;
+			y = true;
+			z = true;//TODO:
+		}
 	
 		if(x & y & z){
 			mesh->collider.collision = true;
@@ -160,14 +167,29 @@ void Collision::update_collision_engine(const Engine* engine){
 		EMesh* vehicle = engine->meshes[3];
 
 		EMesh* cube = engine->meshes[0];
+
+		EMesh* other_sphere = engine->meshes[11];
+
+		player->collider.sphere = new SphereCollider;
+		player->collider.sphere->radius = 0.5;
+		player->collider.sphere->center = player->location_vector;
+
+		other_sphere->collider.sphere = new SphereCollider;
+		other_sphere->collider.sphere->radius = 0.5;
+		other_sphere->collider.sphere->center = other_sphere->location_vector;
+
+
 		while(1){
 				if(player){
-					if(Collision::collision_of(vehicle,player)){
-					std::cout << "collision\n";
+					if( Collision::collision_of(vehicle,player) ){
+					std::cout << "AABB collision\n";
 					} 
-					if(Collision::trigger_on(cube,player)){
+					if( Collision::trigger_on(cube,player) ){
 						std::cout << "triiger\n";
 					} 
+					if( Collision::sphere_collision_of(other_sphere,player) ){
+						std::cout << "sphere collision\n";
+					}
 				}
 				
 			
