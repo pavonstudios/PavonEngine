@@ -30,7 +30,7 @@
 #include "objects.h"
 #include "camera.h"
 #include "game_map.hpp"
-
+#include "audio_manager.hpp"
 class Game;
 #include "Game/gui.hpp"
 
@@ -51,7 +51,7 @@ public:
     MeshManager mesh_manager;
     Input input;
     MapManager maps;
-
+    AudioManager audio_manager;
     TranslationUpdate tranlation_update;
 
     Game * game;

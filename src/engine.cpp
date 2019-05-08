@@ -58,9 +58,12 @@ void Engine::init(){
            window_manager.create_window(pAndroid_app);
         #endif
 
+		audio_manager.init();
 
 		maps.engine = this;
 
+		audio_manager.play();
+		
 		draw_loading_screen();		
 		
 		configure_window_callback();

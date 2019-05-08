@@ -1,11 +1,11 @@
 CLANG=clang++ -g -std=c++17 -stdlib=libc++
 CC=g++ -g -std=c++17
-Library=-lglfw -lpthread -lm
+Library=-lglfw -lpthread -lm -lSDL2
 
 MAIN_OBJS = camera.cpp engine.cpp
 DEFINES= -DGLTF -DDEVELOPMENT
 
-OBJs= main.o engine.o camera.o asset_manager.o objects.o input.o skeletal.o WindowManager.o game_map.o collision.o
+OBJs= main.o engine.o camera.o asset_manager.o objects.o input.o skeletal.o WindowManager.o game_map.o collision.o audio_manager.o
 
 
 COMPILE= $(CC) -c -DGLTF $(DEFINES) -DDEVELOPMENT
@@ -29,14 +29,14 @@ vk: DEFINES := -DVULKAN
 vk: TYPE := vk
 vk: renderer.o  $(OBJs) game
 	mkdir -p bin && cd src
-	$(CC) -o ../renderer renderer.o $(OBJs) model_loader.o $(GAME) $(Library) -I./ -lvulkan $(DEFINES)
+	$(CC) -o ../renderer renderer.o $(OBJs) model_loader.o audio.o $(GAME) $(Library) -I./ -lvulkan $(DEFINES)
 
 .ONESHELL:
 es2: DEFINES := -DES2
 es2: TYPE := es2
 es2: $(OBJs) game
 	mkdir -p bin && cd src
-	$(CC) -o ../renderer $(OBJs) model_loader.o $(GAME) $(Library) $(INCLUDE_OPENGL) -I./ $(DEFINES) -DGLTF -lX11 
+	$(CC) -o ../renderer $(OBJs) model_loader.o audio.o $(GAME) $(Library) $(INCLUDE_OPENGL) -I./ $(DEFINES) -DGLTF -lX11 
 
 .ONESHELL:
 game:
@@ -47,6 +47,17 @@ game:
 WindowManager.o: 
 	cd src
 	$(CC) -c WindowManager.cpp -DGLTF $(DEFINES)
+
+
+.ONESHELL:
+audio_manager.o: audio.o
+	cd src
+	$(CC) -c audio_manager.cpp -DGLTF $(DEFINES)
+
+.ONESHELL:
+audio.o: 
+	cd src
+	gcc -g -c audio.c -DGLTF $(DEFINES)
 
 .ONESHELL:
 collision.o: 
