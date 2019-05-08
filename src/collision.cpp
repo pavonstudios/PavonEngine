@@ -5,8 +5,65 @@ using namespace engine;
 
 
 void Collision::create_collision_helper_vertices(Engine* engine){
-	
+	for(EMesh* mesh_with_collider : engine->linear_meshes){
+		if(mesh_with_collider->type == MESH_WITH_COLLIDER){
+			EMesh* mesh_collider_helper = new EMesh();
+			vec3 max = mesh_with_collider->box.m_vecMax;
+			vec3 min = mesh_with_collider->box.m_vecMin;
+			vec3 world_position = mesh_with_collider->location_vector;
+
+
+			Vertex vert1 {};
+			vert1.pos = vec3(max.x + world_position.x, max.y + world_position.y , max.z + world_position.z);
+
+			Vertex vert2 {};
+			vert2.pos = vec3(min.x+world_position.x, max.y+world_position.y, max.z+world_position.z);
+
+			Vertex vert3 {};
+			vert3.pos = vec3(min.x+world_position.x, min.y+world_position.y , max.z+world_position.z);
+
+			Vertex vert4 {};
+			vert4.pos = vec3(min.x+world_position.x, min.y+world_position.y , min.z+world_position.z);
+
+			Vertex vert5 {};
+			vert5.pos = vec3(max.x+world_position.x, max.y+world_position.y , min.z+world_position.z);
+			
+			Vertex vert6 {};
+			vert6.pos = vec3(max.x+world_position.x, min.y+world_position.y , min.z+world_position.z);
+
+			Vertex vert7 {};
+			vert7.pos = vec3(max.x+world_position.x, min.y+world_position.y , max.z+world_position.z);
+
+			Vertex vert8 {};
+			vert8.pos = vec3(min.x+world_position.x, max.y+world_position.y , min.z+world_position.z);
+
+
+			mesh_collider_helper->vertices.push_back(vert1);
+			mesh_collider_helper->vertices.push_back(vert2);
+			mesh_collider_helper->vertices.push_back(vert3);
+			mesh_collider_helper->vertices.push_back(vert4);
+			mesh_collider_helper->vertices.push_back(vert5);
+			mesh_collider_helper->vertices.push_back(vert6);
+			mesh_collider_helper->vertices.push_back(vert7);
+			mesh_collider_helper->vertices.push_back(vert8);
+
+			mesh_collider_helper->data_shader.fragment_shader_path = "Game/Assets/shaders/gles/green.glsl";
+
+			
+			mesh_collider_helper->data_shader.vertex_shader_path = "Game/Assets/shaders/gles/vert_mvp.glsl";
+		
+			mesh_collider_helper->type = -1;
+			mesh_collider_helper->bIsGUI = false;
+			mesh_collider_helper->name = "collider";   
+
+
+			engine->linear_meshes.push_back(mesh_collider_helper);
+			engine->colliders_draw_mesh.push_back(mesh_collider_helper);
+
+		}
+	}
 }
+
 bool Collision::sphere_collision_of(EMesh* mesh2 , EMesh* mesh){
 
 		bool y = false;

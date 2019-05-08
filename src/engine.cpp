@@ -80,6 +80,7 @@ void Engine::init(){
 
 		#ifdef ES2
 		Skeletal::create_bones_vertices(this);
+		Collision::create_collision_helper_vertices(this);
 		#endif
 		
 		ready_to_game = true;
@@ -189,7 +190,18 @@ void Engine::es2_draw_frame() {
 			renderer.activate_vertex_attributes(model->mesh);
 			update_mvp(model->mesh);
 			renderer.draw(model->mesh);
-		}			
+		}		
+
+		glClear(GL_DEPTH_BUFFER_BIT);
+		for(EMesh* mesh : colliders_draw_mesh){
+			glUseProgram  ( mesh->shader_program );
+			renderer.activate_vertex_attributes(mesh);
+			update_mvp(mesh);
+			glBindBuffer(GL_ARRAY_BUFFER,mesh->vertex_buffer);
+			glDrawArrays( GL_POINTS,0,mesh->vertices.size());
+			glLineWidth(3);
+        	glDrawArrays(  GL_LINES,0,mesh->vertices.size());
+		}	
 		
 		glClear(GL_DEPTH_BUFFER_BIT);
 		for(auto* mesh : helpers){
@@ -488,7 +500,7 @@ void Engine::load_map(std::string path){
 
 
 	for(auto mesh : meshes){
-		if(mesh->type == -1){
+		if(mesh->type == -1 || mesh->type == MESH_WITH_COLLIDER){
 			if(mesh->gltf_model.accessors.size() > 0){
             if(mesh->gltf_model.accessors[0].minValues.size() > 0){
                 mesh->box.m_vecMax.x = mesh->gltf_model.accessors[0].maxValues[0];

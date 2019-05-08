@@ -48,7 +48,7 @@ void MapManager::parse_map_file(std::stringstream &file){
 					}
 					if(first_char == 'a'){
 						//with collider
-						type = MESH_WITH_COLLIDER;
+						mesh_type = MESH_WITH_COLLIDER;
 					}
 									
 					if(engine->game->player_id == -1){
@@ -138,6 +138,7 @@ void MapManager::create_mesh_with_data(struct MapDataToLoad &data){
 	model->location_vector = location;
 	model->model_matrix = model_matrix;
 
+	model->type = data.type;
 	if(data.type != MESH_LOD){
 		engine->meshes.push_back(model);
 		
@@ -146,6 +147,7 @@ void MapManager::create_mesh_with_data(struct MapDataToLoad &data){
 	model->texture.texture_id = data.texture_id;
 	model->model_id = data.model_id;
 	engine->linear_meshes.push_back(model);
+
 
 }
 

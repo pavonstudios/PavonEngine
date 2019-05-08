@@ -71,7 +71,8 @@ public:
     std::vector<EMesh*> unique_meshes;
     std::vector<EMesh*> skeletal_meshes;//loaded mesh
 
-    std::vector<EMesh*> helpers; 
+    std::vector<EMesh*> helpers;
+    std::vector<EMesh*> colliders_draw_mesh;  
 
     std::vector<Model*> models_to_draw;
     #ifdef ES2 
