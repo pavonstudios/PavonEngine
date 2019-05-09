@@ -44,7 +44,7 @@ namespace engine{
 	};
 
 	struct Animation{
-		AnimationChannel channels;
+		std::vector<AnimationChannel> channels;
 		std::vector<AnimationSampler> samplers;
 	};
 
@@ -55,10 +55,10 @@ namespace engine{
     };
    
 	struct SkeletalMesh{
-		EMesh* mesh;
+		EMesh* mesh = nullptr;
 		std::vector<Node*> nodes;
 		std::vector<Node*> linear_nodes;
-		Skin* skin;
+		Skin* skin = nullptr;
 		struct NodeUniform node_uniform;
 		std::vector<Animation> animations;
 		

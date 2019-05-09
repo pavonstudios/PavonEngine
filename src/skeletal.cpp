@@ -40,10 +40,11 @@ void Skeletal::load_data(EMesh* mesh){
     Skeletal::load_skin(mesh, mesh->gltf_model);
     NodeManager::create_nodes_index(mesh);
     mesh->skeletal = new SkeletalMesh;
-    Skeletal::load_animation(mesh->skeletal,mesh->gltf_model);
     mesh->skeletal->nodes = mesh->nodes;
     mesh->skeletal->linear_nodes = mesh->linear_nodes;
     mesh->skeletal->mesh = mesh; 
+    Skeletal::load_animation(mesh->skeletal,mesh->gltf_model);
+
 
 
     Skeletal::update_joints_nodes(mesh);
@@ -298,9 +299,20 @@ void Skeletal::load_animation(SkeletalMesh* skeletal, tinygltf::Model &gltf_mode
                     break;
                 }
             }
+             //channels
+            for(auto& source : anim.channels){
+                AnimationChannel channel{};
+                channel.sampler_index = source.sampler;
+                channel.node = node_from_index(skeletal->mesh,source.target_node);
+                new_animation.channels.push_back(channel);
+            }
+
             new_animation.samplers.push_back(new_sampler);
 
         }
+
+       
+        
 
         skeletal->animations.push_back(new_animation);
     }
@@ -394,6 +406,7 @@ void Skeletal::create_bones_vertices(Engine* engine){
             }else if (i >= 3){
                 triangle->indices.push_back(skin->joints[i]->parent->bone_index);
             }
+
         }
         triangle->indices.push_back(i);
 
