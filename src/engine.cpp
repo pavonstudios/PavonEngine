@@ -24,7 +24,6 @@ Engine::Engine(){
 	Engine::Engine(android_app * pApp){
         renderer.app = pApp;
         this->pAndroid_app = pApp;
-
 	}
 #endif
 
@@ -50,86 +49,77 @@ void Engine::draw_loading_screen(){
 
 
 void Engine::init(){
-        window_manager.engine = this;
-		#ifndef ANDROID
-			window_manager.create_window();
-        #endif
-        #ifdef ANDROID
-           window_manager.create_window(pAndroid_app);
-        #endif
+	window_manager.engine = this;
+	#ifndef ANDROID
+		window_manager.create_window();
+	#endif
+	#ifdef ANDROID
+		window_manager.create_window(pAndroid_app);
+	#endif
 
-		audio_manager.init();
+	audio_manager.init();
 
-		maps.engine = this;
+	maps.engine = this;
 
-		audio_manager.play();
-		
-		draw_loading_screen();		
-		
-		configure_window_callback();
+	audio_manager.play();
+	
+	draw_loading_screen();		
+	
+	configure_window_callback();
 
-		#ifdef VULKAN
-				
-			renderer.run(&vkdata);		
+	#ifdef VULKAN			
+		renderer.run(&vkdata);		
 
-			mesh_manager.vulkan_device = vulkan_device;
-		#endif
-		
-		std::string map_path = assets.path("Maps/map01.map");
+		mesh_manager.vulkan_device = vulkan_device;
+	#endif
+	
+	std::string map_path = assets.path("Maps/map01.map");
 
-		game = new Game(this);
-		load_map(map_path);
-		game->init();
+	game = new Game(this);
+	load_map(map_path);
+	game->init();
 
-		#ifdef ES2//gizmos helpers
+	#ifdef ES2//gizmos helpers
 		Skeletal::create_bones_vertices(this);
 		Collision::create_collision_helper_vertices(this);
-		#endif
-		
-		ready_to_game = true;
-
-	auto tStart = std::chrono::high_resolution_clock::now();
-
-		#ifdef VULKAN
-			renderer.VulkanConfig();
-		#endif
-
-		mesh_manager.create_buffers(this,unique_meshes);
-		mesh_manager.create_buffers(this,linear_meshes);
-
-
-		#ifdef VULKAN			
-			
-			for(auto mesh : linear_meshes){
-				renderer.load_mesh(mesh);
-				renderer.update_descriptor_set(mesh);
-			}			
-			
-			renderer.configure_objects();
-				
-		#endif
-
+	#endif
 	
-		#if defined(ES2) || defined(ANDROID)
-			renderer.init_gl();
-			renderer.load_shaders(linear_meshes);
-			renderer.load_textures(maps.same_textures);
-			renderer.load_textures(linear_meshes);	
+	ready_to_game = true;
+
+auto tStart = std::chrono::high_resolution_clock::now();
+
+	#ifdef VULKAN
+		renderer.VulkanConfig();
+	#endif
+
+	mesh_manager.create_buffers(this,unique_meshes);
+	mesh_manager.create_buffers(this,linear_meshes);
+
+
+	#ifdef VULKAN			
+		
+		for(auto mesh : linear_meshes){
+			renderer.load_mesh(mesh);
+			renderer.update_descriptor_set(mesh);
+		}			
+		
+		renderer.configure_objects();
 			
-				//edit_mode = true;
-    	#endif
-
-#ifdef DEVELOPMENT
-	calculate_time(tStart);
-#endif
-
-		
-		init_collision_engine();
-	
+	#endif
 
 
+	#if defined(ES2) || defined(ANDROID)
+		renderer.init_gl();
+		renderer.load_shaders(linear_meshes);
+		renderer.load_textures(maps.same_textures);
+		renderer.load_textures(linear_meshes);
+	#endif
 
-		
+	#ifdef DEVELOPMENT
+		calculate_time(tStart);
+	#endif
+
+	init_collision_engine();		
 	
 }
 
@@ -220,24 +210,20 @@ void Engine::es2_draw_frame() {
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,mesh->indices_buffer);
         	glDrawElements(GL_LINES,mesh->indices.size(),GL_UNSIGNED_INT,(void*)0);
 		}
-
 				
 	#endif
 }
 
-void Engine::main_loop(){
-
-	
+void Engine::main_loop(){	
 	
 	gettimeofday ( &t1 , &tz );
 	
 	
-	while (!window_manager.window_should_close()) {
+	while ( !window_manager.window_should_close() ) {
+
 		window_manager.check_events();
 
-
 		input.update_input(this);
-
 
 		loop_data();
 
@@ -249,24 +235,25 @@ void Engine::main_loop(){
 		
 		#if defined (ES2) || defined(ANDROID)
 			es2_draw_frame();
-		#endif		
+		#endif	
 
-		frames++;
-#ifdef DEVELOPMENT
-		calculate_fps(tStart);	 
-#endif
+		#ifdef DEVELOPMENT
+			frames++;
+			calculate_fps(tStart);	 
+		#endif
+
 		window_manager.swap_buffers();
 
-		tranlation_update.movements.clear();
+		tranlation_update.movements.clear();		
 		
-		
-	}	
+	}
+
 	delete game;
+
 	#ifdef VULKAN
 		renderer.finish();
 		//window manager clear ?
-    #endif
-	
+    #endif	
 }
 
 void Engine::update_render_size(){
@@ -275,15 +262,14 @@ void Engine::update_render_size(){
 	    glViewport(0,0,main_camera.screen_width,main_camera.screen_height);
    	#endif
 
-	    if(ready_to_game){
-            if(game){
-                if(game->gui)
-                    game->gui->update_elements_mvp();
-            }
-	    }
-
-
+	if(ready_to_game){
+		if(game){
+			if(game->gui)
+				game->gui->update_elements_mvp();
+		}
+	}
 }
+
 void Engine::delete_meshes(){
 	for(auto mesh : meshes){
 		delete mesh;
@@ -344,6 +330,7 @@ void Engine::delete_meshes(){
 #endif
 
 float Engine::get_time(){
+
 	static auto startTime = std::chrono::high_resolution_clock::now();
 
 	auto currentTime = std::chrono::high_resolution_clock::now();
@@ -356,6 +343,7 @@ float Engine::get_time(){
 }
 
 void Engine::update_mvp(EMesh* mesh){
+	
 	glm::mat4 mat = glm::mat4(1.0);
 	if(mesh->bIsGUI){
 		//TODO: 3d gui
