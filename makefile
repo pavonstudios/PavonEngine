@@ -19,17 +19,14 @@ INCLUDE_OPENGL = -lGLEW -lGLESv2 -lEGL
 DEFINES :=
 TYPE :=
 
-.ONESHELL:
-link:
-	cd ./src
-	$(CC) -o ../renderer $(OBJs) model_loader.o $(GAME) $(Library) $(INCLUDE_OPENGL) -I./ $(DEFINES) -DGLTF -lX11 
 
 .ONESHELL:
 vk: DEFINES := -DVULKAN
 vk: TYPE := vk
 vk: renderer.o  $(OBJs) game
 	mkdir -p bin && cd src
-	$(CC) -o ../renderer renderer.o $(OBJs) model_loader.o audio.o $(GAME) $(Library) -I./ -lvulkan $(DEFINES)
+	$(CC) -o ../renderer renderer.o audio.o $(OBJs) model_loader.o $(GAME) $(Library) -I./ -lvulkan $(DEFINES)
+
 
 .ONESHELL:
 es2: DEFINES := -DES2
@@ -37,6 +34,11 @@ es2: TYPE := es2
 es2: $(OBJs) game
 	mkdir -p bin && cd src
 	$(CC) -o ../renderer $(OBJs) model_loader.o audio.o $(GAME) $(Library) $(INCLUDE_OPENGL) -I./ $(DEFINES) -DGLTF -lX11 
+
+.ONESHELL:
+link:
+	cd ./src
+	$(CC) -o ../renderer $(OBJs) audio.o model_loader.o $(GAME) $(Library) $(INCLUDE_OPENGL) -I./ $(DEFINES) -DGLTF -lX11 
 
 .ONESHELL:
 game:

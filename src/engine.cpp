@@ -52,7 +52,7 @@ void Engine::draw_loading_screen(){
 void Engine::init(){
         window_manager.engine = this;
 		#ifndef ANDROID
-		window_manager.create_window();
+			window_manager.create_window();
         #endif
         #ifdef ANDROID
            window_manager.create_window(pAndroid_app);
@@ -70,9 +70,9 @@ void Engine::init(){
 
 		#ifdef VULKAN
 				
-				renderer.run(&vkdata);		
-	
-				mesh_manager.vulkan_device = vulkan_device;
+			renderer.run(&vkdata);		
+
+			mesh_manager.vulkan_device = vulkan_device;
 		#endif
 		
 		std::string map_path = assets.path("Maps/map01.map");
@@ -81,12 +81,13 @@ void Engine::init(){
 		load_map(map_path);
 		game->init();
 
-		#ifdef ES2
+		#ifdef ES2//gizmos helpers
 		Skeletal::create_bones_vertices(this);
 		Collision::create_collision_helper_vertices(this);
 		#endif
 		
 		ready_to_game = true;
+
 	auto tStart = std::chrono::high_resolution_clock::now();
 
 		#ifdef VULKAN
@@ -123,11 +124,10 @@ void Engine::init(){
 #endif
 
 		
-		
+		init_collision_engine();
 	
 
-		std::thread col_thread(Collision::update_collision_engine,(Engine*)this);
-		col_thread.detach();
+
 
 		
 	
@@ -332,6 +332,7 @@ void Engine::delete_meshes(){
 				#endif
 		      usleep( 1000* LIMIT_FPS);
 	}
+
 	void Engine::calculate_time( std::chrono::time_point<std::chrono::system_clock> tStart){
 		auto tEnd = std::chrono::high_resolution_clock::now();
 		auto tDiff = std::chrono::duration<double, std::milli>(tEnd - tStart).count();
@@ -632,4 +633,11 @@ void Engine::distance_object_from_camera(){
 	
 	
 	
+}
+
+void Engine::init_collision_engine(){
+	
+	std::thread col_thread(Collision::update_collision_engine,(Engine*)this);
+	col_thread.detach();
+
 }

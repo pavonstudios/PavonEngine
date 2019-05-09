@@ -11,10 +11,13 @@ void Skeletal::update_joints_nodes(EMesh* mesh){
     mesh->node_uniform.joint_count = (float)joints_number;  
 
     for(int i = 0; i < skin->joints.size(); i++){
+
         Node* joint = skin->joints[i];
+
         Skeletal::update_joint_matrix(joint);
         
         glm::mat4 bind_mat = NodeManager::get_global_matrix(joint);
+        
         glm::mat joint_mat = 
 
             //inverse(mesh->model_matrix) * 
@@ -39,6 +42,7 @@ void Skeletal::load_data(EMesh* mesh){
     }
   
     Skeletal::load_skin(mesh, mesh->gltf_model);
+    
     NodeManager::create_nodes_index(mesh);//bones index numeration
 
     mesh->skeletal = new SkeletalMesh;

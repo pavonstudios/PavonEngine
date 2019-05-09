@@ -4,20 +4,15 @@
 
 #define GLM_FORCE_SWIZZLE
 
-#ifndef ANDROID
-    #ifdef VULKAN
-        #include "renderer.h"
-        #define GLFW_INCLUDE_VULKAN
-        #include "VulkanData.hpp"
-        #include <GLFW/glfw3.h>
-    #endif
-    #include <pthread.h>
 
-#else
-    #include "android_renderer.h"
-#endif
+#ifdef VULKAN
+    #include "renderer.h"
+    #define GLFW_INCLUDE_VULKAN
+    #include "VulkanData.hpp"
+    #include <GLFW/glfw3.h>
+#endif    
 
-#ifdef ES2    
+#if defined (ES2) || defined (ANDROID)  
     #include "android_renderer.h"
 #endif
 
@@ -42,9 +37,14 @@ using namespace engine;
 class Engine {
   
 public:
-    Renderer renderer; 
-
     Engine();
+
+    #ifdef ANDROID
+        Engine(android_app * pApp);
+        android_app * pAndroid_app;
+    #endif
+
+    Renderer renderer;   
     WindowManager window_manager;
     AssetManager assets;
     Camera main_camera;
@@ -59,12 +59,8 @@ public:
     bool ready_to_game = false;
     bool loading = true;
     bool play_animations = false;
-    float animation_time = 0.0f;
-    
-    #ifdef ANDROID
-        Engine(android_app * pApp);
-        android_app * pAndroid_app;
-    #endif
+    float animation_time = 0.0f;   
+   
 
     std::vector<EMesh*> meshes;//mesh to draw
     std::vector<EMesh*> linear_meshes;//loaded mesh 
@@ -89,7 +85,7 @@ public:
     float fps = 0;
     int last_fps = 0;
     float frame_time = 0;
-    struct  timezone  tz;
+    struct timezone  tz;
 	timeval  t1, t2;
     int  num_frames = 0;
     float LIMIT_FPS = 8;
@@ -121,24 +117,24 @@ public:
         void calculate_fps(std::chrono::time_point<std::chrono::system_clock>);
     #endif 
 
-#ifndef ANDROID
-    
-    #ifdef VULKAN        
-        VulkanData vkdata = {VK_NULL_HANDLE};
-        vks::VulkanDevice* vulkan_device; 
-        void vulkan_loop();     
-	   
-        GLFWwindow* window;
-        GLFWwindow* get_window_pointer()
-        {
-            return window;
-        }    
-    #endif
+    void init_collision_engine();
 
     
+#ifdef VULKAN        
+    VulkanData vkdata = {VK_NULL_HANDLE};
+    vks::VulkanDevice* vulkan_device; 
+    void vulkan_loop();     
+    
+    GLFWwindow* window;
+    GLFWwindow* get_window_pointer()
+    {
+        return window;
+    }    
+#endif
+    
 
 
-#endif//end no define android
+
 
     
 
