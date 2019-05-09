@@ -309,10 +309,7 @@ void Skeletal::load_animation(SkeletalMesh* skeletal, tinygltf::Model &gltf_mode
 
             new_animation.samplers.push_back(new_sampler);
 
-        }
-
-       
-        
+        }        
 
         skeletal->animations.push_back(new_animation);
     }
@@ -320,8 +317,8 @@ void Skeletal::load_animation(SkeletalMesh* skeletal, tinygltf::Model &gltf_mode
 
 void Skeletal::reset_animations(std::vector<SkeletalMesh*> skeletals){
     for(auto* skeletal : skeletals){
-          EMesh* mesh = skeletal->mesh;
-         Node* node = Skeletal::node_by_name(mesh,"bone2");
+        EMesh* mesh = skeletal->mesh;
+        Node* node = Skeletal::node_by_name(mesh,"thin_L");
 
         quat new_quat{};
         node->Rotation = new_quat;
@@ -333,30 +330,33 @@ void Skeletal::play_animations(std::vector<SkeletalMesh*> skeletals, float time)
     for(auto* skeletal : skeletals){
         mat4 model_space = mat4(1.0);
        
-        AnimationSampler sampler = skeletal->animations[0].samplers[0];
+       AnimationSampler sampler{};
+       for(auto& channel : skeletal->animations[0].channels){
+           sampler = skeletal->animations[0].samplers[channel.sampler_index];
 
-       
-        EMesh* mesh = skeletal->mesh;
+              //node->Translation = vec3(skeletal->animations[0].samplers[0].outputs_vec4[4]);
+
+            for(size_t i = 0; i < sampler.inputs.size() - 1 ; i++ ){
+                if( (time >= sampler.inputs[i])  && ( time <= sampler.inputs[i + 1] ) ){
+
+                        Node* node = channel.node;
+
+                        glm::quat quat1;
+                        quat1.x = sampler.outputs_vec4[i+1].x;
+                        quat1.y = sampler.outputs_vec4[i+1].y;
+                        quat1.z = sampler.outputs_vec4[i+1].z;
+                        quat1.w = sampler.outputs_vec4[i+1].w;     
+
+                        node->Rotation = quat1;
+                }
+
+            }
+
+       }     
+      
         			
 		
-        //node->Translation = vec3(skeletal->animations[0].samplers[0].outputs_vec4[4]);
-
-       for(size_t i = 0; i < sampler.inputs.size() - 1 ; i++ ){
-           if( (time >= sampler.inputs[i])  && ( time <= sampler.inputs[i + 1] ) ){
-
-                Node* node = Skeletal::node_by_name(mesh,"bone2");
-
-
-                glm::quat quat1;
-                quat1.x = sampler.outputs_vec4[i+1].x;
-                quat1.y = sampler.outputs_vec4[i+1].y;
-                quat1.z = sampler.outputs_vec4[i+1].z;
-                quat1.w = sampler.outputs_vec4[i+1].w;     
-
-                node->Rotation = quat1;
-           }
-
-       }
+     
 
       //   mat4 rot = glm::mat4(quat1);
         //node->rot_mat = rot;

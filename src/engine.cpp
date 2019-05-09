@@ -157,7 +157,7 @@ void Engine::loop_data(){
 			std::cout << "time: " << animation_time << std::endl;
 			if(animation_time >= 3){
 				animation_time = 0;
-				Skeletal::reset_animations(skeletals);
+				//Skeletal::reset_animations(skeletals);
 				//play_animations = false;
 			}
 		}
