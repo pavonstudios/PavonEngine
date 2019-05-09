@@ -75,7 +75,6 @@ namespace engine{
 		static Node* find_node(Node* parent, uint32_t index);
 		static void load_skin(EMesh* mesh, tinygltf::Model &gltf_model);
 		static void load_data(EMesh* mesh);
-		static void update_joints_matrix(EMesh* mesh, Node* node);
 		static Node* node_by_name(EMesh* mesh, const char* name);
 		static void update_joints_nodes(EMesh* mesh);
 		static void update_joint_matrix(Node* node);
@@ -94,8 +93,6 @@ namespace engine{
 	class NodeManager{
 		public:
 			static void create_nodes_index(EMesh* mesh);
-			static void update(Node* node);
-			static void update(EMesh* mesh, Node*  node);
 			static glm::mat4 get_local_matrix(Node* node);
 			static glm::mat4 get_global_matrix(Node* node);
 			static glm::mat4 get_global_matrix_simple(Node* node);

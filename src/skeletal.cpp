@@ -1,14 +1,14 @@
 #include "objects.h"
 #include "engine.h"
 using namespace engine;
+/*
+Fill node uniform block of joints matrix for send to the vertex shader
+*/
 void Skeletal::update_joints_nodes(EMesh* mesh){
     
     Skin* skin = mesh->skins[0];
     size_t joints_number = skin->joints.size();
-    mesh->node_uniform.joint_count = (float)joints_number;
-    
-
-
+    mesh->node_uniform.joint_count = (float)joints_number;  
 
     for(int i = 0; i < skin->joints.size(); i++){
         Node* joint = skin->joints[i];
@@ -17,7 +17,9 @@ void Skeletal::update_joints_nodes(EMesh* mesh){
         glm::mat4 bind_mat = NodeManager::get_global_matrix(joint);
         glm::mat joint_mat = 
 
-            joint->global_matrix; //* skin->inverse_bind_matrix[i];
+            //inverse(mesh->model_matrix) * 
+            joint->global_matrix;// * 
+            skin->inverse_bind_matrix[i];
 
 
         mesh->node_uniform.joint_matrix[i] = joint_mat;
@@ -35,23 +37,25 @@ void Skeletal::load_data(EMesh* mesh){
         load_data.parent = nullptr;
         Skeletal::load_node(mesh,load_data);
     }
-
   
     Skeletal::load_skin(mesh, mesh->gltf_model);
-    NodeManager::create_nodes_index(mesh);
+    NodeManager::create_nodes_index(mesh);//bones index numeration
+
     mesh->skeletal = new SkeletalMesh;
     mesh->skeletal->nodes = mesh->nodes;
     mesh->skeletal->linear_nodes = mesh->linear_nodes;
     mesh->skeletal->mesh = mesh; 
+
     Skeletal::load_animation(mesh->skeletal,mesh->gltf_model);
 
-
-
     Skeletal::update_joints_nodes(mesh);
-
-
 }
 
+/*
+
+update node->global_matrix
+
+*/
 void Skeletal::update_joint_matrix(Node* node){
     glm::mat4 joint_mat = glm::mat4(1.0);
     if(node->parent){
@@ -72,40 +76,6 @@ void NodeManager::create_nodes_index(EMesh* mesh){
 }
 
 
-void NodeManager::update(Node* node){
-    if(node->name != "")
-        std::cout << "update node: " << node->name << std::endl;
-    if(node->mesh){
-        glm::mat4 global_transform_mat = get_global_matrix(node);
-        EMesh* mesh = node->mesh;
-        if(node->skin){
-            std::cout << "SKIN update" << std::endl;
-            Skin* skin = node->skin;
-            mesh->node_uniform.matrix = global_transform_mat;
-
-            glm::mat4 inverse_transform = glm::inverse(global_transform_mat);
-
-            size_t joints_number = skin->joints.size();
-            mesh->node_uniform.joint_count = (float)joints_number;
-
-            Skeletal::update_joints_nodes(mesh);
-        }
-    }
-    for(auto& child : node->children){
-        NodeManager::update(child);
-    }
-}
-
-void NodeManager::update(EMesh* mesh, Node* node){  
-    
-    
-    /* for(auto& child : node->children){
-        NodeManager::update(mesh,child);
-    } */
-    Skeletal::update_joints_nodes(mesh);
-        
-}
-
 glm::mat4 NodeManager::get_local_matrix(Node* node){
     glm::mat4 local = glm::translate(glm::mat4(1.0f),node->Translation) * glm::mat4(node->Rotation) * node->rot_mat;
     return local;
@@ -121,6 +91,7 @@ glm::mat4 NodeManager::get_global_matrix(Node* node){
     return local_matrix;
 
 }
+
 glm::mat4 NodeManager::get_global_matrix_simple(Node* node){
     glm::mat4 local_matrix = get_local_matrix(node);
     Node* node_parent = node->parent;
@@ -131,15 +102,9 @@ glm::mat4 NodeManager::get_global_matrix_simple(Node* node){
     else
     {
         global_mat = local_matrix;
-    }
-     
+    }     
    
     return global_mat;
-
-}
-
-
-void Skeletal::update_joints_matrix(EMesh* mesh, Node* node){
 
 }
 
@@ -326,7 +291,6 @@ void Skeletal::reset_animations(std::vector<SkeletalMesh*> skeletals){
 }
 
 void Skeletal::play_animations(std::vector<SkeletalMesh*> skeletals, float time){
-    //std::cout << "play\n";
     for(auto* skeletal : skeletals){
         mat4 model_space = mat4(1.0);
        
@@ -334,9 +298,8 @@ void Skeletal::play_animations(std::vector<SkeletalMesh*> skeletals, float time)
        for(auto& channel : skeletal->animations[0].channels){
            sampler = skeletal->animations[0].samplers[channel.sampler_index];
 
-              //node->Translation = vec3(skeletal->animations[0].samplers[0].outputs_vec4[4]);
-
             for(size_t i = 0; i < sampler.inputs.size() - 1 ; i++ ){
+                
                 if( (time >= sampler.inputs[i])  && ( time <= sampler.inputs[i + 1] ) ){
 
                         Node* node = channel.node;
@@ -352,14 +315,9 @@ void Skeletal::play_animations(std::vector<SkeletalMesh*> skeletals, float time)
 
             }
 
-       }     
-      
-        			
-		
-     
+       }   
+       Skeletal::update_joints_nodes(skeletal->mesh);  
 
-      //   mat4 rot = glm::mat4(quat1);
-        //node->rot_mat = rot;
     }
 }
 
@@ -378,9 +336,7 @@ void Skeletal::update_joint_vertices_data(Engine* engine){
    
     #ifdef ES2
     glBindBuffer(GL_ARRAY_BUFFER,mesh->vertex_buffer);
-    //glBufferSubData(mesh->vertex_buffer,0,mesh->vertices.size() * sizeof(Vertex),mesh->vertices.data());
     glBufferData(GL_ARRAY_BUFFER,mesh->vertices.size() * sizeof(Vertex),mesh->vertices.data(),GL_STATIC_DRAW);
-
     #endif
 }
 
@@ -399,9 +355,7 @@ void Skeletal::create_bones_vertices(Engine* engine){
         
         if(skin->joints[i]->parent){
             
-            if(i == 0){
-                //triangle->indices.push_back(0);
-            }else if(i == 2){
+            if(i == 2){
                 triangle->indices.push_back(i-1);
             }else if (i >= 3){
                 triangle->indices.push_back(skin->joints[i]->parent->bone_index);

@@ -144,7 +144,7 @@ void Engine::loop_data(){
 
 		game->update();
 
-		//distance_object_from_camera();
+		distance_object_from_camera();
 
 		Objects::update_positions(this,tranlation_update);
 
@@ -605,8 +605,8 @@ void Engine::translate_mesh(EMesh* mesh, uint direction, float value){
 void Engine::distance_object_from_camera(){
 	vec3 camera_position = main_camera.cameraPos;
 	int mesh_id = 9;
-	EMesh* mesh = linear_meshes[9];
-	mesh->lod1 = linear_meshes[10];
+	EMesh* mesh = linear_meshes[12];
+	mesh->lod1 = linear_meshes[13];
 	vec3 object_position = mesh->location_vector;
 
 	bool erased = false;
@@ -617,12 +617,12 @@ void Engine::distance_object_from_camera(){
 		#ifdef ES2 
 			//std::cout << "distance: " << distance <<std::endl;
 			if(distance > 15){
-				meshes[9] = linear_meshes[11];
+				meshes[12] = linear_meshes[13];
 				erased = true;
 				//std::cout << "erased" << std::endl;
 			}
 			if(distance < 15){
-				meshes[9] = linear_meshes[10];
+				meshes[12] = linear_meshes[12];
 				erased = true;
 				//std::cout << "erased" << std::endl;
 			}

@@ -25,8 +25,8 @@ m models/sphere.gltf 0 0 0.5 textures/character2.jpg player
 m models/sphere.gltf -1 2 0.5 textures/car01.jpg 
 
 
-#m models/pavon_the_game/big_pole.gltf 0 0 0 textures/pavon_the_game/modules_coust.png
-#m models/pavon_the_game/big_poleLOD1.gltf 0 0 0 textures/pavon_the_game/modules_coust.png LOD
+m models/pavon_the_game/big_pole.gltf 0 -10 0 textures/pavon_the_game/modules_coust.png
+m models/pavon_the_game/big_poleLOD1.gltf -10 0 0 textures/pavon_the_game/modules_coust.png LOD
 
 /
 b models/pavon_the_game/police_patrol.gltf 0 12 0 
