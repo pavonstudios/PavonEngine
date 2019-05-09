@@ -38,7 +38,7 @@ void Skeletal::load_data(EMesh* mesh){
 
   
     Skeletal::load_skin(mesh, mesh->gltf_model);
-
+    NodeManager::create_nodes_index(mesh);
     mesh->skeletal = new SkeletalMesh;
     Skeletal::load_animation(mesh->skeletal,mesh->gltf_model);
     mesh->skeletal->nodes = mesh->nodes;
@@ -375,14 +375,27 @@ void Skeletal::update_joint_vertices_data(Engine* engine){
 void Skeletal::create_bones_vertices(Engine* engine){
    
     EMesh* triangle = new EMesh();
+    Skin* skin = engine->skeletal_meshes[0]->skins[0];
 
-    for(auto* node : engine->skeletal_meshes[0]->skins[0]->joints){
-        mat4 local = NodeManager::get_global_matrix(node);
+    for( int i = 0; i < skin->joints.size() ; i++ ){
+        mat4 local = NodeManager::get_global_matrix(skin->joints[i]);
         local = engine->skeletal_meshes[0]->model_matrix * local;
         Vertex vert {};
         vec3 position =  vec3(local[3]);
         vert.pos = position;
         triangle->vertices.push_back(vert);
+        
+        if(skin->joints[i]->parent){
+            
+            if(i == 0){
+                //triangle->indices.push_back(0);
+            }else if(i >= 2){
+                triangle->indices.push_back(i-1);
+            }else if (i >= 3){
+                triangle->indices.push_back(skin->joints[i]->parent->bone_index-1);
+            }
+        }
+        triangle->indices.push_back(i);
 
     }
 
