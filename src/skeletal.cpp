@@ -389,10 +389,10 @@ void Skeletal::create_bones_vertices(Engine* engine){
             
             if(i == 0){
                 //triangle->indices.push_back(0);
-            }else if(i >= 2){
+            }else if(i == 2){
                 triangle->indices.push_back(i-1);
             }else if (i >= 3){
-                triangle->indices.push_back(skin->joints[i]->parent->bone_index-1);
+                triangle->indices.push_back(skin->joints[i]->parent->bone_index);
             }
         }
         triangle->indices.push_back(i);

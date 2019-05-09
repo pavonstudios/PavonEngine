@@ -216,7 +216,9 @@ void Engine::es2_draw_frame() {
 			glBindBuffer(GL_ARRAY_BUFFER,mesh->vertex_buffer);
 			glDrawArrays( GL_POINTS,0,mesh->vertices.size());
 			glLineWidth(3);
-        	glDrawArrays(  GL_LINES,0,mesh->vertices.size());
+        	//glDrawArrays(  GL_LINES,0,mesh->vertices.size());
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,mesh->indices_buffer);
+        	glDrawElements(GL_LINES,mesh->indices.size(),GL_UNSIGNED_INT,(void*)0);
 		}
 
 				
