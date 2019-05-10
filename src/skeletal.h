@@ -71,13 +71,10 @@ namespace engine{
 	class Skeletal{
 	public:
 		static void load_node(EMesh* mesh, NodeLoadData& node_data);    
-		static Node* node_from_index(EMesh* mesh, uint32_t index);
-		static Node* find_node(Node* parent, uint32_t index);
 		static void load_skin(EMesh* mesh, tinygltf::Model &gltf_model);
 		static void load_data(EMesh* mesh);
-		static Node* node_by_name(EMesh* mesh, const char* name);
+		
 		static void update_joints_nodes(EMesh* mesh);
-		static void update_joint_matrix(Node* node);
 		static void load_animation(SkeletalMesh* skeletal, tinygltf::Model &gltf_model);
 
 		static void play_animations(std::vector<SkeletalMesh*> skeletals, float time);
@@ -88,6 +85,10 @@ namespace engine{
 
 		static void reset_animations(std::vector<SkeletalMesh*> skeletals);
 
+		static Node* node_by_name(EMesh* mesh, const char* name);
+		static Node* node_from_index(EMesh* mesh, uint32_t index);
+		static Node* find_node(Node* parent, uint32_t index);
+
 	};
 
 	class NodeManager{
@@ -95,7 +96,6 @@ namespace engine{
 			static void create_nodes_index(EMesh* mesh);
 			static glm::mat4 get_local_matrix(Node* node);
 			static glm::mat4 get_global_matrix(Node* node);
-			static glm::mat4 get_global_matrix_simple(Node* node);
 	};
 
 }

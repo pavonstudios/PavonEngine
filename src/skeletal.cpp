@@ -13,11 +13,8 @@ void Skeletal::update_joints_nodes(EMesh* mesh){
     for(size_t i = 0; i < skin->joints.size(); i++){
 
         Node* joint = skin->joints[i];
-
-        Skeletal::update_joint_matrix(joint);
-        
-        //glm::mat4 bind_mat = NodeManager::get_global_matrix(joint);
-        mat4 local = NodeManager::get_global_matrix(skin->joints[i]);
+     
+        mat4 local = NodeManager::get_global_matrix(joint);
         local = mesh->model_matrix * local;
 
         glm::mat joint_mat = 
@@ -57,19 +54,6 @@ void Skeletal::load_data(EMesh* mesh){
     Skeletal::update_joints_nodes(mesh);
 }
 
-/*
-
-update node->global_matrix
-
-*/
-void Skeletal::update_joint_matrix(Node* node){
-    glm::mat4 joint_mat = glm::mat4(1.0);
-    if(node->parent){
-        joint_mat = node->parent->global_matrix * node->matrix;
-    }
-    node->global_matrix = joint_mat;
-}
-
 void NodeManager::create_nodes_index(EMesh* mesh){
     int index = 0;
     Skin* skin = mesh->skins[0];
@@ -80,7 +64,6 @@ void NodeManager::create_nodes_index(EMesh* mesh){
         index++;
     }
 }
-
 
 glm::mat4 NodeManager::get_local_matrix(Node* node){
     glm::mat4 local = glm::translate(glm::mat4(1.0f),node->Translation) * glm::mat4(node->Rotation) * node->rot_mat;
@@ -95,22 +78,6 @@ glm::mat4 NodeManager::get_global_matrix(Node* node){
         node_parent = node_parent->parent;
     }
     return local_matrix;
-
-}
-
-glm::mat4 NodeManager::get_global_matrix_simple(Node* node){
-    glm::mat4 local_matrix = get_local_matrix(node);
-    Node* node_parent = node->parent;
-
-    glm::mat4 global_mat;
-    if(node_parent)       
-        global_mat = get_local_matrix(node_parent) * local_matrix;
-    else
-    {
-        global_mat = local_matrix;
-    }     
-   
-    return global_mat;
 
 }
 
@@ -219,7 +186,6 @@ Node* Skeletal::node_by_name(EMesh* mesh, const char* name ){
 
     mesh->linear_nodes.push_back(new_node);
  }
-
 
 void Skeletal::load_animation(SkeletalMesh* skeletal, tinygltf::Model &gltf_model){
     for(auto& anim : gltf_model.animations){
