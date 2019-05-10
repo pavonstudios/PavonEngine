@@ -81,7 +81,7 @@ void Engine::init(){
 	load_map(map_path);
 	game->init();
 
-	#ifdef ES2//gizmos helpers
+	#ifdef ES2 //gizmos helpers
 		Skeletal::create_bones_vertices(this);
 		Collision::create_collision_helper_vertices(this);
 	#endif

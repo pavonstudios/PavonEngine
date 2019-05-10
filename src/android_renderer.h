@@ -245,7 +245,7 @@ public:
    public:
    void load_mesh_texture(EMesh* mesh){
 
-        glActiveTexture(GL_TEXTURE0);
+
         glGenTextures(1, &mesh->texture_id);
         glBindTexture(GL_TEXTURE_2D,mesh->texture_id);
 
@@ -254,7 +254,8 @@ public:
         #ifdef ANDROID
             
             image_size size = assets.load_bmp("textures/GUI/white_logo.jpg",app->activity->assetManager);
-            glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,size.width,size.heigth,0,GL_RGB,GL_UNSIGNED_BYTE,size.data);
+            //glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,size.width,size.heigth,0,GL_RGB,GL_UNSIGNED_BYTE,size.data);
+
         #else
             image_size size;
             if(mesh->texture.hasTexture){
@@ -266,13 +267,13 @@ public:
                 size = assets.load_and_get_size(mesh->texture_path.c_str());
                 glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,size.width,size.heigth,0,GL_RGB,GL_UNSIGNED_BYTE,size.data); 
             }
-                
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         #endif                   
         
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
       
    }
     void load_textures(const std::vector<EMesh*>& meshes){

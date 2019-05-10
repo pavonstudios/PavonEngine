@@ -205,7 +205,7 @@ void MapManager::assign_shader_path(){
 			data_skinned_mesh.fragment_shader_path = "Game/Assets/shaders/frag.spv";
 			data_skinned_mesh.vertex_shader_path = "Game/Assets/shaders/skin.spv";
 			#endif
-			#ifdef ES2
+			#if defined(ES2) || defined(ANDROID)
 			data_skinned_mesh.fragment_shader_path = engine->assets.path("shaders/gles/frag.glsl");
 			data_skinned_mesh.vertex_shader_path = engine->assets.path("shaders/gles/skin_vert.glsl");
 			#endif
