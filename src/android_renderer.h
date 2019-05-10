@@ -252,10 +252,19 @@ public:
 
         AssetManager assets;
         #ifdef ANDROID
-            
+            float texture[]{
+                    0.0f, 0.0f, 0.0f,1.0f,   0.0f, 1.0f, 1.0f,1.0f,
+                    0.0f, 1.0f, 1.0f,1.0f,   0.0f, 0.0f, 0.0f,1.0f
+            };
             image_size size = assets.load_bmp("textures/GUI/white_logo.jpg",app->activity->assetManager);
-            //glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,size.width,size.heigth,0,GL_RGB,GL_UNSIGNED_BYTE,size.data);
-
+            glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,2,2,0,GL_RGBA, GL_UNSIGNED_BYTE,texture);
+               glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+               glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+               glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+               glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+               GLenum  error;
+               error = glGetError();
+                image_size sdf;
         #else
             image_size size;
             if(mesh->texture.hasTexture){

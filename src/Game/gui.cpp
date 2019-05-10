@@ -62,7 +62,7 @@ GUI::GUI(Engine* engine){
     triangle->data_shader.vertex_shader_path = engine->assets.path("shaders/gles/vert_mvp.glsl");
     #endif
     #ifdef ANDROID
-    triangle->data_shader.fragment_shader_path = engine->assets.path("shaders/gles/frag.glsl");
+    triangle->data_shader.fragment_shader_path = engine->assets.path("shaders/gles/frag2.glsl");
     //data.fragment_shader_path = assets.path("shaders/gles/frag_uv_color.glsl");
 
 
