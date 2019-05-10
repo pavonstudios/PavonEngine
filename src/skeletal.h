@@ -1,4 +1,13 @@
-#include "objects.h"
+#ifndef SKELETAL_H
+#define SKELETAL_H
+
+#include <vector>
+#include <string>
+#include <glm/glm.hpp>
+#include "tiny_class.h"
+#include <glm/gtc/quaternion.hpp>
+
+using namespace glm;
 
 #define PATH_TYPE_NULL 0
 #define PATH_TYPE_TRANSLATION 1
@@ -106,3 +115,4 @@ namespace engine{
 	};
 
 }
+#endif

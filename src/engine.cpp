@@ -140,20 +140,7 @@ void Engine::loop_data(){
 
 		Objects::update_positions(this,tranlation_update);
 
-		if(play_animations){
-			animation_time += deltaTime;
-			std::vector<SkeletalMesh*> skeletals;
-			skeletals.push_back(skeletal_meshes[0]->skeletal);
-			//skeletals.push_back(skeletal_meshes[1]->skeletal);
-			Skeletal::play_animations(skeletals,animation_time);
-
-			std::cout << "time: " << animation_time << std::endl;
-			if(animation_time >= 3){
-				animation_time = 0;
-				//Skeletal::reset_animations(skeletals);
-				//play_animations = false;
-			}
-		}
+		animation_manager.play_animations(this);
 		
 		
 }

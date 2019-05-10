@@ -275,16 +275,17 @@ void Skeletal::reset_animations(std::vector<SkeletalMesh*> skeletals){
 }
 
 void Skeletal::play_animations(std::vector<SkeletalMesh*> skeletals, float time){
-    for(auto* skeletal : skeletals){
-        //mat4 model_space = mat4(1.0);
+
+    for(SkeletalMesh* skeletal : skeletals){
        
        AnimationSampler sampler{};
+
        for(auto& channel : skeletals[0]->animations[0].channels){
            sampler = skeletals[0]->animations[0].samplers[channel.sampler_index];
 
             for( size_t i = 0; i < sampler.inputs.size() - 1 ; i++ ){
                 
-                if( (time >= sampler.inputs[i])  && ( time <= sampler.inputs[i + 1] ) ){
+                if( ( time >= sampler.inputs[i] )  && ( time <= sampler.inputs[i + 1] ) ){
                     
                     /*  The ratio of those amounts is the fraction of 
                         the interval between timed key frames at which time t appears. 

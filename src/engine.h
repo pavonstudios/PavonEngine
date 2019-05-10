@@ -28,7 +28,7 @@
 #include "audio_manager.hpp"
 class Game;
 #include "Game/gui.hpp"
-
+#include "animation_manager.hpp"
 
 #include  <sys/time.h>
 
@@ -55,6 +55,7 @@ public:
     AudioManager audio_manager;
 #endif
     TranslationUpdate tranlation_update;
+    AnimationManager animation_manager;
 
     Game * game;
 
