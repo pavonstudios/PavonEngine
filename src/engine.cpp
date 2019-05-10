@@ -142,6 +142,7 @@ void Engine::loop_data(){
 			animation_time += deltaTime;
 			std::vector<SkeletalMesh*> skeletals;
 			skeletals.push_back(skeletal_meshes[0]->skeletal);
+			skeletals.push_back(skeletal_meshes[1]->skeletal);
 			Skeletal::play_animations(skeletals,animation_time);
 
 			std::cout << "time: " << animation_time << std::endl;

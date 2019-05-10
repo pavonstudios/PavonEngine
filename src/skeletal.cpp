@@ -276,8 +276,8 @@ void Skeletal::play_animations(std::vector<SkeletalMesh*> skeletals, float time)
         //mat4 model_space = mat4(1.0);
        
        AnimationSampler sampler{};
-       for(auto& channel : skeletal->animations[0].channels){
-           sampler = skeletal->animations[0].samplers[channel.sampler_index];
+       for(auto& channel : skeletals[0]->animations[0].channels){
+           sampler = skeletals[0]->animations[0].samplers[channel.sampler_index];
 
             for( size_t i = 0; i < sampler.inputs.size() - 1 ; i++ ){
                 
