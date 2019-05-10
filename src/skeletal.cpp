@@ -273,16 +273,27 @@ void Skeletal::play_animations(std::vector<SkeletalMesh*> skeletals, float time)
             for(size_t i = 0; i < sampler.inputs.size() - 1 ; i++ ){
                 
                 if( (time >= sampler.inputs[i])  && ( time <= sampler.inputs[i + 1] ) ){
+                    /*  The ratio of those amounts is the fraction of 
+                        the interval between timed key frames at which time t appears. 
+                    */
+                    float time_mix = (time - sampler.inputs[i] ) / ( sampler.inputs[i+1] - sampler.inputs[i] );
 
-                        Node* node = channel.node;
+                    Node* node = channel.node;
 
-                        glm::quat quat1;
-                        quat1.x = sampler.outputs_vec4[i+1].x;
-                        quat1.y = sampler.outputs_vec4[i+1].y;
-                        quat1.z = sampler.outputs_vec4[i+1].z;
-                        quat1.w = sampler.outputs_vec4[i+1].w;     
+                    glm::quat quat0;
+                    quat0.x = sampler.outputs_vec4[i].x;
+                    quat0.y = sampler.outputs_vec4[i].y;
+                    quat0.z = sampler.outputs_vec4[i].z;
+                    quat0.w = sampler.outputs_vec4[i].w;
 
-                        node->Rotation = quat1;
+                    glm::quat quat1;
+                    quat1.x = sampler.outputs_vec4[i+1].x;
+                    quat1.y = sampler.outputs_vec4[i+1].y;
+                    quat1.z = sampler.outputs_vec4[i+1].z;
+                    quat1.w = sampler.outputs_vec4[i+1].w;     
+
+                    quat interpolated = normalize( slerp(quat0,quat1,time_mix) );
+                    node->Rotation = interpolated;
                 }
 
             }
