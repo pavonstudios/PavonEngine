@@ -241,6 +241,7 @@ void Skeletal::load_animation(SkeletalMesh* skeletal, tinygltf::Model &gltf_mode
                 AnimationChannel channel{};
                 channel.sampler_index = source.sampler;
                 channel.node = node_from_index(skeletal->mesh,source.target_node);
+                channel.node_index = source.target_node;
                 
                 if(source.target_path == "rotation"){
                     channel.PathType = PATH_TYPE_ROTATION;
@@ -288,7 +289,7 @@ void Skeletal::play_animations(std::vector<SkeletalMesh*> skeletals, float time)
                     */
                     float time_mix = (time - sampler.inputs[i] ) / ( sampler.inputs[i+1] - sampler.inputs[i] );
 
-                    Node* node = channel.node;
+                    Node* node = node_from_index(skeletal->mesh,channel.node_index);
 
                     switch (channel.PathType)
                     {

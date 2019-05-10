@@ -42,6 +42,7 @@ namespace engine{
 		uint8 PathType = PATH_TYPE_NULL; 
 		Node* node;
 		uint32 sampler_index;
+		uint8 node_index;
 	};
 
 	struct AnimationSampler{
