@@ -5,7 +5,7 @@
 void MapManager::parse_map_file(std::stringstream &file){
 		std::string line;
 		int counter = 0;		
-		int type = 0;		
+		//int type = 0;		
 	
 
 		while( std::getline(file,line) ) {		

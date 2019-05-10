@@ -212,7 +212,7 @@ void Input::key_verifier_released(char character){
 }
 void Input::key_code_verifier_pressed(int key_code){
 	//printf( "KeyPress: %x\n", key_code );
-		key_pressed *actual_key;
+	//	key_pressed *actual_key;
 
 }
 void Input::key_set(const char key, bool isPressed){
@@ -291,7 +291,7 @@ void Input::update_input(Engine* engine){
 			engine->main_camera.MoveRight();	
 		}
 #ifndef  ANDROID
-		float rotation_velocity = 0.2f;
+		//float rotation_velocity = 0.2f;
 
 		if(Z.bIsPressed){
 

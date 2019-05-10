@@ -1,5 +1,5 @@
 CLANG=clang++ -g -std=c++17 -stdlib=libc++
-CC=g++ -g -std=c++17
+CC=g++ -g -std=c++17 -Wall
 Library=-lglfw -lpthread -lm -lSDL2
 
 MAIN_OBJS = camera.cpp engine.cpp

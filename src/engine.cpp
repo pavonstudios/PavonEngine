@@ -303,11 +303,11 @@ void Engine::delete_meshes(){
 
 		if ( ++num_frames % 60 == 0 ) {
 				gettimeofday( &t2, &tz );
-				float dt  =  t2.tv_sec - t1.tv_sec + (t2.tv_usec - t1.tv_usec) * 1e-6;
+				//float dt  =  t2.tv_sec - t1.tv_sec + (t2.tv_usec - t1.tv_usec) * 1e-6;
 				//cout << "fps: " << num_frames / dt << endl;
 				//print_debug("",0,15);
 				//printf("FPS: ");
-				float fps = num_frames / dt;
+				//float fps = num_frames / dt;
 				//std::cout << fps << std::endl;
 
 				num_frames = 0;
@@ -343,7 +343,7 @@ float Engine::get_time(){
 }
 
 void Engine::update_mvp(EMesh* mesh){
-	
+
 	glm::mat4 mat = glm::mat4(1.0);
 	if(mesh->bIsGUI){
 		//TODO: 3d gui
@@ -593,7 +593,7 @@ void Engine::translate_mesh(EMesh* mesh, uint direction, float value){
 
 void Engine::distance_object_from_camera(){
 	vec3 camera_position = main_camera.cameraPos;
-	int mesh_id = 9;
+	//int mesh_id = 9;
 	EMesh* mesh = linear_meshes[12];
 	mesh->lod1 = linear_meshes[13];
 	vec3 object_position = mesh->location_vector;

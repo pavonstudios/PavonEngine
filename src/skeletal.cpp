@@ -10,13 +10,13 @@ void Skeletal::update_joints_nodes(EMesh* mesh){
     size_t joints_number = skin->joints.size();
     mesh->node_uniform.joint_count = (float)joints_number;  
 
-    for(int i = 0; i < skin->joints.size(); i++){
+    for(size_t i = 0; i < skin->joints.size(); i++){
 
         Node* joint = skin->joints[i];
 
         Skeletal::update_joint_matrix(joint);
         
-        glm::mat4 bind_mat = NodeManager::get_global_matrix(joint);
+        //glm::mat4 bind_mat = NodeManager::get_global_matrix(joint);
         
         glm::mat joint_mat = 
 
@@ -32,7 +32,7 @@ void Skeletal::update_joints_nodes(EMesh* mesh){
 
 void Skeletal::load_data(EMesh* mesh){
     int node_count = mesh->gltf_model.nodes.size();
-    for(size_t i = 0; i < node_count;i++){
+    for(int i = 0; i < node_count;i++){
         NodeLoadData load_data = {};
         load_data.gltf_model = &mesh->gltf_model;
         load_data.gltf_node = &mesh->gltf_model.nodes[i];
@@ -42,7 +42,7 @@ void Skeletal::load_data(EMesh* mesh){
     }
   
     Skeletal::load_skin(mesh, mesh->gltf_model);
-    
+
     NodeManager::create_nodes_index(mesh);//bones index numeration
 
     mesh->skeletal = new SkeletalMesh;
@@ -201,7 +201,7 @@ Node* Skeletal::node_by_name(EMesh* mesh, const char* name ){
     int children_count = node_data.gltf_node->children.size();
 
     if( children_count > 0){
-        for(size_t i = 0;i < children_count ;i++){
+        for(int i = 0;i < children_count ;i++){
             mesh->nodes[node_data.gltf_node->children[i]]->parent = new_node;
         }
         
@@ -296,7 +296,7 @@ void Skeletal::reset_animations(std::vector<SkeletalMesh*> skeletals){
 
 void Skeletal::play_animations(std::vector<SkeletalMesh*> skeletals, float time){
     for(auto* skeletal : skeletals){
-        mat4 model_space = mat4(1.0);
+        //mat4 model_space = mat4(1.0);
        
        AnimationSampler sampler{};
        for(auto& channel : skeletal->animations[0].channels){
@@ -349,7 +349,7 @@ void Skeletal::create_bones_vertices(Engine* engine){
     EMesh* triangle = new EMesh();
     Skin* skin = engine->skeletal_meshes[0]->skins[0];
 
-    for( int i = 0; i < skin->joints.size() ; i++ ){
+    for( size_t i = 0; i < skin->joints.size() ; i++ ){
         mat4 local = NodeManager::get_global_matrix(skin->joints[i]);
         local = engine->skeletal_meshes[0]->model_matrix * local;
         Vertex vert {};

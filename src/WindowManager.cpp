@@ -254,10 +254,10 @@ void WindowManager::check_events(){
             }
          }
 
-         if(xev.type == ClientMessage && xev.xclient.data.l[0] == wmDeleteMessage){
+        /*  if(xev.type == ClientMessage && xev.xclient.data.l[0] == wmDeleteMessage){
             std::cout << "close message\n";
             
-         }
+         } */
       }
       
      
