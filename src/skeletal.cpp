@@ -31,7 +31,7 @@ void Skeletal::update_joints_nodes(EMesh* mesh){
 
 }
 
-void Skeletal::load_data(EMesh* mesh){
+void Skeletal::load_data(AnimationManager* manager, EMesh* mesh){
     int node_count = mesh->gltf_model.nodes.size();
     for(int i = 0; i < node_count;i++){
         NodeLoadData load_data = {};
@@ -51,7 +51,7 @@ void Skeletal::load_data(EMesh* mesh){
     mesh->skeletal->linear_nodes = mesh->linear_nodes;
     mesh->skeletal->mesh = mesh; 
 
-    AnimationManager::load_animation(mesh->skeletal,mesh->gltf_model);
+    manager->load_animation(mesh->skeletal,mesh->gltf_model);
 
     Skeletal::update_joints_nodes(mesh);
 }
@@ -207,8 +207,8 @@ void Skeletal::play_animations(std::vector<SkeletalMesh*> skeletals, float time)
        
        AnimationSampler sampler{};
 
-       for(auto& channel : skeletals[0]->animations[0].channels){
-           sampler = skeletals[0]->animations[0].samplers[channel.sampler_index];
+       for(auto& channel : skeletals[0]->animations[0]->channels){
+           sampler = skeletals[0]->animations[0]->samplers[channel.sampler_index];
 
             for( size_t i = 0; i < sampler.inputs.size() - 1 ; i++ ){
                 

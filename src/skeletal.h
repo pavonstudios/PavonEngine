@@ -12,6 +12,7 @@ using namespace glm;
 #define PATH_TYPE_NULL 0
 #define PATH_TYPE_TRANSLATION 1
 #define PATH_TYPE_ROTATION 2
+class AnimationManager;
 
 namespace engine{
 	struct EMesh;
@@ -60,6 +61,7 @@ namespace engine{
 	};
 
 	struct Animation{
+		std::string name;
 		std::vector<AnimationChannel> channels;
 		std::vector<AnimationSampler> samplers;
 	};
@@ -76,7 +78,7 @@ namespace engine{
 		std::vector<Node*> linear_nodes;
 		Skin* skin = nullptr;
 		struct NodeUniform node_uniform;
-		std::vector<Animation> animations;
+		std::vector<Animation*> animations;
 		
 	};
 	
@@ -88,7 +90,7 @@ namespace engine{
 	public:
 		static void load_node(EMesh* mesh, NodeLoadData& node_data);    
 		static void load_skin(EMesh* mesh, tinygltf::Model &gltf_model);
-		static void load_data(EMesh* mesh);
+		static void load_data(AnimationManager* manager, EMesh* mesh);
 		
 		static void update_joints_nodes(EMesh* mesh);
 

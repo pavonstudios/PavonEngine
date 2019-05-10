@@ -21,7 +21,8 @@ void AnimationManager::play_animations(Engine* engine){
 
 void AnimationManager::load_animation(SkeletalMesh* skeletal, tinygltf::Model &gltf_model){
     for(auto& anim : gltf_model.animations){
-        Animation new_animation;
+        Animation* new_animation = new Animation;
+		new_animation->name = anim.name;
 
         for(auto& sampler : anim.samplers){
             AnimationSampler new_sampler{};
@@ -83,13 +84,14 @@ void AnimationManager::load_animation(SkeletalMesh* skeletal, tinygltf::Model &g
                     channel.PathType = PATH_TYPE_TRANSLATION;
                 }
                 
-                new_animation.channels.push_back(channel);
+                new_animation->channels.push_back(channel);
             }
 
-            new_animation.samplers.push_back(new_sampler);
+            new_animation->samplers.push_back(new_sampler);
 
         }        
 
         skeletal->animations.push_back(new_animation);
+		this->animations.push_back(new_animation);
     }
 }
