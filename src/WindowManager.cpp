@@ -190,72 +190,18 @@ void WindowManager::check_events(){
    #ifdef ES2
       while ( XPending ( x_display ) ){
          XEvent  xev;
-         KeySym key;		
-         char text[255];	
-         KeySym key_release;		
-         char key_release_char[255];	
+        
+        
          XNextEvent( x_display, &xev );
+         engine->input.check_input_event(engine,xev);
 
-         if ( xev.type == KeyPress ){
-           // printf( "KeyPress: %i\n", xev.xkey.keycode );
-            engine->input.key_code_verifier_pressed(xev.xkey.keycode);
-         } 
-         if (xev.type == KeyRelease){
-         // std::cout << "key realease from window manager \n";
-          engine->input.key_code_verifier_released(xev.xkey.keycode);
-         }
-
-         
-            
          if(xev.type == ConfigureNotify){
             XConfigureEvent xce = xev.xconfigure;
             this->window_width = xce.width;
             this->window_height = xce.height;
             update_window_size();           
          }
-
-         /* use the XLookupString routine to convert the invent
-               KeyPress data into regular text.  Weird but necessary...
-            */
-         if (xev.type==KeyPress&&
-               XLookupString(&xev.xkey,text,255,&key,0)==1) {
-            
-               if (text[0]=='q') {
-                  
-               }
-               
-              
-               
-               engine->input.key_verifier_pressed(text[0]);
-                 
-
-            }
-         if (xev.type==KeyRelease &&
-               XLookupString(&xev.xkey,key_release_char,255,&key_release,0)==1) {
-
-               engine->input.key_verifier_released(key_release_char[0]);
-            }
-
-         if ( xev.type == MotionNotify ) {  // if mouse has moved
-            engine->input.mouse_movement(engine,xev.xmotion.x,xev.xmotion.y);
-         }
          
-         if(xev.type == ButtonPress){
-            
-            if(xev.xbutton.button == Button1){
-            
-               engine->input.left_button_pressed = true;
-            }
-         }
-         
-         if(xev.type == ButtonRelease){
-            
-            if(xev.xbutton.button == Button1){
-               engine->input.left_button_pressed = false;
-               engine->input.left_button_release = true;
-            }
-         }
-
         /*  if(xev.type == ClientMessage && xev.xclient.data.l[0] == wmDeleteMessage){
             std::cout << "close message\n";
             

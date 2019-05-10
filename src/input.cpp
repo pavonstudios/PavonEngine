@@ -203,6 +203,70 @@ void Input::mouse_movement(Engine* engine, float xpos, float ypos){
 	}//end right click pressed
 }	
 #ifdef ES2
+
+void Input::check_input_event(Engine* engine, XEvent &xev){
+	KeySym key;		
+         char text[255];	
+         KeySym key_release;		
+         char key_release_char[255];	
+
+         if ( xev.type == KeyPress ){
+            //printf( "KeyPress: %i\n", xev.xkey.keycode );
+            engine->input.key_code_verifier_pressed(xev.xkey.keycode);
+         } 
+         if (xev.type == KeyRelease){
+         // std::cout << "key realease from window manager \n";
+          engine->input.key_code_verifier_released(xev.xkey.keycode);
+         }
+
+         
+            
+         
+
+         /* use the XLookupString routine to convert the invent
+               KeyPress data into regular text.  Weird but necessary...
+            */
+         if (xev.type==KeyPress&&
+               XLookupString(&xev.xkey,text,255,&key,0)==1) {
+            
+               if (text[0]=='q') {
+                  
+               }
+               
+              
+               
+               engine->input.key_verifier_pressed(text[0]);
+                 
+
+            }
+         if (xev.type==KeyRelease &&
+               XLookupString(&xev.xkey,key_release_char,255,&key_release,0)==1) {
+
+               engine->input.key_verifier_released(key_release_char[0]);
+            }
+
+         if ( xev.type == MotionNotify ) {  // if mouse has moved
+            engine->input.mouse_movement(engine,xev.xmotion.x,xev.xmotion.y);
+         }
+         
+         if(xev.type == ButtonPress){
+            
+            if(xev.xbutton.button == Button1){
+            
+               engine->input.left_button_pressed = true;
+            }
+         }
+         
+         if(xev.type == ButtonRelease){
+            
+            if(xev.xbutton.button == Button1){
+               engine->input.left_button_pressed = false;
+               engine->input.left_button_release = true;
+            }
+         }
+
+}
+
 void Input::key_verifier_pressed(char character){	
 	key_set(character,true);
 }
@@ -214,17 +278,31 @@ void Input::key_verifier_released(char character){
 void Input::key_code_verifier_pressed(int key_code){
 	
 	
-	if(key_code == 10 ){
+switch (key_code)
+	{
+	case 10:
 		key_set('1',true);
+		break;
+	
+	case 65:
+		key_set('-',true);
+		break;
 	}
 
 
 }
 void Input::key_code_verifier_released(int key_code){
-	
-	
-	if(key_code == 10 ){
+		
+
+	switch (key_code)
+	{
+	case 10:
 		key_set('1',false);
+		break;
+	
+	case 65:
+		key_set('-',false);
+		break;
 	}
 
 
@@ -264,8 +342,14 @@ void Input::key_set(const char key, bool isPressed){
 	if(key == 'v'){
 		actual_key = &this->V;
 	}
-	if(key == '1'){
-		actual_key = &this->KEY_1;
+
+	switch(key){
+		case	'1':
+			actual_key = &this->KEY_1;
+			break;
+		case '-':
+			actual_key = &this->SPACE;
+			break;
 	}
 
 	if(actual_key){

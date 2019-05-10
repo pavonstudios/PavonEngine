@@ -62,6 +62,9 @@ void ThirdPerson::update(){
 		//this->mesh->model_matrix = glm::rotate(mesh->model_matrix,glm::radians(-15.0f * engine->deltaTime),glm::vec3(0,0,1));
 		 		
 	}
+	if(engine->input.SPACE.bIsPressed){
+		std::cout << "space \n";
+	}
 	#ifdef DEVELOPMENT
 	if(engine->input.Q.bIsPressed){		
 		engine->translate_mesh(mesh,UP,velocity);		

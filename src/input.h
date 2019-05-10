@@ -27,6 +27,7 @@ public:
 	Key V;
 	Key TAB;
 	Key KEY_1;
+	Key SPACE;
 
 	float pitch = 0;
 	float yaw = 0;
@@ -53,6 +54,8 @@ public:
 	void key_verifier_pressed(char character);
 
 	void key_verifier_released(char character);
+
+	void check_input_event(Engine* engine, XEvent &event);
 private:
 	void key_set(const char key, bool isPressed);
 #endif
