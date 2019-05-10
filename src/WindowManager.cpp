@@ -197,10 +197,12 @@ void WindowManager::check_events(){
          XNextEvent( x_display, &xev );
 
          if ( xev.type == KeyPress ){
-           //  printf( "KeyPress: %x\n", xev.xkey.keycode );
+           // printf( "KeyPress: %i\n", xev.xkey.keycode );
+            engine->input.key_code_verifier_pressed(xev.xkey.keycode);
          } 
          if (xev.type == KeyRelease){
          // std::cout << "key realease from window manager \n";
+          engine->input.key_code_verifier_released(xev.xkey.keycode);
          }
 
          
@@ -221,10 +223,10 @@ void WindowManager::check_events(){
                if (text[0]=='q') {
                   
                }
-               if(text[0] == '\t')
-                   engine->input.key_code_verifier_pressed(xev.xkey.keycode);
-               else
-                  engine->input.key_verifier_pressed(text[0]);
+               
+              
+               
+               engine->input.key_verifier_pressed(text[0]);
                  
 
             }

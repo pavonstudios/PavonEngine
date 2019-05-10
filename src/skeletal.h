@@ -1,4 +1,9 @@
 #include "objects.h"
+
+#define PATH_TYPE_NULL 0
+#define PATH_TYPE_TRANSLATION 1
+#define PATH_TYPE_ROTATION 2
+
 namespace engine{
 	struct EMesh;
 	struct Skin;
@@ -21,9 +26,9 @@ namespace engine{
 	};
 
 	struct Skin {
-			Node *skeleton_root = nullptr;
-			std::vector<glm::mat4> inverse_bind_matrix;
-			std::vector<Node*> joints;
+		Node *skeleton_root = nullptr;
+		std::vector<glm::mat4> inverse_bind_matrix;
+		std::vector<Node*> joints;
 	};
 	
 	struct NodeLoadData{
@@ -34,6 +39,7 @@ namespace engine{
 	};
 
 	struct AnimationChannel {
+		uint8 PathType = PATH_TYPE_NULL; 
 		Node* node;
 		uint32 sampler_index;
 	};

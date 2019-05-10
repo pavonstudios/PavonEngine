@@ -110,6 +110,7 @@ void Input::key_callback(GLFWwindow* window, int key, int scancode, int action, 
   #endif
            
 }
+
 void Input::mouse_callback(GLFWwindow* window, double xpos, double ypos){
 	#ifdef VULKAN
 	  auto engine = reinterpret_cast<Engine*>(glfwGetWindowUserPointer(window));
@@ -120,8 +121,6 @@ void Input::mouse_callback(GLFWwindow* window, double xpos, double ypos){
 	#endif
 
 }
-
-
 
 void Input::mouse_button_callback(GLFWwindow* window, int button, int action, int mods){
 	#ifdef VULKAN
@@ -152,6 +151,7 @@ void Input::mouse_button_callback(GLFWwindow* window, int button, int action, in
 
 }
 #endif//end if define vulkan
+
 void Input::mouse_movement(Engine* engine, float xpos, float ypos){
 	
 	engine->input.mousex = xpos;
@@ -210,13 +210,27 @@ void Input::key_verifier_pressed(char character){
 void Input::key_verifier_released(char character){	
 	key_set(character,false);
 }
+
 void Input::key_code_verifier_pressed(int key_code){
-	//printf( "KeyPress: %x\n", key_code );
-	//	key_pressed *actual_key;
+	
+	
+	if(key_code == 10 ){
+		key_set('1',true);
+	}
+
+
+}
+void Input::key_code_verifier_released(int key_code){
+	
+	
+	if(key_code == 10 ){
+		key_set('1',false);
+	}
+
 
 }
 void Input::key_set(const char key, bool isPressed){
-	key_pressed *actual_key;
+	Key *actual_key;
 	if(key == 'w'){
 		actual_key = &this->W;
 	}
@@ -250,6 +264,9 @@ void Input::key_set(const char key, bool isPressed){
 	if(key == 'v'){
 		actual_key = &this->V;
 	}
+	if(key == '1'){
+		actual_key = &this->KEY_1;
+	}
 
 	if(actual_key){
 		if(isPressed){
@@ -273,6 +290,14 @@ void Input::update_input(Engine* engine){
 		this->TAB.Released = false;
 	}
 
+	if(KEY_1.Released){
+		if(!engine->draw_gizmos){
+				engine->draw_gizmos = true;				
+		}else{
+			engine->draw_gizmos = false;
+		}
+		this->KEY_1.Released = false;
+	}
 
 	if(engine->edit_mode){
 		if(S.bIsPressed){
@@ -332,6 +357,8 @@ void Input::update_input(Engine* engine){
 			engine->main_camera.mouse_control_update(yaw, pitch);
 
 		}		
+
+		
 
 	}
 }

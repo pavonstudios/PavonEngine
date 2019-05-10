@@ -8,24 +8,25 @@
 #include <iostream>
 class Engine;
 
-struct key_pressed{
+struct Key{
 	bool bIsPressed = false;
 	bool Released = false;
 };
 class Input {
 public:
 
-	key_pressed D;
-	key_pressed A;
-	key_pressed E;
-	key_pressed Q;
-	key_pressed X;
-	key_pressed Z;
-	key_pressed W = {false, false};
-	key_pressed S;
-	key_pressed C;
-	key_pressed V;
-	key_pressed TAB;
+	Key D;
+	Key A;
+	Key E;
+	Key Q;
+	Key X;
+	Key Z;
+	Key W = {false, false};
+	Key S;
+	Key C;
+	Key V;
+	Key TAB;
+	Key KEY_1;
 
 	float pitch = 0;
 	float yaw = 0;
@@ -48,6 +49,7 @@ public:
 #endif
 #ifdef ES2
 	void key_code_verifier_pressed(int key_code);
+	void key_code_verifier_released(int key_code);
 	void key_verifier_pressed(char character);
 
 	void key_verifier_released(char character);

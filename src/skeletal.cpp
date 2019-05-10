@@ -241,6 +241,15 @@ void Skeletal::load_animation(SkeletalMesh* skeletal, tinygltf::Model &gltf_mode
                 AnimationChannel channel{};
                 channel.sampler_index = source.sampler;
                 channel.node = node_from_index(skeletal->mesh,source.target_node);
+                
+                if(source.target_path == "rotation"){
+                    channel.PathType = PATH_TYPE_ROTATION;
+                }
+
+                if(source.target_path == "translation"){
+                    channel.PathType = PATH_TYPE_TRANSLATION;
+                }
+                
                 new_animation.channels.push_back(channel);
             }
 
@@ -270,9 +279,10 @@ void Skeletal::play_animations(std::vector<SkeletalMesh*> skeletals, float time)
        for(auto& channel : skeletal->animations[0].channels){
            sampler = skeletal->animations[0].samplers[channel.sampler_index];
 
-            for(size_t i = 0; i < sampler.inputs.size() - 1 ; i++ ){
+            for( size_t i = 0; i < sampler.inputs.size() - 1 ; i++ ){
                 
                 if( (time >= sampler.inputs[i])  && ( time <= sampler.inputs[i + 1] ) ){
+                    
                     /*  The ratio of those amounts is the fraction of 
                         the interval between timed key frames at which time t appears. 
                     */
@@ -280,20 +290,37 @@ void Skeletal::play_animations(std::vector<SkeletalMesh*> skeletals, float time)
 
                     Node* node = channel.node;
 
-                    glm::quat quat0;
-                    quat0.x = sampler.outputs_vec4[i].x;
-                    quat0.y = sampler.outputs_vec4[i].y;
-                    quat0.z = sampler.outputs_vec4[i].z;
-                    quat0.w = sampler.outputs_vec4[i].w;
+                    switch (channel.PathType)
+                    {
+                    case PATH_TYPE_ROTATION:
+                        {
+                        glm::quat quat0;
+                        quat0.x = sampler.outputs_vec4[i].x;
+                        quat0.y = sampler.outputs_vec4[i].y;
+                        quat0.z = sampler.outputs_vec4[i].z;
+                        quat0.w = sampler.outputs_vec4[i].w;
 
-                    glm::quat quat1;
-                    quat1.x = sampler.outputs_vec4[i+1].x;
-                    quat1.y = sampler.outputs_vec4[i+1].y;
-                    quat1.z = sampler.outputs_vec4[i+1].z;
-                    quat1.w = sampler.outputs_vec4[i+1].w;     
+                        glm::quat quat1;
+                        quat1.x = sampler.outputs_vec4[i+1].x;
+                        quat1.y = sampler.outputs_vec4[i+1].y;
+                        quat1.z = sampler.outputs_vec4[i+1].z;
+                        quat1.w = sampler.outputs_vec4[i+1].w;     
 
-                    quat interpolated = normalize( slerp(quat0,quat1,time_mix) );
-                    node->Rotation = interpolated;
+                        quat interpolated = normalize( slerp(quat0,quat1,time_mix) );
+                        node->Rotation = interpolated;
+                        }
+                        break;
+
+                    case PATH_TYPE_TRANSLATION:
+                        vec4 translation = mix(sampler.outputs_vec4[i], sampler.outputs_vec4[i+1], time_mix );
+                        node->Translation = vec3(translation);
+
+                        break;
+                   
+                    }
+                   
+
+                    
                 }
 
             }

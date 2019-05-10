@@ -79,7 +79,7 @@ skeletal.o:
 .ONESHELL:
 input.o: 
 	cd src
-	$(CC) -c input.cpp -DGLTF $(DEFINES)
+	$(CC) -c input.cpp -DGLTF $(DEFINES) -DDEVELOPMENT
 
 .ONESHELL:
 model_loader.o: 

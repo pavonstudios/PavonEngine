@@ -56,6 +56,7 @@ public:
 
     Game * game;
 
+   
     bool ready_to_game = false;
     bool loading = true;
     bool play_animations = false;
@@ -111,6 +112,7 @@ public:
  
     void draw_loading_screen();
     #ifdef DEVELOPMENT
+        bool draw_gizmos = false;
         void print_debug(const std::string text, int8_t posx, int8_t posy);
         void print_fps();
         void calculate_time(std::chrono::time_point<std::chrono::system_clock>);
