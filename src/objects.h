@@ -36,9 +36,6 @@
 
 class Engine;
 
-
-
-
 #define MESH_TYPE_STATIC 0
 #define MESH_TYPE_SKINNED 1
 #define MESH_WITH_COLLIDER 5

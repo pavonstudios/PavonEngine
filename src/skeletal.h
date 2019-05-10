@@ -91,7 +91,6 @@ namespace engine{
 		static void load_data(EMesh* mesh);
 		
 		static void update_joints_nodes(EMesh* mesh);
-		static void load_animation(SkeletalMesh* skeletal, tinygltf::Model &gltf_model);
 
 		static void play_animations(std::vector<SkeletalMesh*> skeletals, float time);
 
