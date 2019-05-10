@@ -1,6 +1,26 @@
 #include "animation_manager.hpp"
 #include "engine.h"
 
+Animation* AnimationManager::animation_by_name(std::string name){
+    for(Animation* anim : this->animations){
+        if(anim->name == name){
+            return anim;
+        }
+    }
+    std::cout << "Animation: " << name << " not found\n"; 
+    return nullptr;
+}
+
+void AnimationManager::play_animation(std::string name){
+    Animation* anim = animation_by_name(name);
+    if(anim){
+        
+    }else
+    {
+       std::cout << "no playing animation\n";
+    }
+    
+}
 
 void AnimationManager::play_animations(Engine* engine){
 	if(engine->play_animations){

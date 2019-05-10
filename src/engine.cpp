@@ -50,6 +50,7 @@ void Engine::draw_loading_screen(){
 
 void Engine::init(){
 	window_manager.engine = this;
+	animation_manager.engine = this;
 	#ifndef ANDROID
 		window_manager.create_window();
 	#endif
