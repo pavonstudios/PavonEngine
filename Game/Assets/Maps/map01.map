@@ -19,10 +19,10 @@ m models/pavon_the_game/road_plus_border_coast.gltf 0 0 0 textures/pavon_the_gam
 
 m models/pavon_the_game/back_bulding.gltf 0 0 0 textures/pavon_the_game/bakcbuilding02.png
 
-s models/fireman02.gltf -4 -2 0 textures/pavon_the_game/fireman.png
-s models/pavon_the_game/police02.gltf -6 -2 0 textures/character2.jpg 
+#s models/fireman02.gltf -4 -2 0 textures/pavon_the_game/fireman.png
+s models/pavon_the_game/police02.gltf -6 -2 0 textures/character2.jpg player
 
-m models/sphere.gltf 0 0 0.5 textures/character2.jpg player
+m models/sphere.gltf 0 0 0.5 textures/character2.jpg 
 m models/sphere.gltf -1 2 0.5 textures/car01.jpg 
 
 

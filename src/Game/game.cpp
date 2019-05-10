@@ -6,7 +6,7 @@ void Game::init_player(){
 
 		player->engine = this->engine;	
 		player->mesh = nullptr;
-		player->camera_position = vec3(0,-2.5,-8.5);
+		player->camera_position = vec3(0,-2.5,-4.5);
 		if(this->player_id == -1){
 			std::runtime_error("no player assigned from map file");
 		}else{

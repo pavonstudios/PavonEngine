@@ -36,8 +36,9 @@ void ThirdPerson::update(){
 	std::string log_position = "position " + std::to_string(mesh->location_vector.x) + " " + std::to_string(mesh->location_vector.y) + " " + std::to_string(mesh->location_vector.z);
 	//engine->print_debug(log_position,10,0);	
 
-	
+	engine->play_animations = false;
 	if(engine->input.W.bIsPressed == true){
+		engine->play_animations = true;
 		engine->translate_mesh(mesh,FORWARD,velocity);
 	}
 
