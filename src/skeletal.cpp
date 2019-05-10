@@ -17,11 +17,13 @@ void Skeletal::update_joints_nodes(EMesh* mesh){
         Skeletal::update_joint_matrix(joint);
         
         //glm::mat4 bind_mat = NodeManager::get_global_matrix(joint);
-        
+        mat4 local = NodeManager::get_global_matrix(skin->joints[i]);
+        local = mesh->model_matrix * local;
+
         glm::mat joint_mat = 
 
-            //inverse(mesh->model_matrix) * 
-            joint->global_matrix;// * 
+            inverse(mesh->model_matrix) * 
+            local * 
             skin->inverse_bind_matrix[i];
 
 
