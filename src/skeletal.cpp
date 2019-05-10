@@ -1,5 +1,7 @@
 #include "objects.h"
 #include "engine.h"
+
+
 using namespace engine;
 /*
 Fill node uniform block of joints matrix for send to the vertex shader
@@ -17,7 +19,7 @@ void Skeletal::update_joints_nodes(EMesh* mesh){
         mat4 local = NodeManager::get_global_matrix(joint);
         local = mesh->model_matrix * local;
 
-        glm::mat joint_mat = 
+        glm::mat4 joint_mat =
 
             inverse(mesh->model_matrix) * 
             local * 

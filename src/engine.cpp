@@ -55,13 +55,15 @@ void Engine::init(){
 	#endif
 	#ifdef ANDROID
 		window_manager.create_window(pAndroid_app);
-	#endif
+    #endif
 
+#ifndef ANDROID
 	audio_manager.init();
-
+    audio_manager.play();
+#endif
 	maps.engine = this;
 
-	audio_manager.play();
+
 	
 	draw_loading_screen();		
 	

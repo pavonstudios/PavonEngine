@@ -291,12 +291,14 @@ void Input::update_input(Engine* engine){
 	}
 
 	if(KEY_1.Released){
+#ifdef DEVELOPMENT
 		if(!engine->draw_gizmos){
 				engine->draw_gizmos = true;				
 		}else{
 			engine->draw_gizmos = false;
 		}
 		this->KEY_1.Released = false;
+#endif
 	}
 
 	if(engine->edit_mode){

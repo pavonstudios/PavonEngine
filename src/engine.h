@@ -51,7 +51,9 @@ public:
     MeshManager mesh_manager;
     Input input;
     MapManager maps;
+#ifndef  ANDROID
     AudioManager audio_manager;
+#endif
     TranslationUpdate tranlation_update;
 
     Game * game;

@@ -33,6 +33,8 @@ add_library(maincode
         Game/game.cpp
         game_map.cpp
         collision.cpp
+        skeletal.cpp
+
     )
 
 
@@ -44,6 +46,7 @@ target_link_libraries(maincode
         ${log-lib}
         EGL
         GLESv2
+
         
 
         )
