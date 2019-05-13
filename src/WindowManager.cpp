@@ -141,9 +141,20 @@ void WindowManager::create_window(){
    #ifdef VULKAN
       create_window_glfw();
    #endif
+   #ifdef WAYLAND
+      create_wayland_window();
+   #endif
   
 
 }
+#ifdef WAYLAND
+void WindowManager::create_wayland_window(){
+   struct wl_display* display = nullptr;
+   display = wl_display_connect(nullptr);
+   
+
+}
+#endif 
 
 #ifdef ANDROID
    #include <android/log.h>

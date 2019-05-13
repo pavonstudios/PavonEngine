@@ -18,6 +18,10 @@
 #ifdef VULKAN
     #include "GLFW/glfw3.h"
 #endif
+#ifdef WAYLAND
+    #include <wayland-client.h>
+#endif
+
 
 #include  <iostream>
 #include  <cstdlib>
@@ -36,6 +40,7 @@ public:
     void check_events();
     ~WindowManager();
     void update_window_size();
+    void create_wayland_window();
    
     #ifdef ES2
        
