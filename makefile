@@ -1,6 +1,6 @@
 CLANG=clang++ -g -std=c++17 -stdlib=libc++
 CC=g++ -g -std=c++17 -Wall
-Library=-lglfw -lpthread -lm -lSDL2
+Library := -lpthread -lm -lSDL2
 
 MAIN_OBJS = camera.cpp engine.cpp
 DEFINES= -DGLTF -DDEVELOPMENT
@@ -14,7 +14,7 @@ GAMEOBJs = $(wildcard /home/pavon/rt_renderer/src/Game/*.o)
 
 GAME = Game/*.o
 
-INCLUDE_OPENGL = -lGLEW -lGLESv2 -lEGL
+INCLUDE_OPENGL = -lGLESv2 -lEGL -lX11 
 
 DEFINES :=
 TYPE :=
@@ -22,6 +22,7 @@ TYPE :=
 
 .ONESHELL:
 vk: DEFINES := -DVULKAN
+vk: Library += -lglfw
 vk: TYPE := vk
 vk: renderer.o  $(OBJs) game
 	mkdir -p bin && cd src
@@ -33,7 +34,7 @@ es2: DEFINES := -DES2
 es2: TYPE := es2
 es2: $(OBJs) game
 	mkdir -p bin && cd src
-	$(CC) -o ../renderer $(OBJs) model_loader.o audio.o $(GAME) $(Library) $(INCLUDE_OPENGL) -I./ $(DEFINES) -DGLTF -lX11 
+	$(CC) -o ../renderer $(OBJs) model_loader.o audio.o $(GAME) $(Library) $(INCLUDE_OPENGL) -I./ $(DEFINES) -DGLTF 
 
 .ONESHELL:
 link:
