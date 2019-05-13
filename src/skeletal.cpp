@@ -6,7 +6,7 @@ using namespace engine;
 /*
 Fill node uniform block of joints matrix for send to the vertex shader
 */
-void Skeletal::update_joints_nodes(EMesh* mesh){
+void SkeletalManager::update_joints_nodes(EMesh* mesh){
     
     Skin* skin = mesh->skins[0];
     size_t joints_number = skin->joints.size();
@@ -31,7 +31,7 @@ void Skeletal::update_joints_nodes(EMesh* mesh){
 
 }
 
-void Skeletal::load_data(AnimationManager* manager, EMesh* mesh){
+void SkeletalManager::load_data(AnimationManager* manager, EMesh* mesh){
     int node_count = mesh->gltf_model.nodes.size();
     for(int i = 0; i < node_count;i++){
         NodeLoadData load_data = {};
@@ -39,10 +39,10 @@ void Skeletal::load_data(AnimationManager* manager, EMesh* mesh){
         load_data.gltf_node = &mesh->gltf_model.nodes[i];
         load_data.index = i;
         load_data.parent = nullptr;
-        Skeletal::load_node(mesh,load_data);
+        SkeletalManager::load_node(mesh,load_data);
     }
   
-    Skeletal::load_skin(mesh, mesh->gltf_model);
+    SkeletalManager::load_skin(mesh, mesh->gltf_model);
 
     NodeManager::create_nodes_index(mesh);//bones index numeration
 
@@ -53,7 +53,7 @@ void Skeletal::load_data(AnimationManager* manager, EMesh* mesh){
 
     manager->load_animation(mesh->skeletal,mesh->gltf_model);
 
-    Skeletal::update_joints_nodes(mesh);
+    SkeletalManager::update_joints_nodes(mesh);
 }
 
 void NodeManager::create_nodes_index(EMesh* mesh){
@@ -83,7 +83,7 @@ glm::mat4 NodeManager::get_global_matrix(Node* node){
 
 }
 
-void Skeletal::load_skin(EMesh* mesh, tinygltf::Model &gltf_model){
+void SkeletalManager::load_skin(EMesh* mesh, tinygltf::Model &gltf_model){
     for(tinygltf::Skin &source_skin: gltf_model.skins){
         Skin *new_skin = new Skin{};
         if(source_skin.skeleton > -1){
@@ -114,7 +114,7 @@ void Skeletal::load_skin(EMesh* mesh, tinygltf::Model &gltf_model){
     
 }
 
-Node* Skeletal::find_node(Node* parent, uint32_t index){
+Node* SkeletalManager::find_node(Node* parent, uint32_t index){
     Node* node_found = nullptr;
     if(parent->index == index)
         return parent;
@@ -126,7 +126,7 @@ Node* Skeletal::find_node(Node* parent, uint32_t index){
     return node_found;
 }
 
-Node* Skeletal::node_from_index(EMesh* mesh, uint32_t index){
+Node* SkeletalManager::node_from_index(EMesh* mesh, uint32_t index){
     Node* node_found = nullptr;
     for(auto &node : mesh->nodes){
         node_found = find_node(node,index);
@@ -136,7 +136,7 @@ Node* Skeletal::node_from_index(EMesh* mesh, uint32_t index){
     return node_found;
 }
 
-Node* Skeletal::node_by_name(EMesh* mesh, const char* name ){
+Node* SkeletalManager::node_by_name(EMesh* mesh, const char* name ){
     Node* node_found = nullptr;
     for(auto node : mesh->nodes){
         if(node->name == name){
@@ -150,7 +150,7 @@ Node* Skeletal::node_by_name(EMesh* mesh, const char* name ){
     return node_found;
 }
 
- void Skeletal::load_node(EMesh* mesh, NodeLoadData& node_data){
+ void SkeletalManager::load_node(EMesh* mesh, NodeLoadData& node_data){
      
     Node *new_node = new Node{};
     new_node->parent = node_data.parent;
@@ -191,17 +191,17 @@ Node* Skeletal::node_by_name(EMesh* mesh, const char* name ){
 
 
 
-void Skeletal::reset_animations(std::vector<SkeletalMesh*> skeletals){
+void SkeletalManager::reset_animations(std::vector<SkeletalMesh*> skeletals){
     for(auto* skeletal : skeletals){
         EMesh* mesh = skeletal->mesh;
-        Node* node = Skeletal::node_by_name(mesh,"thin_L");
+        Node* node = SkeletalManager::node_by_name(mesh,"thin_L");
 
         quat new_quat{};
         node->Rotation = new_quat;
     }
 }
 
-void Skeletal::play_animations(std::vector<SkeletalMesh*> skeletals, float time){
+void SkeletalManager::play_animations(std::vector<SkeletalMesh*> skeletals, float time){
 
     for(SkeletalMesh* skeletal : skeletals){
        
@@ -257,12 +257,12 @@ void Skeletal::play_animations(std::vector<SkeletalMesh*> skeletals, float time)
             }
 
        }   
-       Skeletal::update_joints_nodes(skeletal->mesh);  
+       SkeletalManager::update_joints_nodes(skeletal->mesh);  
 
     }
 }
 
-void Skeletal::update_joint_vertices_data(Engine* engine){
+void SkeletalManager::update_joint_vertices_data(Engine* engine){
     EMesh* mesh = engine->helpers[0];
     mesh->vertices.clear();
 
@@ -281,7 +281,7 @@ void Skeletal::update_joint_vertices_data(Engine* engine){
     #endif
 }
 
-void Skeletal::create_bones_vertices(Engine* engine){
+void SkeletalManager::create_bones_vertices(Engine* engine){
    
     EMesh* triangle = new EMesh();
     Skin* skin = engine->skeletal_meshes[0]->skins[0];

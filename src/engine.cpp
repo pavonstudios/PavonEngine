@@ -83,7 +83,7 @@ void Engine::init(){
 	game->init();
 
 	#ifdef ES2 //gizmos helpers
-		Skeletal::create_bones_vertices(this);
+		SkeletalManager::create_bones_vertices(this);
 		Collision::create_collision_helper_vertices(this);
 	#endif
 	
@@ -191,7 +191,7 @@ void Engine::es2_draw_frame() {
 			
 			glClear(GL_DEPTH_BUFFER_BIT);
 			for(auto* mesh : helpers){
-				Skeletal::update_joint_vertices_data(this);
+				SkeletalManager::update_joint_vertices_data(this);
 				glUseProgram  ( mesh->shader_program );
 				renderer.activate_vertex_attributes(mesh);					
 					

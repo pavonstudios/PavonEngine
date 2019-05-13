@@ -29,7 +29,7 @@ void AnimationManager::play_animation(SkeletalMesh* skeletal, std::string name){
                     */
                     float time_mix = (time - sampler.inputs[i] ) / ( sampler.inputs[i+1] - sampler.inputs[i] );
 
-                    Node* node = Skeletal::node_from_index(skeletal->mesh,channel.node_index);
+                    Node* node = SkeletalManager::node_from_index(skeletal->mesh,channel.node_index);
 
                     switch (channel.PathType)
                     {
@@ -67,7 +67,7 @@ void AnimationManager::play_animation(SkeletalMesh* skeletal, std::string name){
             }
 
        }   
-       Skeletal::update_joints_nodes(skeletal->mesh);
+       SkeletalManager::update_joints_nodes(skeletal->mesh);
     }else
     {
        std::cout << "no playing animation\n";
@@ -81,12 +81,12 @@ void AnimationManager::play_animations(Engine* engine){
 			std::vector<SkeletalMesh*> skeletals;
 			skeletals.push_back(engine->skeletal_meshes[0]->skeletal);
 			//skeletals.push_back(skeletal_meshes[1]->skeletal);
-			Skeletal::play_animations(skeletals,engine->animation_time);
+			SkeletalManager::play_animations(skeletals,engine->animation_time);
 
 			std::cout << "time: " << engine->animation_time << std::endl;
 			if(engine->animation_time >= 3){
 				engine->animation_time = 0;
-				//Skeletal::reset_animations(skeletals);
+				//SkeletalManager::reset_animations(skeletals);
 				//play_animations = false;
 			}
 		}
@@ -146,7 +146,7 @@ void AnimationManager::load_animation(SkeletalMesh* skeletal, tinygltf::Model &g
             for(auto& source : anim.channels){
                 AnimationChannel channel{};
                 channel.sampler_index = source.sampler;
-                channel.node = Skeletal::node_from_index(skeletal->mesh,source.target_node);
+                channel.node = SkeletalManager::node_from_index(skeletal->mesh,source.target_node);
                 channel.node_index = source.target_node;
                 
                 if(source.target_path == "rotation"){

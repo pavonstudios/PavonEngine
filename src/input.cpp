@@ -400,7 +400,7 @@ void Input::update_input(Engine* engine){
 		if(Z.bIsPressed){
 
 			EMesh* mesh = engine->skeletal_meshes[0];
-			Node* node = Skeletal::node_by_name(mesh,"bone2.003");
+			Node* node = SkeletalManager::node_by_name(mesh,"bone2.003");
 			node->rot_mat = rotate(node->rot_mat,radians(-15*engine->deltaTime),vec3(1,0,0));
 
 		}
@@ -408,7 +408,7 @@ void Input::update_input(Engine* engine){
 		if(X.bIsPressed){	
 
 			EMesh* mesh = engine->skeletal_meshes[0];
-			Node* node = Skeletal::node_by_name(mesh,"bone2");
+			Node* node = SkeletalManager::node_by_name(mesh,"bone2");
 			node->rot_mat = rotate(node->rot_mat,radians(15*engine->deltaTime),vec3(1,0,0));
 
 		}
