@@ -40,7 +40,7 @@ es2: $(OBJs) game
 .ONESHELL:
 win: 
 	cd src
-	$(CCWIN) main.cpp -o ../renderer.exe -DWINDOWS
+	$(CCWIN) main.cpp -o ../renderer.exe -static -static-libstdc++ -DWINDOWS
 
 
 .ONESHELL:

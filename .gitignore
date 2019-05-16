@@ -24,4 +24,5 @@ textures/pavon_the_game/*
 src/Server/server
 src/Server/.vscode/ipch
 *.exe
-
+./renderer.exe
+renderer.exe
