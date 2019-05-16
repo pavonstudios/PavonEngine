@@ -1,8 +1,18 @@
-#define STB_IMAGE_IMPLEMENTATION
-#include "engine.h"
 
+#ifdef WINDOWS
+#include <iostream>
+int main(){
+    std::cout << "Engine\n";
+    return 1;
+}
+#endif
 
-#ifndef ANDROID
+#if defined (ES2) || defined (VULKAN) || defined (ANDROID)
+    #define STB_IMAGE_IMPLEMENTATION
+    #include "engine.h"
+#endif
+
+#if defined (ES2) || defined (VULKAN) 
     
    
         int main() {

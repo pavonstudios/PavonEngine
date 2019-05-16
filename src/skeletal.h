@@ -88,7 +88,9 @@ namespace engine{
 
 	class SkeletalManager{
 	public:
-		static void load_node(EMesh* mesh, NodeLoadData& node_data);    
+		static void load_node(EMesh* mesh, NodeLoadData& node_data);
+		static void load_node(SkeletalMesh* mesh, NodeLoadData& node_data);
+		
 		static void load_skin(EMesh* mesh, tinygltf::Model &gltf_model);
 		static void load_data(AnimationManager* manager, EMesh* mesh);
 		

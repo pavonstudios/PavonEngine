@@ -40,6 +40,7 @@ void SkeletalManager::load_data(AnimationManager* manager, EMesh* mesh){
         load_data.index = i;
         load_data.parent = nullptr;
         SkeletalManager::load_node(mesh,load_data);
+        
     }
   
     SkeletalManager::load_skin(mesh, mesh->gltf_model);
@@ -150,7 +151,7 @@ Node* SkeletalManager::node_by_name(EMesh* mesh, const char* name ){
     return node_found;
 }
 
- void SkeletalManager::load_node(EMesh* mesh, NodeLoadData& node_data){
+void SkeletalManager::load_node(EMesh* mesh, NodeLoadData& node_data){
      
     Node *new_node = new Node{};
     new_node->parent = node_data.parent;
@@ -187,9 +188,44 @@ Node* SkeletalManager::node_by_name(EMesh* mesh, const char* name ){
     }
 
     mesh->linear_nodes.push_back(new_node);
- }
+}
 
+void SkeletalManager::load_node(SkeletalMesh* mesh, NodeLoadData& node_data){
+     
+    Node *new_node = new Node{};
+    new_node->parent = node_data.parent;
+    new_node->matrix = glm::mat4(1.0f);
+    new_node->skin_index = node_data.gltf_node->skin;
+    new_node->index = node_data.index;
+    new_node->name = node_data.gltf_node->name;
+    
+    //some nodes do not contain transform information
+    if(node_data.gltf_node->translation.size() == 3)
+        new_node->Translation = glm::make_vec3(node_data.gltf_node->translation.data());
 
+    if(node_data.gltf_node->rotation.size() == 4)
+        new_node->Rotation = glm::make_quat(node_data.gltf_node->rotation.data());
+
+    if(node_data.gltf_node->matrix.size() == 16)
+        new_node->matrix = glm::make_mat4x4(node_data.gltf_node->matrix.data());
+
+    int children_count = node_data.gltf_node->children.size();
+
+    if( children_count > 0){
+        for(int i = 0;i < children_count ;i++){
+            mesh->nodes[ node_data.gltf_node->children[i] ]->parent = new_node;
+        }
+        
+    }
+    
+    if(node_data.parent){
+        node_data.parent->children.push_back(new_node);       
+    }else{
+         mesh->nodes.push_back(new_node);
+    }
+
+    mesh->linear_nodes.push_back(new_node);
+}
 
 void SkeletalManager::reset_animations(std::vector<SkeletalMesh*> skeletals){
     for(auto* skeletal : skeletals){

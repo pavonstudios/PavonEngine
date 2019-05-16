@@ -1,5 +1,6 @@
 CLANG=clang++ -g -std=c++17 -stdlib=libc++
 CC=g++ -g -std=c++17 -Wall
+CCWIN=x86_64-w64-mingw32-g++ -g -std=c++17 -Wall
 Library := -lpthread -lm -lSDL2
 
 MAIN_OBJS = camera.cpp engine.cpp
@@ -35,6 +36,12 @@ es2: TYPE := es2
 es2: $(OBJs) game
 	mkdir -p bin && cd src
 	$(CC) -o ../renderer $(OBJs) model_loader.o audio.o $(GAME) $(Library) $(INCLUDE_OPENGL) -I./ $(DEFINES) -DGLTF 
+
+.ONESHELL:
+win: 
+	cd src
+	$(CCWIN) main.cpp -o ../renderer.exe -DWINDOWS
+
 
 .ONESHELL:
 link:
