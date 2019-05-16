@@ -23,4 +23,5 @@ models/pavon_the_game/*
 textures/pavon_the_game/*
 src/Server/server
 src/Server/.vscode/ipch
+*.exe
 
