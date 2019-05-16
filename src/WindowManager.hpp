@@ -15,7 +15,7 @@
     #include <GLES2/gl2.h>
     #include <android_native_app_glue.h>
 #endif
-#ifdef VULKAN
+#if defined (VULKAN) || defined (WINDOWS)
     #include "GLFW/glfw3.h"
 #endif
 #ifdef WAYLAND
@@ -61,6 +61,9 @@ public:
         private:
             void configure_egl();
         #endif
+    #endif
+    #ifdef WINDOWS
+    GLFWwindow* glfw_window;
     #endif
     #ifdef VULKAN
     GLFWwindow* get_window(){

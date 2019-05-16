@@ -144,7 +144,22 @@ void WindowManager::create_window(){
    #ifdef WAYLAND
       create_wayland_window();
    #endif
-  
+   #ifdef WINDOWS
+      if( !glfwInit() )
+		{
+			fprintf( stderr, "Failed to initialize GLFW\n" );
+			return;
+		}	
+	
+		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+		
+		glfw_window = glfwCreateWindow(this->window_width, this->window_height, this->window_name.c_str(), nullptr, nullptr);
+		if( glfw_window == NULL ){
+			fprintf( stderr, "Failed to open GLFW window\n" );
+			glfwTerminate();
+			return;
+		}
+   #endif
 
 }
 #ifdef WAYLAND

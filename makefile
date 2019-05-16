@@ -41,9 +41,10 @@ es2: $(OBJs) game
 
 .ONESHELL:
 win: CC := $(CCWIN)
+win: DEFINES := -DWINDOWS
 win: WindowManager.o
 	cd src
-	$(CCWIN) main.cpp -o ../renderer.exe WindowManager.o -static -static-libstdc++ -DWINDOWS 
+	$(CCWIN) main.cpp -o ../renderer.exe WindowManager.o -lglfw3 -lopengl32 -lgdi32 -static -static-libstdc++ -DWINDOWS
 
 
 .ONESHELL:
