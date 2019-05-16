@@ -26,3 +26,4 @@ src/Server/.vscode/ipch
 *.exe
 ./renderer.exe
 renderer.exe
+renderer.exe

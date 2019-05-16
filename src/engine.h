@@ -12,7 +12,7 @@
     #include <GLFW/glfw3.h>
 #endif    
 
-#if defined (ES2) || defined (ANDROID)  
+#if defined (ES2) || defined (ANDROID)
     #include "android_renderer.h"
 #endif
 
@@ -37,23 +37,25 @@ using namespace engine;
 class Engine {
   
 public:
-    Engine();
+    
 
     #ifdef ANDROID
         Engine(android_app * pApp);
         android_app * pAndroid_app;
     #endif
 
-    Renderer renderer;   
+    #if defined (ES2) || defined (ANDROID)  || defined(VULKAN)
+    Engine();
+    Renderer renderer; 
+    AudioManager audio_manager;  
+    #endif
     WindowManager window_manager;
     AssetManager assets;
     Camera main_camera;
     MeshManager mesh_manager;
     Input input;
     MapManager maps;
-#ifndef  ANDROID
-    AudioManager audio_manager;
-#endif
+
     TranslationUpdate tranlation_update;
     AnimationManager animation_manager;
 

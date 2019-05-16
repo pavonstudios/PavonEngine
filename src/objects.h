@@ -11,7 +11,8 @@
     #ifdef VULKAN
         #include <vulkan/vulkan.h>
         #include "VulkanDevice.hpp"
-    #else
+    #endif
+    #ifdef ES2
         #include <GLES2/gl2.h>
     #endif
     #include <glm/gtc/quaternion.hpp>

@@ -1,8 +1,10 @@
 
 #ifdef WINDOWS
-#include <iostream>
+#include "engine.h"
 int main(){
     std::cout << "Engine\n";
+    Engine engine;
+    engine.window_manager.create_window();
     return 1;
 }
 #endif

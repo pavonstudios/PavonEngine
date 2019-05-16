@@ -1,5 +1,6 @@
 CLANG=clang++ -g -std=c++17 -stdlib=libc++
-CC=g++ -g -std=c++17 -Wall
+CC:=
+CCLINUX=g++ -g -std=c++17 -Wall
 CCWIN=x86_64-w64-mingw32-g++ -g -std=c++17 -Wall
 Library := -lpthread -lm -lSDL2
 
@@ -33,14 +34,16 @@ vk: renderer.o  $(OBJs) game
 .ONESHELL:
 es2: DEFINES := -DES2
 es2: TYPE := es2
+es2: CC := $(CCLINUX)
 es2: $(OBJs) game
 	mkdir -p bin && cd src
 	$(CC) -o ../renderer $(OBJs) model_loader.o audio.o $(GAME) $(Library) $(INCLUDE_OPENGL) -I./ $(DEFINES) -DGLTF 
 
 .ONESHELL:
-win: 
+win: CC := $(CCWIN)
+win: WindowManager.o
 	cd src
-	$(CCWIN) main.cpp -o ../renderer.exe -static -static-libstdc++ -DWINDOWS
+	$(CCWIN) main.cpp -o ../renderer.exe WindowManager.o -static -static-libstdc++ -DWINDOWS 
 
 
 .ONESHELL:

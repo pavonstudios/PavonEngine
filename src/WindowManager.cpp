@@ -275,8 +275,9 @@ void WindowManager::update_window_size(){
 
    engine->main_camera.screen_width = window_width;
    engine->main_camera.screen_height = window_height;
+   #if defined (ES2) || defined (ANDROID)  || defined(VULKAN)
    engine->update_render_size();
-
+   #endif
 }
 
 bool WindowManager::window_should_close(){

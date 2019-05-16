@@ -12,16 +12,19 @@
 #include <cassert>
 #include <vector>
 
-
+#if defined (ES2) || defined (ANDROID)  
 #include <GLES2/gl2.h>
-
+#endif
+#ifdef WINDOWS
+#include <GL/gl.h>
+#endif
 #ifdef ANDROID
     #include <android/log.h>
     #include <android_native_app_glue.h>
     #include <jni.h>
     #include "glm/glm.hpp"
     #include "glm/gtc/matrix_transform.hpp"
-
+    #include "android_helper.h"
 #endif
 #include "objects.h"
 
@@ -29,7 +32,7 @@
 
 #include <chrono>
 
-#include "android_helper.h"
+
 
 
 

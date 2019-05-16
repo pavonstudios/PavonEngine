@@ -11,7 +11,7 @@
 
 #include <unistd.h>
 
-
+#if defined (ES2) || defined (ANDROID)  || defined(VULKAN)
 Engine::Engine(){
 
 	#ifdef VULKAN 
@@ -19,6 +19,7 @@ Engine::Engine(){
 	#endif
 
 }
+#endif
 
 #ifdef ANDROID
 	Engine::Engine(android_app * pApp){
