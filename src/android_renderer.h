@@ -35,7 +35,7 @@
 using  namespace engine;
 using namespace std;
 using namespace glm;
-#include "renderer/opengl.hpp"
+#include "renderers/opengl.hpp"
 
 class Renderer{
 public:
