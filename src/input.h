@@ -2,9 +2,11 @@
 #define INPUT_CONTROLLER
 
 #ifdef VULKAN
-#include <GLFW/glfw3.h>
+	#include <GLFW/glfw3.h>
 #endif
-
+#ifdef ES2
+	#include  <X11/Xlib.h>
+#endif
 #include <iostream>
 class Engine;
 

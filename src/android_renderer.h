@@ -28,27 +28,14 @@
 #endif
 #include "objects.h"
 
-
-
 #include <chrono>
-
-
-
-
 
 #include "asset_manager.h"
 
 using  namespace engine;
 using namespace std;
 using namespace glm;
-
-struct shader_src{
-    std::string vertex_shader_path;
-    std::string fragment_shader_path;
-    const char* vertex_code;
-    const char* fragment_code;
-    int type = -1;
-};
+#include "renderer/opengl.hpp"
 
 class Renderer{
 public:
@@ -62,13 +49,10 @@ public:
 #endif
 
 private:
-
-
    
     GLuint indices;
 
     GLuint textureid;
-
 
     GLuint shaderProgram;
 
