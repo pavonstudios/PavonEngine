@@ -31,6 +31,9 @@ void SkeletalManager::update_joints_nodes(EMesh* mesh){
 
 }
 
+SkeletalLoader::SkeletalLoader(){
+
+}
 void SkeletalManager::load_data(AnimationManager* manager, EMesh* mesh){
     SkeletalMesh* skel_mesh = new SkeletalMesh;
     mesh->skeletal = skel_mesh;
@@ -43,20 +46,15 @@ void SkeletalManager::load_data(AnimationManager* manager, EMesh* mesh){
         load_data.index = i;
         load_data.parent = nullptr;
         SkeletalManager::load_node(mesh,load_data);
-        SkeletalManager::load_node(skel_mesh,load_data);
-        
+        SkeletalManager::load_node(skel_mesh,load_data);        
     }
   
     SkeletalManager::load_skin(mesh, mesh->gltf_model);
+     manager->skeletal_loader->load_skin(skel_mesh,mesh->gltf_model);
 
-    NodeManager::create_nodes_index(mesh);//bones index numeration
+    NodeManager::create_nodes_index(mesh);//bones index numeration 
 
-   
-    mesh->skeletal->nodes = mesh->nodes;
-    mesh->skeletal->linear_nodes = mesh->linear_nodes;
-    mesh->skeletal->mesh = mesh; 
-
-    manager->load_animation(mesh->skeletal,mesh->gltf_model);
+    manager->load_animation(skel_mesh,mesh->gltf_model);
 
     SkeletalManager::update_joints_nodes(mesh);
 }
@@ -114,7 +112,9 @@ void SkeletalLoader::load_skin(SkeletalMesh* mesh, tinygltf::Model &gltf_model){
         }
 
         //mesh->skins.push_back(new_skin);
+        mesh->skin = new_skin;
     }
+    
     
 }
 void SkeletalManager::load_skin(EMesh* mesh, tinygltf::Model &gltf_model){

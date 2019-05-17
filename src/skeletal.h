@@ -85,6 +85,8 @@ namespace engine{
 
 	
 	class SkeletalLoader{
+		public:
+		SkeletalLoader();
 		void load_skin(SkeletalMesh* mesh, tinygltf::Model &gltf_model);
 	};
 

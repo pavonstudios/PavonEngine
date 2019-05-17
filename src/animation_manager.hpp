@@ -8,6 +8,10 @@ class Engine;
 using namespace engine;
 class AnimationManager{
 	public:
+		SkeletalLoader* skeletal_loader = nullptr;
+		AnimationManager();
+		~AnimationManager();
+		void clear_loaders();
 		Engine* engine;
 		void play_animations(Engine* engine);
 		std::vector<Animation*> animations;

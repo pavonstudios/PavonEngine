@@ -91,7 +91,15 @@ void AnimationManager::play_animations(Engine* engine){
 			}
 		}
 }
+void AnimationManager::clear_loaders(){
 
+}
+AnimationManager::AnimationManager(){
+    this->skeletal_loader = new SkeletalLoader();
+}
+AnimationManager::~AnimationManager(){
+
+}
 void AnimationManager::load_animation(SkeletalMesh* skeletal, tinygltf::Model &gltf_model){
     for(auto& anim : gltf_model.animations){
         Animation* new_animation = new Animation;
