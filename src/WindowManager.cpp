@@ -151,7 +151,7 @@ void WindowManager::create_window(){
 			return;
 		}	
 	
-		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+		glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
 		
 		glfw_window = glfwCreateWindow(this->window_width, this->window_height, this->window_name.c_str(), nullptr, nullptr);
 		if( glfw_window == NULL ){
@@ -159,6 +159,11 @@ void WindowManager::create_window(){
 			glfwTerminate();
 			return;
 		}
+        glfwMakeContextCurrent(glfw_window);
+    
+        
+
+
    #endif
 
 }
