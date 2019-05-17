@@ -5,6 +5,13 @@ int main(){
     std::cout << "Engine\n";
     Engine engine;
     engine.window_manager.create_window();
+  
+    while(1){
+        glClearColor(0.0, 1.0, 0.0, 1.0);
+		glClear(GL_COLOR_BUFFER_BIT);		
+		engine.window_manager.swap_buffers();
+		
+    }
     return 1;
 }
 #endif

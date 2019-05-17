@@ -261,7 +261,7 @@ void WindowManager::swap_buffers(){
       #ifdef ES2
          eglSwapBuffers ( egl_display, egl_surface );
       #endif
-      #ifdef VULKAN
+      #if defined (WINDOWS) || defined (VULKAN) 
          glfwSwapBuffers(glfw_window);
       #endif
 }
