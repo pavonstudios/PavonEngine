@@ -84,7 +84,9 @@ namespace engine{
 	
 
 	
-
+	class SkeletalLoader{
+		void load_skin(SkeletalMesh* mesh, tinygltf::Model &gltf_model);
+	};
 
 	class SkeletalManager{
 	public:
@@ -92,6 +94,8 @@ namespace engine{
 		static void load_node(SkeletalMesh* mesh, NodeLoadData& node_data);
 		
 		static void load_skin(EMesh* mesh, tinygltf::Model &gltf_model);
+		
+
 		static void load_data(AnimationManager* manager, EMesh* mesh);
 		
 		static void update_joints_nodes(EMesh* mesh);
@@ -102,11 +106,7 @@ namespace engine{
 
 		static void update_joint_vertices_data(Engine*);
 
-		static void reset_animations(std::vector<SkeletalMesh*> skeletals);
-
-		static Node* node_by_name(EMesh* mesh, const char* name);
-		static Node* node_from_index(EMesh* mesh, uint32_t index);
-		static Node* find_node(Node* parent, uint32_t index);
+		static void reset_animations(std::vector<SkeletalMesh*> skeletals);		
 
 	};
 
@@ -115,6 +115,14 @@ namespace engine{
 			static void create_nodes_index(EMesh* mesh);
 			static glm::mat4 get_local_matrix(Node* node);
 			static glm::mat4 get_global_matrix(Node* node);
+			static Node* node_by_name(EMesh* mesh, const char* name);
+			static Node* node_from_index(EMesh* mesh, uint32_t index);
+
+			static Node* find_node(Node* parent, uint32_t index);
+
+			static Node* node_by_name(SkeletalMesh* mesh, const char* name);
+			static Node* node_from_index(SkeletalMesh* mesh, uint32_t index);
+			
 	};
 
 }

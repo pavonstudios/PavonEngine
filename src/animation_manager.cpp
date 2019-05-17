@@ -29,7 +29,7 @@ void AnimationManager::play_animation(SkeletalMesh* skeletal, std::string name){
                     */
                     float time_mix = (time - sampler.inputs[i] ) / ( sampler.inputs[i+1] - sampler.inputs[i] );
 
-                    Node* node = SkeletalManager::node_from_index(skeletal->mesh,channel.node_index);
+                    Node* node = NodeManager::node_from_index(skeletal->mesh,channel.node_index);
 
                     switch (channel.PathType)
                     {
@@ -146,7 +146,7 @@ void AnimationManager::load_animation(SkeletalMesh* skeletal, tinygltf::Model &g
             for(auto& source : anim.channels){
                 AnimationChannel channel{};
                 channel.sampler_index = source.sampler;
-                channel.node = SkeletalManager::node_from_index(skeletal->mesh,source.target_node);
+                channel.node = NodeManager::node_from_index(skeletal->mesh,source.target_node);
                 channel.node_index = source.target_node;
                 
                 if(source.target_path == "rotation"){

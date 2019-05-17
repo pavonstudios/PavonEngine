@@ -87,15 +87,44 @@ glm::mat4 NodeManager::get_global_matrix(Node* node){
     return local_matrix;
 
 }
+void SkeletalLoader::load_skin(SkeletalMesh* mesh, tinygltf::Model &gltf_model){
+    for(tinygltf::Skin &source_skin: gltf_model.skins){
+        Skin *new_skin = new Skin{};
+        if(source_skin.skeleton > -1){
+            new_skin->skeleton_root = NodeManager::node_from_index(mesh, source_skin.skeleton);
+        }
+        for(int joint_index : source_skin.joints){
+            Node* node = NodeManager::node_from_index(mesh, joint_index);
+            if(node)
+                new_skin->joints.push_back(node);
+        }
+        if(source_skin.inverseBindMatrices > -1){
+            const tinygltf::Accessor &accessor = gltf_model.accessors[source_skin.inverseBindMatrices];
 
+            const tinygltf::BufferView &bufferView = gltf_model.bufferViews[accessor.bufferView];
+            
+            const tinygltf::Buffer &buffer = gltf_model.buffers[bufferView.buffer];
+            
+            new_skin->inverse_bind_matrix.resize(accessor.count);
+            
+            memcpy(new_skin->inverse_bind_matrix.data(),
+                     &buffer.data[accessor.byteOffset + bufferView.byteOffset],
+                     accessor.count * sizeof(glm::mat4));
+
+        }
+
+        //mesh->skins.push_back(new_skin);
+    }
+    
+}
 void SkeletalManager::load_skin(EMesh* mesh, tinygltf::Model &gltf_model){
     for(tinygltf::Skin &source_skin: gltf_model.skins){
         Skin *new_skin = new Skin{};
         if(source_skin.skeleton > -1){
-            new_skin->skeleton_root = node_from_index(mesh, source_skin.skeleton);
+            new_skin->skeleton_root = NodeManager::node_from_index(mesh, source_skin.skeleton);
         }
         for(int joint_index : source_skin.joints){
-            Node* node = node_from_index(mesh, joint_index);
+            Node* node = NodeManager::node_from_index(mesh, joint_index);
             if(node)
                 new_skin->joints.push_back(node);
         }
@@ -119,7 +148,7 @@ void SkeletalManager::load_skin(EMesh* mesh, tinygltf::Model &gltf_model){
     
 }
 
-Node* SkeletalManager::find_node(Node* parent, uint32_t index){
+Node* NodeManager::find_node(Node* parent, uint32_t index){
     Node* node_found = nullptr;
     if(parent->index == index)
         return parent;
@@ -130,8 +159,7 @@ Node* SkeletalManager::find_node(Node* parent, uint32_t index){
     }
     return node_found;
 }
-
-Node* SkeletalManager::node_from_index(EMesh* mesh, uint32_t index){
+Node* NodeManager::node_from_index(SkeletalMesh* mesh, uint32_t index){
     Node* node_found = nullptr;
     for(auto &node : mesh->nodes){
         node_found = find_node(node,index);
@@ -141,7 +169,31 @@ Node* SkeletalManager::node_from_index(EMesh* mesh, uint32_t index){
     return node_found;
 }
 
-Node* SkeletalManager::node_by_name(EMesh* mesh, const char* name ){
+Node* NodeManager::node_by_name(SkeletalMesh* mesh, const char* name ){
+    Node* node_found = nullptr;
+    for(auto node : mesh->nodes){
+        if(node->name == name){
+            node_found = node;
+        }        
+        if(node_found)
+            break;
+    }
+    if(!node_found)
+        std::cout << "node not found : " << std::string(name) << std::endl;
+    return node_found;
+}
+
+Node* NodeManager::node_from_index(EMesh* mesh, uint32_t index){
+    Node* node_found = nullptr;
+    for(auto &node : mesh->nodes){
+        node_found = find_node(node,index);
+        if(node_found)
+            break;
+    }
+    return node_found;
+}
+
+Node* NodeManager::node_by_name(EMesh* mesh, const char* name ){
     Node* node_found = nullptr;
     for(auto node : mesh->nodes){
         if(node->name == name){
@@ -231,7 +283,7 @@ void SkeletalManager::load_node(SkeletalMesh* mesh, NodeLoadData& node_data){
 void SkeletalManager::reset_animations(std::vector<SkeletalMesh*> skeletals){
     for(auto* skeletal : skeletals){
         EMesh* mesh = skeletal->mesh;
-        Node* node = SkeletalManager::node_by_name(mesh,"thin_L");
+        Node* node = NodeManager::node_by_name(mesh,"thin_L");
 
         quat new_quat{};
         node->Rotation = new_quat;
@@ -256,7 +308,7 @@ void SkeletalManager::play_animations(std::vector<SkeletalMesh*> skeletals, floa
                     */
                     float time_mix = (time - sampler.inputs[i] ) / ( sampler.inputs[i+1] - sampler.inputs[i] );
 
-                    Node* node = node_from_index(skeletal->mesh,channel.node_index);
+                    Node* node = NodeManager::node_from_index(skeletal->mesh,channel.node_index);
 
                     switch (channel.PathType)
                     {
