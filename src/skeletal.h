@@ -69,7 +69,7 @@ namespace engine{
 	struct NodeUniform{
         alignas(16) glm::mat4 matrix;
         alignas(16) glm::mat4 joint_matrix[200];
-        float joint_count;
+        float joint_count = 0;
     };
    
 	struct SkeletalMesh{

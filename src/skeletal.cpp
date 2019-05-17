@@ -32,6 +32,9 @@ void SkeletalManager::update_joints_nodes(EMesh* mesh){
 }
 
 void SkeletalManager::load_data(AnimationManager* manager, EMesh* mesh){
+    SkeletalMesh* skel_mesh = new SkeletalMesh;
+    mesh->skeletal = skel_mesh;
+    
     int node_count = mesh->gltf_model.nodes.size();
     for(int i = 0; i < node_count;i++){
         NodeLoadData load_data = {};
@@ -40,6 +43,7 @@ void SkeletalManager::load_data(AnimationManager* manager, EMesh* mesh){
         load_data.index = i;
         load_data.parent = nullptr;
         SkeletalManager::load_node(mesh,load_data);
+        SkeletalManager::load_node(skel_mesh,load_data);
         
     }
   
@@ -47,7 +51,7 @@ void SkeletalManager::load_data(AnimationManager* manager, EMesh* mesh){
 
     NodeManager::create_nodes_index(mesh);//bones index numeration
 
-    mesh->skeletal = new SkeletalMesh;
+   
     mesh->skeletal->nodes = mesh->nodes;
     mesh->skeletal->linear_nodes = mesh->linear_nodes;
     mesh->skeletal->mesh = mesh; 
@@ -193,9 +197,7 @@ void SkeletalManager::load_node(EMesh* mesh, NodeLoadData& node_data){
 void SkeletalManager::load_node(SkeletalMesh* mesh, NodeLoadData& node_data){
      
     Node *new_node = new Node{};
-    new_node->parent = node_data.parent;
-    new_node->matrix = glm::mat4(1.0f);
-    new_node->skin_index = node_data.gltf_node->skin;
+    new_node->parent = node_data.parent;       
     new_node->index = node_data.index;
     new_node->name = node_data.gltf_node->name;
     
@@ -214,14 +216,13 @@ void SkeletalManager::load_node(SkeletalMesh* mesh, NodeLoadData& node_data){
     if( children_count > 0){
         for(int i = 0;i < children_count ;i++){
             mesh->nodes[ node_data.gltf_node->children[i] ]->parent = new_node;
-        }
-        
+        }        
     }
     
     if(node_data.parent){
         node_data.parent->children.push_back(new_node);       
     }else{
-         mesh->nodes.push_back(new_node);
+        mesh->nodes.push_back(new_node);
     }
 
     mesh->linear_nodes.push_back(new_node);

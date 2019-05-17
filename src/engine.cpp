@@ -488,6 +488,9 @@ void Engine::load_map(std::string path){
 		}
 
 		maps.parse_map_file(file);
+		maps.create_meshes_with_map_loaded_data();
+		maps.assign_shader_path();
+		maps.load_skeletal_meshes();
 
 
 	for(auto mesh : meshes){

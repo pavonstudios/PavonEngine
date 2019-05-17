@@ -81,7 +81,7 @@ void MapManager::parse_map_file(std::stringstream &file){
 		
 		}
 
-		create_meshes_with_map_loaded_data();
+		
 }
 void MapManager::load_meshes_for_instance(struct MapDataToLoad &data){
 	std::string path = engine->assets.path(data.model_path);
@@ -215,10 +215,15 @@ void MapManager::assign_shader_path(){
 			for(int id : skeletal_id){//assing skinned shader
 				engine->linear_meshes[id]->data_shader = data_skinned_mesh;
 				engine->linear_meshes[id]->type = MESH_TYPE_SKINNED;
-				engine->skeletal_meshes.push_back(engine->linear_meshes[id]);
-				SkeletalManager::load_data(&engine->animation_manager ,engine->linear_meshes[id]);
 			}
 			
+}
+
+void MapManager::load_skeletal_meshes(){
+	for(int id : skeletal_id){
+		engine->skeletal_meshes.push_back(engine->linear_meshes[id]);
+		SkeletalManager::load_data(&engine->animation_manager ,engine->linear_meshes[id]);
+	}
 }
 
 void MapManager::create_meshes_with_map_loaded_data(){
@@ -230,6 +235,6 @@ void MapManager::create_meshes_with_map_loaded_data(){
 			create_mesh_with_data(data);
 		}
 
-		assign_shader_path();
+		
 }
 

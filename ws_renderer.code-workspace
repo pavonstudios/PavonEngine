@@ -59,7 +59,8 @@
 			"__config": "cpp",
 			"__functional_base": "cpp",
 			"__nullptr": "cpp",
-			"thread": "cpp"
+			"thread": "cpp",
+			"typeindex": "cpp"
 		}
 	}
 }
