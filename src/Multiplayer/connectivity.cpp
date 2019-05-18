@@ -36,7 +36,7 @@ void ConnectionManager::connect_to_game_server(){
 
 	if(connected > -1){
 			vec3 position = vec3(1,1,1);
-	send(server_socket,&position,sizeof(glm::vec3),0);
+	//send(server_socket,&position,sizeof(glm::vec3),0);
 	}
 
 	
@@ -56,11 +56,11 @@ ConnectionManager::~ConnectionManager(){
 Accept connections from server
 */
 void ConnectionManager::init(){
-	std::thread t_wait_data(wait_data);
+	std::thread t_wait_data(wait_data,this);
 	t_wait_data.detach();
 }
 
-void ConnectionManager::wait_data(){
+void ConnectionManager::wait_data(ConnectionManager* manager){
 	int socket_server_file_descriptor = socket(AF_INET,SOCK_STREAM,0);
 	struct sockaddr_in address;
 	int addrlen = sizeof(address);
@@ -73,11 +73,12 @@ void ConnectionManager::wait_data(){
 
 	listen(socket_server_file_descriptor,3);
 
-	int client_conection = 0;
+	
 	std::cout << "waiting server response\n";
+	manager->in_server_socket = accept(socket_server_file_descriptor,(struct sockaddr *)&address,(socklen_t*)&addrlen);
+	std::cout << "connectd\n";
 	while(1){
-		client_conection = accept(socket_server_file_descriptor,(struct sockaddr *)&address,(socklen_t*)&addrlen);
-		std::cout << "server responce\n"; 
+		manager->update();
 	}
 }
 
@@ -89,4 +90,14 @@ void ConnectionManager::send_player_data(ThirdPerson* player){
 
 	if(server_socket > -1)
 		send(server_socket,&packet,sizeof(ClientPacket),0);
+}
+
+void ConnectionManager::update(){
+
+	SendPacket packet = {};
+	recv(in_server_socket,&packet,sizeof(SendPacket),0);
+	if(packet.players_count > 0){
+		std::cout << "Player count : " << packet.players_count << std::endl;
+	}
+
 }

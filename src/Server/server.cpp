@@ -18,6 +18,31 @@ void Server::send_data(){
 	}
 	
 }
+void Server::connect_to_clients(){
+
+	for(Client* client : clients){
+		if(client->send_connected){
+			continue;
+		}
+		client->send_socket = socket(AF_INET, SOCK_STREAM,0);
+
+		struct sockaddr_in ipOfServer;
+
+		ipOfServer.sin_family = AF_INET;
+		ipOfServer.sin_port = htons(6001);
+		ipOfServer.sin_addr.s_addr = inet_addr("127.0.0.1");//need to be cliend ip
+
+		std::cout << "connecting to send socket\n";
+		int connected = connect(client->send_socket, (struct sockaddr *)&ipOfServer, sizeof(ipOfServer));
+		if(connected < 0){
+			std::cout << "not connected\n";
+		}
+		if(connected >= 0)
+			client->send_connected = true;
+	}
+
+}
+
 void Server::get_ip_client(){
 	std::cout << "get ip\n";
 }
@@ -41,6 +66,7 @@ void Server::wait_connections(Server* server){
 		std::cout << "waiting connections\n";
 		Client* new_client = new Client;
 		new_client->client_socket = accept(socket_server_file_descriptor,(struct sockaddr *)&address,(socklen_t*)&addrlen);
+		server->can_replicate = false;
 
 		new_client->id = client_count;
 		new_client->connected = true;
@@ -55,6 +81,7 @@ void Server::wait_connections(Server* server){
 		
 		server->send_data();
 		client_count++;
+		server->can_replicate = true;
 	}
 
 }
@@ -71,12 +98,22 @@ void Server::recive_data(Client* client){
 			break;
 		}
 	}
+	
 	std::cout << "client disconneted\n";
 
 }
 
 void Server::replicate_clients_data(){
-	for(Client* client : clients){
-		
+	for(Client* actual_client : clients){
+		SendPacket packet = {};
+		packet.players_count = clients.size() - 1 ;
+		for(Client* send_client : clients){
+			if(actual_client->id == send_client->id){
+				continue;
+			}
+			send(send_client->send_socket,&packet,sizeof(SendPacket),0);
+
+		}
+
 	}
 }

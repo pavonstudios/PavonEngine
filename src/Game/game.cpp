@@ -42,8 +42,7 @@ Game::~Game(){
 void Game::update(){
 	if(!engine->edit_mode){
 			if(player->mesh){
-				player->update();	
-				engine->net_manager->send_player_data(player);
+				player->update();					
 			}
 			
 		}			

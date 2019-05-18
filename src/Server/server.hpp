@@ -13,11 +13,13 @@
 class Server{
 public:
 	bool quit = false;
+	bool can_replicate = true;
 	std::vector<Client*> clients;
 	void send_data();
 	void get_ip_client();
 	static void wait_connections(Server* server);
 	static void recive_data(Client*);
 	void replicate_clients_data();
+	void connect_to_clients();
 };
 #endif

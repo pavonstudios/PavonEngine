@@ -38,9 +38,15 @@ int main(){
 	t1.detach();
 	std::thread server_thread(Server::wait_connections,&server);
 	server_thread.detach();
+
 	server.get_ip_client();
 	while(!quit){
 		
+		if(server.can_replicate){
+			server.connect_to_clients();
+			server.replicate_clients_data();
+
+		}
 	}
 
 

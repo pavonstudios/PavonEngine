@@ -11,10 +11,16 @@ struct Client{
 	int client_socket = -1;
 	bool connected = false;
 	int send_socket = -1;
+	bool send_connected = false;
 };
 
 struct ClientPacket{
-	int command = 0;
+	int command = -1;
 	glm::vec3 position;
+};
+
+struct SendPacket{
+	int command = -1;
+	int players_count = 0;
 };
 #endif
