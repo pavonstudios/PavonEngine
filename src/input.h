@@ -36,7 +36,8 @@ public:
 	float yaw = 0;
 
 	bool right_button_pressed = false;
-
+	bool right_button_release = false;
+	
 	bool first_mouse = true;
 
 	float lastX = 400, lastY = 300;

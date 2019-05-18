@@ -61,6 +61,10 @@ void ThirdPerson::update(){
 	if(engine->input.SPACE.bIsPressed){				
 		engine->animation_manager.play_animation(mesh->skeletal,"jump");
 	}
+
+	if(engine->input.right_button_pressed){
+		engine->animation_manager.play_animation(mesh->skeletal,"aim");
+	}
 	#ifdef DEVELOPMENT
 	if(engine->input.Q.bIsPressed){		
 		engine->translate_mesh(mesh,UP,velocity);		

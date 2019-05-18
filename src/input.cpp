@@ -248,6 +248,9 @@ void Input::check_input_event(Engine* engine, XEvent &xev){
 		
 				engine->input.left_button_pressed = true;
 		}
+		if(xev.xbutton.button == Button3){
+			engine->input.right_button_pressed = true;
+		}
 	}
 	
 	if(xev.type == ButtonRelease){
@@ -255,6 +258,10 @@ void Input::check_input_event(Engine* engine, XEvent &xev){
 		if(xev.xbutton.button == Button1){
 				engine->input.left_button_pressed = false;
 				engine->input.left_button_release = true;
+		}
+		if(xev.xbutton.button == Button3){
+			engine->input.right_button_pressed = false;
+			engine->input.right_button_release = true;
 		}
 	}
 
