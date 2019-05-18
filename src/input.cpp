@@ -280,7 +280,14 @@ switch (key_code)
 	case 65:
 		key_set('-',true);
 		break;
+	case 9:
+		key_set('0',true);
+		break;
+
+
 	}
+	
+	
 
 
 }
@@ -296,7 +303,14 @@ void Input::key_code_verifier_released(int key_code){
 	case 65:
 		key_set('-',false);
 		break;
+
+	case 9:
+		key_set('0',false);
+		break;
+
+		
 	}
+	
 
 
 }
@@ -343,6 +357,9 @@ void Input::key_set(const char key, bool isPressed){
 		case '-':
 			actual_key = &this->SPACE;
 			break;
+		case '0':
+			actual_key = &this->ESC;
+			break;
 	}
 
 	if(actual_key){
@@ -365,6 +382,9 @@ void Input::update_input(Engine* engine){
 			engine->edit_mode = false;
 		}
 		this->TAB.Released = false;
+	}
+	if(ESC.Released){
+		engine->window_manager.close_window = true;
 	}
 
 	if(KEY_1.Released){

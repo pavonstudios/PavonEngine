@@ -30,6 +30,7 @@ public:
 	Key TAB;
 	Key KEY_1;
 	Key SPACE;
+	Key ESC;
 
 	float pitch = 0;
 	float yaw = 0;

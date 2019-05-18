@@ -301,16 +301,16 @@ void WindowManager::update_window_size(){
 }
 
 bool WindowManager::window_should_close(){
-   bool value = false; 
+  
    #ifdef VULKAN
-      value = glfwWindowShouldClose(glfw_window);
+      this->close_window = glfwWindowShouldClose(glfw_window);
    #endif
    #if defined(ES2)
-      value = false;
+      
    #endif
 
 #ifdef ANDROID
-    value = engine->pAndroid_app->destroyRequested;
+    this->close_window = engine->pAndroid_app->destroyRequested;
 #endif
-   return value;
+   return this->close_window;
 }
