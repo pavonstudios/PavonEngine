@@ -1,11 +1,6 @@
 #ifndef CONECTIVITY
 #define CONECTIVITY
-#include <sys/socket.h>
-#include <unistd.h>
-#include <netinet/in.h> 
-#include <arpa/inet.h>
-#include <iostream>
-#include <thread>
+
 class ConnectionManager{
 	public:
 		ConnectionManager();

@@ -52,6 +52,9 @@ void wait_conectiions(Server* server){
 		new_client->id = client_count;
 		server->clients.push_back(new_client);
 		std::cout << "someone connected\n";
+		char msg[1000];
+		recv(client_conection,(char*)&msg,sizeof(msg),0);
+		std::cout << msg << std::endl;
 		server->send_data();
 		client_count++;
 	}

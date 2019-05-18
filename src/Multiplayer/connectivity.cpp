@@ -1,4 +1,13 @@
 #include "connectivity.hpp"
+
+#include <sys/socket.h>
+#include <unistd.h>
+#include <netinet/in.h> 
+#include <arpa/inet.h>
+#include <iostream>
+#include <thread>
+
+#include <cstring>
 void ConnectionManager::connect_to_game_server(){
 	init();
 	
@@ -16,6 +25,12 @@ void ConnectionManager::connect_to_game_server(){
 	if(connected < 0){
 		std::cout << "not connected\n";
 	}
+	std::string message = "hello server";
+	char msg[1000];
+	memset(&msg,0,sizeof(msg));
+	strcpy(msg, message.c_str());
+	send(new_socket,(char*)&msg, strlen(msg),0);
+	
 
 	
 }
