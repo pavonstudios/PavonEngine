@@ -36,6 +36,7 @@ void Game::init(){
 Game::~Game(){
 	delete gui;
 	delete engine->net_manager;
+	
 }
 
 void Game::update(){

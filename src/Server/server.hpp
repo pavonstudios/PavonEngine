@@ -18,5 +18,6 @@ public:
 	void get_ip_client();
 	static void wait_connections(Server* server);
 	static void recive_data(Client*);
+	void replicate_clients_data();
 };
 #endif

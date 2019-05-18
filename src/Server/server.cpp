@@ -74,3 +74,9 @@ void Server::recive_data(Client* client){
 	std::cout << "client disconneted\n";
 
 }
+
+void Server::replicate_clients_data(){
+	for(Client* client : clients){
+		
+	}
+}

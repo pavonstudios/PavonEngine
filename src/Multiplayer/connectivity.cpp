@@ -26,6 +26,7 @@ void ConnectionManager::connect_to_game_server(){
 	int connected = connect(server_socket, (struct sockaddr *)&ipOfServer, sizeof(ipOfServer));
 	if(connected < 0){
 		std::cout << "not connected\n";
+		server_socket = -1;
 	}
 	std::string message = "hello server";
 	char msg[1000];
@@ -33,15 +34,23 @@ void ConnectionManager::connect_to_game_server(){
 	strcpy(msg, message.c_str());
 	//send(new_socket,(char*)&msg, strlen(msg),0);
 
-	
-	vec3 position = vec3(1,1,1);
+	if(connected > -1){
+			vec3 position = vec3(1,1,1);
 	send(server_socket,&position,sizeof(glm::vec3),0);
+	}
+
 	
 	
 }
 
 ConnectionManager::ConnectionManager(){
 
+}
+
+ConnectionManager::~ConnectionManager(){
+	ClientPacket packet {};
+	packet.command = COMMAND_EXIT;
+	send(server_socket,&packet,sizeof(ClientPacket),0);
 }
 /*
 Accept connections from server
@@ -78,5 +87,6 @@ void ConnectionManager::send_player_data(ThirdPerson* player){
 	packet.command = COMMAND_MOVE;
 	packet.position = player->mesh->location_vector;
 
-	send(server_socket,&packet,sizeof(ClientPacket),0);
+	if(server_socket > -1)
+		send(server_socket,&packet,sizeof(ClientPacket),0);
 }

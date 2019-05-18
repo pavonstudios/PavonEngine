@@ -10,6 +10,7 @@ struct Client{
 	int id = -1;
 	int client_socket = -1;
 	bool connected = false;
+	int send_socket = -1;
 };
 
 struct ClientPacket{

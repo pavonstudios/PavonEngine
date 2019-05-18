@@ -5,6 +5,7 @@ class ConnectionManager{
 	public:
 		int server_socket = -1;
 		ConnectionManager();
+		~ConnectionManager();
 		void connect_to_game_server();
 		void init();
 		static void wait_data();
