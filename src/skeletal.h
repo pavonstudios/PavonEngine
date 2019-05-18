@@ -100,9 +100,7 @@ namespace engine{
 
 		static void load_data(AnimationManager* manager, EMesh* mesh);
 		
-		static void update_joints_nodes(EMesh* mesh);
-
-		static void play_animations(std::vector<SkeletalMesh*> skeletals, float time);
+		static void update_joints_nodes(EMesh* mesh);		
 
 		static void create_bones_vertices(Engine*);
 

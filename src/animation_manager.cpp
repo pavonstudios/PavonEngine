@@ -29,7 +29,7 @@ void AnimationManager::play_animation(SkeletalMesh* skeletal, std::string name){
                     */
                     float time_mix = (time - sampler.inputs[i] ) / ( sampler.inputs[i+1] - sampler.inputs[i] );
 
-                    Node* node = NodeManager::node_from_index(skeletal->mesh,channel.node_index);
+                    Node* node = NodeManager::node_from_index(skeletal,channel.node_index);
 
                     switch (channel.PathType)
                     {
@@ -74,15 +74,76 @@ void AnimationManager::play_animation(SkeletalMesh* skeletal, std::string name){
     }
     
 }
+void AnimationManager::play_animations(std::vector<SkeletalMesh*> skeletals, float time){
 
+    for(SkeletalMesh* skeletal : skeletals){
+       
+       AnimationSampler sampler{};
+
+       for(auto& channel : skeletals[0]->animations[0]->channels){
+           sampler = skeletals[0]->animations[0]->samplers[channel.sampler_index];
+
+            for( size_t i = 0; i < sampler.inputs.size() - 1 ; i++ ){
+                
+                if( ( time >= sampler.inputs[i] )  && ( time <= sampler.inputs[i + 1] ) ){
+                    
+                    /*  The ratio of those amounts is the fraction of 
+                        the interval between timed key frames at which time t appears. 
+                    */
+                    float time_mix = (time - sampler.inputs[i] ) / ( sampler.inputs[i+1] - sampler.inputs[i] );
+
+                    Node* node = NodeManager::node_from_index(skeletal->mesh,channel.node_index);
+
+                    switch (channel.PathType)
+                    {
+                    case PATH_TYPE_ROTATION:
+                        {
+                        glm::quat quat0;
+                        quat0.x = sampler.outputs_vec4[i].x;
+                        quat0.y = sampler.outputs_vec4[i].y;
+                        quat0.z = sampler.outputs_vec4[i].z;
+                        quat0.w = sampler.outputs_vec4[i].w;
+
+                        glm::quat quat1;
+                        quat1.x = sampler.outputs_vec4[i+1].x;
+                        quat1.y = sampler.outputs_vec4[i+1].y;
+                        quat1.z = sampler.outputs_vec4[i+1].z;
+                        quat1.w = sampler.outputs_vec4[i+1].w;     
+
+                        quat interpolated = normalize( slerp(quat0,quat1,time_mix) );
+                        node->Rotation = interpolated;
+                        }
+                        break;
+
+                    case PATH_TYPE_TRANSLATION:
+                        vec4 translation = mix(sampler.outputs_vec4[i], sampler.outputs_vec4[i+1], time_mix );
+                        node->Translation = vec3(translation);
+
+                        break;
+                   
+                    }
+                   
+
+                    
+                }
+
+            }
+
+       }   
+       SkeletalManager::update_joints_nodes(skeletal->mesh);  
+
+    }
+}
 void AnimationManager::play_animations(Engine* engine){
 	if(engine->play_animations){
 			engine->animation_time += engine->deltaTime;
+
 			std::vector<SkeletalMesh*> skeletals;
 			skeletals.push_back(engine->skeletal_meshes[0]->skeletal);
-			//skeletals.push_back(skeletal_meshes[1]->skeletal);
-			SkeletalManager::play_animations(skeletals,engine->animation_time);
+			
+			play_animations(skeletals,engine->animation_time);
 
+            //play_animation(engine->skeletal_meshes[0]->skeletal,"jump");
 			std::cout << "time: " << engine->animation_time << std::endl;
 			if(engine->animation_time >= 3){
 				engine->animation_time = 0;
@@ -154,7 +215,7 @@ void AnimationManager::load_animation(SkeletalMesh* skeletal, tinygltf::Model &g
             for(auto& source : anim.channels){
                 AnimationChannel channel{};
                 channel.sampler_index = source.sampler;
-                channel.node = NodeManager::node_from_index(skeletal->mesh,source.target_node);
+                channel.node = NodeManager::node_from_index(skeletal,source.target_node);
                 channel.node_index = source.target_node;
                 
                 if(source.target_path == "rotation"){

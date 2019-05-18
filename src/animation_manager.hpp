@@ -18,6 +18,7 @@ class AnimationManager{
 		void load_animation(SkeletalMesh* skeletal, tinygltf::Model &gltf_model);
 		Animation* animation_by_name(std::string name);
 		void play_animation(SkeletalMesh* skeletal, std::string name);
+		void play_animations(std::vector<SkeletalMesh*> skeletals, float time);
 
 };
 

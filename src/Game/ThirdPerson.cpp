@@ -38,7 +38,7 @@ void ThirdPerson::update(){
 
 	engine->play_animations = false;
 	if(engine->input.W.bIsPressed == true){
-		engine->play_animations = true;
+		engine->play_animations = true;		
 		engine->translate_mesh(mesh,FORWARD,velocity);
 	}
 
