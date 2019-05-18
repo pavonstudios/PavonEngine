@@ -77,11 +77,12 @@ void ThirdPerson::update(){
 
 	update_camera_postion();
 	
-	monse_control(engine->input.yaw, engine->input.pitch);
+	mouse_control(engine->input.yaw, engine->input.pitch);
 
 
 }
-void ThirdPerson::monse_control(float yaw, float pitch){
+
+void ThirdPerson::mouse_control(float yaw, float pitch){
 	
 	float rotation = (yaw * -5.f) * engine->deltaTime;
 	if(yaw != 0){
