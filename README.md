@@ -1,8 +1,12 @@
 # Real time renderder
 Simple real time vulkan and opengl renderer
 
-Compile for OpenGl
-$make gl
+--> Server
+--> Collision
+--> Skeletal Animation
+
+Compile for OpenGl ES
+$make es2
 
 Compile for Vulkan
 $make
