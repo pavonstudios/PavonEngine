@@ -29,7 +29,7 @@ void AnimationManager::play_animation(SkeletalMesh* skeletal, std::string name){
                     */
                     float time_mix = (time - sampler.inputs[i] ) / ( sampler.inputs[i+1] - sampler.inputs[i] );
 
-                    Node* node = NodeManager::node_from_index(skeletal,channel.node_index);
+                    Node* node = NodeManager::node_from_index(skeletal->mesh,channel.node_index);
 
                     switch (channel.PathType)
                     {
@@ -79,9 +79,10 @@ void AnimationManager::play_animations(std::vector<SkeletalMesh*> skeletals, flo
     for(SkeletalMesh* skeletal : skeletals){
        
        AnimationSampler sampler{};
+       Animation* anim = animation_by_name("walk");
 
-       for(auto& channel : skeletals[0]->animations[0]->channels){
-           sampler = skeletals[0]->animations[0]->samplers[channel.sampler_index];
+       for(auto& channel : anim->channels){
+           sampler = anim->samplers[channel.sampler_index];
 
             for( size_t i = 0; i < sampler.inputs.size() - 1 ; i++ ){
                 
@@ -141,9 +142,9 @@ void AnimationManager::play_animations(Engine* engine){
 			std::vector<SkeletalMesh*> skeletals;
 			skeletals.push_back(engine->skeletal_meshes[0]->skeletal);
 			
-			play_animations(skeletals,engine->animation_time);
+			//play_animations(skeletals,engine->animation_time);
 
-            //play_animation(engine->skeletal_meshes[0]->skeletal,"jump");
+            //play_animation(engine->skeletal_meshes[0]->skeletal,"walk");
 			std::cout << "time: " << engine->animation_time << std::endl;
 			if(engine->animation_time >= 3){
 				engine->animation_time = 0;

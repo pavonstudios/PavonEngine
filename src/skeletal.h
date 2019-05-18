@@ -102,12 +102,13 @@ namespace engine{
 		
 		static void update_joints_nodes(EMesh* mesh);		
 
+		static void reset_animations(std::vector<SkeletalMesh*> skeletals);	
+
+		#ifdef DEVELOPMENT
 		static void create_bones_vertices(Engine*);
 
 		static void update_joint_vertices_data(Engine*);
-
-		static void reset_animations(std::vector<SkeletalMesh*> skeletals);		
-
+		#endif
 	};
 
 	class NodeManager{

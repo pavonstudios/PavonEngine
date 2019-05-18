@@ -33,6 +33,7 @@ vk: renderer.o  $(OBJs) game
 
 .ONESHELL:
 es2: DEFINES := -DES2
+es2: DEFINES += -DDEVELOPMENT
 es2: TYPE := es2
 es2: CC := $(CCLINUX)
 es2: $(OBJs) game

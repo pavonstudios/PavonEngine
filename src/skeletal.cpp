@@ -290,7 +290,7 @@ void SkeletalManager::reset_animations(std::vector<SkeletalMesh*> skeletals){
         node->Rotation = new_quat;
     }
 }
-
+#ifdef DEVELOPMENT
 void SkeletalManager::update_joint_vertices_data(Engine* engine){
     EMesh* mesh = engine->helpers[0];
     mesh->vertices.clear();
@@ -352,3 +352,4 @@ void SkeletalManager::create_bones_vertices(Engine* engine){
         engine->helpers.push_back(triangle);        
     #endif
 }
+#endif

@@ -39,6 +39,7 @@ void ThirdPerson::update(){
 	engine->play_animations = false;
 	if(engine->input.W.bIsPressed == true){
 		engine->play_animations = true;		
+		engine->animation_manager.play_animation(mesh->skeletal,"walk");
 		engine->translate_mesh(mesh,FORWARD,velocity);
 	}
 
