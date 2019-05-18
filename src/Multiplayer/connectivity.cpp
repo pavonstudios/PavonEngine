@@ -9,12 +9,11 @@
 
 #include <cstring>
 #include "../engine.h"
+#include "../Game/ThirdPerson.hpp"
 void ConnectionManager::connect_to_game_server(){
-	init();
-	
-	int new_socket;
+	init();	
 
-	new_socket = socket(AF_INET, SOCK_STREAM,0);
+	server_socket = socket(AF_INET, SOCK_STREAM,0);
 
 	struct sockaddr_in ipOfServer;
 
@@ -22,7 +21,7 @@ void ConnectionManager::connect_to_game_server(){
     ipOfServer.sin_port = htons(6000);
     ipOfServer.sin_addr.s_addr = inet_addr("127.0.0.1");
 
-	int connected = connect(new_socket, (struct sockaddr *)&ipOfServer, sizeof(ipOfServer));
+	int connected = connect(server_socket, (struct sockaddr *)&ipOfServer, sizeof(ipOfServer));
 	if(connected < 0){
 		std::cout << "not connected\n";
 	}
@@ -33,7 +32,7 @@ void ConnectionManager::connect_to_game_server(){
 	//send(new_socket,(char*)&msg, strlen(msg),0);
 
 	vec3 position = vec3(1,1,1);
-	send(new_socket,&position,sizeof(glm::vec3),0);
+	send(server_socket,&position,sizeof(glm::vec3),0);
 	
 	
 }
@@ -41,6 +40,9 @@ void ConnectionManager::connect_to_game_server(){
 ConnectionManager::ConnectionManager(){
 
 }
+/*
+Accept connections from server
+*/
 void ConnectionManager::init(){
 	std::thread t_wait_data(wait_data);
 	t_wait_data.detach();
@@ -65,4 +67,9 @@ void ConnectionManager::wait_data(){
 		client_conection = accept(socket_server_file_descriptor,(struct sockaddr *)&address,(socklen_t*)&addrlen);
 		std::cout << "server responce\n"; 
 	}
+}
+
+void ConnectionManager::send_player_position(ThirdPerson* player){
+	vec3 position = player->position;
+	send(server_socket,&position,sizeof(glm::vec3),0);
 }
