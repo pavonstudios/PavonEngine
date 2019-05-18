@@ -11,7 +11,7 @@ class ThirdPerson{
 		void update_camera_postion();
 		void mouse_control(float yaw, float pitch);
 		virtual void update();
-		glm::vec3 position = glm::vec3(0,0,0);
+		//glm::vec3 position = glm::vec3(0,0,0);
 		float velocity = 2;
 		vec3 camera_position = vec3(0,-1.5,-1.5);		
 };

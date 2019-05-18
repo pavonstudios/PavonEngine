@@ -39,20 +39,33 @@ void Server::wait_connections(Server* server){
 	int client_count = 0;
 	while(!server->quit){
 		std::cout << "waiting connections\n";
-		client_conection = accept(socket_server_file_descriptor,(struct sockaddr *)&address,(socklen_t*)&addrlen);
 		Client* new_client = new Client;
+		new_client->client_socket = accept(socket_server_file_descriptor,(struct sockaddr *)&address,(socklen_t*)&addrlen);
+
 		new_client->id = client_count;
+		new_client->connected = true;
 		server->clients.push_back(new_client);
+		std::thread new_client_thread (Server::recive_data,new_client);
+		new_client_thread.detach();
 		std::cout << "someone connected\n";
+
 		char msg[1000];
 		//recv(client_conection,(char*)&msg,sizeof(msg),0);
 		std::cout << msg << std::endl;
-		glm::vec3 position;
-		recv(client_conection,&position,sizeof(glm::vec3),0);
-		std::cout << position.x << " " << position.y << " " << position.z << std::endl;
-
+		
 		server->send_data();
 		client_count++;
 	}
+
+}
+
+void Server::recive_data(Client* client){
+	while(client->connected){
+		glm::vec3 position;
+		recv(client->client_socket,&position,sizeof(glm::vec3),0);
+		std::cout << position.x << " " << position.y << " " << position.z << std::endl;
+
+	}
+	std::cout << "client disconneted\n";
 
 }

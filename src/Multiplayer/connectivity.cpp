@@ -31,6 +31,7 @@ void ConnectionManager::connect_to_game_server(){
 	strcpy(msg, message.c_str());
 	//send(new_socket,(char*)&msg, strlen(msg),0);
 
+	
 	vec3 position = vec3(1,1,1);
 	send(server_socket,&position,sizeof(glm::vec3),0);
 	
@@ -70,6 +71,6 @@ void ConnectionManager::wait_data(){
 }
 
 void ConnectionManager::send_player_position(ThirdPerson* player){
-	vec3 position = player->position;
+	vec3 position = player->mesh->location_vector;
 	send(server_socket,&position,sizeof(glm::vec3),0);
 }
