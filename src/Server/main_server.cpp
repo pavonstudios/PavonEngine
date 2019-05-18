@@ -4,9 +4,11 @@
 #include <unistd.h>
 #include <netinet/in.h> 
 
+#include "server.hpp"
+
 bool quit = false;
 
-void input(){
+void input(Server* server){
 	std::cout << "input thread created\n";
 	std::string input;
 	while(!quit){
@@ -16,10 +18,16 @@ void input(){
 			quit = true;
 			
 		}
+		if(input == "clients"){
+			std::cout << "Client count: " << server->clients.size() << std::endl;
+			for(Client* client : server->clients){
+
+			}
+		}
 	}	
 	
 }
-void wait_conectiions(){
+void wait_conectiions(Server* server){
 	int socket_server_file_descriptor = socket(AF_INET,SOCK_STREAM,0);
 	struct sockaddr_in address;
 	int addrlen = sizeof(address);
@@ -33,19 +41,24 @@ void wait_conectiions(){
 	listen(socket_server_file_descriptor,3);
 
 	int client_conection = 0;
-	
+	int client_count = 0;
 	while(!quit){
 		std::cout << "waiting connections\n";
 		client_conection = accept(socket_server_file_descriptor,(struct sockaddr *)&address,(socklen_t*)&addrlen);
+		Client* new_client = new Client;
+		new_client->id = client_count;
+		server->clients.push_back(new_client);
 		std::cout << "someone connected\n";
+		client_count++;
 	}
 }
 int main(){
-	
-	std::thread t1(input);
+	Server server;
+
+	std::thread t1(input,&server);
 	t1.detach();
-	std::thread server(wait_conectiions);
-	server.detach();
+	std::thread server_thread(wait_conectiions,&server);
+	server_thread.detach();
 	while(!quit){
 
 	}
