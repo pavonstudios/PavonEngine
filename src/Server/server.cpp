@@ -61,10 +61,15 @@ void Server::wait_connections(Server* server){
 
 void Server::recive_data(Client* client){
 	while(client->connected){
-		glm::vec3 position;
-		recv(client->client_socket,&position,sizeof(glm::vec3),0);
+		ClientPacket packet = {};
+		recv(client->client_socket,&packet,sizeof(ClientPacket),0);
+		glm::vec3 position = packet.position;
 		std::cout << position.x << " " << position.y << " " << position.z << std::endl;
-
+		
+		if( packet.command == COMMAND_EXIT ){
+			client->connected = false;
+			break;
+		}
 	}
 	std::cout << "client disconneted\n";
 

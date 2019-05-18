@@ -10,6 +10,8 @@
 #include <cstring>
 #include "../engine.h"
 #include "../Game/ThirdPerson.hpp"
+#include "../Server/client.hpp"
+
 void ConnectionManager::connect_to_game_server(){
 	init();	
 
@@ -70,7 +72,11 @@ void ConnectionManager::wait_data(){
 	}
 }
 
-void ConnectionManager::send_player_position(ThirdPerson* player){
-	vec3 position = player->mesh->location_vector;
-	send(server_socket,&position,sizeof(glm::vec3),0);
+void ConnectionManager::send_player_data(ThirdPerson* player){
+	ClientPacket packet {};
+
+	packet.command = COMMAND_MOVE;
+	packet.position = player->mesh->location_vector;
+
+	send(server_socket,&packet,sizeof(ClientPacket),0);
 }

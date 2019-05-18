@@ -8,6 +8,6 @@ class ConnectionManager{
 		void connect_to_game_server();
 		void init();
 		static void wait_data();
-		void send_player_position(ThirdPerson* player);
+		void send_player_data(ThirdPerson* player);
 };
 #endif
