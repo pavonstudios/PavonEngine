@@ -12,9 +12,8 @@ OBJs += animation_manager.o
 
 COMPILE= $(CC) -c -DGLTF $(DEFINES) -DDEVELOPMENT
 
-GAMEOBJs = $(wildcard /home/pavon/rt_renderer/src/Game/*.o)
-
-GAME = Game/*.o
+GAME := Game/*.o
+GAME += Multiplayer/*.o
 
 INCLUDE_OPENGL = -lGLESv2 -lEGL -lX11 
 
@@ -36,7 +35,7 @@ es2: DEFINES := -DES2
 es2: DEFINES += -DDEVELOPMENT
 es2: TYPE := es2
 es2: CC := $(CCLINUX)
-es2: $(OBJs) game
+es2: $(OBJs) game connectivity
 	mkdir -p bin && cd src
 	$(CC) -o ../renderer $(OBJs) model_loader.o audio.o $(GAME) $(Library) $(INCLUDE_OPENGL) -I./ $(DEFINES) -DGLTF 
 
@@ -62,6 +61,11 @@ game:
 WindowManager.o: 
 	cd src
 	$(CC) -c WindowManager.cpp -DGLTF $(DEFINES)
+
+.ONESHELL:
+connectivity: 
+	cd src/Multiplayer
+	$(CC) -c connectivity.cpp -DGLTF $(DEFINES)
 
 .ONESHELL:
 animation_manager.o: 

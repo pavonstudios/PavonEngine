@@ -27,10 +27,13 @@
 #include "game_map.hpp"
 #include "audio_manager.hpp"
 class Game;
+
 #include "Game/gui.hpp"
 #include "animation_manager.hpp"
 
 #include  <sys/time.h>
+
+class ConnectionManager;
 
 using namespace engine;
 
@@ -60,6 +63,7 @@ public:
     AnimationManager animation_manager;
 
     Game * game;
+    ConnectionManager* net_manager;
 
    
     bool ready_to_game = false;

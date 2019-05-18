@@ -11,6 +11,8 @@
 
 #include <unistd.h>
 
+#include "Multiplayer/connectivity.hpp"
+
 #if defined(ES2) || defined(ANDROID) || defined(VULKAN)
 Engine::Engine()
 {

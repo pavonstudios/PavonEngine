@@ -1,4 +1,5 @@
 #include "game.hpp"
+#include "../Multiplayer/connectivity.hpp"
 void Game::init_player(){
 
 		player = new ThirdPerson();		
@@ -17,7 +18,8 @@ void Game::init_player(){
 		if(player->mesh == nullptr){
 			std::runtime_error("no player mesh pointer assigner");
 		}
-		player->connect_to_game_server();
+		
+		engine->net_manager = new ConnectionManager();
 
 }
 Game::Game(Engine* engine){
@@ -32,6 +34,7 @@ void Game::init(){
 
 Game::~Game(){
 	delete gui;
+	delete engine->net_manager;
 }
 
 void Game::update(){
