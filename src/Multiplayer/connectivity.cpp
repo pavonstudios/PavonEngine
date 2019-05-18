@@ -13,7 +13,7 @@
 #include "../Server/client.hpp"
 
 void ConnectionManager::connect_to_game_server(){
-	init();	
+	//init();	
 
 	server_socket = socket(AF_INET, SOCK_STREAM,0);
 
@@ -28,16 +28,14 @@ void ConnectionManager::connect_to_game_server(){
 		std::cout << "not connected\n";
 		server_socket = -1;
 	}
+
+	
 	std::string message = "hello server";
 	char msg[1000];
 	memset(&msg,0,sizeof(msg));
 	strcpy(msg, message.c_str());
 	//send(new_socket,(char*)&msg, strlen(msg),0);
 
-	if(connected > -1){
-			vec3 position = vec3(1,1,1);
-	//send(server_socket,&position,sizeof(glm::vec3),0);
-	}
 
 	
 	
@@ -77,8 +75,10 @@ void ConnectionManager::wait_data(ConnectionManager* manager){
 	std::cout << "waiting server response\n";
 	manager->in_server_socket = accept(socket_server_file_descriptor,(struct sockaddr *)&address,(socklen_t*)&addrlen);
 	std::cout << "connectd\n";
-	while(1){
-		manager->update();
+	while(true){
+		//manager->update();
+		//std::cout << "update\n";
+
 	}
 }
 

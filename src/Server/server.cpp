@@ -21,6 +21,7 @@ void Server::send_data(){
 void Server::connect_to_clients(){
 
 	for(Client* client : clients){
+		
 		if(client->send_connected){
 			continue;
 		}
@@ -48,7 +49,7 @@ void Server::get_ip_client(){
 }
 
 void Server::wait_connections(Server* server){
-		int socket_server_file_descriptor = socket(AF_INET,SOCK_STREAM,0);
+	int socket_server_file_descriptor = socket(AF_INET,SOCK_STREAM,0);
 	struct sockaddr_in address;
 	int addrlen = sizeof(address);
 
@@ -65,7 +66,8 @@ void Server::wait_connections(Server* server){
 	while(!server->quit){
 		std::cout << "waiting connections\n";
 		Client* new_client = new Client;
-		new_client->client_socket = accept(socket_server_file_descriptor,(struct sockaddr *)&address,(socklen_t*)&addrlen);
+		accept(socket_server_file_descriptor,(struct sockaddr *)&address,(socklen_t*)&addrlen);
+		new_client->client_socket = socket_server_file_descriptor;
 		server->can_replicate = false;
 
 		new_client->id = client_count;
@@ -79,7 +81,7 @@ void Server::wait_connections(Server* server){
 		//recv(client_conection,(char*)&msg,sizeof(msg),0);
 		std::cout << msg << std::endl;
 		
-		server->send_data();
+		//server->send_data();
 		client_count++;
 		server->can_replicate = true;
 	}
@@ -107,11 +109,12 @@ void Server::replicate_clients_data(){
 	for(Client* actual_client : clients){
 		SendPacket packet = {};
 		packet.players_count = clients.size() - 1 ;
+		send(actual_client->send_socket,&packet,sizeof(SendPacket),0);
+
 		for(Client* send_client : clients){
 			if(actual_client->id == send_client->id){
 				continue;
 			}
-			send(send_client->send_socket,&packet,sizeof(SendPacket),0);
 
 		}
 
