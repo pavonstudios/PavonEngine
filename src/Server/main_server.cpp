@@ -24,6 +24,9 @@ void input(Server* server){
 
 			}
 		}
+		if(input == "send"){
+			server->send_data();			
+		}
 	}	
 	
 }
@@ -49,6 +52,7 @@ void wait_conectiions(Server* server){
 		new_client->id = client_count;
 		server->clients.push_back(new_client);
 		std::cout << "someone connected\n";
+		server->send_data();
 		client_count++;
 	}
 }
@@ -59,6 +63,7 @@ int main(){
 	t1.detach();
 	std::thread server_thread(wait_conectiions,&server);
 	server_thread.detach();
+	server.get_ip_client();
 	while(!quit){
 
 	}
