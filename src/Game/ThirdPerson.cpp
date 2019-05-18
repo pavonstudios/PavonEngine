@@ -38,7 +38,6 @@ void ThirdPerson::update(){
 
 	engine->play_animations = false;
 	if(engine->input.W.bIsPressed == true){
-		engine->play_animations = true;		
 		engine->animation_manager.play_animation(mesh->skeletal,"walk");
 		engine->translate_mesh(mesh,FORWARD,velocity);
 	}
@@ -63,8 +62,8 @@ void ThirdPerson::update(){
 		//this->mesh->model_matrix = glm::rotate(mesh->model_matrix,glm::radians(-15.0f * engine->deltaTime),glm::vec3(0,0,1));
 		 		
 	}
-	if(engine->input.SPACE.bIsPressed){
-		std::cout << "space \n";
+	if(engine->input.SPACE.bIsPressed){				
+		engine->animation_manager.play_animation(mesh->skeletal,"jump");
 	}
 	#ifdef DEVELOPMENT
 	if(engine->input.Q.bIsPressed){		

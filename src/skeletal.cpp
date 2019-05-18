@@ -281,15 +281,6 @@ void SkeletalManager::load_node(SkeletalMesh* mesh, NodeLoadData& node_data){
     mesh->linear_nodes.push_back(new_node);
 }
 
-void SkeletalManager::reset_animations(std::vector<SkeletalMesh*> skeletals){
-    for(auto* skeletal : skeletals){
-        EMesh* mesh = skeletal->mesh;
-        Node* node = NodeManager::node_by_name(mesh,"thin_L");
-
-        quat new_quat{};
-        node->Rotation = new_quat;
-    }
-}
 #ifdef DEVELOPMENT
 void SkeletalManager::update_joint_vertices_data(Engine* engine){
     EMesh* mesh = engine->helpers[0];

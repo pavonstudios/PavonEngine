@@ -95,14 +95,11 @@ namespace engine{
 		static void load_node(EMesh* mesh, NodeLoadData& node_data);
 		static void load_node(SkeletalMesh* mesh, NodeLoadData& node_data);
 		
-		static void load_skin(EMesh* mesh, tinygltf::Model &gltf_model);
-		
+		static void load_skin(EMesh* mesh, tinygltf::Model &gltf_model);		
 
 		static void load_data(AnimationManager* manager, EMesh* mesh);
 		
 		static void update_joints_nodes(EMesh* mesh);		
-
-		static void reset_animations(std::vector<SkeletalMesh*> skeletals);	
 
 		#ifdef DEVELOPMENT
 		static void create_bones_vertices(Engine*);
