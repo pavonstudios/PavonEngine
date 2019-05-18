@@ -66,8 +66,7 @@ void Server::wait_connections(Server* server){
 	while(!server->quit){
 		std::cout << "waiting connections\n";
 		Client* new_client = new Client;
-		accept(socket_server_file_descriptor,(struct sockaddr *)&address,(socklen_t*)&addrlen);
-		new_client->client_socket = socket_server_file_descriptor;
+		new_client->client_socket = accept(socket_server_file_descriptor,(struct sockaddr *)&address,(socklen_t*)&addrlen);
 		server->can_replicate = false;
 
 		new_client->id = client_count;
