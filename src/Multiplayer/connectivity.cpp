@@ -8,6 +8,7 @@
 #include <thread>
 
 #include <cstring>
+#include "../engine.h"
 void ConnectionManager::connect_to_game_server(){
 	init();
 	
@@ -29,9 +30,11 @@ void ConnectionManager::connect_to_game_server(){
 	char msg[1000];
 	memset(&msg,0,sizeof(msg));
 	strcpy(msg, message.c_str());
-	send(new_socket,(char*)&msg, strlen(msg),0);
-	
+	//send(new_socket,(char*)&msg, strlen(msg),0);
 
+	vec3 position = vec3(1,1,1);
+	send(new_socket,&position,sizeof(glm::vec3),0);
+	
 	
 }
 

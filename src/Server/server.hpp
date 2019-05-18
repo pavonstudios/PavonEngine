@@ -12,8 +12,10 @@
 
 class Server{
 public:
+	bool quit = false;
 	std::vector<Client*> clients;
 	void send_data();
 	void get_ip_client();
+	static void wait_connections(Server* server);
 };
 #endif
