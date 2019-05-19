@@ -27,6 +27,7 @@ void SkeletalManager::update_joints_nodes(EMesh* mesh){
 
 
         mesh->node_uniform.joint_matrix[i] = joint_mat;
+        
     } 
 
 }
@@ -212,7 +213,6 @@ void SkeletalManager::load_node(EMesh* mesh, NodeLoadData& node_data){
      
     Node *new_node = new Node{};
     new_node->parent = node_data.parent;
-    new_node->matrix = glm::mat4(1.0f);
     new_node->skin_index = node_data.gltf_node->skin;
     new_node->index = node_data.index;
     new_node->name = node_data.gltf_node->name;
@@ -224,8 +224,6 @@ void SkeletalManager::load_node(EMesh* mesh, NodeLoadData& node_data){
     if(node_data.gltf_node->rotation.size() == 4)
         new_node->Rotation = glm::make_quat(node_data.gltf_node->rotation.data());
 
-    if(node_data.gltf_node->matrix.size() == 16)
-        new_node->matrix = glm::make_mat4x4(node_data.gltf_node->matrix.data());
 
     int children_count = node_data.gltf_node->children.size();
 
@@ -235,9 +233,7 @@ void SkeletalManager::load_node(EMesh* mesh, NodeLoadData& node_data){
         }
         
     }
-    if(node_data.gltf_node->mesh > -1){
-        new_node->mesh = mesh;
-    }
+
     if(node_data.parent){
         node_data.parent->children.push_back(new_node);       
     }else{
@@ -260,9 +256,6 @@ void SkeletalManager::load_node(SkeletalMesh* mesh, NodeLoadData& node_data){
 
     if(node_data.gltf_node->rotation.size() == 4)
         new_node->Rotation = glm::make_quat(node_data.gltf_node->rotation.data());
-
-    if(node_data.gltf_node->matrix.size() == 16)
-        new_node->matrix = glm::make_mat4x4(node_data.gltf_node->matrix.data());
 
     int children_count = node_data.gltf_node->children.size();
 
@@ -344,3 +337,9 @@ void SkeletalManager::create_bones_vertices(Engine* engine){
     #endif
 }
 #endif
+
+void SkeletalManager::joint_by_name(SkeletalMesh* mesh, std::string name ){
+    for(Node* joint : mesh->nodes){
+
+    }
+}

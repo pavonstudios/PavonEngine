@@ -22,6 +22,8 @@ void Game::init_player(){
 		engine->net_manager = new ConnectionManager();
 		engine->net_manager->connect_to_game_server();
 
+		
+
 }
 Game::Game(Engine* engine){
 	this->engine = engine;

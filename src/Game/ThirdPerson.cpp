@@ -27,6 +27,17 @@ void ThirdPerson::update_camera_postion(){
 	//engine->main_camera.cameraPos = camera_position + mesh->location_vector;
 	
 }
+
+void ThirdPerson::update_weapon_position(){
+	EMesh* weapon = engine->mesh_manager.mesh_by_name("glock");
+	//mat4 hand_mat = 
+	Node* hand = NodeManager::node_by_name(mesh,"Bone.012"); //TODO: node by name with skeletal parameter not updated
+	mat4 local = NodeManager::get_global_matrix(hand);
+    local = mesh->model_matrix * local;
+
+	weapon->model_matrix = local;
+}
+
 void ThirdPerson::update(){
 
 	std::string log_position = "position " + std::to_string(mesh->location_vector.x) + " " + std::to_string(mesh->location_vector.y) + " " + std::to_string(mesh->location_vector.z);
@@ -78,7 +89,8 @@ void ThirdPerson::update(){
 	update_camera_postion();
 	
 	mouse_control(engine->input.yaw, engine->input.pitch);
-
+	
+	update_weapon_position();
 
 }
 

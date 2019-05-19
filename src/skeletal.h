@@ -22,11 +22,8 @@ namespace engine{
 		Node *parent;
 		uint32_t index;
 		glm::vec3 Translation{};
-		glm::quat Rotation{};
-		glm::mat4 matrix;
+		glm::quat Rotation{};	
 		std::vector<Node*> children;
-		EMesh* mesh;
-		Skin* skin;
 		int32_t skin_index = -1;
 		std::string name;   
 		uint32_t bone_index;   
@@ -110,6 +107,8 @@ namespace engine{
 
 		static void update_joint_vertices_data(Engine*);
 		#endif
+
+		static void joint_by_name(SkeletalMesh* , std::string);
 	};
 
 	class NodeManager{
