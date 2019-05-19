@@ -1,8 +1,6 @@
 #ifndef OPENGL_HPP
 #define OPENGL_HPP
 
-#include <initializer_list>
-#include <memory>
 #include <cstdlib>
 #include <cstring>
 #include <string>
@@ -12,24 +10,21 @@
 #include <cassert>
 #include <vector>
 
-#if defined (ES2) || defined (ANDROID)  
-#include <GLES2/gl2.h>
-#endif
 #ifdef WINDOWS
-#include <GL/gl.h>
+    #include <GL/gl.h>
+#else
+    #include <GLES2/gl2.h>
 #endif
 #ifdef ANDROID
     #include <android/log.h>
     #include <android_native_app_glue.h>
     #include <jni.h>
-    #include "glm/glm.hpp"
-    #include "glm/gtc/matrix_transform.hpp"
-    #include "android_helper.h"
+    #include "../glm/glm.hpp"
+    #include "../glm/gtc/matrix_transform.hpp"
+    #include "../android_helper.h"
 #endif
+
 #include "../objects.h"
-
-#include <chrono>
-
 #include "../asset_manager.h"
 
 using  namespace engine;
