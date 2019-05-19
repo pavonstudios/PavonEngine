@@ -3,7 +3,7 @@
 #include "engine.h"
 #include "iostream"
 
-
+#include <thread>
 
 #ifdef ES2
     #include <GLES2/gl2.h>
@@ -410,9 +410,49 @@ EMesh* MeshManager::mesh_by_name(std::string name){
 }
 
 void TexturesManager::load_textures_to_cpu_memory(const std::vector<EMesh*> meshes){
+    int core_count = std::thread::hardware_concurrency();
+    int meshes_count = meshes.size();
+
+    div_t division = std::div(meshes_count,core_count);
+    
+    std::vector< std::vector<EMesh*> > parts;
+
+    int cout_to_div = division.quot;
+    int counter = 0;
+     std::vector<EMesh*> part;
+    for(int i = 0 ; i < meshes.size() - 1 ; i++){
+       
+        part.push_back(meshes[i]);
+        counter++;
+        if(counter == cout_to_div){
+            
+            parts.push_back(part);
+            counter = 0;
+            part.clear();
+        }        
+    }
+    if(division.rem >= 1){
+        std::vector<EMesh*> part;
+        part.push_back(meshes.back());
+        parts.push_back(part);
+    }
+
+    std::vector<std::thread> threads;
+    for(int t = 0 ; t < parts.size() ; t++){
+        std::thread load (TexturesManager::load_texture,this->engine, std::ref(parts[t]) );
+        threads.push_back(std::move(load));
+    }
+    for(int v = 0 ; v < threads.size() ; v++){
+        threads[v].join();
+    }
+
+    
+    
+}
+
+void TexturesManager::load_texture(Engine * engine, std::vector<EMesh*> &meshes){
     for(EMesh* mesh : meshes){
-        
-        if (mesh->texture.hasTexture)
+         if (mesh->texture.hasTexture)
         {
         
         }
@@ -424,6 +464,6 @@ void TexturesManager::load_textures_to_cpu_memory(const std::vector<EMesh*> mesh
                 mesh->image = image;
             }
         }
-        
     }
+   
 }
