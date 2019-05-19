@@ -13,7 +13,7 @@
 #endif    
 
 #if defined (ES2) || defined (ANDROID)
-    #include "android_renderer.h"
+    #include "renderers/opengl.hpp"
 #endif
 
 #include <chrono>

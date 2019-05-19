@@ -36,9 +36,9 @@ es2: DEFINES := -DES2
 es2: DEFINES += -DDEVELOPMENT
 es2: TYPE := es2
 es2: CC := $(CCLINUX)
-es2: $(OBJs) game connectivity
+es2: $(OBJs) game connectivity opengl.o
 	mkdir -p bin && cd src
-	$(CC) -o ../renderer $(OBJs) model_loader.o audio.o $(GAME) $(Library) $(INCLUDE_OPENGL) -I./ $(DEFINES) -DGLTF 
+	$(CC) -o ../renderer $(OBJs) model_loader.o audio.o ./renderers/opengl.o $(GAME) $(Library) $(INCLUDE_OPENGL) -I./ $(DEFINES) -DGLTF 
 
 .ONESHELL:
 win: CC := $(CCWIN)
@@ -62,6 +62,11 @@ game:
 WindowManager.o: 
 	cd src
 	$(CC) -c WindowManager.cpp -DGLTF $(DEFINES)
+
+.ONESHELL:
+opengl.o: 
+	cd src/renderers
+	$(CC) -c opengl.cpp -DGLTF $(DEFINES)
 
 .ONESHELL:
 connectivity: 

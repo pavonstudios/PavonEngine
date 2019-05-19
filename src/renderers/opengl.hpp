@@ -1,5 +1,41 @@
 #ifndef OPENGL_HPP
 #define OPENGL_HPP
+
+#include <initializer_list>
+#include <memory>
+#include <cstdlib>
+#include <cstring>
+#include <string>
+#include <fstream>
+
+#include <errno.h>
+#include <cassert>
+#include <vector>
+
+#if defined (ES2) || defined (ANDROID)  
+#include <GLES2/gl2.h>
+#endif
+#ifdef WINDOWS
+#include <GL/gl.h>
+#endif
+#ifdef ANDROID
+    #include <android/log.h>
+    #include <android_native_app_glue.h>
+    #include <jni.h>
+    #include "glm/glm.hpp"
+    #include "glm/gtc/matrix_transform.hpp"
+    #include "android_helper.h"
+#endif
+#include "../objects.h"
+
+#include <chrono>
+
+#include "../asset_manager.h"
+
+using  namespace engine;
+using namespace std;
+using namespace glm;
+
 struct shader_src{
     std::string vertex_shader_path;
     std::string fragment_shader_path;
@@ -9,7 +45,7 @@ struct shader_src{
 };
 
 
-class RendererGL{
+class Renderer{
 public:
     bool bReady = false;
     EMesh* triangle;

@@ -1,5 +1,5 @@
 #include "opengl.hpp"
-GLuint RendererGL::load_shader(shader_src &shader_data, GLenum type)
+GLuint Renderer::load_shader(shader_src &shader_data, GLenum type)
 {
 	const char *shader_source;
 	if (type == GL_VERTEX_SHADER)
@@ -23,7 +23,7 @@ GLuint RendererGL::load_shader(shader_src &shader_data, GLenum type)
 	return shader;
 }
 
-void RendererGL::print_shader_info_log(GLuint shader, shader_src &shader_data, const char *src)
+void Renderer::print_shader_info_log(GLuint shader, shader_src &shader_data, const char *src)
 {
 
 	GLint length;
@@ -74,7 +74,7 @@ void RendererGL::print_shader_info_log(GLuint shader, shader_src &shader_data, c
 	}
 }
 
-char *RendererGL::load_shader_file(const char *path)
+char *Renderer::load_shader_file(const char *path)
 {
 #ifdef ANDROID
 	AAsset *file = AAssetManager_open(app->activity->assetManager, path, AASSET_MODE_BUFFER);
@@ -112,7 +112,7 @@ char *RendererGL::load_shader_file(const char *path)
 #endif
 }
 
-void RendererGL::load_shaders(EMesh *mesh)
+void Renderer::load_shaders(EMesh *mesh)
 {
 
 	char *vertex_shader_src = load_shader_file(mesh->data_shader.vertex_shader_path.c_str());
@@ -134,7 +134,7 @@ void RendererGL::load_shaders(EMesh *mesh)
 	glLinkProgram(mesh->shader_program); // link the program
 }
 
-void RendererGL::load_shaders(const std::vector<EMesh *> &meshes)
+void Renderer::load_shaders(const std::vector<EMesh *> &meshes)
 {
 	for (EMesh *mesh : meshes)
 	{
@@ -158,7 +158,7 @@ void RendererGL::load_shaders(const std::vector<EMesh *> &meshes)
 	}
 }
 
-void RendererGL::init_gl()
+void Renderer::init_gl()
 {
 	//glViewport(0,0,800,600);
 
@@ -168,7 +168,7 @@ void RendererGL::init_gl()
 	glDepthFunc(GL_LESS);
 }
 
-void RendererGL::load_mesh_texture(EMesh *mesh)
+void Renderer::load_mesh_texture(EMesh *mesh)
 {
 
 	glGenTextures(1, &mesh->texture_id);
@@ -208,7 +208,7 @@ void RendererGL::load_mesh_texture(EMesh *mesh)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 #endif
 }
-void RendererGL::load_textures(const std::vector<EMesh *> &meshes)
+void Renderer::load_textures(const std::vector<EMesh *> &meshes)
 {
 	GLuint texture_id;
 	glGenTextures(1, &texture_id);
@@ -260,7 +260,7 @@ void RendererGL::load_textures(const std::vector<EMesh *> &meshes)
 	}
 }
 
-void RendererGL::load_textures(std::vector<std::string> &textures_paths)
+void Renderer::load_textures(std::vector<std::string> &textures_paths)
 {
 
 	for (auto path : textures_paths)
@@ -290,7 +290,7 @@ void RendererGL::load_textures(std::vector<std::string> &textures_paths)
 	}
 }
 
-void RendererGL::activate_vertex_attributes(EMesh *mesh)
+void Renderer::activate_vertex_attributes(EMesh *mesh)
 {
 
 	glBindBuffer(GL_ARRAY_BUFFER, mesh->vertex_buffer);
@@ -314,7 +314,7 @@ void RendererGL::activate_vertex_attributes(EMesh *mesh)
 	}
 }
 
-void RendererGL::update_mvp(EMesh *mesh)
+void Renderer::update_mvp(EMesh *mesh)
 {
 
 	if (mesh->type == MESH_TYPE_SKINNED)
@@ -336,12 +336,12 @@ void RendererGL::update_mvp(EMesh *mesh)
 	}
 }
 
-void RendererGL::draw_mesh()
+void Renderer::draw_mesh()
 {
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 3);
 }
 
-void RendererGL::draw_gui(EMesh *mesh)
+void Renderer::draw_gui(EMesh *mesh)
 {
 	// int samplerid = glGetUniformLocation(shaderProgram, "texture_sampler");
 	//  glUniform1i(samplerid, 0);
@@ -354,7 +354,7 @@ void RendererGL::draw_gui(EMesh *mesh)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-void RendererGL::draw(EMesh *mesh)
+void Renderer::draw(EMesh *mesh)
 {
 
 	glBindTexture(GL_TEXTURE_2D, mesh->texture_id);
@@ -363,5 +363,3 @@ void RendererGL::draw(EMesh *mesh)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->indices_buffer);
 	glDrawElements(GL_TRIANGLES, mesh->indices.size(), GL_UNSIGNED_INT, (void *)0);
 }
-}
-;
