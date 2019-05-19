@@ -34,7 +34,7 @@ void ThirdPerson::update(){
 
 	engine->play_animations = false;
 	if(engine->input.W.bIsPressed == true){
-		engine->animation_manager.play_animation(mesh->skeletal,"walk");
+		engine->animation_manager.play_animation(mesh->skeletal,"walk",true);
 		engine->translate_mesh(mesh,FORWARD,velocity);
 	}
 
@@ -59,11 +59,11 @@ void ThirdPerson::update(){
 		 		
 	}
 	if(engine->input.SPACE.bIsPressed){				
-		engine->animation_manager.play_animation(mesh->skeletal,"jump");
+		engine->animation_manager.play_animation(mesh->skeletal,"jump",true);
 	}
 
 	if(engine->input.right_button_pressed){
-		engine->animation_manager.play_animation(mesh->skeletal,"aim");
+		engine->animation_manager.play_animation(mesh->skeletal,"aim",false);
 	}
 	#ifdef DEVELOPMENT
 	if(engine->input.Q.bIsPressed){		

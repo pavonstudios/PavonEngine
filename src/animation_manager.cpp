@@ -11,16 +11,21 @@ Animation* AnimationManager::animation_by_name(std::string name){
     return nullptr;
 }
 
-void AnimationManager::play_animation(SkeletalMesh* skeletal, std::string name){
+void AnimationManager::play_animation(SkeletalMesh* skeletal, std::string name, bool loop){
     engine->play_animations = true;
 
     Animation* anim = animation_by_name(name);
+    
     float time = anim->time;
+    
+    anim->loop = loop;
+
     if(!anim){
         std::cout << "no playing animation\n";
         return;
     }
-        AnimationSampler sampler{};
+    
+    AnimationSampler sampler{};
 
     for(auto& channel : anim->channels){
         sampler = anim->samplers[channel.sampler_index];
@@ -63,10 +68,8 @@ void AnimationManager::play_animation(SkeletalMesh* skeletal, std::string name){
 
                     break;
                 
-                }
-                
-
-                
+                }                
+            
             }
 
         }         
@@ -82,7 +85,11 @@ void AnimationManager::play_animations(Engine* engine){
         for(auto *anim : animations){
             anim->time += engine->deltaTime;
             if(anim->time >= anim->end){
-                anim->time = 0;
+                if(anim->loop)
+                    anim->time = 0;
+                else{
+                    anim->time = anim->end;
+                }
             }
         }
 	

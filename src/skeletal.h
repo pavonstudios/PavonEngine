@@ -62,6 +62,7 @@ namespace engine{
 
 	struct Animation{
 		float time = 0;
+		bool loop = false;
 		std::string name;
 		std::vector<AnimationChannel> channels;
 		std::vector<AnimationSampler> samplers;
