@@ -74,9 +74,10 @@ void Engine::init()
 	configure_window_callback();
 
 #ifdef VULKAN
+	renderer.engine = this;
 	renderer.run(&vkdata);
 
-	mesh_manager.vulkan_device = vulkan_device;
+	mesh_manager.vulkan_device = this->vulkan_device;
 #endif
 
 	std::string map_path = assets.path("Maps/map01.map");
@@ -97,6 +98,7 @@ void Engine::init()
 #ifdef VULKAN
 	renderer.VulkanConfig();
 #endif
+
 
 	mesh_manager.create_buffers(this, unique_meshes);
 	mesh_manager.create_buffers(this, linear_meshes);

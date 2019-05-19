@@ -66,11 +66,12 @@ struct SwapChainSupportDetails {
     std::vector<VkSurfaceFormatKHR> formats;
     std::vector<VkPresentModeKHR> presentModes;
 };
-
+class Engine;
 using namespace engine;
 class Renderer {
 
 public:
+    Engine* engine = nullptr;
     VulkanData* pVkData;
     vks::VulkanDevice *vulkan_device;
 	void run(VulkanData* vkdata);
@@ -84,7 +85,7 @@ public:
     
     void repeat();
     void finish();
-    class Engine* engine;
+    
 
     void configure_objects(){
         createSyncObjects();

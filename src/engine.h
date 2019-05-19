@@ -46,7 +46,14 @@ public:
         Engine(android_app * pApp);
         android_app * pAndroid_app;
     #endif
-
+    #ifdef VULKAN        
+    VulkanData vkdata = {VK_NULL_HANDLE};
+    vks::VulkanDevice* vulkan_device = nullptr; 
+    void vulkan_loop();     
+    
+    GLFWwindow* window;
+  
+    #endif
     #if defined (ES2) || defined (ANDROID)  || defined(VULKAN)
     Engine();
     Renderer renderer; 
@@ -131,17 +138,7 @@ public:
     void init_collision_engine();
 
     
-#ifdef VULKAN        
-    VulkanData vkdata = {VK_NULL_HANDLE};
-    vks::VulkanDevice* vulkan_device; 
-    void vulkan_loop();     
-    
-    GLFWwindow* window;
-    GLFWwindow* get_window_pointer()
-    {
-        return window;
-    }    
-#endif
+
     
 
 

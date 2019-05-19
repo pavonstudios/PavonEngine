@@ -25,6 +25,7 @@ TYPE :=
 vk: DEFINES := -DVULKAN
 vk: Library += -lglfw
 vk: TYPE := vk
+vk: CC := $(CCLINUX)
 vk: renderer.o  $(OBJs) game
 	mkdir -p bin && cd src
 	$(CC) -o ../renderer renderer.o audio.o $(OBJs) model_loader.o $(GAME) $(Library) -I./ -lvulkan $(DEFINES)

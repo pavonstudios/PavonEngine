@@ -113,7 +113,7 @@ void MeshManager::create_buffers(Engine* engine, const std::vector<EMesh*>& mesh
            
         #endif
         #ifdef VULKAN //vertex buffer
-/*             EMesh* mesh_to_process = mesh;
+            /*             EMesh* mesh_to_process = mesh;
             bufferSize = sizeof(mesh_to_process->vertices[0]) * mesh_to_process->vertices.size();
 
             VkBuffer stagingBuffer;

@@ -16,7 +16,7 @@ VkExtent2D Renderer::chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabiliti
         return capabilities.currentExtent;
     } else {
         int width, height;
-        glfwGetFramebufferSize(engine->get_window_pointer(), &width, &height);
+        glfwGetFramebufferSize(engine->window_manager.get_window(), &width, &height);
 
         VkExtent2D actualExtent = {
             static_cast<uint32_t>(width),
@@ -31,7 +31,8 @@ VkExtent2D Renderer::chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabiliti
 }
 
 void Renderer::createSurface() {
-    if (glfwCreateWindowSurface(instance, engine->get_window_pointer(), nullptr, &surface) != VK_SUCCESS) {
+
+    if (glfwCreateWindowSurface(instance, engine->window_manager.get_window(), nullptr, &surface) != VK_SUCCESS) {
         throw std::runtime_error("failed to create window surface!");
     }
 }

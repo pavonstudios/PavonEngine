@@ -197,7 +197,7 @@ public:
     class MeshManager{
         public:
         #ifdef VULKAN
-            vks::VulkanDevice* vulkan_device;
+            vks::VulkanDevice* vulkan_device = nullptr;
             void clean_pipeline_from_meshes(std::vector<EMesh*> meshes);
         #endif
             int load_model_gltf(EMesh* mesh, const char* path);
