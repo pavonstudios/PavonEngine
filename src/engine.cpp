@@ -13,6 +13,8 @@
 
 #include "Multiplayer/connectivity.hpp"
 
+#include "macros.h"
+
 #if defined(ES2) || defined(ANDROID) || defined(VULKAN)
 Engine::Engine()
 {
@@ -107,14 +109,13 @@ void Engine::init()
 	renderer.VulkanConfig();
 #endif
 
-	auto vertives_time = std::chrono::high_resolution_clock::now();
+	
 	mesh_manager.create_buffers(this, unique_meshes);
-	mesh_manager.create_buffers(this, linear_meshes);
-	calculate_time("vertices to GPU memory",vertives_time);
+	
+	TIME(mesh_manager.create_buffers(this, linear_meshes),"vertices to CPU")	
 
-	auto cpu_texture_time = std::chrono::high_resolution_clock::now();
-	textures_manager.load_textures_to_cpu_memory(linear_meshes);
-	calculate_time("texture to CPU memory",cpu_texture_time);
+	TIME(textures_manager.load_textures_to_cpu_memory(linear_meshes),"texture to CPU")
+	
 
 #ifdef VULKAN
 

@@ -8,7 +8,9 @@
 
 #pragma once
 
+#ifdef VULKAN
 #include "vulkan/vulkan.h"
+
 
 #if defined(__ANDROID__)
 #define VK_CHECK_RESULT(f)																				\
@@ -31,4 +33,15 @@
 	}																									\
 }
 #endif
+
+#endif//define vulkan
+
+#define TIME(f,t)					\
+{								\
+								\
+	auto function_time = std::chrono::high_resolution_clock::now();\
+	f;			/*funcion */				\
+	calculate_time(t,function_time);\
+}								
+
 
