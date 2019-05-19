@@ -41,7 +41,7 @@ GUI::GUI(Engine* engine){
     triangle->vertices.push_back(vert4);
     
     
-    triangle->texture_path = engine->assets.path("textures/car01.jpg");
+    triangle->texture_path = engine->assets.path("textures/GUI/white_logo.jpg");
 
     #ifdef VULKAN
         triangle->data_shader.fragment_shader_path = "Game/Assets/shaders/red.spv";

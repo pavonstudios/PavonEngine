@@ -34,7 +34,7 @@ Engine::Engine(android_app *pApp)
 void Engine::draw_loading_screen()
 {
 #if defined(ES2) || defined(ANDROID)
-	glClearColor(0.0, 1.0, 0.0, 1.0);
+	glClearColor(0.0, 0.0, 0.0, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT);
 	GUI *loading = new GUI(this);
 	EMesh *mesh = meshes[0];
