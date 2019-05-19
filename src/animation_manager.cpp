@@ -15,7 +15,7 @@ void AnimationManager::play_animation(SkeletalMesh* skeletal, std::string name){
     engine->play_animations = true;
 
     Animation* anim = animation_by_name(name);
-    float time = engine->animation_time;
+    float time = anim->time;
     if(!anim){
         std::cout << "no playing animation\n";
         return;
@@ -78,14 +78,15 @@ void AnimationManager::play_animation(SkeletalMesh* skeletal, std::string name){
 
 void AnimationManager::play_animations(Engine* engine){
 	if(engine->play_animations){
-			engine->animation_time += engine->deltaTime;
-
-			//std::cout << "time: " << engine->animation_time << std::endl;
-			if(engine->animation_time >= 3){
-				engine->animation_time = 0;
 		
-			}
-		}
+        for(auto *anim : animations){
+            anim->time += engine->deltaTime;
+            if(anim->time >= anim->end){
+                anim->time = 0;
+            }
+        }
+	
+	}
 }
 
 void AnimationManager::clear_loaders(){
