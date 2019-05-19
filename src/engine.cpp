@@ -107,9 +107,10 @@ void Engine::init()
 	renderer.VulkanConfig();
 #endif
 
-
+	auto vertives_time = std::chrono::high_resolution_clock::now();
 	mesh_manager.create_buffers(this, unique_meshes);
 	mesh_manager.create_buffers(this, linear_meshes);
+	calculate_time("vertices to GPU memory",vertives_time);
 
 #ifdef VULKAN
 
@@ -127,7 +128,9 @@ void Engine::init()
 	renderer.init_gl();
 	renderer.load_shaders(linear_meshes);
 	renderer.load_textures(maps.same_textures);
+	auto texture_time = std::chrono::high_resolution_clock::now();
 	renderer.load_textures(linear_meshes);
+	calculate_time("texture to GPU memory", texture_time);
 #endif
 
 #ifdef DEVELOPMENT
