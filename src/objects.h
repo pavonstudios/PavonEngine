@@ -101,6 +101,7 @@ struct UniformBufferObject {
 
 #include "skeletal.h"
 
+#include "texture.h"
 
 namespace engine{
 
@@ -149,7 +150,8 @@ public:
     UniformBufferObject ubo; 
     PipelineData data_shader;
     glm::mat4 MVP;
-    EImageData texture; 
+    EImageData texture;
+    Image image; 
     
     glm::mat4 model_matrix = glm::mat4(1.0);
     glm::vec3 location_vector;
@@ -210,6 +212,12 @@ public:
             #endif   
             void load_textures_gltf(EMesh* mesh, tinygltf::Model & gltf_model);
             EMesh* mesh_by_name(std::string);
+    };
+
+    class TexturesManager{
+        public:
+            Engine* engine;
+            void load_textures_to_cpu_memory(const std::vector<EMesh*> meshes);
     };
 
     class Objects{

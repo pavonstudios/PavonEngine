@@ -179,7 +179,7 @@ void Renderer::load_mesh_texture(EMesh *mesh)
 	float texture[]{
 		0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f,
 		0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f};
-	image_size size = assets.load_bmp("textures/GUI/white_logo.jpg", app->activity->assetManager);
+	Image size = assets.load_bmp("textures/GUI/white_logo.jpg", app->activity->assetManager);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -187,9 +187,9 @@ void Renderer::load_mesh_texture(EMesh *mesh)
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	GLenum error;
 	error = glGetError();
-	image_size sdf;
+	Image sdf;
 #else
-	image_size size;
+	Image size;
 	if (mesh->texture.hasTexture)
 	{
 		size.heigth = mesh->texture.height;
@@ -222,13 +222,10 @@ void Renderer::load_textures(const std::vector<EMesh *> &meshes)
 			glGenTextures(1, &mesh->texture_id);
 			glBindTexture(GL_TEXTURE_2D, mesh->texture_id);
 
-			AssetManager assets;
-#ifdef ANDROID
-			if (mesh->texture_path != "")
-				image_size size = assets.load_bmp(mesh->texture_path.c_str(), app->activity->assetManager);
-				//glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,size.width,size.heigth,0,GL_RGB,GL_UNSIGNED_BYTE,size.data);
-#else
-			image_size size;
+		
+#ifndef ANDROID
+
+			Image size;
 			if (mesh->texture.hasTexture)
 			{
 				size.heigth = mesh->texture.height;
@@ -240,8 +237,7 @@ void Renderer::load_textures(const std::vector<EMesh *> &meshes)
 			{
 				if (mesh->texture_path != "")
 				{
-					size = assets.load_and_get_size(mesh->texture_path.c_str());
-					glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, size.width, size.heigth, 0, GL_RGB, GL_UNSIGNED_BYTE, size.data);
+					glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, mesh->image.width, mesh->image.heigth, 0, GL_RGB, GL_UNSIGNED_BYTE, mesh->image.data);
 				}
 			}
 
@@ -272,9 +268,9 @@ void Renderer::load_textures(std::vector<std::string> &textures_paths)
 		AssetManager assets;
 #ifdef ANDROID
 
-		image_size size = assets.load_bmp(assets.path(path).c_str(), app->activity->assetManager); //TODO: load texture with android path
+		Image size = assets.load_bmp(assets.path(path).c_str(), app->activity->assetManager); //TODO: load texture with android path
 #else
-		image_size size;
+		Image size;
 
 		size = assets.load_and_get_size(assets.path(path).c_str());
 

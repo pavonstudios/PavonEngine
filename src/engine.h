@@ -63,6 +63,7 @@ public:
     AssetManager assets;
     Camera main_camera;
     MeshManager mesh_manager;
+    TexturesManager textures_manager;
     Input input;
     MapManager maps;
 

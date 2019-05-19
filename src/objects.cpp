@@ -409,3 +409,21 @@ EMesh* MeshManager::mesh_by_name(std::string name){
     return nullptr;
 }
 
+void TexturesManager::load_textures_to_cpu_memory(const std::vector<EMesh*> meshes){
+    for(EMesh* mesh : meshes){
+        
+        if (mesh->texture.hasTexture)
+        {
+        
+        }
+        else
+        {
+            if (mesh->texture_path != ""){
+                Image image;
+                image = engine->assets.load_and_get_size(mesh->texture_path.c_str());
+                mesh->image = image;
+            }
+        }
+        
+    }
+}

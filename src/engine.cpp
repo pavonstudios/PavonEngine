@@ -58,7 +58,7 @@ void Engine::init()
 	animation_manager.engine = this;
 	mesh_manager.engine = this;
 	maps.engine = this;
-	
+	textures_manager.engine = this;		
 
 
 #ifndef ANDROID
@@ -111,6 +111,10 @@ void Engine::init()
 	mesh_manager.create_buffers(this, unique_meshes);
 	mesh_manager.create_buffers(this, linear_meshes);
 	calculate_time("vertices to GPU memory",vertives_time);
+
+	auto cpu_texture_time = std::chrono::high_resolution_clock::now();
+	textures_manager.load_textures_to_cpu_memory(linear_meshes);
+	calculate_time("texture to CPU memory",cpu_texture_time);
 
 #ifdef VULKAN
 

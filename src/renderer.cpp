@@ -191,7 +191,7 @@ void Renderer::createCommandBuffers() {
 
 void Renderer::createTextureImage(std::string texture_path, EMesh* mesh) {
        VkDeviceSize imageSize = 0;
-       image_size size;
+       Image size;
        if(mesh->texture.hasTexture){
 
         size.pPixels = mesh->texture.data;
