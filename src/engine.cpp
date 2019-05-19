@@ -56,6 +56,7 @@ void Engine::init()
 {
 	window_manager.engine = this;
 	animation_manager.engine = this;
+	mesh_manager.engine = this;
 #ifndef ANDROID
 	window_manager.create_window();
 #endif
@@ -459,8 +460,6 @@ void Engine::load_and_assing_location(struct MapDataToLoad data)
 #else
 	mesh_manager.load_model_gltf(model, path.c_str());
 #endif
-
-	model->name = data.model_path;
 
 	glm::mat4 model_matrix = glm::mat4(1.0f);
 	model_matrix = glm::translate(model_matrix, location);

@@ -98,7 +98,7 @@ void MapManager::load_meshes_for_instance(struct MapDataToLoad &data){
 		engine->mesh_manager.load_model_gltf(model, path.c_str());
 	#endif
 
-	model->name = data.model_path;
+	//model->name = data.model_path;
 
 	engine->unique_meshes.push_back(model);
 }
@@ -131,7 +131,7 @@ void MapManager::create_mesh_with_data(struct MapDataToLoad &data){
 			#endif	
 	}
 
-	model->name = data.model_path;
+	//model->name = data.model_path;
 
 	glm::mat4 model_matrix = glm::mat4(1.0f);
 	model_matrix = glm::translate(model_matrix, location);

@@ -380,6 +380,7 @@ void MeshManager::load_primitives_data(EMesh* mesh, tinygltf::Model &gltf_model)
 
         mesh->vertices = vertices;
         mesh->indices = indices;
+        mesh->name = gltf_model.meshes[0].name;
     }
 
 
@@ -398,4 +399,13 @@ void Objects::translate(Engine* engine, EMesh* mesh, Movement& movement){
     engine->tranlation_update.movements.push_back(movement);
 }
 
+EMesh* MeshManager::mesh_by_name(std::string name){
+    for(EMesh* mesh : engine->linear_meshes){
+        if(mesh->name == name){
+            return mesh;
+        }
+    }
+    std::cout << "mesh not found: " << name << std::endl;
+    return nullptr;
+}
 

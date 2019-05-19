@@ -107,9 +107,9 @@ namespace engine{
 
 struct EMesh {
 public:
+    std::string name = "";
     int type = -1;
     int model_id = -1;
-    std::string name;
     EMesh();
 #ifdef VULKAN
     EMesh(vks::VulkanDevice* vulkan_device);
@@ -196,6 +196,7 @@ public:
 
     class MeshManager{
         public:
+            Engine* engine;
         #ifdef VULKAN
             vks::VulkanDevice* vulkan_device = nullptr;
             void clean_pipeline_from_meshes(std::vector<EMesh*> meshes);
@@ -208,6 +209,7 @@ public:
             int load_mode_gltf_android(EMesh* mesh, const char* path, AAssetManager* pAssetManager);
             #endif   
             void load_textures_gltf(EMesh* mesh, tinygltf::Model & gltf_model);
+            EMesh* mesh_by_name(std::string);
     };
 
     class Objects{
