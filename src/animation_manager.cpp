@@ -16,65 +16,64 @@ void AnimationManager::play_animation(SkeletalMesh* skeletal, std::string name){
 
     Animation* anim = animation_by_name(name);
     float time = engine->animation_time;
-    if(anim){
+    if(!anim){
+        std::cout << "no playing animation\n";
+        return;
+    }
         AnimationSampler sampler{};
 
-       for(auto& channel : anim->channels){
-           sampler = anim->samplers[channel.sampler_index];
+    for(auto& channel : anim->channels){
+        sampler = anim->samplers[channel.sampler_index];
 
-            for( size_t i = 0; i < sampler.inputs.size() - 1 ; i++ ){
+        for( size_t i = 0; i < sampler.inputs.size() - 1 ; i++ ){
+            
+            if( ( time >= sampler.inputs[i] )  && ( time <= sampler.inputs[i + 1] ) ){
                 
-                if( ( time >= sampler.inputs[i] )  && ( time <= sampler.inputs[i + 1] ) ){
-                    
-                    /*  The ratio of those amounts is the fraction of 
-                        the interval between timed key frames at which time t appears. 
-                    */
-                    float time_mix = (time - sampler.inputs[i] ) / ( sampler.inputs[i+1] - sampler.inputs[i] );
+                /*  The ratio of those amounts is the fraction of 
+                    the interval between timed key frames at which time t appears. 
+                */
+                float time_mix = (time - sampler.inputs[i] ) / ( sampler.inputs[i+1] - sampler.inputs[i] );
 
-                    Node* node = NodeManager::node_from_index(skeletal->mesh,channel.node_index);
+                Node* node = NodeManager::node_from_index(skeletal->mesh,channel.node_index);
 
-                    switch (channel.PathType)
+                switch (channel.PathType)
+                {
+                case PATH_TYPE_ROTATION:
                     {
-                    case PATH_TYPE_ROTATION:
-                        {
-                        glm::quat quat0;
-                        quat0.x = sampler.outputs_vec4[i].x;
-                        quat0.y = sampler.outputs_vec4[i].y;
-                        quat0.z = sampler.outputs_vec4[i].z;
-                        quat0.w = sampler.outputs_vec4[i].w;
+                    glm::quat quat0;
+                    quat0.x = sampler.outputs_vec4[i].x;
+                    quat0.y = sampler.outputs_vec4[i].y;
+                    quat0.z = sampler.outputs_vec4[i].z;
+                    quat0.w = sampler.outputs_vec4[i].w;
 
-                        glm::quat quat1;
-                        quat1.x = sampler.outputs_vec4[i+1].x;
-                        quat1.y = sampler.outputs_vec4[i+1].y;
-                        quat1.z = sampler.outputs_vec4[i+1].z;
-                        quat1.w = sampler.outputs_vec4[i+1].w;     
+                    glm::quat quat1;
+                    quat1.x = sampler.outputs_vec4[i+1].x;
+                    quat1.y = sampler.outputs_vec4[i+1].y;
+                    quat1.z = sampler.outputs_vec4[i+1].z;
+                    quat1.w = sampler.outputs_vec4[i+1].w;     
 
-                        quat interpolated = normalize( slerp(quat0,quat1,time_mix) );
-                        node->Rotation = interpolated;
-                        }
-                        break;
-
-                    case PATH_TYPE_TRANSLATION:
-                        vec4 translation = mix(sampler.outputs_vec4[i], sampler.outputs_vec4[i+1], time_mix );
-                        node->Translation = vec3(translation);
-
-                        break;
-                   
+                    quat interpolated = normalize( slerp(quat0,quat1,time_mix) );
+                    node->Rotation = interpolated;
                     }
-                   
+                    break;
 
-                    
+                case PATH_TYPE_TRANSLATION:
+                    vec4 translation = mix(sampler.outputs_vec4[i], sampler.outputs_vec4[i+1], time_mix );
+                    node->Translation = vec3(translation);
+
+                    break;
+                
                 }
+                
 
+                
             }
 
-       }   
-       SkeletalManager::update_joints_nodes(skeletal->mesh);
-    }else
-    {
-       std::cout << "no playing animation\n";
+        }         
+         
     }
-    
+
+    SkeletalManager::update_joints_nodes(skeletal->mesh); 
 }
 
 void AnimationManager::play_animations(Engine* engine){
@@ -117,6 +116,15 @@ void AnimationManager::load_animation(SkeletalMesh* skeletal, tinygltf::Model &g
                 const float *buf = static_cast<const float*>(dataPtr);
                 for (size_t index = 0; index < input_accessor.count; index++) {
                     new_sampler.inputs.push_back(buf[index]);
+                }
+
+                for(float input : new_sampler.inputs){
+                    if(input < new_animation->start){
+                        new_animation->start = input;
+                    }
+                    if(input > new_animation->end){
+                        new_animation->end = input;
+                    }
                 }
             }
 

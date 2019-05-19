@@ -61,9 +61,12 @@ namespace engine{
 	};
 
 	struct Animation{
+		float time = 0;
 		std::string name;
 		std::vector<AnimationChannel> channels;
 		std::vector<AnimationSampler> samplers;
+		float start = std::numeric_limits<float>::max();
+		float end = std::numeric_limits<float>::min();
 	};
 
 	struct NodeUniform{
