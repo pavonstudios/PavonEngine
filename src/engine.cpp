@@ -57,6 +57,10 @@ void Engine::init()
 	window_manager.engine = this;
 	animation_manager.engine = this;
 	mesh_manager.engine = this;
+	maps.engine = this;
+	
+
+
 #ifndef ANDROID
 	window_manager.create_window();
 #endif
@@ -68,7 +72,7 @@ void Engine::init()
 	audio_manager.init();
 	audio_manager.play();
 #endif
-	maps.engine = this;
+	
 
 	draw_loading_screen();
 
@@ -84,7 +88,10 @@ void Engine::init()
 	std::string map_path = assets.path("Maps/map01.map");
 
 	game = new Game(this);
-	load_map(map_path);
+	auto time_load_map = std::chrono::high_resolution_clock::now();
+		load_map(map_path);
+	calculate_time("map to cpu memory",time_load_map);
+
 	game->init();
 
 #if defined(DEVELOPMENT)  && defined(ES2) //gizmos helpers
@@ -124,7 +131,7 @@ void Engine::init()
 #endif
 
 #ifdef DEVELOPMENT
-	calculate_time(tStart);
+	calculate_time("mesh",tStart);
 #endif
 
 	init_collision_engine();
@@ -333,13 +340,13 @@ void Engine::calculate_fps(std::chrono::time_point<std::chrono::system_clock> tS
 	usleep(1000 * LIMIT_FPS);
 }
 
-void Engine::calculate_time(std::chrono::time_point<std::chrono::system_clock> tStart)
+void Engine::calculate_time(std::string text, std::chrono::time_point<std::chrono::system_clock> tStart)
 {
 	auto tEnd = std::chrono::high_resolution_clock::now();
 	auto tDiff = std::chrono::duration<double, std::milli>(tEnd - tStart).count();
 	float elapsed_time = (float)tDiff / 1000.0f;
 
-	std::cout << "Loading mesh time: " << elapsed_time << std::endl;
+	std::cout << "Loading " << text << " time: " << elapsed_time << std::endl;
 }
 #endif
 
