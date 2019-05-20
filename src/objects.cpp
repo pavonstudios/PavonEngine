@@ -12,7 +12,7 @@
 #ifdef GLTF
 using namespace engine;
 EMesh::EMesh(){
-    
+    this->vertices.clear();
 }
 
 

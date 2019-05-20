@@ -34,7 +34,7 @@ GUI::GUI(Engine* engine){
     vert4.pos = glm::vec3(1.0,-1.0,0.0);
     vert4.texCoord = vec2(1,0); 
    
-            
+    triangle->vertices.clear();
     triangle->vertices.push_back(vert1);
     triangle->vertices.push_back(vert2);        
     triangle->vertices.push_back(vert3);

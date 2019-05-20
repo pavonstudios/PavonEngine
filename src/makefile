@@ -116,7 +116,7 @@ model_loader.o:
 
 
 
-objects.o:
+objects.o: objects.cpp
 	
 	$(CC) -c objects.cpp -DGLTF $(DEFINES)
 
