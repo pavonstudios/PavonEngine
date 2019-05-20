@@ -5,8 +5,11 @@
 
 #include <thread>
 
-#ifdef ES2
+#if defined(ES2) && defined (LINUX)
     #include <GLES2/gl2.h>
+#endif
+#ifdef WINDOWS
+    #include <GL/gl.h>
 #endif
 
 #ifdef GLTF
@@ -191,7 +194,7 @@ void MeshManager::load_textures_gltf(EMesh* mesh, tinygltf::Model & gltf_model){
         tinygltf::Image tiny_image = gltf_model.images[0];
 
         unsigned char * image_data = nullptr;
-        u_int32_t image_size = 0;
+        uint32_t image_size = 0;
 
         if(tiny_image.component == 3){
             std::cout << "RGB\n"; 

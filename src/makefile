@@ -32,8 +32,9 @@ vk: renderer.o  $(OBJs) game
 	$(CC) -o ../renderer renderer.o audio.o $(OBJs) $(GAME) $(Library) -I./ -lvulkan $(DEFINES)
 
 
-
-es2: DEFINES := -DES2
+es2: DEFINES := -DLINUX
+es2: DEFINES += -DES2
+es2: DEFINES += -DX11
 es2: DEFINES += -DDEVELOPMENT
 es2: TYPE := es2
 es2: CC := $(CCLINUX)
@@ -43,9 +44,11 @@ es2: $(OBJs) game connectivity opengl.o
 
 win: CC := $(CCWIN)
 win: DEFINES := -DWINDOWS
-win: WindowManager.o
+win: DEFINES += -DES2
+win: DEFINES += -DDEVELOPMENT
+win: $(OBJs) game
 	
-	$(CCWIN) main.cpp -o ../renderer.exe WindowManager.o -lglfw3 -lopengl32 -lgdi32 -static -static-libstdc++ -DWINDOWS
+	$(CC) -o ../renderer.exe $(OBJs) audio.o ./renderers/opengl.o $(GAME) -lglfw3 -lopengl32 -lgdi32 -static -static-libstdc++ -DWINDOWS
 
 
 
@@ -59,7 +62,7 @@ game:
 	$(MAKE) -C ./Game $(TYPE)
 
 
-WindowManager.o: WindowManager.cpp
+WindowManager.o: WindowManager.cpp WindowManager.hpp
 	
 	$(CC) -c WindowManager.cpp -DGLTF $(DEFINES)
 
@@ -105,18 +108,17 @@ skeletal.o:
 	$(CC) -c skeletal.cpp -DGLTF $(DEFINES)
 
 
-input.o: input.cpp
+input.o: input.cpp input.h
 	
 	$(CC) -c input.cpp -DGLTF $(DEFINES) -DDEVELOPMENT
 
-model_loader.o: CC := $(CCLINUX)
 model_loader.o: 
 	
 	$(CC) -c model_loader.cpp -DGLTF $(DEFINES)
 
 
 
-objects.o: objects.cpp
+objects.o: objects.cpp objects.h
 	
 	$(CC) -c objects.cpp -DGLTF $(DEFINES)
 
@@ -137,7 +139,7 @@ asset_manager.o:
 	$(CC) -c asset_manager.cpp -I./ -DGLTF $(DEFINES)
 
 
-engine.o: engine.cpp
+engine.o: engine.cpp engine.h
 	
 	$(CC) -c engine.cpp -I./ -DGLTF $(DEFINES) -DDEVELOPMENT
 	

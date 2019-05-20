@@ -12,7 +12,10 @@
         #include <vulkan/vulkan.h>
         #include "VulkanDevice.hpp"
     #endif
-    #ifdef ES2
+    #ifdef WINDOWS
+        #include <GL/gl.h>
+    #endif
+    #if defined(LINUX) && defined (ES2)
         #include <GLES2/gl2.h>
     #endif
     #include <glm/gtc/quaternion.hpp>

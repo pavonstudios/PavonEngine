@@ -15,7 +15,7 @@
 
 #include "macros.h"
 
-#if defined(ES2) || defined(ANDROID) || defined(VULKAN)
+#if defined(ES2) || defined(ANDROID) || defined(VULKAN) || defined (WINDOWS)
 Engine::Engine()
 {
 

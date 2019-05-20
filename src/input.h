@@ -4,7 +4,7 @@
 #ifdef VULKAN
 	#include <GLFW/glfw3.h>
 #endif
-#ifdef ES2
+#if defined(LINUX) && defined (ES2)
 	#include  <X11/Xlib.h>
 #endif
 #include <iostream>
@@ -54,7 +54,7 @@ public:
     static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
     static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 #endif
-#ifdef ES2
+#if defined(LINUX) && defined(X11)
 	void key_code_verifier_pressed(int key_code);
 	void key_code_verifier_released(int key_code);
 	void key_verifier_pressed(char character);

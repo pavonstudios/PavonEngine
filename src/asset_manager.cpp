@@ -2,7 +2,7 @@
 #include "iostream"
 
 
-//#include "tiny_class.h"
+
 void AssetManager::free_image(void * pixels){
     stbi_image_free(pixels);
 }

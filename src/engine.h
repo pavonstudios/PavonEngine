@@ -12,7 +12,7 @@
     #include <GLFW/glfw3.h>
 #endif    
 
-#if defined (ES2) || defined (ANDROID)
+#if defined (ES2)
     #include "renderers/opengl.hpp"
 #endif
 
@@ -54,11 +54,12 @@ public:
     GLFWwindow* window;
   
     #endif
-    #if defined (ES2) || defined (ANDROID)  || defined(VULKAN)
+    
     Engine();
     Renderer renderer; 
-    AudioManager audio_manager;  
-    #endif
+    AudioManager audio_manager; 
+    AnimationManager animation_manager; 
+    
     WindowManager window_manager;
     AssetManager assets;
     Camera main_camera;
@@ -68,7 +69,7 @@ public:
     MapManager maps;
 
     TranslationUpdate tranlation_update;
-    AnimationManager animation_manager;
+    
 
     Game * game = nullptr;
     ConnectionManager* net_manager;

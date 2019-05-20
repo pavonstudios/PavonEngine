@@ -1,13 +1,16 @@
 #ifndef WINDOW
 #define WINDOW
 
-#ifdef ES2
+#if defined(LINUX) && defined (ES2)
     #include  <X11/Xlib.h>
     #include  <X11/Xatom.h>
     #include  <X11/Xutil.h>
-    
-    #include <EGL/egl.h>
     #include <GLES2/gl2.h>
+   
+#endif
+#if defined (ES2)
+    #include <EGL/egl.h>
+  
     using namespace std;
 #endif
 #ifdef ANDROID
@@ -48,18 +51,22 @@ public:
        
         #ifdef ANDROID
             void create_window(android_app * app);
-        #else
+        #endif
+        
+        #ifdef X11
             Display    *x_display;
             Window      x_window;
             Atom wmDeleteMessage;
-            EGLDisplay  egl_display;
-            EGLContext  egl_context;
-            EGLSurface  egl_surface;
+            
                         
             void create_window_xorg();
             void clear();
-            void move_cursor_to_center();
-            
+            void move_cursor_to_center();            
+        #endif
+        #ifdef ES2
+        EGLDisplay  egl_display;
+        EGLContext  egl_context;
+        EGLSurface  egl_surface;
         private:
             void configure_egl();
         #endif

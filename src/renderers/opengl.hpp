@@ -12,9 +12,11 @@
 
 #ifdef WINDOWS
     #include <GL/gl.h>
-#else
+#endif
+#ifdef LINUX
     #include <GLES2/gl2.h>
 #endif
+
 #ifdef ANDROID
     #include <android/log.h>
     #include <android_native_app_glue.h>

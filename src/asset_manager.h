@@ -6,6 +6,7 @@
 #include <android/asset_manager.h>
 #include <GLES2/gl2.h>
 #endif
+
 #include "stb_image.h"
 
 #include "texture.h"

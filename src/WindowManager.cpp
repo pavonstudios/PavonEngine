@@ -139,7 +139,7 @@ void WindowManager::framebufferResizeCallback(GLFWwindow* window, int width, int
 #endif
 
 void WindowManager::create_window(){
-   #ifdef ES2
+   #ifdef X11
       create_window_xorg();
    #endif
    #ifdef VULKAN
