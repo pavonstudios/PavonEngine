@@ -290,7 +290,9 @@ switch (key_code)
 	case 9:
 		key_set('0',true);
 		break;
-
+	case 50:
+		key_set('9', true);
+		break;
 
 	}
 	
@@ -314,7 +316,9 @@ void Input::key_code_verifier_released(int key_code){
 	case 9:
 		key_set('0',false);
 		break;
-
+	case 50:
+		key_set('9', false);
+		break;
 		
 	}
 	
@@ -356,6 +360,7 @@ void Input::key_set(const char key, bool isPressed){
 	if(key == 'v'){
 		actual_key = &this->V;
 	}
+	
 
 	switch(key){
 		case	'1':
@@ -366,6 +371,9 @@ void Input::key_set(const char key, bool isPressed){
 			break;
 		case '0':
 			actual_key = &this->ESC;
+			break;
+		case '9':
+			actual_key = &this->SHIFT;
 			break;
 	}
 

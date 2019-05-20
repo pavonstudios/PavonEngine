@@ -1,6 +1,6 @@
 
 .PHONY: all
-all:
+es2:
 	$(MAKE) -C ./src es2
 
 .PHONY: clean

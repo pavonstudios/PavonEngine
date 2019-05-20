@@ -10,7 +10,8 @@
                 "VULKAN",
                 "GLTF",
                 "DEVELOPMENT",
-                "WAYLAND"
+                "WAYLAND",
+                "ES2"
                 
                                 
 			]

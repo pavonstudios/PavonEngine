@@ -49,10 +49,17 @@ void ThirdPerson::update(){
 
 	std::string log_position = "position " + std::to_string(mesh->location_vector.x) + " " + std::to_string(mesh->location_vector.y) + " " + std::to_string(mesh->location_vector.z);
 	//engine->print_debug(log_position,10,0);	
-
+	velocity = 2;
 	engine->play_animations = false;
-	if(engine->input.W.bIsPressed == true){
-		engine->animation_manager.play_animation(mesh->skeletal,"walk",true);
+
+	if(engine->input.W.bIsPressed){
+		if(engine->input.SHIFT.bIsPressed){
+			velocity = 7;
+			engine->animation_manager.play_animation(mesh->skeletal,"run",true);
+		}else{
+			engine->animation_manager.play_animation(mesh->skeletal,"walk",true);
+
+		}
 		engine->translate_mesh(mesh,FORWARD,velocity);
 	}
 
@@ -83,13 +90,15 @@ void ThirdPerson::update(){
 	if(engine->input.right_button_pressed){
 		engine->animation_manager.play_animation(mesh->skeletal,"aim",false);
 	}
+	
+
 	#ifdef DEVELOPMENT
-	if(engine->input.Q.bIsPressed){		
-		engine->translate_mesh(mesh,UP,velocity);		
-	}
-	if(engine->input.E.bIsPressed){
-		engine->translate_mesh(mesh,DOWN,velocity);
-	}
+		if(engine->input.Q.bIsPressed){		
+			engine->translate_mesh(mesh,UP,velocity);		
+		}
+		if(engine->input.E.bIsPressed){
+			engine->translate_mesh(mesh,DOWN,velocity);
+		}
 	#endif
 	
 

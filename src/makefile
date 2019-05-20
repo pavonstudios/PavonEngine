@@ -105,7 +105,7 @@ skeletal.o:
 	$(CC) -c skeletal.cpp -DGLTF $(DEFINES)
 
 
-input.o: 
+input.o: input.cpp
 	
 	$(CC) -c input.cpp -DGLTF $(DEFINES) -DDEVELOPMENT
 
