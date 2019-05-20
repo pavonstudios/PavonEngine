@@ -59,7 +59,7 @@ game:
 	$(MAKE) -C ./Game $(TYPE)
 
 
-WindowManager.o: 
+WindowManager.o: WindowManager.cpp
 	
 	$(CC) -c WindowManager.cpp -DGLTF $(DEFINES)
 
@@ -137,7 +137,7 @@ asset_manager.o:
 	$(CC) -c asset_manager.cpp -I./ -DGLTF $(DEFINES)
 
 
-engine.o: 
+engine.o: engine.cpp
 	
 	$(CC) -c engine.cpp -I./ -DGLTF $(DEFINES) -DDEVELOPMENT
 	

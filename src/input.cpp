@@ -240,6 +240,12 @@ void Input::check_input_event(Engine* engine, XEvent &xev){
 
 	if ( xev.type == MotionNotify ) {  // if mouse has moved
 		engine->input.mouse_movement(engine,xev.xmotion.x,xev.xmotion.y);
+		engine->input.mouse_in_gamex = xev.xmotion.x;
+		engine->input.mouse_in_gamey = xev.xmotion.y;
+	}
+	else{
+		engine->input.mouse_in_gamex = 600;
+		engine->input.mouse_in_gamey = 800;
 	}
 	
 	if(xev.type == ButtonPress){
@@ -389,7 +395,12 @@ void Input::key_set(const char key, bool isPressed){
 #endif
 void Input::update_input(Engine* engine){
 
+	std::cout << this->mouse_in_gamey << std::endl;
+	std::cout << this->mouse_in_gamex << std::endl;
 
+	engine->input.mouse_in_gamex = 600;
+	engine->input.mouse_in_gamey = 800;
+	
 	if(TAB.Released){
 		if(!engine->edit_mode){
 				engine->edit_mode = true;				

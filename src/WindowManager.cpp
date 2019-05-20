@@ -63,6 +63,10 @@ void WindowManager::configure_egl(){
    eglMakeCurrent( egl_display, egl_surface, egl_surface, egl_context );
 }
 
+void WindowManager::move_cursor_to_center(){
+   
+   XWarpPointer(x_display, None, x_window, 0, 0, 0, 0, 800, 600);
+}
 
 
 void WindowManager::create_window_xorg(){

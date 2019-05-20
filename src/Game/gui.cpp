@@ -52,8 +52,10 @@ GUI::GUI(Engine* engine){
         triangle->texture.format = VK_FORMAT_R8G8B8A8_UNORM;	
     #endif
     #ifdef ES2
-    if(engine->loading)
+    if(engine->loading){
         triangle->data_shader.fragment_shader_path = engine->assets.path("shaders/gles/frag.glsl");
+        engine->meshes.clear();
+    }
     else{
         triangle->data_shader.fragment_shader_path = engine->assets.path("shaders/gles/red.glsl");
 

@@ -51,7 +51,7 @@ void ThirdPerson::update(){
 	//engine->print_debug(log_position,10,0);	
 	velocity = 2;
 	engine->play_animations = false;
-
+	engine->window_manager.move_cursor_to_center();
 	if(engine->input.W.bIsPressed){
 		if(engine->input.SHIFT.bIsPressed){
 			velocity = 7;

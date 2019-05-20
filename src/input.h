@@ -42,6 +42,7 @@ public:
 	bool first_mouse = true;
 
 	float lastX = 400, lastY = 300;
+	float mouse_in_gamex = 400, mouse_in_gamey = 300;
 	float mousex, mousey;
 	bool left_button_pressed = false;
 	bool left_button_release = false;

@@ -38,6 +38,9 @@ void Engine::draw_loading_screen()
 #if defined(ES2) || defined(ANDROID)
 	glClearColor(0.0, 0.0, 0.0, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT);
+	
+	this->linear_meshes.clear();
+	this->meshes.clear();
 	GUI *loading = new GUI(this);
 	EMesh *mesh = meshes[0];
 	renderer.load_shaders(mesh);
@@ -89,6 +92,7 @@ void Engine::init()
 
 	std::string map_path = assets.path("Maps/map01.map");
 
+	this->meshes.clear();
 	game = new Game(this);
 	auto time_load_map = std::chrono::high_resolution_clock::now();
 		load_map(map_path);

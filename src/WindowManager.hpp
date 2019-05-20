@@ -42,6 +42,7 @@ public:
     ~WindowManager();
     void update_window_size();
     void create_wayland_window();
+    
    
     #ifdef ES2
        
@@ -57,7 +58,7 @@ public:
                         
             void create_window_xorg();
             void clear();
-            
+            void move_cursor_to_center();
             
         private:
             void configure_egl();
