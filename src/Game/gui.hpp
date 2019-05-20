@@ -32,13 +32,14 @@ class GUI{
 		GUI(Engine* engine);
 		~GUI();
 		Engine* engine;
-		EMesh* mesh;
 		void update();
 		void calculate_mouse_position();
 		std::vector<UIElement*> elements;
 		void update_elements_mvp();
 		bool is_button_pressed(std::string name);
 		void update_elemete_position(UIElement* element);
+		void update_engine_meshes();
+		std::vector<EMesh*> mesh_elements;
 };
 
 #endif

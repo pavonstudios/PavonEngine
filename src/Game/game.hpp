@@ -15,7 +15,7 @@ class Game{
 		Engine* engine;
 		void update();
 		void init_player();
-		GUI* gui;
+		GUI* gui = nullptr;
 		void init();
 		ThirdPerson * player;
 		int player_id = -1;

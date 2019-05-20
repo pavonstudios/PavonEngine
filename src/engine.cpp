@@ -42,6 +42,7 @@ void Engine::draw_loading_screen()
 	this->linear_meshes.clear();
 	this->meshes.clear();
 	GUI *loading = new GUI(this);
+	loading->update_engine_meshes();
 	EMesh *mesh = meshes[0];
 	renderer.load_shaders(mesh);
 	mesh_manager.create_buffers(mesh);

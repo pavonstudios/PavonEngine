@@ -70,7 +70,7 @@ public:
     TranslationUpdate tranlation_update;
     AnimationManager animation_manager;
 
-    Game * game;
+    Game * game = nullptr;
     ConnectionManager* net_manager;
 
    

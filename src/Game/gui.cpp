@@ -73,8 +73,7 @@ GUI::GUI(Engine* engine){
     triangle->type = -1;
     triangle->bIsGUI = true;
     triangle->name = "gui button";
-    this->mesh = triangle;
-    Button* button = new Button(mesh);
+    Button* button = new Button(triangle);
     button->relative_position = vec2(250,250);
     button->relative_to = POSITION_RELATIVE_LEFT_BOTTON;
     button->size = vec2(30,30);
@@ -82,8 +81,7 @@ GUI::GUI(Engine* engine){
     elements.push_back((UIElement*)button);
 
     #if defined (ES2) || defined (ANDROID) 
-        engine->linear_meshes.push_back(this->mesh);
-        engine->meshes.push_back(this->mesh);
+        this->mesh_elements.push_back(triangle);
     #endif
 }
 
@@ -186,6 +184,10 @@ void GUI::update_elemete_position(UIElement* element){
     model_mat = model_mat * image_scale;
     mat = projection * model_mat;
     element->mesh->MVP = mat;
+}
+void GUI::update_engine_meshes(){
+    engine->meshes.push_back(mesh_elements[0]);
+    engine->linear_meshes.push_back(mesh_elements[0]);
 }
 void GUI::update_elements_mvp(){
     glm::mat4 mat = glm::mat4(1.0);

@@ -32,6 +32,7 @@ Game::Game(Engine* engine){
 void Game::init(){
 	gui = new GUI(engine);
 	gui->update_elements_mvp();
+	gui->update_engine_meshes();
 	init_player();
 }
 
