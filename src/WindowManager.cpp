@@ -65,7 +65,7 @@ void WindowManager::configure_egl(){
 
 void WindowManager::move_cursor_to_center(){
    
-   XWarpPointer(x_display, None, x_window, 0, 0, 0, 0, 800, 600);
+   XWarpPointer(x_display, None, x_window, 0, 0, 0, 0, 400, 300);
 }
 
 

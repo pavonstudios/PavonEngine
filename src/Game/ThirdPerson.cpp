@@ -103,7 +103,7 @@ void ThirdPerson::update(){
 	
 
 	update_camera_postion();
-	
+	engine->input.move_camera = true;
 	mouse_control(engine->input.yaw, engine->input.pitch);
 	
 	update_weapon_position();

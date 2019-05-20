@@ -115,8 +115,8 @@ void GUI::calculate_mouse_position(){
         }
     }else{
         if(!engine->edit_mode){
-            #if defined(ES2) || defined (ANDROID)
-            engine->input.move_camera = false;
+            #if defined (ANDROID)
+                engine->input.move_camera = false;
             #endif
         }
        

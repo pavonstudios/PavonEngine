@@ -395,8 +395,8 @@ void Input::key_set(const char key, bool isPressed){
 #endif
 void Input::update_input(Engine* engine){
 
-	std::cout << this->mouse_in_gamey << std::endl;
-	std::cout << this->mouse_in_gamex << std::endl;
+	//std::cout << this->mouse_in_gamey << std::endl;
+	//std::cout << this->mouse_in_gamex << std::endl;
 
 	engine->input.mouse_in_gamex = 600;
 	engine->input.mouse_in_gamey = 800;
