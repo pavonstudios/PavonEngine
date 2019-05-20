@@ -3,15 +3,26 @@ CC=g++ -g -std=c++17
 SRCS := $(wildcard *.cpp)
 BINS := $(SRCS:%.cpp=%)
 
+OBJS := $(patsubst %.cpp,%.o,$(wildcard *.cpp))
+
+CPPS := $(patsubst %.o,%.cpp,$(wildcard *.o))
+
 DEFINE := 
 
 vk: DEFINE := -DVULKAN
-vk: ${BINS}
+vk: game
 
 es2: DEFINE := -DES2
-es2: ${BINS}
+es2: game
 
-%: %.cpp
+.PHONY: game
+game: ${OBJS}
+
+
+%.o: %.cpp
 	$(CC) -c $< -DGLTF $(DEFINE) -DDEVELOPMENT
 
+.PHONY:clear
+clean:
+	rm -f *.o
 	

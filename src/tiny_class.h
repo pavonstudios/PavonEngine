@@ -3,6 +3,7 @@
 #ifndef TINY_CLASS
 #define TINY_CLASS
 
+#define TINYGLTF_NO_STB_IMAGE_WRITE 
 
 #ifdef TINYGLTF_ANDROID_LOAD_FROM_ASSETS
  #include <android/asset_manager.h>
