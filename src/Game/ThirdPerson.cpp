@@ -1,4 +1,5 @@
 #include "ThirdPerson.hpp"
+#include "weapon.hpp"
 #ifndef ANDROID
     #include <glm/glm.hpp>
     #include <glm/gtc/matrix_transform.hpp>
@@ -47,6 +48,10 @@ void ThirdPerson::update_weapon_position(){
 
 void ThirdPerson::update(){
 
+	if(engine->input.left_button_pressed){
+		weapons->shoot(weapons->main_weapon);
+		std::cout << "shooting\n";
+	}
 	std::string log_position = "position " + std::to_string(mesh->location_vector.x) + " " + std::to_string(mesh->location_vector.y) + " " + std::to_string(mesh->location_vector.z);
 	//engine->print_debug(log_position,10,0);	
 	velocity = 2;

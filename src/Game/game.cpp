@@ -1,4 +1,5 @@
 #include "game.hpp"
+#include "weapon.hpp"
 #include "../Multiplayer/connectivity.hpp"
 void Game::init_player(){
 
@@ -23,7 +24,12 @@ void Game::init_player(){
 		engine->net_manager = new ConnectionManager();
 		engine->net_manager->connect_to_game_server();
 		#endif
-		
+
+		player->weapons = new WeaponManager();
+		player->weapons->owner = player;
+		player->weapons->main_weapon = new Weapon;
+		player->weapons->main_weapon->ammo = 30;
+
 
 }
 Game::Game(Engine* engine){
@@ -40,7 +46,7 @@ void Game::init(){
 Game::~Game(){
 	delete gui;
 	delete engine->net_manager;
-	
+	delete player->weapons;
 }
 
 void Game::update(){

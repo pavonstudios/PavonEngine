@@ -89,12 +89,12 @@ animation_manager.o:
 
 
 
-audio_manager.o: audio.o
+audio_manager.o: audio.o audio_manager.cpp audio_manager.hpp
 	
 	$(CC) -c audio_manager.cpp -DGLTF $(DEFINES)
 
 
-audio.o: 
+audio.o: audio.c audio.h
 	
 	gcc -g -c audio.c -DGLTF $(DEFINES)
 

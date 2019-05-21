@@ -24,7 +24,10 @@
       "group": {
         "kind": "build",
         "isDefault": true
-      }
+      },
+      "problemMatcher": [
+        "$gcc"
+      ]
     },
     {
       "type": "shell",

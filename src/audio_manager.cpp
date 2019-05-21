@@ -18,6 +18,9 @@ void AudioManager::play(){
 	
 
 }
+void AudioManager::play(std::string sound_path){
+	playSound(sound_path.c_str(),SDL_MIX_MAXVOLUME);
+}
 void AudioManager::finish(){
 	endAudio();
 	SDL_Quit();

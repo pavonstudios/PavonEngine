@@ -3,12 +3,15 @@
 
 #include "../engine.h"
 
+class WeaponManager;
+
 class ThirdPerson{
 	public:
 		ThirdPerson();
 		Engine* engine;
 		EMesh* mesh;
 		SkeletalMesh* skeletal = nullptr;
+		WeaponManager* weapons;
 		void update_camera_postion();
 		void mouse_control(float yaw, float pitch);
 		void update_weapon_position();
