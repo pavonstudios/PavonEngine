@@ -7,7 +7,7 @@ Library := -lpthread -lm -lSDL2
 MAIN_OBJS = camera.cpp engine.cpp
 DEFINES= -DGLTF -DDEVELOPMENT
 
-OBJs := main.o engine.o camera.o asset_manager.o objects.o input.o skeletal.o WindowManager.o game_map.o collision.o
+OBJs := main.o engine.o camera.o asset_manager.o objects.o input.o skeletal.o WindowManager.o game_map.o collision.o audio_manager.o
 OBJs += animation_manager.o
 OBJs += model_loader.o
 
@@ -38,20 +38,19 @@ es2: DEFINES += -DES2
 es2: DEFINES += -DX11
 es2: DEFINES += -DDEVELOPMENT
 es2: GAME += Multiplayer/*.o
-es2: OBJs += audio_manager.o
 es2: TYPE := es2
 es2: CC := $(CCLINUX)
 es2: $(OBJs) game connectivity opengl.o	
-	$(CC) -o ../renderer $(OBJs) ./renderers/opengl.o $(GAME) $(Library) $(INCLUDE_OPENGL) -I./ $(DEFINES) -DGLTF 
+	$(CC) -o ../renderer audio.o $(OBJs) ./renderers/opengl.o $(GAME) $(Library) $(INCLUDE_OPENGL) -I./ $(DEFINES) -DGLTF 
 
 
 win: CC := $(CCWIN)
 win: DEFINES := -DWINDOWS
 win: DEFINES += -DES2
 win: DEFINES += -DDEVELOPMENT
-win: $(OBJs) game
+win: main.o engine.o WindowManager.o 
 	
-	$(CC) -o ../renderer.exe $(OBJs) ./renderers/opengl.o $(GAME) -lglfw3 -lglew32 -lopengl32 -lgdi32 -static -static-libstdc++ -DWINDOWS
+	$(CC) -o ../renderer.exe main.o engine.o WindowManager.o -lglfw3 -lglew32 -lopengl32 -lgdi32 -static -static-libstdc++ -DWINDOWS
 
 
 
@@ -127,7 +126,7 @@ objects.o: objects.cpp objects.h
 
 
 
-main.o:
+main.o: main.cpp
 	
 	$(CC) -c main.cpp -DGLTF $(DEFINES)
 

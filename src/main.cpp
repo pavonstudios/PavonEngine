@@ -1,5 +1,5 @@
 
-/* #ifdef WINDOWS
+#ifdef WINDOWS
 #include "engine.h"
 int main(){
     std::cout << "Engine\n";
@@ -14,14 +14,14 @@ int main(){
     }
     return 1;
 }
-#endif */
+#endif
 
 #if defined (ES2) || defined (VULKAN) || defined (ANDROID)
     #define STB_IMAGE_IMPLEMENTATION
     #include "engine.h"
 #endif
 
-#if defined (ES2) || defined (VULKAN) 
+#if defined (LINUX) && defined (ES2) || defined (VULKAN) 
     
    
         int main() {

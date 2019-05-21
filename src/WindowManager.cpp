@@ -282,6 +282,7 @@ WindowManager::~WindowManager(){
 }
 
 void WindowManager::update_window_size(){
+   #ifdef LINUX
 	int width = 0, height = 0;
    #ifdef VULKAN
       while (width == 0 || height == 0) {
@@ -300,6 +301,7 @@ void WindowManager::update_window_size(){
    #if defined (ES2) || defined (ANDROID)  || defined(VULKAN)
    engine->update_render_size();
    #endif
+   #endif//(linux)
 }
 
 bool WindowManager::window_should_close(){

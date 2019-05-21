@@ -162,8 +162,9 @@ void Renderer::load_shaders(const std::vector<EMesh *> &meshes)
 void Renderer::init_gl()
 {
 	//glViewport(0,0,800,600);
+	#ifdef WINDOWS
 	glewInit();
-	
+	#endif
 	glClearColor(0.2, 0.0, 0.0, 1.0);
 
 	glEnable(GL_DEPTH_TEST);

@@ -33,6 +33,7 @@ Engine::Engine(android_app *pApp)
 }
 #endif
 
+#ifdef LINUX
 void Engine::draw_loading_screen()
 {
 #if defined (LINUX) && defined(ES2) || defined(ANDROID)
@@ -256,22 +257,6 @@ void Engine::main_loop()
 #endif
 }
 
-void Engine::update_render_size()
-{
-	main_camera.update_projection_matrix();
-#if defined(ES2) || (ANDROID)
-	glViewport(0, 0, main_camera.screen_width, main_camera.screen_height);
-#endif
-
-	if (ready_to_game)
-	{
-		if (game)
-		{
-			if (game->gui)
-				game->gui->update_elements_mvp();
-		}
-	}
-}
 
 void Engine::delete_meshes()
 {
@@ -655,3 +640,24 @@ void Engine::init_collision_engine()
 	std::thread col_thread(Collision::update_collision_engine, (Engine *)this);
 	col_thread.detach();
 }
+
+
+void Engine::update_render_size()
+{
+	main_camera.update_projection_matrix();
+#if defined(ES2) || (ANDROID)
+	glViewport(0, 0, main_camera.screen_width, main_camera.screen_height);
+#endif
+
+	if (ready_to_game)
+	{
+		if (game)
+		{
+			if (game->gui)
+				game->gui->update_elements_mvp();
+		}
+	}
+}
+
+
+#endif

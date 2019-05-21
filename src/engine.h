@@ -40,31 +40,41 @@ using namespace engine;
 class Engine {
   
 public:
+    Engine();
+    Renderer renderer; 
+    WindowManager window_manager;
+ 
+  
     
-
     #ifdef ANDROID
         Engine(android_app * pApp);
         android_app * pAndroid_app;
     #endif
     #ifdef VULKAN        
-    VulkanData vkdata = {VK_NULL_HANDLE};
-    vks::VulkanDevice* vulkan_device = nullptr; 
-    void vulkan_loop();     
-    
-    GLFWwindow* window;
+        VulkanData vkdata = {VK_NULL_HANDLE};
+        vks::VulkanDevice* vulkan_device = nullptr; 
+        void vulkan_loop();     
+        
+        GLFWwindow* window;
   
-    #endif
+    #endif    
     
-    Engine();
-    Renderer renderer; 
+
     #ifdef LINUX
+    Camera main_camera;
+    Game * game = nullptr;
+    void update_render_size();
+
+    bool ready_to_game = false;
+    bool loading = true;
+    bool play_animations = false;
+
     AudioManager audio_manager; 
-    #endif
     AnimationManager animation_manager; 
     
-    WindowManager window_manager;
+    
     AssetManager assets;
-    Camera main_camera;
+    
     MeshManager mesh_manager;
     TexturesManager textures_manager;
     Input input;
@@ -73,14 +83,11 @@ public:
     TranslationUpdate tranlation_update;
     
 
-    Game * game = nullptr;
+    
     ConnectionManager* net_manager;
 
    
-    bool ready_to_game = false;
-    bool loading = true;
-    bool play_animations = false;
-  
+    
    
 
     std::vector<EMesh*> meshes;//mesh to draw
@@ -125,7 +132,7 @@ public:
     void init();
     void es2_draw_frame();
     void loop_data();
-    void update_render_size();
+   
     void distance_object_from_camera(); 
 
     void translate_mesh(EMesh* mesh, uint direction, float value);
@@ -140,16 +147,7 @@ public:
     #endif 
 
     void init_collision_engine();
-
-    
-
-    
-
-
-
-
-    
-
+    #endif   
 
     
 };
