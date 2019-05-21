@@ -8,5 +8,9 @@ win:
 	$(MAKE) -C ./src win
 
 .PHONY: clean
-clean:
+clean: clean_game
 	rm -f ./src/*.o
+
+.PHONY: clean_game
+clean_game:
+	rm -f ./src/Game/*.o

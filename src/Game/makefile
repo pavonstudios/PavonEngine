@@ -1,4 +1,4 @@
-CC=g++ -g -std=c++17
+CC=g++ -g -std=c++17 $(CFLAGS)
 
 SRCS := $(wildcard *.cpp)
 BINS := $(SRCS:%.cpp=%)
@@ -7,12 +7,14 @@ OBJS := $(patsubst %.cpp,%.o,$(wildcard *.cpp))
 
 CPPS := $(patsubst %.o,%.cpp,$(wildcard *.o))
 
-DEFINE := 
+DEFINES := 
 
-vk: DEFINE := -DVULKAN
+vk: DEFINES := -DVULKAN
 vk: game
 
-es2: DEFINE := -DES2
+es2: DEFINES := -DES2
+es2: DEFINES += -DLINUX
+es2: DEFINES += -DX11
 es2: game
 
 .PHONY: game
@@ -20,7 +22,7 @@ game: ${OBJS}
 
 
 %.o: %.cpp
-	$(CC) -c $< -DGLTF $(DEFINE) -DDEVELOPMENT
+	$(CC) -c $< -DGLTF $(DEFINES) -DDEVELOPMENT
 
 .PHONY:clear
 clean:
