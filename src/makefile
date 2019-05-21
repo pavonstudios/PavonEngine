@@ -10,6 +10,7 @@ DEFINES= -DGLTF -DDEVELOPMENT
 OBJs := main.o engine.o camera.o asset_manager.o objects.o input.o skeletal.o WindowManager.o game_map.o collision.o audio_manager.o
 OBJs += animation_manager.o
 OBJs += model_loader.o
+OBJs += gui.o
 
 
 COMPILE= $(CC) -c -DGLTF $(DEFINES) -DDEVELOPMENT
@@ -48,9 +49,9 @@ win: CC := $(CCWIN)
 win: DEFINES := -DWINDOWS
 win: DEFINES += -DES2
 win: DEFINES += -DDEVELOPMENT
-win: main.o engine.o WindowManager.o 
+win: main.o engine.o WindowManager.o gui.o asset_manager.o opengl.o objects.o model_loader.o input.o camera.o skeletal.o animation_manager.o
 	
-	$(CC) -o ../renderer.exe main.o engine.o WindowManager.o -lglfw3 -lglew32 -lopengl32 -lgdi32 -static -static-libstdc++ -DWINDOWS
+	$(CC) -o ../renderer.exe main.o engine.o WindowManager.o gui.o asset_manager.o objects.o model_loader.o input.o camera.o skeletal.o animation_manager.o ./renderers/opengl.o -lglfw3 -lglew32 -lopengl32 -lgdi32 -static -static-libstdc++ -DWINDOWS
 
 
 
@@ -62,6 +63,9 @@ link:
 .PHONY: game
 game:
 	$(MAKE) -C ./Game $(TYPE)
+
+gui.o: gui.hpp gui.cpp
+	$(CC) -c gui.cpp -DGLTF $(DEFINES)
 
 
 WindowManager.o: WindowManager.cpp WindowManager.hpp

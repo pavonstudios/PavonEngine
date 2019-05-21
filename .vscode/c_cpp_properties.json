@@ -11,7 +11,8 @@
                 "GLTF",
                 "DEVELOPMENT",
                 "WAYLAND",
-                "ES2"
+                "ES2",
+                "WINDOWS"
                 
                                 
 			]

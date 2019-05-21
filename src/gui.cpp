@@ -1,11 +1,11 @@
-#include "../engine.h"
+#include "engine.h"
 #include "gui.hpp"
 #ifndef ANDROID
     #include <glm/glm.hpp>
     #include <glm/gtc/matrix_transform.hpp>
 #else
-    #include "../glm/glm.hpp"
-    #include "../glm/gtc/matrix_transform.hpp"
+    #include "glm/glm.hpp"
+    #include "glm/gtc/matrix_transform.hpp"
 #endif
 using namespace glm;
 using namespace engine;

@@ -1,15 +1,19 @@
 
 #ifdef WINDOWS
+#define STB_IMAGE_IMPLEMENTATION
 #include "engine.h"
 int main(){
     std::cout << "Engine\n";
     Engine engine;
     engine.window_manager.create_window();
   
+   	
+    
+    
     while(1){
-        glClearColor(0.0, 1.0, 0.0, 1.0);
-		glClear(GL_COLOR_BUFFER_BIT);		
-		engine.window_manager.swap_buffers();
+        engine.draw_loading_screen();
+       
+		
 		glfwPollEvents();
     }
     return 1;

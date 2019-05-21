@@ -154,7 +154,11 @@ void WindowManager::create_window(){
 		}	
 	
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
-		
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); // We want OpenGL 3.3
+      glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+      glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
+      glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // We don't want the old OpenGL 
+
 		glfw_window = glfwCreateWindow(this->window_width, this->window_height, this->window_name.c_str(), nullptr, nullptr);
 		if( glfw_window == NULL ){
 			fprintf( stderr, "Failed to open GLFW window\n" );
@@ -162,9 +166,14 @@ void WindowManager::create_window(){
 			return;
 		}
         glfwMakeContextCurrent(glfw_window);
-    
-        
 
+        glewInit();
+    
+        GLuint buffer;
+         glGenBuffers(1,&buffer);	
+         glBindBuffer(GL_ARRAY_BUFFER,buffer);
+
+         std::cout << "buffer created\n";
 
    #endif
 

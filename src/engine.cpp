@@ -33,11 +33,10 @@ Engine::Engine(android_app *pApp)
 }
 #endif
 
-#ifdef LINUX
 void Engine::draw_loading_screen()
 {
-#if defined (LINUX) && defined(ES2) || defined(ANDROID)
-	glClearColor(0.0, 0.0, 0.0, 1.0);
+#if defined(ES2) || defined(ANDROID)
+	glClearColor(0.0, 1.0, 0.0, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT);
 	
 	this->linear_meshes.clear();
@@ -58,6 +57,59 @@ void Engine::draw_loading_screen()
 	delete loading;
 #endif
 }
+
+void Engine::update_mvp(EMesh *mesh)
+{
+
+	glm::mat4 mat = glm::mat4(1.0);
+	if (mesh->bIsGUI)
+	{
+		//TODO: 3d gui
+		if (input.Z.bIsPressed)
+		{
+			mat = translate(mat, vec3(-0.5, -0.5, 0)) * scale(mat, vec3(0.1, 0.1, 1));
+			mat = rotate(mat, radians(90.f), vec3(1, 0, 0));
+			mat = rotate(mat, radians(90.f), vec3(0, 0, 1));
+			mat = translate(mat, vec3(0, 0, -100));
+
+			mat = main_camera.Projection * main_camera.View * mat;
+		}
+
+		//loading screen
+		if (loading)
+		{
+			mat = mat4(1.0);
+			mat = rotate(mat, radians(180.f), vec3(1, 0, 0)) * scale(mat, vec3(0.3, 0.3, 1));
+			loading = false;
+			mesh->MVP = mat;
+		}
+	}
+	else
+	{
+
+		mat = main_camera.Projection * main_camera.View * mesh->model_matrix;
+	}
+
+	if (!mesh->bIsGUI)
+	{
+		mesh->MVP = mat;
+	}
+#if defined(ES2) || defined(ANDROID)
+	if (mesh->type == MESH_TYPE_SKINNED)
+	{
+		mesh->ubo.proj = main_camera.Projection;
+		mesh->ubo.view = main_camera.View;
+		mesh->ubo.model = mesh->model_matrix;
+	}
+#endif
+
+#if defined(ES2) || defined(ANDROID)
+	renderer.update_mvp(mesh);
+#endif
+}
+
+#ifdef LINUX
+
 
 void Engine::init()
 {
@@ -338,55 +390,7 @@ float Engine::get_time()
 	return time;
 }
 
-void Engine::update_mvp(EMesh *mesh)
-{
 
-	glm::mat4 mat = glm::mat4(1.0);
-	if (mesh->bIsGUI)
-	{
-		//TODO: 3d gui
-		if (input.Z.bIsPressed)
-		{
-			mat = translate(mat, vec3(-0.5, -0.5, 0)) * scale(mat, vec3(0.1, 0.1, 1));
-			mat = rotate(mat, radians(90.f), vec3(1, 0, 0));
-			mat = rotate(mat, radians(90.f), vec3(0, 0, 1));
-			mat = translate(mat, vec3(0, 0, -100));
-
-			mat = main_camera.Projection * main_camera.View * mat;
-		}
-
-		//loading screen
-		if (loading)
-		{
-			mat = mat4(1.0);
-			mat = rotate(mat, radians(180.f), vec3(1, 0, 0)) * scale(mat, vec3(0.3, 0.3, 1));
-			loading = false;
-			mesh->MVP = mat;
-		}
-	}
-	else
-	{
-
-		mat = main_camera.Projection * main_camera.View * mesh->model_matrix;
-	}
-
-	if (!mesh->bIsGUI)
-	{
-		mesh->MVP = mat;
-	}
-#if defined(ES2) || defined(ANDROID)
-	if (mesh->type == MESH_TYPE_SKINNED)
-	{
-		mesh->ubo.proj = main_camera.Projection;
-		mesh->ubo.view = main_camera.View;
-		mesh->ubo.model = mesh->model_matrix;
-	}
-#endif
-
-#if defined(ES2) || defined(ANDROID)
-	renderer.update_mvp(mesh);
-#endif
-}
 
 void Engine::configure_window_callback()
 {

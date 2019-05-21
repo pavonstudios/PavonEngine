@@ -28,7 +28,7 @@
 #include "audio_manager.hpp"
 class Game;
 
-#include "Game/gui.hpp"
+#include "gui.hpp"
 #include "animation_manager.hpp"
 
 #include  <sys/time.h>
@@ -43,9 +43,37 @@ public:
     Engine();
     Renderer renderer; 
     WindowManager window_manager;
- 
-  
+     Camera main_camera;
+      AssetManager assets;
+    void draw_loading_screen();
+     void update_mvp(EMesh* mesh);
+    std::vector<EMesh*> meshes;//mesh to draw
+    std::vector<EMesh*> linear_meshes;//loaded mesh 
+     bool ready_to_game = false;
+    bool loading = true;
+    bool play_animations = false;
+    Input input;
+    bool edit_mode = false;
+    std::vector<EMesh*> unique_meshes;
+    TranslationUpdate tranlation_update;
     
+
+    float deltaTime = 0.0f;	// Time between current frame and last frame
+
+    bool draw_gizmos = false;
+
+    
+    
+    std::vector<EMesh*> skeletal_meshes;//loaded mesh
+
+    std::vector<EMesh*> helpers;
+    std::vector<EMesh*> colliders_draw_mesh;  
+
+    std::vector<Model*> models_to_draw;
+    #ifdef ES2 
+    std::vector<GLuint> texture_ids;
+    #endif
+
     #ifdef ANDROID
         Engine(android_app * pApp);
         android_app * pAndroid_app;
@@ -61,26 +89,24 @@ public:
     
 
     #ifdef LINUX
-    Camera main_camera;
+      
     Game * game = nullptr;
     void update_render_size();
 
-    bool ready_to_game = false;
-    bool loading = true;
-    bool play_animations = false;
-
+   
+    
     AudioManager audio_manager; 
     AnimationManager animation_manager; 
     
     
-    AssetManager assets;
+   
     
     MeshManager mesh_manager;
     TexturesManager textures_manager;
-    Input input;
+    
     MapManager maps;
 
-    TranslationUpdate tranlation_update;
+    
     
 
     
@@ -89,24 +115,10 @@ public:
    
     
    
-
-    std::vector<EMesh*> meshes;//mesh to draw
-    std::vector<EMesh*> linear_meshes;//loaded mesh 
-    std::vector<EMesh*> unique_meshes;
-    std::vector<EMesh*> skeletal_meshes;//loaded mesh
-
-    std::vector<EMesh*> helpers;
-    std::vector<EMesh*> colliders_draw_mesh;  
-
-    std::vector<Model*> models_to_draw;
-    #ifdef ES2 
-    std::vector<GLuint> texture_ids;
-    #endif
     
     
-    bool edit_mode = false;
+    
 
-    float deltaTime = 0.0f;	// Time between current frame and last frame
     float lastFrame = 0.0f; // Time of last frame
 
     int frames = 0;
@@ -128,7 +140,7 @@ public:
     void load_and_assing_location(struct MapDataToLoad data);
     void load_map(std::string path);
     float get_time();    
-    void update_mvp(EMesh* mesh);
+   
     void init();
     void es2_draw_frame();
     void loop_data();
@@ -137,7 +149,7 @@ public:
 
     void translate_mesh(EMesh* mesh, uint direction, float value);
  
-    void draw_loading_screen();
+    
     #ifdef DEVELOPMENT
         bool draw_gizmos = false;
         void print_debug(const std::string text, int8_t posx, int8_t posy);

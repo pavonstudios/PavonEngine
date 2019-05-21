@@ -3,9 +3,8 @@
 
 
 #include "ThirdPerson.hpp"	
-#include "gui.hpp"
 #include "vehicle.hpp"
-#include "gui.hpp"
+#include "../gui.hpp"
 
 
 class Game{
