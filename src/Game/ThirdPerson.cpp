@@ -52,6 +52,10 @@ void ThirdPerson::update(){
 		weapons->shoot(weapons->main_weapon);
 		std::cout << "shooting\n";
 	}
+	if(engine->input.R.bIsPressed){
+		weapons->reload(weapons->main_weapon);
+		std::cout << "reloading\n";
+	}
 	std::string log_position = "position " + std::to_string(mesh->location_vector.x) + " " + std::to_string(mesh->location_vector.y) + " " + std::to_string(mesh->location_vector.z);
 	//engine->print_debug(log_position,10,0);	
 	velocity = 2;

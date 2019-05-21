@@ -32,6 +32,7 @@ public:
 	Key SPACE;
 	Key ESC;
 	Key SHIFT;
+	Key R;
 
 	float pitch = 0;
 	float yaw = 0;

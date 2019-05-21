@@ -381,6 +381,9 @@ void Input::key_set(const char key, bool isPressed){
 		case '9':
 			actual_key = &this->SHIFT;
 			break;
+		case 'r':
+			actual_key = &this->R;
+			break;
 	}
 
 	if(actual_key){

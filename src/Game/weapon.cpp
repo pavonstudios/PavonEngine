@@ -17,5 +17,10 @@ void WeaponManager::shoot(Weapon* weapon){
 }
 
 void WeaponManager::reload(Weapon* weapon){
+    if(weapon->ammo >= 0){
+    std::string path = owner->engine->assets.path("Sounds/weapon_reload.wav");
+    owner->engine->audio_manager.play(path);
+    weapon->ammo = 30;
+    }
 
 }
