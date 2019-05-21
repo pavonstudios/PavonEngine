@@ -75,7 +75,7 @@ public:
 
     void load_shaders(const std::vector<EMesh*>& meshes); 
 
-    void initc_gl();   
+    void init_gl();   
 	
    void load_mesh_texture(EMesh* mesh);      
     

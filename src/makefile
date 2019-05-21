@@ -51,7 +51,7 @@ win: DEFINES += -DES2
 win: DEFINES += -DDEVELOPMENT
 win: $(OBJs) game
 	
-	$(CC) -o ../renderer.exe $(OBJs) ./renderers/opengl.o $(GAME) -lglfw3 -lglew -lopengl32 -lgdi32 -static -static-libstdc++ -DWINDOWS
+	$(CC) -o ../renderer.exe $(OBJs) ./renderers/opengl.o $(GAME) -lglfw3 -lglew32 -lopengl32 -lgdi32 -static -static-libstdc++ -DWINDOWS
 
 
 
