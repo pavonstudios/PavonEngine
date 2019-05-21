@@ -45,7 +45,7 @@ void Engine::draw_loading_screen()
 	loading->update_engine_meshes();
 	EMesh *mesh = meshes[0];
 	renderer.load_shaders(mesh);
-	mesh_manager.create_buffers(mesh);
+	renderer.create_buffer(mesh);
 	renderer.load_mesh_texture(mesh);
 	glUseProgram(mesh->shader_program);
 	renderer.activate_vertex_attributes(mesh);
@@ -115,9 +115,9 @@ void Engine::init()
 #endif
 
 	
-	mesh_manager.create_buffers(this, unique_meshes);
+	//mesh_manager.create_buffers(this, unique_meshes);
 	
-	TIME(mesh_manager.create_buffers(this, linear_meshes),"vertices to CPU")	
+	TIME(renderer.create_buffers(this, linear_meshes),"vertices to CPU")	
 
 	TIME(textures_manager.load_textures_to_cpu_memory(linear_meshes),"texture to CPU")
 	

@@ -69,30 +69,7 @@ EMesh::~EMesh(){
     #endif
 }
 void MeshManager::create_buffers(Engine* engine, const std::vector<EMesh*>& meshes){
-    for(EMesh* mesh : meshes){
-        #if defined(ES2) || defined(ANDROID)
-            if(mesh->model_id == -1){
-                glGenBuffers(1,&mesh->vertex_buffer);
-                glBindBuffer(GL_ARRAY_BUFFER,mesh->vertex_buffer);
-                glBufferData(GL_ARRAY_BUFFER,mesh->vertices.size() * sizeof(Vertex),mesh->vertices.data(),GL_STATIC_DRAW);
-
-                if(mesh->indices.size() > 0){
-                        glGenBuffers(1,&mesh->indices_buffer);
-                        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,mesh->indices_buffer);
-                        glBufferData(GL_ELEMENT_ARRAY_BUFFER,mesh->indices.size() * sizeof(unsigned int),mesh->indices.data(), GL_STATIC_DRAW);
-
-                }
-                
-                glBindBuffer(GL_ARRAY_BUFFER,0);
-                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,0);
-            }
-            else{
-                mesh->vertex_buffer = engine->unique_meshes[0]->vertex_buffer;
-                mesh->indices_buffer = engine->unique_meshes[0]->indices_buffer;
-
-            }
-
-        #endif
+    for(EMesh* mesh : meshes){   
         #ifdef VULKAN
             if(mesh->type == MESH_TYPE_SKINNED){
                     //node uniform buffer
@@ -115,56 +92,12 @@ void MeshManager::create_buffers(Engine* engine, const std::vector<EMesh*>& mesh
                 }
             }
            
-        #endif
-        #ifdef VULKAN //vertex buffer
-            /*             EMesh* mesh_to_process = mesh;
-            bufferSize = sizeof(mesh_to_process->vertices[0]) * mesh_to_process->vertices.size();
-
-            VkBuffer stagingBuffer;
-            VkDeviceMemory stagingBufferMemory;
-            engine->renderer.createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, 
-            VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | 
-            VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
-
-            void* data;
-            vkMapMemory(engine->vulkan_device->logicalDevice, stagingBufferMemory, 0, bufferSize, 0, &data);
-                memcpy(data, mesh_to_process->vertices.data(), (size_t) bufferSize);
-            vkUnmapMemory(engine->vulkan_device->logicalDevice, stagingBufferMemory);
-
-            engine->renderer.createBuffer(bufferSize, 
-            VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, 
-            VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, mesh_to_process->vertices_buffer, mesh_to_process->vertexBufferMemory);
-
-            engine->renderer.copyBuffer(stagingBuffer, mesh_to_process->vertices_buffer, bufferSize);
-
-            vkDestroyBuffer(engine->vulkan_device->logicalDevice, stagingBuffer, nullptr);
-            vkFreeMemory(engine->vulkan_device->logicalDevice, stagingBufferMemory, nullptr);
- */
-        #endif
+        #endif        
     }
     
 }
 void MeshManager::create_buffers(EMesh* mesh){
-    #if defined(ES2) || defined(ANDROID)
-        glGenBuffers(1,&mesh->vertex_buffer);
-        glBindBuffer(GL_ARRAY_BUFFER,mesh->vertex_buffer);
-        
-        if(mesh->type == MESH_TYPE_SKINNED)
-        glBufferData(GL_ARRAY_BUFFER,mesh->vertices.size() * sizeof(Vertex),mesh->vertices.data(),GL_DYNAMIC_DRAW);
-        else
-        glBufferData(GL_ARRAY_BUFFER,mesh->vertices.size() * sizeof(Vertex),mesh->vertices.data(),GL_STATIC_DRAW);
 
-        if(mesh->indices.size() > 0){
-                glGenBuffers(1,&mesh->indices_buffer);
-                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,mesh->indices_buffer);
-                glBufferData(GL_ELEMENT_ARRAY_BUFFER,mesh->indices.size() * sizeof(unsigned int),mesh->indices.data(), GL_STATIC_DRAW);
-
-        }
-        
-        glBindBuffer(GL_ARRAY_BUFFER,0);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,0);
-
-    #endif
     #ifdef VULKAN
     //node uniform buffer
     mesh->node_uniform.matrix = glm::mat4(1.0);

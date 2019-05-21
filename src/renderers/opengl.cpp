@@ -1,4 +1,5 @@
 #include "opengl.hpp"
+#include "../engine.h"
 GLuint Renderer::load_shader(shader_src &shader_data, GLenum type)
 {
 	const char *shader_source;
@@ -358,4 +359,55 @@ void Renderer::draw(EMesh *mesh)
 	glBindBuffer(GL_ARRAY_BUFFER, mesh->vertex_buffer);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->indices_buffer);
 	glDrawElements(GL_TRIANGLES, mesh->indices.size(), GL_UNSIGNED_INT, (void *)0);
+}
+
+
+void Renderer::create_buffers(Engine* engine, const std::vector<EMesh*>& meshes){
+	for(EMesh* mesh : meshes){
+        
+            if(mesh->model_id == -1){
+                glGenBuffers(1,&mesh->vertex_buffer);
+                glBindBuffer(GL_ARRAY_BUFFER,mesh->vertex_buffer);
+                glBufferData(GL_ARRAY_BUFFER,mesh->vertices.size() * sizeof(Vertex),mesh->vertices.data(),GL_STATIC_DRAW);
+
+                if(mesh->indices.size() > 0){
+                        glGenBuffers(1,&mesh->indices_buffer);
+                        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,mesh->indices_buffer);
+                        glBufferData(GL_ELEMENT_ARRAY_BUFFER,mesh->indices.size() * sizeof(unsigned int),mesh->indices.data(), GL_STATIC_DRAW);
+
+                }
+                
+                glBindBuffer(GL_ARRAY_BUFFER,0);
+                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,0);
+            }
+            else{
+                mesh->vertex_buffer = engine->unique_meshes[0]->vertex_buffer;
+                mesh->indices_buffer = engine->unique_meshes[0]->indices_buffer;
+
+            }
+
+	}
+}
+
+void Renderer::create_buffer(EMesh* mesh){
+	   
+	glGenBuffers(1,&mesh->vertex_buffer);
+	glBindBuffer(GL_ARRAY_BUFFER,mesh->vertex_buffer);
+	
+	if(mesh->type == MESH_TYPE_SKINNED)
+	glBufferData(GL_ARRAY_BUFFER,mesh->vertices.size() * sizeof(Vertex),mesh->vertices.data(),GL_DYNAMIC_DRAW);
+	else
+	glBufferData(GL_ARRAY_BUFFER,mesh->vertices.size() * sizeof(Vertex),mesh->vertices.data(),GL_STATIC_DRAW);
+
+	if(mesh->indices.size() > 0){
+			glGenBuffers(1,&mesh->indices_buffer);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,mesh->indices_buffer);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER,mesh->indices.size() * sizeof(unsigned int),mesh->indices.data(), GL_STATIC_DRAW);
+
+	}
+	
+	glBindBuffer(GL_ARRAY_BUFFER,0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,0);
+
+   
 }

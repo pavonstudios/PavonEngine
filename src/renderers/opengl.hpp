@@ -42,6 +42,7 @@ struct shader_src{
     int type = -1;
 };
 
+class Engine;
 
 class Renderer{
 public:
@@ -58,7 +59,6 @@ private:
     GLuint indices;
 
     GLuint textureid;
-
 
     GLuint shaderProgram;
 
@@ -90,7 +90,12 @@ public:
 
     void draw_gui(EMesh* mesh);
 
-    void draw(EMesh* mesh);       
+    void draw(EMesh* mesh);
+
+    void create_buffers(Engine* engine, const std::vector<EMesh*>& meshes);
+
+    void create_buffer(EMesh* mesh);
+
 };
 
 #endif
