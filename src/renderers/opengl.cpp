@@ -442,3 +442,6 @@ void Renderer::draw_gizmos(Engine* engine, std::vector<EMesh*> colliders_draw_me
 		}
 }
 #endif
+void Renderer::use_shader_from(EMesh* mesh){
+	glUseProgram(mesh->shader_program);
+}

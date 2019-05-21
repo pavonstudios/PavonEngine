@@ -99,6 +99,8 @@ public:
     #ifdef DEVELOPMENT
     void draw_gizmos(Engine* engine, std::vector<EMesh*> colliders_draw_mesh, std::vector<EMesh*> helpers);
     #endif
+
+    void use_shader_from(EMesh*);
 };
 
 #endif

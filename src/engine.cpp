@@ -35,7 +35,7 @@ Engine::Engine(android_app *pApp)
 
 void Engine::draw_loading_screen()
 {
-#if defined(ES2) || defined(ANDROID)
+#if defined (LINUX) && defined(ES2) || defined(ANDROID)
 	glClearColor(0.0, 0.0, 0.0, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT);
 	
@@ -79,9 +79,9 @@ void Engine::init()
 	audio_manager.play();
 #endif
 	
-
+	#ifdef LINUX
 	draw_loading_screen();
-
+	#endif
 	configure_window_callback();
 
 #ifdef VULKAN
@@ -176,7 +176,7 @@ void Engine::es2_draw_frame()
 	for (EMesh *mesh : meshes)
 	{
 
-		glUseProgram(mesh->shader_program);
+		renderer.use_shader_from(mesh);
 		renderer.activate_vertex_attributes(mesh);
 
 		if (!mesh->bIsGUI)
@@ -193,6 +193,7 @@ void Engine::es2_draw_frame()
 		}
 	}
 
+	#ifdef LINUX
 	for (Model *model : models_to_draw)
 	{
 		glUseProgram(model->shader_program);
@@ -200,6 +201,7 @@ void Engine::es2_draw_frame()
 		update_mvp(model->mesh);
 		renderer.draw(model->mesh);
 	}
+	#endif
 
 #ifdef DEVELOPMENT
 	if (draw_gizmos)
