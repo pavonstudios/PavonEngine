@@ -19,9 +19,10 @@ void Game::init_player(){
 			std::runtime_error("no player mesh pointer assigned");
 		}
 		
+		#ifdef LINUX
 		engine->net_manager = new ConnectionManager();
 		engine->net_manager->connect_to_game_server();
-
+		#endif
 		
 
 }

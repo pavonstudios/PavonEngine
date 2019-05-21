@@ -11,8 +11,9 @@
 #include <vector>
 
 #ifdef WINDOWS
+    #include <GL/glew.h>
     #include <GL/gl.h>
-    //#include <GL/glew.h>
+    
 #endif
 #ifdef LINUX
     #include <GLES2/gl2.h>
@@ -74,7 +75,7 @@ public:
 
     void load_shaders(const std::vector<EMesh*>& meshes); 
 
-    void init_gl();   
+    void initc_gl();   
 	
    void load_mesh_texture(EMesh* mesh);      
     

@@ -7,14 +7,15 @@ Library := -lpthread -lm -lSDL2
 MAIN_OBJS = camera.cpp engine.cpp
 DEFINES= -DGLTF -DDEVELOPMENT
 
-OBJs := main.o engine.o camera.o asset_manager.o objects.o input.o skeletal.o WindowManager.o game_map.o collision.o audio_manager.o
+OBJs := main.o engine.o camera.o asset_manager.o objects.o input.o skeletal.o WindowManager.o game_map.o collision.o
 OBJs += animation_manager.o
 OBJs += model_loader.o
+
 
 COMPILE= $(CC) -c -DGLTF $(DEFINES) -DDEVELOPMENT
 
 GAME := Game/*.o
-GAME += Multiplayer/*.o
+
 
 INCLUDE_OPENGL = -lGLESv2 -lEGL -lX11 
 
@@ -36,10 +37,12 @@ es2: DEFINES := -DLINUX
 es2: DEFINES += -DES2
 es2: DEFINES += -DX11
 es2: DEFINES += -DDEVELOPMENT
+es2: GAME += Multiplayer/*.o
+es2: OBJs += audio_manager.o
 es2: TYPE := es2
 es2: CC := $(CCLINUX)
 es2: $(OBJs) game connectivity opengl.o	
-	$(CC) -o ../renderer $(OBJs) audio.o ./renderers/opengl.o $(GAME) $(Library) $(INCLUDE_OPENGL) -I./ $(DEFINES) -DGLTF 
+	$(CC) -o ../renderer $(OBJs) ./renderers/opengl.o $(GAME) $(Library) $(INCLUDE_OPENGL) -I./ $(DEFINES) -DGLTF 
 
 
 win: CC := $(CCWIN)
@@ -48,7 +51,7 @@ win: DEFINES += -DES2
 win: DEFINES += -DDEVELOPMENT
 win: $(OBJs) game
 	
-	$(CC) -o ../renderer.exe $(OBJs) audio.o ./renderers/opengl.o $(GAME) -lglfw3 -lopengl32 -lgdi32 -static -static-libstdc++ -DWINDOWS
+	$(CC) -o ../renderer.exe $(OBJs) ./renderers/opengl.o $(GAME) -lglfw3 -lglew -lopengl32 -lgdi32 -static -static-libstdc++ -DWINDOWS
 
 
 

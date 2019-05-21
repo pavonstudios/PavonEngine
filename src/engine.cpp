@@ -74,7 +74,7 @@ void Engine::init()
 	window_manager.create_window(pAndroid_app);
 #endif
 
-#ifndef ANDROID
+#ifdef LINUX
 	audio_manager.init();
 	audio_manager.play();
 #endif

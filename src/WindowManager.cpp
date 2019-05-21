@@ -1,5 +1,6 @@
-#include "WindowManager.hpp"
 #include "engine.h"
+#include "WindowManager.hpp"
+
 
 #if defined(LINUX) && defined (ES2)
 

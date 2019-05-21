@@ -57,7 +57,9 @@ public:
     
     Engine();
     Renderer renderer; 
+    #ifdef LINUX
     AudioManager audio_manager; 
+    #endif
     AnimationManager animation_manager; 
     
     WindowManager window_manager;

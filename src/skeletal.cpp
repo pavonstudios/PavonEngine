@@ -1,5 +1,6 @@
-#include "objects.h"
 #include "engine.h"
+#include "objects.h"
+
 
 #ifdef WINDOWS
 #include <GL/glext.h>
