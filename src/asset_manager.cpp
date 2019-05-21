@@ -14,6 +14,19 @@ std::string AssetManager::path(std::string path_to_convert){
     #ifdef ANDROID
     AssetPath = "";
     #endif   
+    #ifdef WINDOWS
+        for(char& c : AssetPath){
+            if(c == '/'){
+                c = '\\';
+            }
+        }
+        for(char& c : path_to_convert){
+            if(c == '/'){
+                c = '\\';
+            }
+        }    
+        
+    #endif
     return AssetPath + path_to_convert;
 }
 

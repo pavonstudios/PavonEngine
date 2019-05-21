@@ -140,7 +140,7 @@ renderer.o: ./src/renderer.cpp
 	$(CC) -c renderer.cpp -I./ -DGLTF $(DEFINES)
 
 
-asset_manager.o:
+asset_manager.o: asset_manager.h asset_manager.cpp
 	
 	$(CC) -c asset_manager.cpp -I./ -DGLTF $(DEFINES)
 
