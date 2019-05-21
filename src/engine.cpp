@@ -204,33 +204,7 @@ void Engine::es2_draw_frame()
 #ifdef DEVELOPMENT
 	if (draw_gizmos)
 	{
-		glClear(GL_DEPTH_BUFFER_BIT);
-		for (EMesh *mesh : colliders_draw_mesh)
-		{
-			glUseProgram(mesh->shader_program);
-			renderer.activate_vertex_attributes(mesh);
-			update_mvp(mesh);
-			glBindBuffer(GL_ARRAY_BUFFER, mesh->vertex_buffer);
-			glDrawArrays(GL_POINTS, 0, mesh->vertices.size());
-			glLineWidth(3);
-			glDrawArrays(GL_LINES, 0, mesh->vertices.size());
-		}
-
-		glClear(GL_DEPTH_BUFFER_BIT);
-		for (auto *mesh : helpers)
-		{
-			SkeletalManager::update_joint_vertices_data(this);
-			glUseProgram(mesh->shader_program);
-			renderer.activate_vertex_attributes(mesh);
-
-			update_mvp(mesh);
-			glBindBuffer(GL_ARRAY_BUFFER, mesh->vertex_buffer);
-			glDrawArrays(GL_POINTS, 0, mesh->vertices.size());
-			glLineWidth(3);
-			//glDrawArrays(  GL_LINES,0,mesh->vertices.size());
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->indices_buffer);
-			glDrawElements(GL_LINES, mesh->indices.size(), GL_UNSIGNED_INT, (void *)0);
-		}
+		renderer.draw_gizmos(this,colliders_draw_mesh,helpers);
 	}
 
 #endif

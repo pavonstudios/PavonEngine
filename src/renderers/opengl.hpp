@@ -96,6 +96,9 @@ public:
 
     void create_buffer(EMesh* mesh);
 
+    #ifdef DEVELOPMENT
+    void draw_gizmos(Engine* engine, std::vector<EMesh*> colliders_draw_mesh, std::vector<EMesh*> helpers);
+    #endif
 };
 
 #endif

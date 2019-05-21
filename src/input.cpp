@@ -202,7 +202,7 @@ void Input::mouse_movement(Engine* engine, float xpos, float ypos){
 	
 	}//end right click pressed
 }	
-#ifdef ES2
+#if defined(LINUX) && defined(X11)
 
 void Input::check_input_event(Engine* engine, XEvent &xev){
 	KeySym key;		
