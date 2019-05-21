@@ -1,7 +1,9 @@
 #include "objects.h"
 #include "engine.h"
 
-
+#ifdef WINDOWS
+#include <GL/glext.h>
+#endif
 using namespace engine;
 /*
 Fill node uniform block of joints matrix for send to the vertex shader
@@ -288,7 +290,7 @@ void SkeletalManager::update_joint_vertices_data(Engine* engine){
         mesh->vertices.push_back(vert);
     }
    
-    #ifdef ES2
+    #if defined(LINUX) && defined(ES2)
     glBindBuffer(GL_ARRAY_BUFFER,mesh->vertex_buffer);
     glBufferData(GL_ARRAY_BUFFER,mesh->vertices.size() * sizeof(Vertex),mesh->vertices.data(),GL_STATIC_DRAW);
     #endif

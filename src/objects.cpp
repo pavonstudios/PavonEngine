@@ -10,6 +10,7 @@
 #endif
 #ifdef WINDOWS
     #include <GL/gl.h>
+    #include <GL/glext.h>
 #endif
 
 #ifdef GLTF
