@@ -48,18 +48,22 @@ void ThirdPerson::update_weapon_position(){
 
 void ThirdPerson::update(){
 
+		engine->play_animations = false;
+		
 	if(engine->input.left_button_pressed){
 		weapons->shoot(weapons->main_weapon);
 		std::cout << "shooting\n";
 	}
 	if(engine->input.R.bIsPressed){
+		engine->animation_manager.play_animation(mesh->skeletal,"reload",true);
 		weapons->reload(weapons->main_weapon);
+
 		std::cout << "reloading\n";
 	}
 	std::string log_position = "position " + std::to_string(mesh->location_vector.x) + " " + std::to_string(mesh->location_vector.y) + " " + std::to_string(mesh->location_vector.z);
 	//engine->print_debug(log_position,10,0);	
 	velocity = 2;
-	engine->play_animations = false;
+
 	#if defined(LINUX) && defined(X11) && defined (ES2)
 	engine->window_manager.move_cursor_to_center();
 	#endif
