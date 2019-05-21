@@ -1,11 +1,8 @@
 #include "WindowManager.hpp"
 #include "engine.h"
 
-#ifdef ES2
-#ifdef ANDROID
+#if defined(LINUX) && defined (ES2)
 
-#else
-#include "engine.h"
 void WindowManager::configure_egl(){
     ///////  the egl part  //////////////////////////////////////////////////////////////////
    //  egl provides an interface to connect the graphics related functionality of openGL ES
@@ -113,7 +110,7 @@ void WindowManager::clear(){
 }
 #endif
 
-#endif
+
 #ifdef VULKAN
 void WindowManager::create_window_glfw(){
    	if( !glfwInit() )
@@ -222,7 +219,7 @@ void WindowManager::create_wayland_window(){
 #endif
 
 void WindowManager::check_events(){
-   #ifdef ES2
+    #if defined(LINUX) && defined(X11) && defined (ES2)
       while ( XPending ( x_display ) ){
          XEvent  xev;
         
@@ -267,7 +264,7 @@ void WindowManager::swap_buffers(){
       #ifdef ANDROID
          eglSwapBuffers(display, surface);
       #endif
-      #ifdef ES2
+       #if defined(LINUX) && defined(X11) && defined (ES2)
          eglSwapBuffers ( egl_display, egl_surface );
       #endif
       #if defined (WINDOWS) || defined (VULKAN) 

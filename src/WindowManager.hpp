@@ -8,7 +8,7 @@
     #include <GLES2/gl2.h>
    
 #endif
-#if defined (ES2)
+ #if defined(LINUX) && defined(X11) && defined (ES2)
     #include <EGL/egl.h>
   
     using namespace std;
@@ -63,7 +63,7 @@ public:
             void clear();
             void move_cursor_to_center();            
         #endif
-        #ifdef ES2
+        #if defined(LINUX) && defined(X11) && defined (ES2)
         EGLDisplay  egl_display;
         EGLContext  egl_context;
         EGLSurface  egl_surface;
