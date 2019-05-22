@@ -41,6 +41,10 @@ void AnimationManager::play_animation(SkeletalMesh* skeletal, std::string name, 
         std::cout << "no playing animation\n";
         return;
     }
+
+    float time = anim->time;
+    
+    anim->loop = loop;   
     
     anim->loop = loop;
 
