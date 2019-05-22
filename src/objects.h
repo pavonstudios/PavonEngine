@@ -56,6 +56,11 @@ using namespace glm;
 
 namespace engine{ 
   
+    struct Transform{
+        vec3 location;
+        quat rotation;
+    };
+    
     struct MapDataToLoad
 	{
         std::string model_path;

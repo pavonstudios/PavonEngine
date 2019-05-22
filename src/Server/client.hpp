@@ -6,6 +6,8 @@
 
 #include <glm/glm.hpp>
 
+#include "../objects.h"
+
 struct Client{
 	int id = -1;
 	int client_socket = -1;
