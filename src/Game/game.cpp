@@ -58,6 +58,12 @@ void Game::update(){
 				player->update();
 				engine->net_manager->send_player_data(player);					
 			}
+			if(player2){
+				if(player2->mesh){
+				player2->mesh->model_matrix = glm::translate( glm::mat4(1.0),player2->location );
+
+				}
+			}
 			
 		}			
 
@@ -88,10 +94,12 @@ void Game::spawn_new_player(){
 		new_player_mesh->model_matrix = translate(mat4(1.0),vec3(0,0,2));
 		engine->meshes.push_back(new_player_mesh);
 
-
+		new_player->mesh = new_player_mesh;
 	}		
 	
 	if(new_player->mesh == nullptr){
 		std::runtime_error("no player mesh pointer assigned");
 	}
+
+	this->player2 = new_player;
 }

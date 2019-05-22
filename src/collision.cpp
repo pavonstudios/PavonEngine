@@ -218,15 +218,18 @@ void Collision::update_collision(const std::vector<EMesh*>& meshes){
 void Collision::update_collision_engine(const Engine* engine){
 
 		std::cout << "starting collision engine\n";
-
+		
 		EMesh* player = engine->game->player->mesh;
-
+		while(!player){
+			
+		}
 		EMesh* vehicle = engine->meshes[3];
 
 		EMesh* cube = engine->meshes[0];
 
 		EMesh* other_sphere = engine->meshes[11];
 
+		
 		player->collider.sphere = new SphereCollider;
 		player->collider.sphere->radius = 0.5;
 		player->collider.sphere->center = player->location_vector;

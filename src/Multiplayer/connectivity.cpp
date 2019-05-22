@@ -105,6 +105,7 @@ void ConnectionManager::update(){
 			player_spawned = true;
 		}
 		engine->print_vector(packet.other_player_position);
+		game->player2->location = packet.other_player_position;
 	}
 
 }

@@ -18,7 +18,8 @@ class Game{
 		void init_player();
 		void init();
 		void spawn_new_player();
-		ThirdPerson * player;
+		ThirdPerson * player = nullptr;
+		ThirdPerson* player2 = nullptr;
 		int player_id = -1;
 };
 #endif

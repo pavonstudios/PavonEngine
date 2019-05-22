@@ -18,10 +18,12 @@ class ThirdPerson{
 		virtual void update();
 		float velocity = 2;
 		vec3 camera_position = vec3(0,-1.5,-1.5);		
+		vec3 location;
 	private:
 		mat4 camera_rotation_offset = mat4(1.0);
 		mat4 weapon_rotation_offset = mat4(1.0);
 		void create_rotation_offset_matrixs();
+
 };
 
 #endif
