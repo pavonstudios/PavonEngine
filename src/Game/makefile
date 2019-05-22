@@ -21,7 +21,7 @@ es2: game
 game: ${OBJS}
 
 
-%.o: %.cpp
+%.o: %.cpp %.hpp
 	$(CC) -c $< -DGLTF $(DEFINES) -DDEVELOPMENT
 
 .PHONY:clear

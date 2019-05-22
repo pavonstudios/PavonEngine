@@ -10,21 +10,33 @@
 
 
 ThirdPerson::ThirdPerson(){
-
+	create_rotation_offset_matrixs();
 }
-
-void ThirdPerson::update_camera_postion(){
-	
+void ThirdPerson::create_rotation_offset_matrixs(){
 	glm::mat4 mat = glm::translate(glm::mat4(1.0),glm::vec3(0,0,0));
 	
 	glm::mat4 rotated = glm::rotate(mat,glm::radians(90.f),glm::vec3(0,1,0));
 	glm::mat4 rotated2 = glm::rotate(rotated,glm::radians(90.f),glm::vec3(0,1,0));
 	glm::mat4 rotated3 = glm::rotate(rotated2,glm::radians(90.f),glm::vec3(-1,0,0));
 
+	camera_rotation_offset = rotated3;
+
+	mat4 front_rotated = rotate(mat4(1.0),radians(-90.f),vec3(0,0,1));
+	mat4 front_rotated2 = rotate(mat4(1.0),radians(-90.f),vec3(0,0,1));
+	mat4 front_rotated3 = rotate(mat4(1.0),radians(60.f),vec3(0,1,0));
+	mat4 front_rotated4 = rotate(mat4(1.0),radians(-45.f),vec3(0,0,1));
+	mat4 front_rotated5 = rotate(mat4(1.0),radians(16.f),vec3(0,1,0));
+
+	mat4 rotation = front_rotated * front_rotated2 * front_rotated3 * front_rotated4 * front_rotated5;
+	weapon_rotation_offset = rotation;
+}
+void ThirdPerson::update_camera_postion(){
+
+
 	glm::mat4 translated =glm::translate(glm::mat4(1.0),camera_position);
 
 
-	this->engine->main_camera.View = translated * rotated3 * glm::inverse(this->mesh->model_matrix);
+	this->engine->main_camera.View = translated * camera_rotation_offset * glm::inverse(this->mesh->model_matrix);
 	//engine->main_camera.cameraPos = camera_position + mesh->location_vector;
 	
 }
@@ -34,16 +46,9 @@ void ThirdPerson::update_weapon_position(){
 	//mat4 hand_mat = 
 	Node* hand = NodeManager::node_by_name(mesh,"Bone.012"); //TODO: node by name with skeletal parameter not updated
 	mat4 hand_local = NodeManager::get_global_matrix(hand);
+
 	
-
-	mat4 front_rotated = rotate(mat4(1.0),radians(-90.f),vec3(0,0,1));
-	mat4 front_rotated2 = rotate(mat4(1.0),radians(-90.f),vec3(0,0,1));
-	mat4 front_rotated3 = rotate(mat4(1.0),radians(60.f),vec3(0,1,0));
-	mat4 front_rotated4 = rotate(mat4(1.0),radians(-45.f),vec3(0,0,1));
-	mat4 front_rotated5 = rotate(mat4(1.0),radians(16.f),vec3(0,1,0));
-
-	mat4 rotation = front_rotated * front_rotated2 * front_rotated3 * front_rotated4 * front_rotated5;
-	weapon->model_matrix =  mesh->model_matrix * hand_local * rotation ;
+	weapon->model_matrix =  mesh->model_matrix * hand_local * weapon_rotation_offset ;
 }
 
 void ThirdPerson::update(){
