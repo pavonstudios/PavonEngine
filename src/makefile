@@ -41,7 +41,7 @@ es2: DEFINES += -DDEVELOPMENT
 es2: GAME += Multiplayer/*.o
 es2: TYPE := es2
 es2: CC := $(CCLINUX)
-es2: $(OBJs) game connectivity opengl.o	
+es2: $(OBJs) game connectivity.o opengl.o	
 	$(CC) -o ../renderer audio.o $(OBJs) ./renderers/opengl.o $(GAME) $(Library) $(INCLUDE_OPENGL) -I./ $(DEFINES) -DGLTF 
 
 
@@ -72,15 +72,13 @@ WindowManager.o: WindowManager.cpp WindowManager.hpp
 	
 	$(CC) -c WindowManager.cpp -DGLTF $(DEFINES)
 
-.ONESHELL:
-opengl.o: 
-	cd renderers
-	$(CC) -c opengl.cpp -DGLTF $(DEFINES)
 
-.ONESHELL:
-connectivity: ./Multiplayer/connectivity.hpp ./Multiplayer/connectivity.cpp
-	cd Multiplayer
-	$(CC) -c connectivity.cpp -DGLTF $(DEFINES)
+opengl.o: ./renderers/opengl.cpp ./renderers/opengl.hpp
+	$(CC) -c ./renderers/opengl.cpp -DGLTF $(DEFINES)
+
+
+connectivity.o: ./Multiplayer/connectivity.cpp ./Multiplayer/connectivity.hpp
+	$(CC) -c ./Multiplayer/connectivity.cpp -DGLTF $(DEFINES)
 
 
 animation_manager.o: animation_manager.cpp animation_manager.hpp skeletal.h

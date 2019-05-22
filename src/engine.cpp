@@ -200,7 +200,7 @@ void Engine::init()
 	calculate_time("mesh",tStart);
 #endif
 
-	init_collision_engine();
+	//init_collision_engine();
 }
 
 void Engine::loop_data()
@@ -614,8 +614,11 @@ void Engine::distance_object_from_camera()
 {
 	vec3 camera_position = main_camera.cameraPos;
 	//int mesh_id = 9;
-	EMesh *mesh = linear_meshes[12];
-	mesh->lod1 = linear_meshes[13];
+	EMesh *mesh = mesh_manager.mesh_by_name("pole");
+	EMesh* lod = mesh_manager.mesh_by_name("poleLOD3");
+	if(!lod || !mesh)
+		return;
+	mesh->lod1 = lod;
 	vec3 object_position = mesh->location_vector;
 
 	bool erased = false;
