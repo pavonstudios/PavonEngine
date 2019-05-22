@@ -83,7 +83,7 @@ connectivity:
 	$(CC) -c connectivity.cpp -DGLTF $(DEFINES)
 
 
-animation_manager.o: animation_manager.cpp animation_manager.hpp
+animation_manager.o: animation_manager.cpp animation_manager.hpp skeletal.h
 	
 	$(CC) -c animation_manager.cpp -DGLTF $(DEFINES)
 

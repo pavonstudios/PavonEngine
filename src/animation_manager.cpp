@@ -1,5 +1,6 @@
 #include "animation_manager.hpp"
 #include "engine.h"
+#include <iterator>
 
 Animation* AnimationManager::animation_by_name(std::string name){
     for(Animation* anim : this->animations){
@@ -11,20 +12,46 @@ Animation* AnimationManager::animation_by_name(std::string name){
     return nullptr;
 }
 
+void AnimationManager::add_to_queue(SkeletalMesh* skeletal, std::string name, bool loop){
+    Animation* anim = animation_by_name(name);   
+
+    if(!anim){
+        std::cout << "no playing animation\n";
+        return;
+    }
+    anim->loop = loop;
+
+    AnimationPlay* new_play = new AnimationPlay;
+    new_play->animation = anim;
+    new_play->skeletal = skeletal;
+
+    animation_to_play.push_back(new_play);
+}
+
+/*
+Add animation play to animation queue
+*/
 void AnimationManager::play_animation(SkeletalMesh* skeletal, std::string name, bool loop){
     engine->play_animations = true;
 
     Animation* anim = animation_by_name(name);
     
-    float time = anim->time;
-    
-    anim->loop = loop;
 
     if(!anim){
         std::cout << "no playing animation\n";
         return;
     }
     
+    anim->loop = loop;
+
+    play(anim,skeletal);
+    
+}
+
+void AnimationManager::play(Animation* anim, SkeletalMesh* skeletal){
+
+    float time = anim->time;
+
     AnimationSampler sampler{};
 
     for(auto& channel : anim->channels){
@@ -94,6 +121,33 @@ void AnimationManager::play_animations(Engine* engine){
         }
 	
 	}
+    if( !animation_to_play.empty() ){
+        std::list<AnimationPlay*> to_remove;
+        for(auto *play : animation_to_play){
+            if( work_animation_play(play) )
+                to_remove.push_back(play);
+        }
+        for(auto* del_play : to_remove){
+            this->animation_to_play.remove(del_play);
+        }
+       
+    }
+}
+
+bool AnimationManager::work_animation_play(AnimationPlay* play){
+  
+    Animation* anim = play->animation;
+    SkeletalMesh* mesh = play->skeletal;
+    anim->time += engine->deltaTime;
+
+    if(anim->time >= anim->end){
+            anim->time = 0;    
+            return true;
+        
+    }
+
+    this->play(anim,mesh);
+    return false;
 }
 
 void AnimationManager::clear_loaders(){

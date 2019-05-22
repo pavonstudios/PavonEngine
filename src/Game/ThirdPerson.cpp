@@ -54,10 +54,10 @@ void ThirdPerson::update(){
 		weapons->shoot(weapons->main_weapon);
 		std::cout << "shooting\n";
 	}
-	if(engine->input.R.bIsPressed){
-		engine->animation_manager.play_animation(mesh->skeletal,"reload",true);
+	if(engine->input.R.Released){		
+		engine->animation_manager.add_to_queue(mesh->skeletal,"reload",false);
 		weapons->reload(weapons->main_weapon);
-
+		engine->input.R.Released = false;
 		std::cout << "reloading\n";
 	}
 	std::string log_position = "position " + std::to_string(mesh->location_vector.x) + " " + std::to_string(mesh->location_vector.y) + " " + std::to_string(mesh->location_vector.z);
@@ -98,8 +98,9 @@ void ThirdPerson::update(){
 		//this->mesh->model_matrix = glm::rotate(mesh->model_matrix,glm::radians(-15.0f * engine->deltaTime),glm::vec3(0,0,1));
 		 		
 	}
-	if(engine->input.SPACE.bIsPressed){				
-		engine->animation_manager.play_animation(mesh->skeletal,"jump",true);
+	if(engine->input.SPACE.Released){				
+		engine->animation_manager.add_to_queue(mesh->skeletal,"jump",false);
+		engine->input.SPACE.Released = false;
 	}
 
 	if(engine->input.right_button_pressed){
