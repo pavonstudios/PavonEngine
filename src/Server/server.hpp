@@ -9,16 +9,18 @@
 #include <unistd.h>
 #include <netinet/in.h> 
 #include <arpa/inet.h>
+#include <list>
 
 class Server{
 public:
 	bool quit = false;
 	bool can_replicate = true;
-	std::vector<Client*> clients;
+	bool can_delete = false;
+	std::list<Client*> clients;
 	void send_data();
 	void get_ip_client();
 	static void wait_connections(Server* server);
-	static void recive_data(Client*);
+	static void recive_data(Server* , Client*);
 	void replicate_clients_data();
 	void connect_to_clients();
 	void send_to_client();

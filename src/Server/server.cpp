@@ -78,8 +78,10 @@ void Server::wait_connections(Server* server){
 		new_client->id = client_count;
 		new_client->connected = true;
 		server->clients.push_back(new_client);
-		std::thread new_client_thread (Server::recive_data,new_client);
+
+		std::thread new_client_thread (Server::recive_data,server,new_client);
 		new_client_thread.detach();
+
 		std::cout << "someone connected\n";
 
 		char msg[1000];
@@ -93,35 +95,49 @@ void Server::wait_connections(Server* server){
 
 }
 
-void Server::recive_data(Client* client){
+void Server::recive_data(Server* server, Client* client){
 	while(client->connected){
 		ClientPacket packet = {};
 		recv(client->client_socket,&packet,sizeof(ClientPacket),0);
-		glm::vec3 position = packet.position;
-		//std::cout << position.x << " " << position.y << " " << position.z << std::endl;
 		
+		client->position_recieved = packet.position;
+		
+
 		if( packet.command == COMMAND_EXIT ){
 			client->connected = false;
 			break;
 		}
 	}
-	
+	server->can_replicate = false;
+	while(!server->can_delete){
+		
+	}
+	server->clients.remove(client);
+	server->can_replicate = true;
 	std::cout << "client disconneted\n";
 
 }
 
 void Server::replicate_clients_data(){
+	this->can_delete = false;
 	for(Client* actual_client : clients){
-		SendPacket packet = {};
-		packet.players_count = clients.size() - 1;
-		send(actual_client->send_socket,&packet,sizeof(SendPacket),0);
-
+		
 		for(Client* send_client : clients){
 			if(actual_client->id == send_client->id){
 				continue;
 			}
+			if(actual_client->id >= 1){
+			glm::vec3 position = actual_client->position_recieved;
+			std::cout << position.x << " " << position.y << " " << position.z << std::endl;
+
+			}
+			SendPacket packet = {};
+			packet.players_count = clients.size() - 1;
+			packet.other_player_position = actual_client->position_recieved;
+			send(actual_client->send_socket,&packet,sizeof(SendPacket),0);
 
 		}
 
 	}
+	this->can_delete = true;
 }

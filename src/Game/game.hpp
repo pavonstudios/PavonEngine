@@ -12,10 +12,12 @@ class Game{
 		Game(Engine* engine);
 		~Game();
 		Engine* engine;
+		GUI* gui = nullptr;
+
 		void update();
 		void init_player();
-		GUI* gui = nullptr;
 		void init();
+		void spawn_new_player();
 		ThirdPerson * player;
 		int player_id = -1;
 };

@@ -11,6 +11,7 @@
 #include "../engine.h"
 #include "../Game/ThirdPerson.hpp"
 #include "../Server/client.hpp"
+#include "../Game/game.hpp"
 
 void ConnectionManager::connect_to_game_server(){
 	init();	
@@ -99,7 +100,11 @@ void ConnectionManager::update(){
 	SendPacket packet = {};
 	recv(in_server_socket,&packet,sizeof(SendPacket),0);
 	if(packet.players_count > 0){
-		std::cout << "Player count : " << packet.players_count << std::endl;
+		if(!player_spawned){
+			game->spawn_new_player();
+			player_spawned = true;
+		}
+		engine->print_vector(packet.other_player_position);
 	}
 
 }
