@@ -129,6 +129,7 @@ void AnimationManager::play_animations(Engine* engine){
         }
         for(auto* del_play : to_remove){
             this->animation_to_play.remove(del_play);
+            delete del_play;
         }
        
     }

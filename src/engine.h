@@ -151,7 +151,7 @@ public:
  
     
     #ifdef DEVELOPMENT
-        
+        void print_vector(glm::vec3);
         void print_debug(const std::string text, int8_t posx, int8_t posy);
         void print_fps();
         void calculate_time(std::string, std::chrono::time_point<std::chrono::system_clock>);

@@ -10,7 +10,6 @@ void WeaponManager::shoot(Weapon* weapon){
             std::string path = owner->engine->assets.path("Sounds/shoot.wav");
             owner->engine->audio_manager.play(path);
             weapon->ammo -= 1;
-            std::cout << "shoot\n";
         }
 
     }

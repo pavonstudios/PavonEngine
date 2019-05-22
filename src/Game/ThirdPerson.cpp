@@ -33,17 +33,17 @@ void ThirdPerson::create_rotation_offset_matrixs(){
 void ThirdPerson::update_camera_postion(){
 
 
-	glm::mat4 translated =glm::translate(glm::mat4(1.0),camera_position);
-
-
+	glm::mat4 translated =glm::translate(glm::mat4(1.0),this->camera_position);
+	
 	this->engine->main_camera.View = translated * camera_rotation_offset * glm::inverse(this->mesh->model_matrix);
 	//engine->main_camera.cameraPos = camera_position + mesh->location_vector;
+
 	
 }
 
 void ThirdPerson::update_weapon_position(){
 	EMesh* weapon = engine->mesh_manager.mesh_by_name("glock");
-	//mat4 hand_mat = 
+
 	Node* hand = NodeManager::node_by_name(mesh,"Bone.012"); //TODO: node by name with skeletal parameter not updated
 	mat4 hand_local = NodeManager::get_global_matrix(hand);
 
@@ -107,8 +107,10 @@ void ThirdPerson::update(){
 		engine->input.SPACE.Released = false;
 	}
 
+	this->camera_position = vec3(-0.4,-1.7,-2.8);
 	if(engine->input.right_button_pressed){
 		engine->animation_manager.play_animation(mesh->skeletal,"aim",false);
+		this->camera_position = vec3(-0.4,-1.7,-2);
 	}
 	
 

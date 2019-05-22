@@ -319,6 +319,10 @@ void Engine::delete_meshes()
 }
 
 #ifdef DEVELOPMENT
+void Engine::print_vector(glm::vec3 vector){
+	std::cout << vector.x << " " << vector.y << " " << vector.z << std::endl;
+}
+
 void Engine::print_debug(const std::string text, int8_t posx, int8_t posy)
 {
 	printf("%c[%i;%iH", 0x1B, posx, posy);
