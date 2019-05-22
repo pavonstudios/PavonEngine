@@ -78,7 +78,7 @@ opengl.o:
 	$(CC) -c opengl.cpp -DGLTF $(DEFINES)
 
 .ONESHELL:
-connectivity: 
+connectivity: ./Multiplayer/connectivity.hpp ./Multiplayer/connectivity.cpp
 	cd Multiplayer
 	$(CC) -c connectivity.cpp -DGLTF $(DEFINES)
 

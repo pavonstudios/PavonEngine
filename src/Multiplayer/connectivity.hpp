@@ -12,5 +12,6 @@ class ConnectionManager{
 		static void wait_data(ConnectionManager*);
 		void send_player_data(ThirdPerson* player);
 		void update();
+		static void recieve_data(ConnectionManager*);
 };
 #endif

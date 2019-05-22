@@ -13,7 +13,7 @@
 #include "../Server/client.hpp"
 
 void ConnectionManager::connect_to_game_server(){
-	//init();	
+	init();	
 
 	server_socket = socket(AF_INET, SOCK_STREAM,0);
 
@@ -75,13 +75,15 @@ void ConnectionManager::wait_data(ConnectionManager* manager){
 	std::cout << "waiting server response\n";
 	manager->in_server_socket = accept(socket_server_file_descriptor,(struct sockaddr *)&address,(socklen_t*)&addrlen);
 	std::cout << "connectd\n";
+	std::thread recieve_d(ConnectionManager::recieve_data,manager);
+	recieve_d.detach();
+}
+void ConnectionManager::recieve_data(ConnectionManager* manager){
+	std::cout << "recieving data from server\n";
 	while(true){
-		//manager->update();
-		//std::cout << "update\n";
-
+		manager->update();
 	}
 }
-
 void ConnectionManager::send_player_data(ThirdPerson* player){
 	ClientPacket packet {};
 

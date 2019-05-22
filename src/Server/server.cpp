@@ -14,9 +14,15 @@ void Server::send_data(){
 
 	int connected = connect(new_socket, (struct sockaddr *)&ipOfServer, sizeof(ipOfServer));
 	if(connected < 0){
-		std::cout << "not connected\n";
+		std::cout << "not connected to client\n";
 	}
-	
+	send_socket = new_socket;
+}
+
+void Server::send_to_client(){
+	SendPacket packet = {};
+	packet.players_count = 1;
+	send(send_socket,&packet,sizeof(SendPacket),0);
 }
 void Server::connect_to_clients(){
 
@@ -92,7 +98,7 @@ void Server::recive_data(Client* client){
 		ClientPacket packet = {};
 		recv(client->client_socket,&packet,sizeof(ClientPacket),0);
 		glm::vec3 position = packet.position;
-		std::cout << position.x << " " << position.y << " " << position.z << std::endl;
+		//std::cout << position.x << " " << position.y << " " << position.z << std::endl;
 		
 		if( packet.command == COMMAND_EXIT ){
 			client->connected = false;
@@ -107,7 +113,7 @@ void Server::recive_data(Client* client){
 void Server::replicate_clients_data(){
 	for(Client* actual_client : clients){
 		SendPacket packet = {};
-		packet.players_count = clients.size() - 1 ;
+		packet.players_count = clients.size() - 1;
 		send(actual_client->send_socket,&packet,sizeof(SendPacket),0);
 
 		for(Client* send_client : clients){

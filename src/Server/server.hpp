@@ -21,5 +21,7 @@ public:
 	static void recive_data(Client*);
 	void replicate_clients_data();
 	void connect_to_clients();
+	void send_to_client();
+	int send_socket;
 };
 #endif

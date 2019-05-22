@@ -25,7 +25,7 @@ void input(Server* server){
 			}
 		}
 		if(input == "send"){
-			server->send_data();			
+			server->send_to_client();			
 		}
 	}	
 	
@@ -43,8 +43,8 @@ int main(){
 	while(!quit){
 		
 		if(server.can_replicate){
-			//server.connect_to_clients();
-			//server.replicate_clients_data();
+			server.connect_to_clients();
+			server.replicate_clients_data();
 
 		}
 	}
