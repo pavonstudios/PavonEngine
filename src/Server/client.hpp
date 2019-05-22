@@ -13,6 +13,7 @@ struct Client{
 	int send_socket = -1;
 	bool send_connected = false;
 	glm::vec3 position_recieved;
+	bool thread_created = false;
 };
 
 struct ClientPacket{

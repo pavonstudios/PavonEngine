@@ -24,7 +24,7 @@ void Server::send_to_client(){
 	packet.players_count = 1;
 	send(send_socket,&packet,sizeof(SendPacket),0);
 }
-void Server::connect_to_clients(){
+void Server::connect_for_send_packets_to_clients(){
 
 	for(Client* client : clients){
 		
@@ -68,19 +68,22 @@ void Server::wait_connections(Server* server){
 	listen(socket_server_file_descriptor,3);
 
 	int client_conection = 0;
-	int client_count = 0;
+	
 	while(!server->quit){
+		
 		std::cout << "waiting connections\n";
 		Client* new_client = new Client;
 		new_client->client_socket = accept(socket_server_file_descriptor,(struct sockaddr *)&address,(socklen_t*)&addrlen);
 		server->can_replicate = false;
 
-		new_client->id = client_count;
+		new_client->id = server->client_count;
 		new_client->connected = true;
-		server->clients.push_back(new_client);
 
-		std::thread new_client_thread (Server::recive_data,server,new_client);
-		new_client_thread.detach();
+		server->clients.push_back(new_client);
+		server->can_replicate = true;
+		
+		
+		server->create_client_thread(server,new_client);
 
 		std::cout << "someone connected\n";
 
@@ -89,12 +92,19 @@ void Server::wait_connections(Server* server){
 		std::cout << msg << std::endl;
 		
 		//server->send_data();
-		client_count++;
-		server->can_replicate = true;
+		server->client_count++;
+		
 	}
 
 }
 
+void Server::create_client_thread(Server* server, Client* client){
+	if(!client->thread_created){
+		std::thread new_client_thread (Server::recive_data,server,client);
+		new_client_thread.detach();
+		client->thread_created = true;
+	}
+}
 void Server::recive_data(Server* server, Client* client){
 	while(client->connected){
 		ClientPacket packet = {};
@@ -110,9 +120,10 @@ void Server::recive_data(Server* server, Client* client){
 	}
 	server->can_replicate = false;
 	while(!server->can_delete){
-		
+
 	}
 	server->clients.remove(client);
+
 	server->can_replicate = true;
 	std::cout << "client disconneted\n";
 
@@ -120,21 +131,31 @@ void Server::recive_data(Server* server, Client* client){
 
 void Server::replicate_clients_data(){
 	this->can_delete = false;
+	if(clients.size() >= 2){
+		int i = 0;
+	}
 	for(Client* actual_client : clients){
-		
+		glm::vec3 position = actual_client->position_recieved;
+		std::cout << "Client " << actual_client->id << " " << position.x << " " << position.y << " " << position.z << std::endl;
+
+		if(clients.size() >= 2){
+			SendPacket packet = {};
+			packet.players_count = clients.size() - 1;
+			packet.other_player_position = clients.back()->position_recieved;
+			send(clients.front()->send_socket,&packet,sizeof(SendPacket),0);
+
+		}
 		for(Client* send_client : clients){
 			if(actual_client->id == send_client->id){
 				continue;
 			}
-			if(actual_client->id >= 1){
-			glm::vec3 position = actual_client->position_recieved;
-			std::cout << position.x << " " << position.y << " " << position.z << std::endl;
+		
 
-			}
+			
 			SendPacket packet = {};
 			packet.players_count = clients.size() - 1;
 			packet.other_player_position = actual_client->position_recieved;
-			send(actual_client->send_socket,&packet,sizeof(SendPacket),0);
+			//send(actual_client->send_socket,&packet,sizeof(SendPacket),0);
 
 		}
 

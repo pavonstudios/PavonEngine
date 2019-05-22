@@ -43,7 +43,7 @@ int main(){
 	while(!quit){
 		
 		if(server.can_replicate){
-			server.connect_to_clients();
+			server.connect_for_send_packets_to_clients();
 			server.replicate_clients_data();
 
 		}

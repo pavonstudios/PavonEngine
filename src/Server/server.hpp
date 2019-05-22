@@ -22,8 +22,10 @@ public:
 	static void wait_connections(Server* server);
 	static void recive_data(Server* , Client*);
 	void replicate_clients_data();
-	void connect_to_clients();
+	void connect_for_send_packets_to_clients();
 	void send_to_client();
 	int send_socket;
+	void create_client_thread(Server* , Client* );
+	int client_count = 0;
 };
 #endif
