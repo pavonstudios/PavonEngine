@@ -40,7 +40,7 @@ using namespace engine;
 class Engine {
   
 public:
-    Engine();
+    
     Renderer renderer; 
     WindowManager window_manager;
      Camera main_camera;
@@ -89,7 +89,7 @@ public:
     
 
     #ifdef LINUX
-      
+      Engine();
     Game * game = nullptr;
     void update_render_size();
 

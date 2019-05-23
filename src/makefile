@@ -49,9 +49,9 @@ win: CC := $(CCWIN)
 win: DEFINES := -DWINDOWS
 win: DEFINES += -DES2
 win: DEFINES += -DDEVELOPMENT
-win: main.o engine.o WindowManager.o gui.o asset_manager.o opengl.o objects.o model_loader.o input.o camera.o skeletal.o animation_manager.o
+win: main.o WindowManager.o directx.o
 	
-	$(CC) -o ../renderer.exe main.o engine.o WindowManager.o gui.o asset_manager.o objects.o model_loader.o input.o camera.o skeletal.o animation_manager.o ./renderers/opengl.o -lglfw3 -lglew32 -lopengl32 -lgdi32 -static -static-libstdc++ -DWINDOWS
+	$(CC) -o ../renderer.exe main.o WindowManager.o directx.o -lglfw3 -lglew32 -lopengl32 -lgdi32 -static -static-libstdc++ -DWINDOWS
 
 
 
@@ -76,6 +76,8 @@ WindowManager.o: WindowManager.cpp WindowManager.hpp
 opengl.o: ./renderers/opengl.cpp ./renderers/opengl.hpp
 	$(CC) -c ./renderers/opengl.cpp -DGLTF $(DEFINES)
 
+directx.o: ./renderers/directx.cpp ./renderers/directx.hpp
+	$(CC) -c ./renderers/directx.cpp -DGLTF $(DEFINES)
 
 connectivity.o: ./Multiplayer/connectivity.cpp ./Multiplayer/connectivity.hpp
 	$(CC) -c ./Multiplayer/connectivity.cpp -DGLTF $(DEFINES)
