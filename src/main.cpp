@@ -8,11 +8,11 @@ int main(){
     engine.window_manager.create_window();
   
    	
-    
+	engine.renderer.init();
     
     while(1){
        // engine.draw_loading_screen();
-       
+		engine.renderer.draw_frame();
 		
 		glfwPollEvents();
     }
