@@ -11,7 +11,7 @@ int main(){
     
     
     while(1){
-        engine.draw_loading_screen();
+       // engine.draw_loading_screen();
        
 		
 		glfwPollEvents();
