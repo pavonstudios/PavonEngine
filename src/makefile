@@ -45,13 +45,13 @@ es2: $(OBJs) game connectivity.o opengl.o
 	$(CC) -o ../renderer audio.o $(OBJs) ./renderers/opengl.o $(GAME) $(Library) $(INCLUDE_OPENGL) -I./ $(DEFINES) -DGLTF 
 
 
-win: CC := $(CCWIN)
+#win: CC := $(CCWIN)
+win: CC := $(CCLINUX)
 win: DEFINES := -DWINDOWS
-win: DEFINES += -DES2
 win: DEFINES += -DDEVELOPMENT
-win: main.o engine.o WindowManager.o gui.o asset_manager.o opengl.o objects.o model_loader.o input.o camera.o skeletal.o animation_manager.o
+win: main.o engine.o WindowManager.o
 	
-	$(CC) -o ../renderer.exe main.o engine.o WindowManager.o gui.o asset_manager.o objects.o model_loader.o input.o camera.o skeletal.o animation_manager.o ./renderers/opengl.o -lglfw3 -lglew32 -lopengl32 -lgdi32 -static -static-libstdc++ -DWINDOWS
+	$(CC) -o ../renderer.exe main.o engine.o WindowManager.o -lglfw3 -lgdi32 -static -static-libstdc++ -DWINDOWS
 
 
 

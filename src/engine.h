@@ -16,6 +16,10 @@
     #include "renderers/opengl.hpp"
 #endif
 
+#if defined (WINDOWS)
+    #include "renderers/directx"
+#endif
+
 #include <chrono>
 #include <vector>
 
