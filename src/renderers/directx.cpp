@@ -63,6 +63,8 @@ void Renderer::draw_frame() {
 	float color[4] = { 1.0f, 0.0f, 0.0f, 1.0f };
 	devcon->ClearRenderTargetView(backbuffer, color);
 
+	update_constant_buffer(); 
+	
 	UINT stride = sizeof(Vertex);
 	UINT offset = 0;
 	devcon->IASetVertexBuffers(0, 1, &pVBuffer, &stride, &offset);
@@ -75,6 +77,41 @@ void Renderer::draw_frame() {
 
 	// switch the back buffer and the front buffer
 	swapchain->Present(0, 0);
+}
+
+void Renderer::update_constant_buffer()
+{
+
+	glm::mat4 mat1 = glm::mat4(1.0);
+
+
+	ID3D11Buffer* uniform_buffer;
+	
+	D3D11_BUFFER_DESC bd;
+	ZeroMemory(&bd, sizeof(bd));
+	bd.Usage = D3D11_USAGE_DEFAULT;
+	bd.ByteWidth = sizeof(UniformBufferObject);
+	bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	bd.CPUAccessFlags = 0;
+
+	if (FAILED(dev->CreateBuffer(&bd, NULL, &uniform_buffer))) {
+		throw std::runtime_error("Pixel Shader compiler ERROR");
+		std::cout << "error in created uniform buffer\n";
+	}
+	static auto startTime = std::chrono::high_resolution_clock::now();
+
+	auto currentTime = std::chrono::high_resolution_clock::now();
+	float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
+
+	UniformBufferObject ubo = {};
+	ubo.model = glm::rotate(glm::mat4(1.0f) ,time *  glm::radians( 15.f ) , glm::vec3( 0 ,1 , 0) ) ;
+	//ubo.model = glm::mat4(1.0);
+	ubo.view = glm::mat4(1.0);
+	ubo.proj = glm::mat4(1.0);
+
+	devcon->VSSetConstantBuffers(0, 1, &uniform_buffer);
+	devcon->UpdateSubresource(uniform_buffer, 0, NULL, &ubo, 0, 0);
+
 }
 
 void Renderer::init_pipeline() {

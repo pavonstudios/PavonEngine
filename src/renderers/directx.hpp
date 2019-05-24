@@ -21,9 +21,10 @@ public:
 	ID3D11Buffer* pVBuffer;
 
 	ID3D11InputLayout* pLayout;
-
+	
 	void init();
 	void draw_frame();
+	void update_constant_buffer();
 	void init_pipeline();
 	void create_buffer(ID3D11Buffer **buffer);
 	HRESULT create_shader(LPCWSTR path, ID3DBlob** shader_blob, LPCSTR type, LPCSTR profile);
