@@ -54,15 +54,143 @@ void Renderer::init(){
 
 	devcon->RSSetViewports(1, &viewport);
 
+
+	init_pipeline();
 }
 
 void Renderer::draw_frame() {
-	// clear the back buffer to a deep blue
+	// clear the back buffer 
 	float color[4] = { 1.0f, 0.0f, 0.0f, 1.0f };
 	devcon->ClearRenderTargetView(backbuffer, color);
+
+	UINT stride = sizeof(Vertex);
+	UINT offset = 0;
+	devcon->IASetVertexBuffers(0, 1, &pVBuffer, &stride, &offset);
+
+	devcon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	devcon->Draw(3, 0);    // draw 3 vertices, starting from vertex 0
 
 	// do 3D rendering on the back buffer here
 
 	// switch the back buffer and the front buffer
 	swapchain->Present(0, 0);
+}
+
+void Renderer::init_pipeline() {
+
+	ID3D10Blob* VS, * PS;
+
+	HRESULT vertext_result =  create_shader(L"C:\\Users\\pavon\\source\\repos\\direct\\Debug\\vertex.hlsl", &VS, "vs_5_0");
+	if (FAILED(vertext_result)) {
+		throw std::runtime_error("Vertex shader compile ERROR");
+		return;
+
+	}
+	HRESULT pixel_result = create_shader(L"C:\\Users\\pavon\\source\\repos\\direct\\Debug\\pixel.hlsl", &PS, "PS");
+
+	if (FAILED(pixel_result)) {
+		throw std::runtime_error("Pixel Shader compiler ERROR");
+	}
+
+	ID3D11VertexShader* vertex_shader;
+	ID3D11PixelShader* pixel_shader;
+
+	 dev->CreateVertexShader(VS->GetBufferPointer(), VS->GetBufferSize(), NULL, &vertex_shader);
+	
+
+	 dev->CreatePixelShader(PS->GetBufferPointer(), PS->GetBufferSize(), NULL, &pixel_shader);
+	
+	devcon->VSSetShader(vertex_shader, 0, 0);
+	devcon->PSSetShader(pixel_shader, 0, 0);
+
+	
+
+	create_buffer(&pVBuffer);
+
+	Vertex vert1{};
+	vert1.pos = glm::vec3(-1.0, 1.0, 0.0);
+	vert1.texCoord = vec2(0, 1);
+
+	Vertex vert2{};
+	vert2.pos = glm::vec3(-1.0, -1.0, 0.0);
+	vert2.texCoord = vec2(0, 0);
+
+	Vertex vert3{};
+	vert3.pos = glm::vec3(1.0, 1.0, 0.0);
+
+	Vertex vertices[] = { vert1,vert2,vert3 };
+	// copy the vertices into the buffer
+	D3D11_MAPPED_SUBRESOURCE ms;
+	devcon->Map(pVBuffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &ms);    // map the buffer
+	memcpy(ms.pData, vertices, sizeof(vertices));                 // copy the data
+	devcon->Unmap(pVBuffer, NULL);                                      // unmap the buffer
+
+
+	D3D11_INPUT_ELEMENT_DESC ied[] =
+	{
+		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
+	};
+
+
+	dev->CreateInputLayout(ied, 2, VS->GetBufferPointer(), VS->GetBufferSize(), &pLayout);
+	devcon->IASetInputLayout(pLayout);
+
+
+	
+
+
+}
+
+void Renderer::create_buffer(ID3D11Buffer** buffer)
+{
+	D3D11_BUFFER_DESC bd;
+	ZeroMemory(&bd, sizeof(bd));
+
+	bd.Usage = D3D11_USAGE_DYNAMIC;                // write access access by CPU and GPU
+	bd.ByteWidth = sizeof(Vertex) * 3;             // size is the VERTEX struct * 3
+	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;       // use as a vertex buffer
+	bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;    // allow CPU to write in buffer
+
+	dev->CreateBuffer(&bd, NULL, buffer);       // create the buffer
+}
+
+HRESULT Renderer::create_shader(LPCWSTR path, ID3DBlob** shader_blob, LPCSTR type)
+{
+	
+#define DEBUG
+	UINT flags = D3DCOMPILE_ENABLE_STRICTNESS;
+#if defined( DEBUG ) || defined( _DEBUG )
+	flags |= D3DCOMPILE_DEBUG;
+#endif
+	// Prefer higher CS shader profile when possible as CS 5.0 provides better performance on 11-class hardware.
+	LPCSTR profile = (dev->GetFeatureLevel() >= D3D_FEATURE_LEVEL_11_0) ? "cs_5_0" : "cs_4_0";
+	const D3D_SHADER_MACRO defines[] =
+	{
+		"EXAMPLE_DEFINE", "1",
+		NULL, NULL
+	};
+	
+	ID3DBlob* errorBlob = nullptr;
+	HRESULT hr = D3DCompileFromFile(path, defines, D3D_COMPILE_STANDARD_FILE_INCLUDE,
+		type, profile,
+		flags, 0, shader_blob, &errorBlob);
+
+	if (FAILED(hr))
+	{
+		if (errorBlob)
+		{
+			OutputDebugStringA((char*)errorBlob->GetBufferPointer());
+			
+			const char* errorMsg = (const char*)errorBlob->GetBufferPointer();
+			MessageBox(nullptr, errorMsg, "Shader Compilation Error", MB_RETRYCANCEL);
+			errorBlob->Release();
+		}
+
+		return hr;
+	}
+
+
+	return hr;
 }
