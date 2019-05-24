@@ -167,13 +167,13 @@ void WindowManager::create_window(){
 		}
         glfwMakeContextCurrent(glfw_window);
 
-        glewInit();
+      /*   glewInit();
     
         GLuint buffer;
          glGenBuffers(1,&buffer);	
          glBindBuffer(GL_ARRAY_BUFFER,buffer);
 
-         std::cout << "buffer created\n";
+         std::cout << "buffer created\n"; */
 
    #endif
 

@@ -17,7 +17,7 @@
 #endif
 
 #if defined (WINDOWS)
-    #include "renderers/directx"
+    #include "renderers/directx.hpp"
 #endif
 
 #include <chrono>
