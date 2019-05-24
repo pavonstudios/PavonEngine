@@ -2,15 +2,15 @@
 #ifdef WINDOWS
 #define STB_IMAGE_IMPLEMENTATION
 #include "engine.h"
-int main(){
-    std::cout << "Engine\n";
-    Engine engine;
-    engine.window_manager.create_window();
-  
-   	
+int main() {
+	std::cout << "Engine\n";
+	Engine engine;
+	engine.window_manager.create_window();
+
+
 	engine.renderer.init();
-    
-    while(1){
+
+	while (!engine.window_manager.window_should_close()) {
        // engine.draw_loading_screen();
 		engine.renderer.draw_frame();
 		

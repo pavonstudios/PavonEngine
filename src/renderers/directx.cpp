@@ -81,13 +81,13 @@ void Renderer::init_pipeline() {
 
 	ID3D10Blob* VS, * PS;
 
-	HRESULT vertext_result =  create_shader(L"C:\\Users\\pavon\\source\\repos\\direct\\Debug\\vertex.hlsl", &VS, "vs_5_0");
+	HRESULT vertext_result =  create_shader(L"C:\\Users\\pavon\\source\\repos\\direct\\Debug\\vertex.hlsl", &VS, "vs_5_0","vs_4_0_level_9_1" );
 	if (FAILED(vertext_result)) {
 		throw std::runtime_error("Vertex shader compile ERROR");
 		return;
 
 	}
-	HRESULT pixel_result = create_shader(L"C:\\Users\\pavon\\source\\repos\\direct\\Debug\\pixel.hlsl", &PS, "PS");
+	HRESULT pixel_result = create_shader(L"C:\\Users\\pavon\\source\\repos\\direct\\Debug\\pixel.hlsl", &PS, "PS", "ps_4_0_level_9_1");
 
 	if (FAILED(pixel_result)) {
 		throw std::runtime_error("Pixel Shader compiler ERROR");
@@ -109,17 +109,18 @@ void Renderer::init_pipeline() {
 	create_buffer(&pVBuffer);
 
 	Vertex vert1{};
-	vert1.pos = glm::vec3(-1.0, 1.0, 0.0);
-	vert1.texCoord = vec2(0, 1);
+	vert1.pos = glm::vec3(0.0, 0.5, 0.0);
+	
 
 	Vertex vert2{};
-	vert2.pos = glm::vec3(-1.0, -1.0, 0.0);
-	vert2.texCoord = vec2(0, 0);
+	vert2.pos = glm::vec3(0.45, -0.5, 0.0);
+	
 
 	Vertex vert3{};
-	vert3.pos = glm::vec3(1.0, 1.0, 0.0);
+	vert3.pos = glm::vec3(-0.45, -0.5, 0.0);
 
 	Vertex vertices[] = { vert1,vert2,vert3 };
+
 	// copy the vertices into the buffer
 	D3D11_MAPPED_SUBRESOURCE ms;
 	devcon->Map(pVBuffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &ms);    // map the buffer
@@ -129,12 +130,12 @@ void Renderer::init_pipeline() {
 
 	D3D11_INPUT_ELEMENT_DESC ied[] =
 	{
-		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-		{"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0}
+		//{"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
 	};
 
 
-	dev->CreateInputLayout(ied, 2, VS->GetBufferPointer(), VS->GetBufferSize(), &pLayout);
+	dev->CreateInputLayout(ied, 1, VS->GetBufferPointer(), VS->GetBufferSize(), &pLayout);
 	devcon->IASetInputLayout(pLayout);
 
 
@@ -156,7 +157,7 @@ void Renderer::create_buffer(ID3D11Buffer** buffer)
 	dev->CreateBuffer(&bd, NULL, buffer);       // create the buffer
 }
 
-HRESULT Renderer::create_shader(LPCWSTR path, ID3DBlob** shader_blob, LPCSTR type)
+HRESULT Renderer::create_shader(LPCWSTR path, ID3DBlob** shader_blob, LPCSTR type, LPCSTR profile)
 {
 	
 #define DEBUG
@@ -165,7 +166,7 @@ HRESULT Renderer::create_shader(LPCWSTR path, ID3DBlob** shader_blob, LPCSTR typ
 	flags |= D3DCOMPILE_DEBUG;
 #endif
 	// Prefer higher CS shader profile when possible as CS 5.0 provides better performance on 11-class hardware.
-	LPCSTR profile = (dev->GetFeatureLevel() >= D3D_FEATURE_LEVEL_11_0) ? "cs_5_0" : "cs_4_0";
+	//LPCSTR profile = (dev->GetFeatureLevel() >= D3D_FEATURE_LEVEL_11_0) ? "cs_5_0" : "cs_4_0";
 	const D3D_SHADER_MACRO defines[] =
 	{
 		"EXAMPLE_DEFINE", "1",

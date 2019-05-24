@@ -26,6 +26,6 @@ public:
 	void draw_frame();
 	void init_pipeline();
 	void create_buffer(ID3D11Buffer **buffer);
-	HRESULT create_shader(LPCWSTR path, ID3DBlob** shader_blob, LPCSTR type);
+	HRESULT create_shader(LPCWSTR path, ID3DBlob** shader_blob, LPCSTR type, LPCSTR profile);
 };
 #endif
