@@ -9,7 +9,11 @@
 
 #include "Game/game.hpp"
 
+#ifdef  LINUX
 #include <unistd.h>
+#endif //  LINUX
+
+
 
 #include "Multiplayer/connectivity.hpp"
 

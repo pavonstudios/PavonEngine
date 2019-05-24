@@ -49,9 +49,9 @@ es2: $(OBJs) game connectivity.o opengl.o
 win: CC := $(CCLINUX)
 win: DEFINES := -DWINDOWS
 win: DEFINES += -DDEVELOPMENT
-win: main.o engine.o WindowManager.o
+win: main.o engine.o WindowManager.o directx.o
 	
-	$(CC) -o ../renderer.exe main.o engine.o WindowManager.o -lglfw3 -lgdi32 -static -static-libstdc++ -DWINDOWS
+	$(CC) -o ../renderer.exe main.o engine.o WindowManager.o directx.o -lglfw3 -lgdi32 -static -static-libstdc++ -DWINDOWS
 
 
 

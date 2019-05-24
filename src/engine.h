@@ -35,8 +35,9 @@ class Game;
 #include "gui.hpp"
 #include "animation_manager.hpp"
 
+#ifdef LINUX
 #include  <sys/time.h>
-
+#endif
 class ConnectionManager;
 
 using namespace engine;
