@@ -106,7 +106,7 @@ collision.o:
 	$(CC) -c collision.cpp -DGLTF $(DEFINES)
 
 
-game_map.o: 
+game_map.o: game_map.cpp game_map.hpp
 	
 	$(CC) -c game_map.cpp -DGLTF $(DEFINES)
 

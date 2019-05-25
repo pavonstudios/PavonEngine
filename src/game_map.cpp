@@ -160,8 +160,8 @@ void MapManager::assign_shader_path(){
 			data_static_mesh.draw_type = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 			
 			data_static_mesh.mesh_type = MESH_TYPE_STATIC;
-			data_static_mesh.fragment_shader_path = "Game/Assets/shaders/frag.spv";
-			data_static_mesh.vertex_shader_path = "Game/Assets/shaders/vert.spv";		
+			data_static_mesh.fragment_shader_path = "Game/Assets/shaders/vk/frag.spv";
+			data_static_mesh.vertex_shader_path = "Game/Assets/shaders/vk/vert.spv";		
 
 			for(EMesh* mesh : engine->linear_meshes){
 				mesh->data_shader = data_static_mesh;
@@ -202,8 +202,8 @@ void MapManager::assign_shader_path(){
 			PipelineData data_skinned_mesh = {};
 			#ifdef VULKAN		
 			data_skinned_mesh.draw_type = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
-			data_skinned_mesh.fragment_shader_path = "Game/Assets/shaders/frag.spv";
-			data_skinned_mesh.vertex_shader_path = "Game/Assets/shaders/skin.spv";
+			data_skinned_mesh.fragment_shader_path = "Game/Assets/shaders/vk/frag.spv";
+			data_skinned_mesh.vertex_shader_path = "Game/Assets/shaders/vk/skin_shader.spv";
 			#endif
 			#if defined(ES2) || defined(ANDROID)
 			data_skinned_mesh.fragment_shader_path = engine->assets.path("shaders/gles/frag.glsl");

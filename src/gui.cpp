@@ -44,8 +44,8 @@ GUI::GUI(Engine* engine){
     triangle->texture_path = engine->assets.path("textures/GUI/white_logo.jpg");
 
     #ifdef VULKAN
-        triangle->data_shader.fragment_shader_path = "Game/Assets/shaders/red.spv";
-        triangle->data_shader.vertex_shader_path = "Game/Assets/shaders/simple_vert.spv";
+        triangle->data_shader.fragment_shader_path = "Game/Assets/shaders/vk/red.spv";
+        triangle->data_shader.vertex_shader_path = "Game/Assets/shaders/vk/simple_vert.spv";
         triangle->data_shader.draw_type = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
         triangle->data_shader.mesh_type = MESH_TYPE_STATIC;
         //triangle->init(engine->vulkan_device);
