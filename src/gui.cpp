@@ -186,8 +186,10 @@ void GUI::update_elemete_position(UIElement* element){
     element->mesh->MVP = mat;
 }
 void GUI::update_engine_meshes(){
+    #ifdef ES2
     engine->meshes.push_back(mesh_elements[0]);
     engine->linear_meshes.push_back(mesh_elements[0]);
+    #endif
 }
 void GUI::update_elements_mvp(){
     glm::mat4 mat = glm::mat4(1.0);

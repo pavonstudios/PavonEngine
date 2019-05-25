@@ -26,7 +26,9 @@ TYPE :=
 
 
 vk: DEFINES := -DVULKAN
+vk: DEFINES += -DLINUX
 vk: Library += -lglfw
+vk: GAME += Multiplayer/*.o
 vk: TYPE := vk
 vk: CC := $(CCLINUX)
 vk: renderer.o  $(OBJs) game
@@ -135,7 +137,7 @@ main.o: main.cpp
 	$(CC) -c main.cpp -DGLTF $(DEFINES)
 
 
-renderer.o: ./src/renderer.cpp
+renderer.o: renderer.cpp
 	
 	$(CC) -c renderer.cpp -I./ -DGLTF $(DEFINES)
 

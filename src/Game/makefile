@@ -10,6 +10,7 @@ CPPS := $(patsubst %.o,%.cpp,$(wildcard *.o))
 DEFINES := 
 
 vk: DEFINES := -DVULKAN
+vk: DEFINES += -DLINUX
 vk: game
 
 es2: DEFINES := -DES2

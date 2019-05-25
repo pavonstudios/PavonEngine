@@ -173,8 +173,10 @@ void Engine::init()
 
 	
 	//mesh_manager.create_buffers(this, unique_meshes);
-	
-	TIME(renderer.create_buffers(this, linear_meshes),"vertices to CPU")	
+	#ifdef ES2
+	 	TIME(renderer.create_buffers(this, linear_meshes),"vertices to CPU")	
+
+	#endif // "ES2"
 
 	TIME(textures_manager.load_textures_to_cpu_memory(linear_meshes),"texture to CPU")
 	

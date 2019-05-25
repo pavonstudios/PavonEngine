@@ -3,6 +3,10 @@
 es2:
 	$(MAKE) -C ./src es2
 
+.PHONY: vk
+vk:
+	$(MAKE) -C ./src vk
+
 .PHONY: win
 win:
 	$(MAKE) -C ./src win
