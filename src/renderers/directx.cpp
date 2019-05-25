@@ -63,7 +63,7 @@ void Renderer::init(){
 
 
 	mesh = new EMesh;
-	engine->mesh_manager.load_model_gltf(mesh, "C:\\MinGW\\msys\\1.0\\home\\pavon\\PavonEngine\\Game\\Assets\\models\\sphere.gltf");
+	engine->mesh_manager.load_model_gltf(mesh, "C:\\MinGW\\msys\\1.0\\home\\pavon\\PavonEngine\\Game\\Assets\\models\\pavon_the_game\\lince.gltf");
 
 	create_mesh_buffers(mesh);
 }
@@ -77,25 +77,25 @@ void Renderer::draw_frame() {
 	
 	UINT stride = sizeof(Vertex);
 	UINT offset = 0;
+	
 	devcon->IASetVertexBuffers(0, 1, &mesh->vertex_buffer, &stride, &offset);
 	devcon->IASetIndexBuffer(mesh->indices_buffer, DXGI_FORMAT_R32_UINT, 0);
 
 
 	devcon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	//devcon->Draw(mesh->vertices.size(), 0);    
+	devcon->Draw(mesh->vertices.size(), 0);    
 
 	devcon->DrawIndexed(mesh->indices.size(), 0, 0);
 
+	
+	
 	//devcon->IASetVertexBuffers(0, 1, &pVBuffer, &stride, &offset);
 
-//	devcon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	//devcon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	//devcon->Draw(3, 0);
 
-	// do 3D rendering on the back buffer here
-
-	// switch the back buffer and the front buffer
 	swapchain->Present(0, 0);
 }
 
@@ -122,19 +122,24 @@ void Renderer::update_constant_buffer()
 	auto currentTime = std::chrono::high_resolution_clock::now();
 	float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
-	XMMATRIX model = XMMatrixTranspose(XMMatrixIdentity());
-	XMVECTOR eye = XMVectorSet(0, 100, 0, 0);
+	XMMATRIX model = XMMatrixIdentity();
+	XMVECTOR rot_vector = XMVectorSet(0, 0, 1, 0);
+	model = XMMatrixRotationAxis(rot_vector , time * 0.5);
+	XMVECTOR eye = XMVectorSet(0, 5.f, 0.f, 0);
 	XMVECTOR postion = XMVectorSet(0, 0, 0, 0);
 	XMVECTOR up = XMVectorSet(0, 0, 1, 0);
 
 	XMMATRIX view = XMMatrixLookAtRH(eye, postion, up);
-	UniformBufferObject ubo = {};
-	ubo.model = model;
-	ubo.view = view;
-	
-	
+
+
 	XMMATRIX proj = XMMatrixPerspectiveFovRH(45.f, 800.f / 600.f, 0.001f, 10000.f);
+
+	UniformBufferObject ubo = {};
+	ubo.model = XMMatrixTranspose( model );
+	ubo.view = XMMatrixTranspose( view );
 	ubo.projection = XMMatrixTranspose(proj);
+
+	
 
 	devcon->VSSetConstantBuffers(0, 1, &uniform_buffer);
 	devcon->UpdateSubresource(uniform_buffer, 0, NULL, &ubo, 0, 0);
