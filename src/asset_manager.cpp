@@ -44,7 +44,7 @@ Image AssetManager::load_and_get_size(std::string texture_path){
     #endif // DEBUG  
 
 	
-    #ifdef VULKAN
+    #if defined (VULKAN) || defined (DX11)
          pixels = stbi_load(texture_path.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
            
         if (!pixels) {

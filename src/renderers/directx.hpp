@@ -21,6 +21,8 @@ public:
 	ID3D11DeviceContext* devcon;           // the pointer to our Direct3D device context
 	ID3D11RenderTargetView* backbuffer;
 
+	ID3D11Texture2D* texture_render_target = NULL;
+
 	ID3D11Buffer* pVBuffer;
 
 	ID3D11InputLayout* pLayout;
@@ -29,6 +31,7 @@ public:
 
 	ID3D11DepthStencilView* depthStencilView;
 	ID3D11Texture2D* depthStencilBuffer;
+	ID3D11DepthStencilState* pDepthStencilState;
 
 	//textures
 	ID3D11ShaderResourceView* CubesTexture;

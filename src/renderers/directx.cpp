@@ -23,7 +23,7 @@ void Renderer::init(){
 	D3D11CreateDeviceAndSwapChain(NULL,
 		D3D_DRIVER_TYPE_HARDWARE,
 		NULL,
-		NULL,
+		D3D11_CREATE_DEVICE_DEBUG,
 		NULL,
 		NULL,
 		D3D11_SDK_VERSION,
@@ -39,13 +39,114 @@ void Renderer::init(){
 	ID3D11Texture2D* pBackBuffer = nullptr;
 	swapchain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)& pBackBuffer);
 
+
+	//1. create render target
+	D3D11_TEXTURE2D_DESC textureDesc;
+	ZeroMemory(&textureDesc, sizeof(textureDesc));
+
+	//setup the texture description
+	//we will need to have this texture bound as a render target AND a shader resource
+	textureDesc.Width = 800;
+	textureDesc.Height = 600;
+	textureDesc.MipLevels = 1;
+	textureDesc.ArraySize = 1;
+	textureDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	textureDesc.SampleDesc.Count = 1;
+	textureDesc.Usage = D3D11_USAGE_DEFAULT;
+	textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+	textureDesc.CPUAccessFlags = 0;
+	textureDesc.MiscFlags = 0;
+
+	dev->CreateTexture2D(&textureDesc, NULL, &texture_render_target);
+
+	//2. create render target view
+	D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
+	//setup the description of the render target view.
+	renderTargetViewDesc.Format = textureDesc.Format;
+	renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+	renderTargetViewDesc.Texture2D.MipSlice = 0;
+
 	// use the back buffer address to create the render target
 	dev->CreateRenderTargetView(pBackBuffer, NULL, &backbuffer);
-	pBackBuffer->Release();
+	
 
 	// set the render target as the back buffer
-	devcon->OMSetRenderTargets(1, &backbuffer, NULL);
+	//devcon->OMSetRenderTargets(1, &backbuffer, NULL);
 
+	//Describe our Depth/Stencil Buffer
+	D3D11_TEXTURE2D_DESC depthStencil_texture;
+
+
+	depthStencil_texture.Width = 800;
+	depthStencil_texture.Height = 600;
+	depthStencil_texture.MipLevels = 1;
+	depthStencil_texture.ArraySize = 1;
+	depthStencil_texture.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	depthStencil_texture.SampleDesc.Count = 4;
+	depthStencil_texture.SampleDesc.Quality = 0;
+	depthStencil_texture.Usage = D3D11_USAGE_DEFAULT;
+	depthStencil_texture.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	depthStencil_texture.CPUAccessFlags = 0;
+	depthStencil_texture.MiscFlags = 0;
+
+
+	//Create the Depth/Stencil View
+	dev->CreateTexture2D(&depthStencil_texture, NULL, &depthStencilBuffer);
+	dev->CreateDepthStencilView(depthStencilBuffer, NULL, &depthStencilView);
+
+
+	D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
+
+	ZeroMemory(&depthStencilDesc, sizeof(D3D11_DEPTH_STENCIL_DESC));
+
+	// Depth test parameters
+
+	depthStencilDesc.DepthEnable = true;
+
+	depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+
+	depthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS;
+
+	// Stencil test parameters
+
+	depthStencilDesc.StencilEnable = true;
+
+	depthStencilDesc.StencilReadMask = 0xFF;
+
+	depthStencilDesc.StencilWriteMask = 0xFF;
+
+	// Stencil operations if pixel is front-facing
+
+	depthStencilDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+
+	depthStencilDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
+
+	depthStencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+
+	depthStencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+
+	// Stencil operations if pixel is back-facing.
+
+	depthStencilDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+
+	depthStencilDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
+
+	depthStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+
+	depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+
+
+
+	dev->CreateDepthStencilState(&depthStencilDesc, &pDepthStencilState);
+
+	devcon->OMSetDepthStencilState(pDepthStencilState, 1);
+
+
+
+
+	//Set our Render Target
+	devcon->OMSetRenderTargets(1, &backbuffer, depthStencilView);
+	pBackBuffer->Release();
 
 	// Set the viewport
 	D3D11_VIEWPORT viewport;
@@ -59,29 +160,7 @@ void Renderer::init(){
 	devcon->RSSetViewports(1, &viewport);
 
 
-	//Describe our Depth/Stencil Buffer
-	D3D11_TEXTURE2D_DESC depthStencilDesc;
 
-
-	depthStencilDesc.Width = 800;
-	depthStencilDesc.Height = 600;
-	depthStencilDesc.MipLevels = 1;
-	depthStencilDesc.ArraySize = 1;
-	depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	depthStencilDesc.SampleDesc.Count = 1;
-	depthStencilDesc.SampleDesc.Quality = 0;
-	depthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
-	depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-	depthStencilDesc.CPUAccessFlags = 0;
-	depthStencilDesc.MiscFlags = 0;
-
-
-	//Create the Depth/Stencil View
-	dev->CreateTexture2D(&depthStencilDesc, NULL, &depthStencilBuffer);
-	dev->CreateDepthStencilView(depthStencilBuffer, NULL, &depthStencilView);
-
-	//Set our Render Target
-	devcon->OMSetRenderTargets(1, &backbuffer, depthStencilView);
 
 	init_pipeline();
 
@@ -303,6 +382,7 @@ void Renderer::load_texture(EMesh* mesh)
 	desc.MipLevels = desc.ArraySize = 1;
 	desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	desc.SampleDesc.Count = 1;
+	desc.SampleDesc.Quality = 0.1;
 	desc.Usage = D3D11_USAGE_DYNAMIC;
 	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
 	desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
@@ -311,10 +391,14 @@ void Renderer::load_texture(EMesh* mesh)
 	Image image = engine->assets.load_and_get_size("C:\\MinGW\\msys\\1.0\\home\\pavon\\PavonEngine\\Game\\Assets\\textures\\pavon_the_game\\lince.png");
 
 	D3D11_SUBRESOURCE_DATA init_data;
-	init_data.pSysMem = image.data;
-	init_data.SysMemPitch = (UINT)(1024 * 3);
-	init_data.SysMemSlicePitch = (UINT)(1024 * 1024 * 3);
-	dev->CreateTexture2D(&desc, &init_data, &texture);
+	init_data.pSysMem = image.pPixels;
+	init_data.SysMemPitch = (UINT)(1024 * 4);
+	init_data.SysMemSlicePitch = (UINT)(1024 * 1024 * 4);
+	HRESULT hr = dev->CreateTexture2D(&desc, &init_data, &texture);
+	if (FAILED(hr))
+	{
+		throw std::exception();
+	}
 
 	D3D11_SHADER_RESOURCE_VIEW_DESC SRVDesc;
 	memset(&SRVDesc, 0, sizeof(SRVDesc));
