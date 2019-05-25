@@ -18,6 +18,11 @@
     #if defined(LINUX) && defined (ES2)
         #include <GLES2/gl2.h>
     #endif
+	#ifdef DX11
+		#include <d3d11.h>
+		#include <DirectXMath.h>
+		using namespace DirectX;
+	#endif 
     #include <glm/gtc/quaternion.hpp>
 #else
     #include <GLES2/gl2.h>
@@ -101,9 +106,19 @@ namespace engine{
 
 }
 struct UniformBufferObject {
-    alignas(16) glm::mat4 model;
-    alignas(16) glm::mat4 view;
-    alignas(16) glm::mat4 proj;
+#ifndef DX11
+	alignas(16) glm::mat4 model;
+	alignas(16) glm::mat4 view;
+	alignas(16) glm::mat4 proj;
+#endif // !DX11
+
+  
+#ifdef DX11
+	XMMATRIX model;
+	XMMATRIX view;
+	XMMATRIX projection;
+#endif // DX11
+
 };
 
 
@@ -132,6 +147,7 @@ public:
     VkBuffer vertices_buffer;
     VkBuffer indexBuffer;
     VkBuffer node_unifrom_buffer;
+
     std::vector<VkBuffer> uniformBuffers;
     std::vector<VkDeviceMemory> uniformBuffersMemory;
     std::vector<VkDescriptorSet> descriptorSets;
@@ -154,6 +170,12 @@ public:
     GLuint shader_program = -1;
     GLuint texture_id = -1;
 #endif
+
+#ifdef DX11
+	ID3D11Buffer* vertex_buffer;
+	ID3D11Buffer* indices_buffer;
+	ID3D11Buffer* uniform_buffer;
+#endif 
 
     UniformBufferObject ubo; 
     PipelineData data_shader;
@@ -217,8 +239,10 @@ public:
             void create_buffers(Engine* engine, const std::vector<EMesh*> &meshes); 
             #ifdef ANDROID
             int load_mode_gltf_android(EMesh* mesh, const char* path, AAssetManager* pAssetManager);
-            #endif   
+            #endif
+			#ifdef LINUX
             void load_textures_gltf(EMesh* mesh, tinygltf::Model & gltf_model);
+			#endif	
             EMesh* mesh_by_name(std::string);
     };
 

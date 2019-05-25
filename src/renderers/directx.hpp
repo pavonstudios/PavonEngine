@@ -1,5 +1,6 @@
 #ifndef DIRECTX
 #define DIRECTX
+
 #include <d3d11.h>
 #include <d3dcompiler.h>
 
@@ -9,6 +10,8 @@
 
 class Engine;
 
+#include "..\objects.h"
+using namespace engine;
 class Renderer{
 public:
 	Engine* engine;
@@ -22,10 +25,14 @@ public:
 
 	ID3D11InputLayout* pLayout;
 	
+	ID3D11Buffer* uniform_buffer;
+
+	EMesh* mesh;
 	void init();
 	void draw_frame();
 	void update_constant_buffer();
 	void init_pipeline();
+	void create_mesh_buffers(EMesh* mesh);
 	void create_buffer(ID3D11Buffer **buffer);
 	HRESULT create_shader(LPCWSTR path, ID3DBlob** shader_blob, LPCSTR type, LPCSTR profile);
 };

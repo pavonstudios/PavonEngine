@@ -48,9 +48,11 @@ public:
     
     Renderer renderer; 
     WindowManager window_manager;
-     Camera main_camera;
-      AssetManager assets;
-    void draw_loading_screen();
+	MeshManager mesh_manager;
+    Camera main_camera;
+    AssetManager assets;
+    
+	void draw_loading_screen();
      void update_mvp(EMesh* mesh);
     std::vector<EMesh*> meshes;//mesh to draw
     std::vector<EMesh*> linear_meshes;//loaded mesh 
@@ -106,7 +108,7 @@ public:
     
    
     
-    MeshManager mesh_manager;
+    
     TexturesManager textures_manager;
     
     MapManager maps;

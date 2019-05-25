@@ -1,6 +1,10 @@
 #include "../engine.h"
 #include "directx.hpp"
 
+#include <DirectXMath.h>
+
+using namespace DirectX;
+
 void Renderer::init(){
 	DXGI_SWAP_CHAIN_DESC scd;
 	
@@ -56,6 +60,12 @@ void Renderer::init(){
 
 
 	init_pipeline();
+
+
+	mesh = new EMesh;
+	engine->mesh_manager.load_model_gltf(mesh, "C:\\MinGW\\msys\\1.0\\home\\pavon\\PavonEngine\\Game\\Assets\\models\\sphere.gltf");
+
+	create_mesh_buffers(mesh);
 }
 
 void Renderer::draw_frame() {
@@ -67,11 +77,21 @@ void Renderer::draw_frame() {
 	
 	UINT stride = sizeof(Vertex);
 	UINT offset = 0;
-	devcon->IASetVertexBuffers(0, 1, &pVBuffer, &stride, &offset);
+	devcon->IASetVertexBuffers(0, 1, &mesh->vertex_buffer, &stride, &offset);
+	devcon->IASetIndexBuffer(mesh->indices_buffer, DXGI_FORMAT_R32_UINT, 0);
+
 
 	devcon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	devcon->Draw(3, 0);    // draw 3 vertices, starting from vertex 0
+	//devcon->Draw(mesh->vertices.size(), 0);    
+
+	devcon->DrawIndexed(mesh->indices.size(), 0, 0);
+
+	//devcon->IASetVertexBuffers(0, 1, &pVBuffer, &stride, &offset);
+
+//	devcon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	//devcon->Draw(3, 0);
 
 	// do 3D rendering on the back buffer here
 
@@ -84,8 +104,7 @@ void Renderer::update_constant_buffer()
 
 	glm::mat4 mat1 = glm::mat4(1.0);
 
-
-	ID3D11Buffer* uniform_buffer;
+	XMMATRIX mat2;
 	
 	D3D11_BUFFER_DESC bd;
 	ZeroMemory(&bd, sizeof(bd));
@@ -103,14 +122,24 @@ void Renderer::update_constant_buffer()
 	auto currentTime = std::chrono::high_resolution_clock::now();
 	float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
+	XMMATRIX model = XMMatrixTranspose(XMMatrixIdentity());
+	XMVECTOR eye = XMVectorSet(0, 100, 0, 0);
+	XMVECTOR postion = XMVectorSet(0, 0, 0, 0);
+	XMVECTOR up = XMVectorSet(0, 0, 1, 0);
+
+	XMMATRIX view = XMMatrixLookAtRH(eye, postion, up);
 	UniformBufferObject ubo = {};
-	ubo.model = glm::rotate(glm::mat4(1.0f) ,time *  glm::radians( 15.f ) , glm::vec3( 0 ,1 , 0) ) ;
-	//ubo.model = glm::mat4(1.0);
-	ubo.view = glm::mat4(1.0);
-	ubo.proj = glm::mat4(1.0);
+	ubo.model = model;
+	ubo.view = view;
+	
+	
+	XMMATRIX proj = XMMatrixPerspectiveFovRH(45.f, 800.f / 600.f, 0.001f, 10000.f);
+	ubo.projection = XMMatrixTranspose(proj);
 
 	devcon->VSSetConstantBuffers(0, 1, &uniform_buffer);
 	devcon->UpdateSubresource(uniform_buffer, 0, NULL, &ubo, 0, 0);
+
+	uniform_buffer->Release();
 
 }
 
@@ -145,23 +174,29 @@ void Renderer::init_pipeline() {
 
 	create_buffer(&pVBuffer);
 
+	float multiplies = 5;
 	Vertex vert1{};
-	vert1.pos = glm::vec3(0.0, 0.5, 0.0);
+	vert1.pos = glm::vec3(0.0, 0.5* multiplies, 0.0);
 	
 
 	Vertex vert2{};
-	vert2.pos = glm::vec3(0.45, -0.5, 0.0);
+	vert2.pos = glm::vec3(0.45* multiplies, -0.5* multiplies, 0.0);
 	
 
 	Vertex vert3{};
-	vert3.pos = glm::vec3(-0.45, -0.5, 0.0);
+	vert3.pos = glm::vec3(-0.45* multiplies, -0.5* multiplies, 0.0);
 
 	Vertex vertices[] = { vert1,vert2,vert3 };
+
+	std::vector<Vertex> vertexs;
+	vertexs.push_back(vert1);
+	vertexs.push_back(vert2);
+	vertexs.push_back(vert3);
 
 	// copy the vertices into the buffer
 	D3D11_MAPPED_SUBRESOURCE ms;
 	devcon->Map(pVBuffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &ms);    // map the buffer
-	memcpy(ms.pData, vertices, sizeof(vertices));                 // copy the data
+	memcpy(ms.pData, vertexs.data(), sizeof(Vertex) * vertexs.size() );                 // copy the data
 	devcon->Unmap(pVBuffer, NULL);                                      // unmap the buffer
 
 
@@ -177,6 +212,35 @@ void Renderer::init_pipeline() {
 
 
 	
+
+
+}
+
+void Renderer::create_mesh_buffers(EMesh* mesh)
+{
+	D3D11_BUFFER_DESC bd;
+	ZeroMemory(&bd, sizeof(bd));
+
+	bd.Usage = D3D11_USAGE_DYNAMIC;               
+	bd.ByteWidth = sizeof(Vertex) * mesh->vertices.size();            
+	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;      
+	bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;   
+
+	dev->CreateBuffer(&bd, NULL, &mesh->vertex_buffer);      
+
+	D3D11_MAPPED_SUBRESOURCE ms;
+	devcon->Map(mesh->vertex_buffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &ms);    
+	memcpy(ms.pData, mesh->vertices.data(), sizeof(Vertex) * mesh->vertices.size() );
+	devcon->Unmap(mesh->vertex_buffer, NULL);
+
+	bd.ByteWidth = sizeof(unsigned int) * mesh->indices.size();
+	bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	dev->CreateBuffer(&bd, NULL, &mesh->indices_buffer);
+
+	devcon->Map(mesh->indices_buffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &ms);
+	memcpy(ms.pData, mesh->indices.data(), sizeof(unsigned) * mesh->indices.size());
+	devcon->Unmap(mesh->indices_buffer, NULL);
+
 
 
 }

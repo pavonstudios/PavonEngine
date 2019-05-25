@@ -315,7 +315,7 @@ void WindowManager::update_window_size(){
 
 bool WindowManager::window_should_close(){
   
-   #ifdef VULKAN
+   #if defined (VULKAN) || defined (WINDOWS) 
       this->close_window = glfwWindowShouldClose(glfw_window);
    #endif
    #if defined(ES2)

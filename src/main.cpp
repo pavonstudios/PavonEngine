@@ -6,12 +6,13 @@ int main() {
 	std::cout << "Engine\n";
 	Engine engine;
 	engine.window_manager.create_window();
+	engine.renderer.engine = &engine;
 
 
 	engine.renderer.init();
 
 	while (!engine.window_manager.window_should_close()) {
-       // engine.draw_loading_screen();
+       
 		engine.renderer.draw_frame();
 		
 		glfwPollEvents();

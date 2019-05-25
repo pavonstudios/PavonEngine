@@ -8,7 +8,7 @@
 #if defined(ES2) && defined (LINUX)
     #include <GLES2/gl2.h>
 #endif
-#ifdef WINDOWS
+#ifdef GL
     #include <GL/gl.h>
     #include <GL/glext.h>
 #endif
@@ -120,6 +120,9 @@ void MeshManager::create_buffers(EMesh* mesh){
     #endif
 }
 
+#ifdef LINUX
+
+
 
 
 void MeshManager::load_textures_gltf(EMesh* mesh, tinygltf::Model & gltf_model){
@@ -154,7 +157,7 @@ void MeshManager::load_textures_gltf(EMesh* mesh, tinygltf::Model & gltf_model){
     
     
 }
-
+#endif // LINUX
 #ifdef ANDROID
 int MeshManager::load_mode_gltf_android(EMesh* mesh, const char* path, AAssetManager* assetManager){
         
@@ -220,7 +223,7 @@ int MeshManager::load_model_gltf(EMesh* mesh, const char* path){
     }   
    
     load_primitives_data(mesh, mesh->gltf_model);
-    load_textures_gltf(mesh, mesh->gltf_model);    
+    //load_textures_gltf(mesh, mesh->gltf_model);    
 
     
     return 1;
@@ -386,6 +389,7 @@ void TexturesManager::load_textures_to_cpu_memory(const std::vector<EMesh*> mesh
     
     
 }
+
 
 void TexturesManager::load_texture(Engine * engine, std::vector<EMesh*> &meshes){
     for(EMesh* mesh : meshes){

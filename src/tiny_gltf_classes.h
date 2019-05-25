@@ -5,7 +5,9 @@
 #include <cstring>
 #include <cassert>
 #include <map>
-
+#include <string>
+#include <vector>
+#include <array>
 
 #define TINYGLTF_MODE_POINTS (0)
 #define TINYGLTF_MODE_LINE (1)
