@@ -74,13 +74,13 @@ WindowManager.o: WindowManager.cpp WindowManager.hpp
 
 
 opengl.o: ./renderers/opengl.cpp ./renderers/opengl.hpp
-	$(CC) -c ./renderers/opengl.cpp -DGLTF $(DEFINES)
+	$(CC) -c ./renderers/opengl.cpp -o ./renderers/opengl.o -DGLTF $(DEFINES)
 
 directx.o: ./renderers/directx.cpp ./renderers/directx.hpp
 	$(CC) -c ./renderers/directx.cpp -DGLTF $(DEFINES)
 
 connectivity.o: ./Multiplayer/connectivity.cpp ./Multiplayer/connectivity.hpp
-	$(CC) -c ./Multiplayer/connectivity.cpp -DGLTF $(DEFINES)
+	$(CC) -c ./Multiplayer/connectivity.cpp -o ./Multiplayer/connectivity.o -DGLTF $(DEFINES)
 
 
 animation_manager.o: animation_manager.cpp animation_manager.hpp skeletal.h

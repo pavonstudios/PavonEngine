@@ -218,7 +218,7 @@ void Engine::loop_data()
 
 	game->update();
 
-	distance_object_from_camera();
+	//distance_object_from_camera();
 
 	Objects::update_positions(this, tranlation_update);
 
