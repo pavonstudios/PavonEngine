@@ -90,6 +90,7 @@ void Renderer::init(){
 	engine->mesh_manager.load_model_gltf(mesh, "C:\\MinGW\\msys\\1.0\\home\\pavon\\PavonEngine\\Game\\Assets\\models\\pavon_the_game\\lince.gltf");
 
 	create_mesh_buffers(mesh);
+	load_texture(mesh);
 }
 
 void Renderer::draw_frame() {
@@ -97,8 +98,14 @@ void Renderer::draw_frame() {
 	float color[4] = { 1.0f, 0.0f, 0.0f, 1.0f };
 	devcon->ClearRenderTargetView(backbuffer, color);
 
+	devcon->ClearDepthStencilView(depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+
 	update_constant_buffer(); 
-	
+
+	devcon->PSSetShaderResources(0, 1, &CubesTexture);
+	devcon->PSSetSamplers(0, 1, &CubesTexSamplerState);
+
+
 	UINT stride = sizeof(Vertex);
 	UINT offset = 0;
 	
@@ -108,7 +115,7 @@ void Renderer::draw_frame() {
 
 	devcon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	devcon->Draw(mesh->vertices.size(), 0);    
+	   
 
 	devcon->DrawIndexed(mesh->indices.size(), 0, 0);
 
@@ -149,7 +156,7 @@ void Renderer::update_constant_buffer()
 	XMMATRIX model = XMMatrixIdentity();
 	XMVECTOR rot_vector = XMVectorSet(0, 0, 1, 0);
 	model = XMMatrixRotationAxis(rot_vector , time * 0.5);
-	XMVECTOR eye = XMVectorSet(0, 5.f, 0.f, 0);
+	XMVECTOR eye = XMVectorSet(0, 4.f, 2.f, 0);
 	XMVECTOR postion = XMVectorSet(0, 0, 0, 0);
 	XMVECTOR up = XMVectorSet(0, 0, 1, 0);
 
@@ -176,7 +183,7 @@ void Renderer::init_pipeline() {
 
 	ID3D10Blob* VS, * PS;
 
-	HRESULT vertext_result =  create_shader(L"C:\\Users\\pavon\\source\\repos\\direct\\Debug\\vertex.hlsl", &VS, "vs_5_0","vs_4_0_level_9_1" );
+	HRESULT vertext_result =  create_shader(L"C:\\Users\\pavon\\source\\repos\\direct\\Debug\\vertex.hlsl", &VS, "vs_tex","vs_4_0_level_9_1" );
 	if (FAILED(vertext_result)) {
 		throw std::runtime_error("Vertex shader compile ERROR");
 		return;
@@ -231,12 +238,13 @@ void Renderer::init_pipeline() {
 
 	D3D11_INPUT_ELEMENT_DESC ied[] =
 	{
-		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0}
-		//{"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"SV_Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, offsetof(Vertex, pos), D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, offsetof(Vertex, texCoord), D3D11_INPUT_PER_VERTEX_DATA, 0},
+
 	};
 
-
-	dev->CreateInputLayout(ied, 1, VS->GetBufferPointer(), VS->GetBufferSize(), &pLayout);
+	uint number_of_element = ARRAYSIZE(ied);
+	dev->CreateInputLayout(ied, 2, VS->GetBufferPointer(), VS->GetBufferSize(), &pLayout);
 	devcon->IASetInputLayout(pLayout);
 
 
@@ -285,6 +293,51 @@ void Renderer::create_buffer(ID3D11Buffer** buffer)
 	bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;    // allow CPU to write in buffer
 
 	dev->CreateBuffer(&bd, NULL, buffer);       // create the buffer
+}
+
+void Renderer::load_texture(EMesh* mesh)
+{
+	D3D11_TEXTURE2D_DESC desc;
+	desc.Width = 1024;
+	desc.Height = 1024;
+	desc.MipLevels = desc.ArraySize = 1;
+	desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	desc.SampleDesc.Count = 1;
+	desc.Usage = D3D11_USAGE_DYNAMIC;
+	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+	desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	desc.MiscFlags = 0;
+
+	Image image = engine->assets.load_and_get_size("C:\\MinGW\\msys\\1.0\\home\\pavon\\PavonEngine\\Game\\Assets\\textures\\pavon_the_game\\lince.png");
+
+	D3D11_SUBRESOURCE_DATA init_data;
+	init_data.pSysMem = image.data;
+	init_data.SysMemPitch = (UINT)(1024 * 3);
+	init_data.SysMemSlicePitch = (UINT)(1024 * 1024 * 3);
+	dev->CreateTexture2D(&desc, &init_data, &texture);
+
+	D3D11_SHADER_RESOURCE_VIEW_DESC SRVDesc;
+	memset(&SRVDesc, 0, sizeof(SRVDesc));
+	SRVDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	SRVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	SRVDesc.Texture2D.MipLevels = 1;
+
+	dev->CreateShaderResourceView(texture, &SRVDesc, &CubesTexture);
+
+	D3D11_SAMPLER_DESC sampDesc;
+	ZeroMemory(&sampDesc, sizeof(sampDesc));
+	sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	sampDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+	sampDesc.MinLOD = 0;
+	sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+	dev->CreateSamplerState(&sampDesc, &CubesTexSamplerState);
+
+
+
 }
 
 HRESULT Renderer::create_shader(LPCWSTR path, ID3DBlob** shader_blob, LPCSTR type, LPCSTR profile)

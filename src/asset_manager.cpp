@@ -32,15 +32,19 @@ std::string AssetManager::path(std::string path_to_convert){
 
 Image AssetManager::load_and_get_size(std::string texture_path){
     int texWidth, texHeight, texChannels;
-    stbi_uc* pixels = stbi_load(texture_path.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+    //stbi_uc* pixels = stbi_load(texture_path.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
         
     unsigned char* data = stbi_load(texture_path.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb);
    
-    if (!pixels) {
+   /* if (!pixels) {
             std::string error = "failed to load texture image! " + texture_path;
             throw std::runtime_error(error);
-    }
-    Image size = {texWidth, texHeight, pixels, data};
+    }*/
+	if (!data) {
+		std::string error = "failed to load texture image! " + texture_path;
+		throw std::runtime_error(error);
+	}
+    Image size = {texWidth, texHeight, nullptr, data};
     return size;
 }
 

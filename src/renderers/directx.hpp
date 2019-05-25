@@ -30,6 +30,10 @@ public:
 	ID3D11DepthStencilView* depthStencilView;
 	ID3D11Texture2D* depthStencilBuffer;
 
+	//textures
+	ID3D11ShaderResourceView* CubesTexture;
+	ID3D11SamplerState* CubesTexSamplerState;
+	ID3D11Texture2D* texture = NULL;
 
 
 	EMesh* mesh;
@@ -39,6 +43,7 @@ public:
 	void init_pipeline();
 	void create_mesh_buffers(EMesh* mesh);
 	void create_buffer(ID3D11Buffer **buffer);
+	void load_texture(EMesh* mesh);
 	HRESULT create_shader(LPCWSTR path, ID3DBlob** shader_blob, LPCSTR type, LPCSTR profile);
 };
 #endif
