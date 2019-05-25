@@ -59,6 +59,30 @@ void Renderer::init(){
 	devcon->RSSetViewports(1, &viewport);
 
 
+	//Describe our Depth/Stencil Buffer
+	D3D11_TEXTURE2D_DESC depthStencilDesc;
+
+
+	depthStencilDesc.Width = 800;
+	depthStencilDesc.Height = 600;
+	depthStencilDesc.MipLevels = 1;
+	depthStencilDesc.ArraySize = 1;
+	depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	depthStencilDesc.SampleDesc.Count = 1;
+	depthStencilDesc.SampleDesc.Quality = 0;
+	depthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
+	depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	depthStencilDesc.CPUAccessFlags = 0;
+	depthStencilDesc.MiscFlags = 0;
+
+
+	//Create the Depth/Stencil View
+	dev->CreateTexture2D(&depthStencilDesc, NULL, &depthStencilBuffer);
+	dev->CreateDepthStencilView(depthStencilBuffer, NULL, &depthStencilView);
+
+	//Set our Render Target
+	devcon->OMSetRenderTargets(1, &backbuffer, depthStencilView);
+
 	init_pipeline();
 
 

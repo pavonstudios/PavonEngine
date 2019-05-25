@@ -27,6 +27,11 @@ public:
 	
 	ID3D11Buffer* uniform_buffer;
 
+	ID3D11DepthStencilView* depthStencilView;
+	ID3D11Texture2D* depthStencilBuffer;
+
+
+
 	EMesh* mesh;
 	void init();
 	void draw_frame();
