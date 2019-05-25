@@ -26,12 +26,12 @@
 #include <set>
 
 
-#include "objects.h"
-#include "camera.h"
+#include "../objects.h"
+#include "../camera.h"
 
 
-#include "VulkanData.hpp"
-#include "VulkanDevice.hpp"
+#include "../VulkanData.hpp"
+#include "../VulkanDevice.hpp"
 
 
 const int MAX_FRAMES_IN_FLIGHT = 2;

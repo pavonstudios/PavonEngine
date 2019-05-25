@@ -1,9 +1,9 @@
 
-#include "renderer.h"
+#include "vulkan.hpp"
 
-#include "debug_utils.h"
+#include "../debug_utils.h"
 
-#include "engine.h"
+#include "../engine.h"
 
 #include <array>
 void Renderer::run(VulkanData* vkdata) {                  

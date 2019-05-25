@@ -31,9 +31,9 @@ vk: Library += -lglfw
 vk: GAME += Multiplayer/*.o
 vk: TYPE := vk
 vk: CC := $(CCLINUX)
-vk: renderer.o  $(OBJs) game
+vk: vulkan.o  $(OBJs) game
 	
-	$(CC) -o ../renderer renderer.o audio.o $(OBJs) $(GAME) $(Library) -I./ -lvulkan $(DEFINES)
+	$(CC) -o ../renderer ./renderers/vulkan.o audio.o $(OBJs) $(GAME) $(Library) -I./ -lvulkan $(DEFINES)
 
 
 es2: DEFINES := -DLINUX
@@ -137,9 +137,9 @@ main.o: main.cpp
 	$(CC) -c main.cpp -DGLTF $(DEFINES)
 
 
-renderer.o: renderer.cpp
-	
-	$(CC) -c renderer.cpp -I./ -DGLTF $(DEFINES)
+
+vulkan.o: ./renderers/vulkan.cpp ./renderers/vulkan.hpp
+	$(CC) -c ./renderers/vulkan.cpp -o ./renderers/vulkan.o -DGLTF $(DEFINES)
 
 
 asset_manager.o: asset_manager.h asset_manager.cpp
