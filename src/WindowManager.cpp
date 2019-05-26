@@ -135,7 +135,10 @@ void WindowManager::framebufferResizeCallback(GLFWwindow* window, int width, int
 }
 
 #endif
-
+void WindowManager::error_callback(int error, const char* description)
+{
+	fprintf(stderr, "Error: %s \n Error Number: %i\n", description, error);
+}
 void WindowManager::create_window(){
    #ifdef X11
       create_window_xorg();
@@ -147,17 +150,15 @@ void WindowManager::create_window(){
       create_wayland_window();
    #endif
    #ifdef WINDOWS
+	  glfwSetErrorCallback(error_callback);
       if( !glfwInit() )
 		{
 			fprintf( stderr, "Failed to initialize GLFW\n" );
 			return;
 		}	
 	
-		glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); // We want OpenGL 3.3
-      glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-      glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
-      glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // We don't want the old OpenGL 
+		//glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
+
 
 		glfw_window = glfwCreateWindow(this->window_width, this->window_height, this->window_name.c_str(), nullptr, nullptr);
 		if( glfw_window == NULL ){
@@ -165,15 +166,8 @@ void WindowManager::create_window(){
 			glfwTerminate();
 			return;
 		}
-        glfwMakeContextCurrent(glfw_window);
 
-      /*   glewInit();
-    
-        GLuint buffer;
-         glGenBuffers(1,&buffer);	
-         glBindBuffer(GL_ARRAY_BUFFER,buffer);
-
-         std::cout << "buffer created\n"; */
+  
 
    #endif
 
@@ -185,6 +179,7 @@ void WindowManager::create_wayland_window(){
    
 
 }
+
 #endif 
 
 #ifdef ANDROID

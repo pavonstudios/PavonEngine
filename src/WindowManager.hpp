@@ -45,7 +45,7 @@ public:
     ~WindowManager();
     void update_window_size();
     void create_wayland_window();
-    
+	static void error_callback(int error, const char* description);
    
     #ifdef ES2
        
