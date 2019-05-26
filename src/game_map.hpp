@@ -8,15 +8,15 @@ class Engine;
 
 #include "objects.h"
 using namespace engine;
+#include "engine_component.hpp"
 
 struct Map{
 
 };
 
-class MapManager{
+class MapManager : public EngineComponent{
 public:
-	Engine * engine;
-	void load(std::string path);
+	
 	void create_meshes_with_map_loaded_data();
 	void create_mesh_with_data(MapDataToLoad &data);
 	void parse_map_file(std::stringstream &file);

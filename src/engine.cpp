@@ -19,15 +19,16 @@
 
 #include "macros.h"
 
-#if defined(ES2) || defined(ANDROID) || defined(VULKAN)
+
 Engine::Engine()
 {
 
 #ifdef VULKAN
 	renderer.engine = this;
 #endif
+	setup_components();
 }
-#endif
+
 
 #ifdef ANDROID
 Engine::Engine(android_app *pApp)
@@ -36,6 +37,26 @@ Engine::Engine(android_app *pApp)
 	this->pAndroid_app = pApp;
 }
 #endif
+
+void Engine::setup_components()
+{
+	MapManager* map_manager = new MapManager();
+	map_manager->name = "MapManager";
+	components.push_back( (EngineComponent*)map_manager );
+
+	for (EngineComponent* component : this->components) {
+		component->engine = this;
+	}
+}
+
+EngineComponent* Engine::component_by_name(const char* name)
+{
+	for (EngineComponent* component : components) {
+		if (component->name == name)
+			return component;
+	}
+	return nullptr;
+}
 
 void Engine::draw_loading_screen()
 {

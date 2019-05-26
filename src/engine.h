@@ -41,11 +41,15 @@ class Game;
 class ConnectionManager;
 
 using namespace engine;
-
+#include "engine_component.hpp"
 class Engine {
   
 public:
-    
+	Engine();
+	std::vector<EngineComponent*> components;
+	void setup_components();
+	EngineComponent* component_by_name(const char* name);
+
     Renderer renderer; 
     WindowManager window_manager;
 	MeshManager mesh_manager;
@@ -98,7 +102,7 @@ public:
     
 
     #ifdef LINUX
-      Engine();
+      
     Game * game = nullptr;
     void update_render_size();
 

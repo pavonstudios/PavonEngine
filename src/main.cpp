@@ -13,7 +13,9 @@ int main() {
 	engine.renderer.init();
 	std::string map_path = engine.assets.path("Maps/map01.map");
 	engine.maps.load_file_map(map_path);
-	
+	MapManager* map_manager = (MapManager*)engine.component_by_name("MapManager");
+	map_manager->load_file_map(map_path);
+
 	while (!engine.window_manager.window_should_close()) {
        
 		engine.renderer.draw_frame();
