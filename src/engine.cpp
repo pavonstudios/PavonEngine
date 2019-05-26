@@ -62,55 +62,7 @@ void Engine::draw_loading_screen()
 #endif
 }
 
-void Engine::update_mvp(EMesh *mesh)
-{
 
-	glm::mat4 mat = glm::mat4(1.0);
-	if (mesh->bIsGUI)
-	{
-		//TODO: 3d gui
-		if (input.Z.bIsPressed)
-		{
-			mat = translate(mat, vec3(-0.5, -0.5, 0)) * scale(mat, vec3(0.1, 0.1, 1));
-			mat = rotate(mat, radians(90.f), vec3(1, 0, 0));
-			mat = rotate(mat, radians(90.f), vec3(0, 0, 1));
-			mat = translate(mat, vec3(0, 0, -100));
-
-			mat = main_camera.Projection * main_camera.View * mat;
-		}
-
-		//loading screen
-		if (loading)
-		{
-			mat = mat4(1.0);
-			mat = rotate(mat, radians(180.f), vec3(1, 0, 0)) * scale(mat, vec3(0.3, 0.3, 1));
-			loading = false;
-			mesh->MVP = mat;
-		}
-	}
-	else
-	{
-
-		mat = main_camera.Projection * main_camera.View * mesh->model_matrix;
-	}
-
-	if (!mesh->bIsGUI)
-	{
-		mesh->MVP = mat;
-	}
-#if defined(ES2) || defined(ANDROID)
-	if (mesh->type == MESH_TYPE_SKINNED)
-	{
-		mesh->ubo.proj = main_camera.Projection;
-		mesh->ubo.view = main_camera.View;
-		mesh->ubo.model = mesh->model_matrix;
-	}
-#endif
-
-#if defined(ES2) || defined(ANDROID)
-	renderer.update_mvp(mesh);
-#endif
-}
 
 #ifdef LINUX
 
@@ -315,6 +267,55 @@ void Engine::main_loop()
 #endif
 }
 
+void Engine::update_mvp(EMesh* mesh)
+{
+
+	glm::mat4 mat = glm::mat4(1.0);
+	if (mesh->bIsGUI)
+	{
+		//TODO: 3d gui
+		if (input.Z.bIsPressed)
+		{
+			mat = translate(mat, vec3(-0.5, -0.5, 0)) * scale(mat, vec3(0.1, 0.1, 1));
+			mat = rotate(mat, radians(90.f), vec3(1, 0, 0));
+			mat = rotate(mat, radians(90.f), vec3(0, 0, 1));
+			mat = translate(mat, vec3(0, 0, -100));
+
+			mat = main_camera.Projection * main_camera.View * mat;
+		}
+
+		//loading screen
+		if (loading)
+		{
+			mat = mat4(1.0);
+			mat = rotate(mat, radians(180.f), vec3(1, 0, 0)) * scale(mat, vec3(0.3, 0.3, 1));
+			loading = false;
+			mesh->MVP = mat;
+		}
+	}
+	else
+	{
+
+		mat = main_camera.Projection * main_camera.View * mesh->model_matrix;
+	}
+
+	if (!mesh->bIsGUI)
+	{
+		mesh->MVP = mat;
+	}
+#if defined(ES2) || defined(ANDROID)
+	if (mesh->type == MESH_TYPE_SKINNED)
+	{
+		mesh->ubo.proj = main_camera.Projection;
+		mesh->ubo.view = main_camera.View;
+		mesh->ubo.model = mesh->model_matrix;
+	}
+#endif
+
+#if defined(ES2) || defined(ANDROID)
+	renderer.update_mvp(mesh);
+#endif
+}
 
 void Engine::delete_meshes()
 {
@@ -467,71 +468,7 @@ void Engine::load_and_assing_location(struct MapDataToLoad data)
 	model->texture_path = assets.path(data.texture_path);
 	linear_meshes.push_back(model);
 }
-//load objects paths
 
-void Engine::load_map(std::string path)
-{
-
-#ifndef ANDROID
-
-	std::stringstream file;
-	std::ifstream text_file(path);
-	if (text_file)
-	{
-		file << text_file.rdbuf();
-		text_file.close();
-	}
-
-#endif
-
-#ifdef ANDROID
-	AAsset *android_file = AAssetManager_open(pAndroid_app->activity->assetManager, path.c_str(), AASSET_MODE_BUFFER);
-
-	size_t file_length = AAsset_getLength(android_file);
-	char *fileContent = new char[file_length + 1];
-
-	AAsset_read(android_file, fileContent, file_length);
-	AAsset_close(android_file);
-
-	std::stringstream file((std::string(fileContent)));
-
-#endif
-
-	if (!file)
-	{
-#ifndef ANDROID
-		throw std::runtime_error("failed to load map file");
-#endif
-#ifdef ANDROID
-		LOGW("No file map");
-#endif
-	}
-
-	maps.parse_map_file(file);
-	maps.create_meshes_with_map_loaded_data();
-	maps.assign_shader_path();
-	maps.load_skeletal_meshes();
-
-	for (auto mesh : meshes)
-	{
-		if (mesh->type == -1 || mesh->type == MESH_WITH_COLLIDER)
-		{
-			if (mesh->gltf_model.accessors.size() > 0)
-			{
-				if (mesh->gltf_model.accessors[0].minValues.size() > 0)
-				{
-					mesh->box.m_vecMax.x = mesh->gltf_model.accessors[0].maxValues[0];
-					mesh->box.m_vecMax.y = mesh->gltf_model.accessors[0].maxValues[1];
-					mesh->box.m_vecMax.z = mesh->gltf_model.accessors[0].maxValues[2];
-
-					mesh->box.m_vecMin.x = mesh->gltf_model.accessors[0].minValues[0];
-					mesh->box.m_vecMin.y = mesh->gltf_model.accessors[0].minValues[1];
-					mesh->box.m_vecMin.z = mesh->gltf_model.accessors[0].minValues[2];
-				}
-			}
-		}
-	}
-}
 
 void Engine::translate_mesh(EMesh *mesh, uint direction, float value)
 {

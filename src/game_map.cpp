@@ -50,13 +50,19 @@ void MapManager::parse_map_file(std::stringstream &file){
 						//with collider
 						mesh_type = MESH_WITH_COLLIDER;
 					}
-									
-					if(engine->game->player_id == -1){
+					
+					if (player_id = -1) {
+						if (type == "player") {
+							player_id = counter;
+						}
+					}
+
+					/*if(engine->game->player_id == -1){
 						if(type == "player"){
 							engine->game->player_id = counter;
 							
 						}
-					}
+					}*/
 
 					counter++;								
 					
@@ -220,10 +226,12 @@ void MapManager::assign_shader_path(){
 }
 
 void MapManager::load_skeletal_meshes(){
-	for(int id : skeletal_id){
-		engine->skeletal_meshes.push_back(engine->linear_meshes[id]);
-		SkeletalManager::load_data(&engine->animation_manager ,engine->linear_meshes[id]);
-	}
+	#ifndef WINDOWS
+		for (int id : skeletal_id) {
+			engine->skeletal_meshes.push_back(engine->linear_meshes[id]);
+			SkeletalManager::load_data(&engine->animation_manager, engine->linear_meshes[id]);
+		}
+	#endif // 
 }
 
 void MapManager::create_meshes_with_map_loaded_data(){
@@ -236,5 +244,67 @@ void MapManager::create_meshes_with_map_loaded_data(){
 		}
 
 		
+}
+
+void MapManager::load_file_map(std::string path) {
+#ifndef ANDROID
+
+	std::stringstream file;
+	std::ifstream text_file(path);
+	if (text_file)
+	{
+		file << text_file.rdbuf();
+		text_file.close();
+	}
+
+#endif
+
+#ifdef ANDROID
+	AAsset* android_file = AAssetManager_open(pAndroid_app->activity->assetManager, path.c_str(), AASSET_MODE_BUFFER);
+
+	size_t file_length = AAsset_getLength(android_file);
+	char* fileContent = new char[file_length + 1];
+
+	AAsset_read(android_file, fileContent, file_length);
+	AAsset_close(android_file);
+
+	std::stringstream file((std::string(fileContent)));
+
+#endif
+
+	if (!file)
+	{
+#ifndef ANDROID
+		throw std::runtime_error("failed to load map file");
+#endif
+#ifdef ANDROID
+		LOGW("No file map");
+#endif
+	}
+
+	parse_map_file(file);
+	create_meshes_with_map_loaded_data();
+	assign_shader_path();
+	load_skeletal_meshes();
+
+	for (auto mesh : engine->meshes)
+	{
+		if (mesh->type == -1 || mesh->type == MESH_WITH_COLLIDER)
+		{
+			if (mesh->gltf_model.accessors.size() > 0)
+			{
+				if (mesh->gltf_model.accessors[0].minValues.size() > 0)
+				{
+					mesh->box.m_vecMax.x = mesh->gltf_model.accessors[0].maxValues[0];
+					mesh->box.m_vecMax.y = mesh->gltf_model.accessors[0].maxValues[1];
+					mesh->box.m_vecMax.z = mesh->gltf_model.accessors[0].maxValues[2];
+
+					mesh->box.m_vecMin.x = mesh->gltf_model.accessors[0].minValues[0];
+					mesh->box.m_vecMin.y = mesh->gltf_model.accessors[0].minValues[1];
+					mesh->box.m_vecMin.z = mesh->gltf_model.accessors[0].minValues[2];
+				}
+			}
+		}
+	}
 }
 

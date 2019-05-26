@@ -1,7 +1,9 @@
 #include "asset_manager.h"
 #include "iostream"
 
-
+AssetManager::AssetManager() {
+	this->AssetPath = "Game/Assets/";
+}
 
 void AssetManager::free_image(void * pixels){
     stbi_image_free(pixels);
@@ -15,7 +17,8 @@ std::string AssetManager::path(std::string path_to_convert){
     AssetPath = "";
     #endif   
     #ifdef WINDOWS
-        for(char& c : AssetPath){
+		this->AssetPath = "Game/Assets/";
+        for(char& c : this->AssetPath){
             if(c == '/'){
                 c = '\\';
             }

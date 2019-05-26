@@ -51,7 +51,9 @@ public:
 	MeshManager mesh_manager;
     Camera main_camera;
     AssetManager assets;
-    
+	MapManager maps;
+
+
 	void draw_loading_screen();
      void update_mvp(EMesh* mesh);
     std::vector<EMesh*> meshes;//mesh to draw
@@ -111,7 +113,7 @@ public:
     
     TexturesManager textures_manager;
     
-    MapManager maps;
+    
 
     
     
@@ -145,7 +147,7 @@ public:
     void init_renderer();
     void load_and_assing_location(std::string path, glm::vec3 location);
     void load_and_assing_location(struct MapDataToLoad data);
-    void load_map(std::string path);
+   
     float get_time();    
    
     void init();

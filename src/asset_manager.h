@@ -13,7 +13,8 @@
 
 class AssetManager{
 public:
-    std::string AssetPath = "Game/Assets/";
+	AssetManager();
+    std::string AssetPath;
     std::string convert_to_asset_folder_path(std::string path_to_convert);
     void free_image(void * pixels);
     Image load_and_get_size(std::string texture_path);

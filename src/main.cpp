@@ -7,10 +7,13 @@ int main() {
 	Engine engine;
 	engine.window_manager.create_window();
 	engine.renderer.engine = &engine;
+	engine.maps.engine = &engine;
 
 
 	engine.renderer.init();
-
+	std::string map_path = engine.assets.path("Maps/map01.map");
+	engine.maps.load_file_map(map_path);
+	
 	while (!engine.window_manager.window_should_close()) {
        
 		engine.renderer.draw_frame();

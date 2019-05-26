@@ -131,6 +131,7 @@
     <ClCompile Include="src\asset_manager.cpp" />
     <ClCompile Include="src\camera.cpp" />
     <ClCompile Include="src\engine.cpp" />
+    <ClCompile Include="src\game_map.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\model_loader.cpp" />
     <ClCompile Include="src\objects.cpp" />

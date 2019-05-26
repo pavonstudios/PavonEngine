@@ -24,6 +24,7 @@ public:
 	void assign_shader_path();
 	void load_meshes_for_instance(struct MapDataToLoad &data);
 	void load_skeletal_meshes();
+	void load_file_map(std::string path);
 
 	std::vector<std::string> same_textures;
 	std::vector<std::string> meshes_paths;
@@ -31,5 +32,7 @@ public:
 	std::vector<MapDataToLoad> unique_model_data;
 
 	std::vector<int> skeletal_id;	
+
+	int player_id = -1;
 };
 #endif
