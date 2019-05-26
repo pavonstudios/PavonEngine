@@ -14,7 +14,11 @@ int main() {
 	engine.maps.load_file_map(map_path);
 	engine.textures_manager.load_textures_to_cpu_memory(engine.meshes);
 	engine.renderer.init();
-	
+	engine.textures_manager.free_textures_from_cpu_memory(&engine,engine.meshes);
+	for (EMesh* mesh : engine.meshes) {
+		//mesh->vertices.clear();
+		//mesh->indices.clear();
+	}
 	//MapManager* map_manager = (MapManager*)engine.component_by_name("MapManager");
 	//map_manager->load_file_map(map_path);
 

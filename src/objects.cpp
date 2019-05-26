@@ -408,3 +408,11 @@ void TexturesManager::load_texture(Engine * engine, std::vector<EMesh*> &meshes)
     }
    
 }
+
+void engine::TexturesManager::free_textures_from_cpu_memory(Engine* engine, const std::vector<EMesh*>& meshes)
+{
+	for (EMesh* mesh : meshes) {
+		engine->assets.free_image(mesh->image.pPixels);
+		engine->assets.free_image(mesh->image.data);
+	}
+}

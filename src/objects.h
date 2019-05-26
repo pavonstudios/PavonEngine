@@ -255,6 +255,7 @@ public:
             Engine* engine;
             void load_textures_to_cpu_memory(const std::vector<EMesh*> meshes);
             static void load_texture(Engine* engine, std::vector<EMesh*>& meshes);
+			static void free_textures_from_cpu_memory(Engine* engine, const std::vector<EMesh*>& meshes);
     };
 
     class Objects{
