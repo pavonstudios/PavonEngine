@@ -175,6 +175,10 @@ public:
 	ID3D11Buffer* vertex_buffer;
 	ID3D11Buffer* indices_buffer;
 	ID3D11Buffer* uniform_buffer;
+
+	ID3D11ShaderResourceView* shader_resource_view;
+	ID3D11SamplerState* sampler_state;
+	ID3D11Texture2D* dx_texture = NULL;
 #endif 
 
     UniformBufferObject ubo; 

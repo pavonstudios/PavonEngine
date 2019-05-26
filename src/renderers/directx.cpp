@@ -108,11 +108,12 @@ void Renderer::init(){
 
 	for (EMesh* mesh : engine->meshes) {
 		create_mesh_buffers(mesh);
+		load_texture(mesh);
 	}
 	
-	load_texture(mesh);
+	
 
-	engine->meshes.push_back(mesh);
+	//engine->meshes.push_back(mesh);
 	
 }
 
@@ -130,8 +131,8 @@ void Renderer::draw_frame() {
 	for (EMesh* mesh : engine->meshes) {
 		update_constant_buffer(mesh);
 
-		devcon->PSSetShaderResources(0, 1, &CubesTexture);
-		devcon->PSSetSamplers(0, 1, &CubesTexSamplerState);
+		devcon->PSSetShaderResources(0, 1, &mesh->shader_resource_view);
+		devcon->PSSetSamplers(0, 1, &mesh->sampler_state);
 
 
 		
@@ -195,6 +196,7 @@ void Renderer::update_constant_buffer(EMesh* mesh)
 #endif //  XM
 
 	glm::mat4 model = glm::rotate(glm::mat4(1.0), glm::radians(time * 30.f), glm::vec3(0, 0, 1));
+	model = mesh->model_matrix;
 	glm::mat4 view = glm::lookAtLH(glm::vec3(0.f, 4.f, 2.f), glm::vec3(0, 0, 0), glm::vec3(0, 0, 1));
 	glm::mat4 proj = glm::perspectiveLH(45.f, 800.f / 600.f, 0.001f, 10000.f);
 
@@ -354,13 +356,14 @@ void Renderer::load_texture(EMesh* mesh)
 	desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	desc.MiscFlags = 0;
 
-	Image image = engine->assets.load_and_get_size(".\\Game\\Assets\\textures\\pavon_the_game\\lince.png");
+	///Image image = engine->assets.load_and_get_size(".\\Game\\Assets\\textures\\pavon_the_game\\lince.png");
+	Image image = mesh->image;
 
 	D3D11_SUBRESOURCE_DATA init_data;
 	init_data.pSysMem = image.pPixels;
-	init_data.SysMemPitch = (UINT)(1024 * 4);
-	init_data.SysMemSlicePitch = (UINT)(1024 * 1024 * 4);
-	HRESULT hr = dev->CreateTexture2D(&desc, &init_data, &texture);
+	init_data.SysMemPitch = (UINT)(image.width * 4);
+	init_data.SysMemSlicePitch = (UINT)(image.width * image.heigth * 4);
+	HRESULT hr = dev->CreateTexture2D(&desc, &init_data, &mesh->dx_texture);
 	if (FAILED(hr))
 	{
 		throw std::exception();
@@ -372,7 +375,7 @@ void Renderer::load_texture(EMesh* mesh)
 	SRVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 	SRVDesc.Texture2D.MipLevels = 1;
 
-	dev->CreateShaderResourceView(texture, &SRVDesc, &CubesTexture);
+	dev->CreateShaderResourceView(mesh->dx_texture, &SRVDesc, &mesh->shader_resource_view);
 
 	D3D11_SAMPLER_DESC sampDesc;
 	ZeroMemory(&sampDesc, sizeof(sampDesc));
@@ -384,7 +387,7 @@ void Renderer::load_texture(EMesh* mesh)
 	sampDesc.MinLOD = 0;
 	sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
-	dev->CreateSamplerState(&sampDesc, &CubesTexSamplerState);
+	dev->CreateSamplerState(&sampDesc, &mesh->sampler_state);
 
 
 

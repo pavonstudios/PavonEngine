@@ -56,7 +56,7 @@ public:
     Camera main_camera;
     AssetManager assets;
 	MapManager maps;
-
+	TexturesManager textures_manager;
 
 	void draw_loading_screen();
      void update_mvp(EMesh* mesh);
@@ -115,7 +115,7 @@ public:
    
     
     
-    TexturesManager textures_manager;
+    
     
     
 

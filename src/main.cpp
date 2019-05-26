@@ -2,7 +2,7 @@
 #ifdef WINDOWS
 #define STB_IMAGE_IMPLEMENTATION
 #include "engine.h"
-
+#include "macros.h"
 int main() {
 	std::cout << "Engine\n";
 	Engine engine;
@@ -12,7 +12,7 @@ int main() {
 
 	std::string map_path = engine.assets.path("Maps/map01.map");
 	engine.maps.load_file_map(map_path);
-
+	engine.textures_manager.load_textures_to_cpu_memory(engine.meshes);
 	engine.renderer.init();
 	
 	//MapManager* map_manager = (MapManager*)engine.component_by_name("MapManager");
