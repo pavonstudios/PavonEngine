@@ -102,7 +102,7 @@ void Renderer::init(){
 
 
 	mesh = new EMesh;
-	engine->mesh_manager.load_model_gltf(mesh, "C:\\MinGW\\msys\\1.0\\home\\pavon\\PavonEngine\\Game\\Assets\\models\\pavon_the_game\\lince.gltf");
+	engine->mesh_manager.load_model_gltf(mesh, ".\\Game\\Assets\\models\\pavon_the_game\\lince.gltf");
 
 	create_mesh_buffers(mesh);
 	load_texture(mesh);
@@ -201,13 +201,13 @@ void Renderer::init_pipeline() {
 
 	ID3D10Blob* VS, * PS;
 
-	HRESULT vertext_result =  create_shader(L"C:\\Users\\pavon\\source\\repos\\direct\\Debug\\vertex.hlsl", &VS, "vs_tex","vs_4_0_level_9_1" );
+	HRESULT vertext_result =  create_shader(L".\\Game\\Assets\\shaders\\dx\\vertex.hlsl", &VS, "vs_tex","vs_4_0_level_9_1" );
 	if (FAILED(vertext_result)) {
 		throw std::runtime_error("Vertex shader compile ERROR");
 		return;
 
 	}
-	HRESULT pixel_result = create_shader(L"C:\\Users\\pavon\\source\\repos\\direct\\Debug\\pixel.hlsl", &PS, "PS", "ps_4_0_level_9_1");
+	HRESULT pixel_result = create_shader(L".\\Game\\Assets\\shaders\\dx\\pixel.hlsl", &PS, "PS", "ps_4_0_level_9_1");
 
 	if (FAILED(pixel_result)) {
 		throw std::runtime_error("Pixel Shader compiler ERROR");
@@ -327,7 +327,7 @@ void Renderer::load_texture(EMesh* mesh)
 	desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	desc.MiscFlags = 0;
 
-	Image image = engine->assets.load_and_get_size("C:\\MinGW\\msys\\1.0\\home\\pavon\\PavonEngine\\Game\\Assets\\textures\\pavon_the_game\\lince.png");
+	Image image = engine->assets.load_and_get_size(".\\Game\\Assets\\textures\\pavon_the_game\\lince.png");
 
 	D3D11_SUBRESOURCE_DATA init_data;
 	init_data.pSysMem = image.pPixels;
