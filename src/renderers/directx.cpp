@@ -11,15 +11,14 @@ void Renderer::init(){
 	ZeroMemory(&scd, sizeof(DXGI_SWAP_CHAIN_DESC));
 
 
-	// fill the swap chain description struct
-	scd.BufferCount = 1;                                    // one back buffer
-	scd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;     // use 32-bit color
-	scd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;      // how swap chain is to be used
-	scd.OutputWindow = GetActiveWindow();// the window to be used
-	scd.SampleDesc.Count = 4;                               // how many multisamples
-	scd.Windowed = TRUE;                                    // windowed/full-screen mode
+	scd.BufferCount = 2;                                  
+	scd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;    
+	scd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;      
+	scd.OutputWindow = GetActiveWindow();
+	scd.SampleDesc.Count = 1;                             
+	scd.Windowed = TRUE;                                   
+	
 
-	// create a device, device context and swap chain using the information in the scd struct
 	D3D11CreateDeviceAndSwapChain(NULL,
 		D3D_DRIVER_TYPE_HARDWARE,
 		NULL,
@@ -35,45 +34,15 @@ void Renderer::init(){
 
 	std::cout << "Device and Swap chain created\n";
 
-	// get the address of the back buffer
+
 	ID3D11Texture2D* pBackBuffer = nullptr;
 	swapchain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)& pBackBuffer);
 
 
-	//1. create render target
-	D3D11_TEXTURE2D_DESC textureDesc;
-	ZeroMemory(&textureDesc, sizeof(textureDesc));
 
-	//setup the texture description
-	//we will need to have this texture bound as a render target AND a shader resource
-	textureDesc.Width = 800;
-	textureDesc.Height = 600;
-	textureDesc.MipLevels = 1;
-	textureDesc.ArraySize = 1;
-	textureDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-	textureDesc.SampleDesc.Count = 1;
-	textureDesc.Usage = D3D11_USAGE_DEFAULT;
-	textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
-	textureDesc.CPUAccessFlags = 0;
-	textureDesc.MiscFlags = 0;
-
-	dev->CreateTexture2D(&textureDesc, NULL, &texture_render_target);
-
-	//2. create render target view
-	D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
-	//setup the description of the render target view.
-	renderTargetViewDesc.Format = textureDesc.Format;
-	renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
-	renderTargetViewDesc.Texture2D.MipSlice = 0;
-
-	// use the back buffer address to create the render target
 	dev->CreateRenderTargetView(pBackBuffer, NULL, &backbuffer);
 	
 
-	// set the render target as the back buffer
-	//devcon->OMSetRenderTargets(1, &backbuffer, NULL);
-
-	//Describe our Depth/Stencil Buffer
 	D3D11_TEXTURE2D_DESC depthStencil_texture;
 
 
@@ -82,73 +51,40 @@ void Renderer::init(){
 	depthStencil_texture.MipLevels = 1;
 	depthStencil_texture.ArraySize = 1;
 	depthStencil_texture.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	depthStencil_texture.SampleDesc.Count = 4;
+	depthStencil_texture.SampleDesc.Count = 1;
 	depthStencil_texture.SampleDesc.Quality = 0;
 	depthStencil_texture.Usage = D3D11_USAGE_DEFAULT;
 	depthStencil_texture.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 	depthStencil_texture.CPUAccessFlags = 0;
 	depthStencil_texture.MiscFlags = 0;
 
+	D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
+	ZeroMemory(&dsvDesc, sizeof(dsvDesc));
+	dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;
 
-	//Create the Depth/Stencil View
-	dev->CreateTexture2D(&depthStencil_texture, NULL, &depthStencilBuffer);
-	dev->CreateDepthStencilView(depthStencilBuffer, NULL, &depthStencilView);
-
-
-	D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
-
-	ZeroMemory(&depthStencilDesc, sizeof(D3D11_DEPTH_STENCIL_DESC));
-
-	// Depth test parameters
-
-	depthStencilDesc.DepthEnable = true;
-
-	depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-
-	depthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS;
-
-	// Stencil test parameters
-
-	depthStencilDesc.StencilEnable = true;
-
-	depthStencilDesc.StencilReadMask = 0xFF;
-
-	depthStencilDesc.StencilWriteMask = 0xFF;
-
-	// Stencil operations if pixel is front-facing
-
-	depthStencilDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-
-	depthStencilDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
-
-	depthStencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-
-	depthStencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
-
-	// Stencil operations if pixel is back-facing.
-
-	depthStencilDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-
-	depthStencilDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
-
-	depthStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-
-	depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
-
-
-
-	dev->CreateDepthStencilState(&depthStencilDesc, &pDepthStencilState);
-
-	devcon->OMSetDepthStencilState(pDepthStencilState, 1);
+	HRESULT result;
+	 result = dev->CreateTexture2D(&depthStencil_texture, NULL, &depthStencilBuffer);
+	result = dev->CreateDepthStencilView(depthStencilBuffer, &dsvDesc, &depthStencilView);
 
 
 
 
-	//Set our Render Target
 	devcon->OMSetRenderTargets(1, &backbuffer, depthStencilView);
 	pBackBuffer->Release();
 
-	// Set the viewport
+
+	D3D11_DEPTH_STENCIL_DESC depth_stencil_desc;
+	ZeroMemory(&depth_stencil_desc, sizeof(depth_stencil_desc));
+	depth_stencil_desc.DepthEnable = true;
+	depth_stencil_desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK::D3D11_DEPTH_WRITE_MASK_ALL;
+	depth_stencil_desc.DepthFunc = D3D11_COMPARISON_FUNC::D3D11_COMPARISON_LESS_EQUAL;
+
+	result = dev->CreateDepthStencilState(&depth_stencil_desc, &pDepthStencilState);
+
+	devcon->OMSetDepthStencilState(pDepthStencilState, 0);
+	
+
 	D3D11_VIEWPORT viewport;
 	ZeroMemory(&viewport, sizeof(D3D11_VIEWPORT));
 
@@ -156,10 +92,10 @@ void Renderer::init(){
 	viewport.TopLeftY = 0;
 	viewport.Width = 800;
 	viewport.Height = 600;
+	viewport.MinDepth = 0.f;
+	viewport.MaxDepth = 1.f;
 
 	devcon->RSSetViewports(1, &viewport);
-
-
 
 
 	init_pipeline();
@@ -170,14 +106,17 @@ void Renderer::init(){
 
 	create_mesh_buffers(mesh);
 	load_texture(mesh);
+
+	
 }
 
 void Renderer::draw_frame() {
 	// clear the back buffer 
 	float color[4] = { 1.0f, 0.0f, 0.0f, 1.0f };
-	devcon->ClearRenderTargetView(backbuffer, color);
-
 	devcon->ClearDepthStencilView(depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	devcon->ClearRenderTargetView(backbuffer, color);
+	
+	
 
 	update_constant_buffer(); 
 
@@ -239,10 +178,10 @@ void Renderer::update_constant_buffer()
 	XMVECTOR postion = XMVectorSet(0, 0, 0, 0);
 	XMVECTOR up = XMVectorSet(0, 0, 1, 0);
 
-	XMMATRIX view = XMMatrixLookAtRH(eye, postion, up);
+	XMMATRIX view = XMMatrixLookAtLH(eye, postion, up);
 
 
-	XMMATRIX proj = XMMatrixPerspectiveFovRH(45.f, 800.f / 600.f, 0.001f, 10000.f);
+	XMMATRIX proj = XMMatrixPerspectiveFovLH(45.f, 800.f / 600.f, 0.001f, 10000.f);
 
 	UniformBufferObject ubo = {};
 	ubo.model = XMMatrixTranspose( model );
