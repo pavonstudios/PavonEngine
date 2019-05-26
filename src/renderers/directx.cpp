@@ -104,10 +104,15 @@ void Renderer::init(){
 
 	mesh = new EMesh;
 	engine->mesh_manager.load_model_gltf(mesh, ".\\Game\\Assets\\models\\pavon_the_game\\lince.gltf");
-
 	create_mesh_buffers(mesh);
+
+	for (EMesh* mesh : engine->meshes) {
+		create_mesh_buffers(mesh);
+	}
+	
 	load_texture(mesh);
 
+	engine->meshes.push_back(mesh);
 	
 }
 
@@ -119,25 +124,28 @@ void Renderer::draw_frame() {
 	
 	
 
-	update_constant_buffer(); 
-
-	devcon->PSSetShaderResources(0, 1, &CubesTexture);
-	devcon->PSSetSamplers(0, 1, &CubesTexSamplerState);
-
-
 	UINT stride = sizeof(Vertex);
 	UINT offset = 0;
-	
-	devcon->IASetVertexBuffers(0, 1, &mesh->vertex_buffer, &stride, &offset);
-	devcon->IASetIndexBuffer(mesh->indices_buffer, DXGI_FORMAT_R32_UINT, 0);
+
+	for (EMesh* mesh : engine->meshes) {
+		update_constant_buffer(mesh);
+
+		devcon->PSSetShaderResources(0, 1, &CubesTexture);
+		devcon->PSSetSamplers(0, 1, &CubesTexSamplerState);
 
 
-	devcon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		
 
-	   
+		devcon->IASetVertexBuffers(0, 1, &mesh->vertex_buffer, &stride, &offset);
+		devcon->IASetIndexBuffer(mesh->indices_buffer, DXGI_FORMAT_R32_UINT, 0);
 
-	devcon->DrawIndexed(mesh->indices.size(), 0, 0);
 
+		devcon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+
+
+		devcon->DrawIndexed(mesh->indices.size(), 0, 0);
+	}
 	
 	
 	devcon->IASetVertexBuffers(0, 1, &pVBuffer, &stride, &offset);
@@ -149,7 +157,7 @@ void Renderer::draw_frame() {
 	swapchain->Present(0, 0);
 }
 
-void Renderer::update_constant_buffer()
+void Renderer::update_constant_buffer(EMesh* mesh)
 {
 
 	glm::mat4 mat1 = glm::mat4(1.0);

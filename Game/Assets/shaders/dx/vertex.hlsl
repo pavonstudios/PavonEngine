@@ -1,4 +1,4 @@
-#pragma pack_matrix( row_major )
+#pragma pack_matrix( row_major )//for GLM 
 
 cbuffer UniformBuffer : register ( b0 ) {
 	matrix model;

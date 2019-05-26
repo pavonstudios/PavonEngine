@@ -42,7 +42,7 @@ public:
 	EMesh* mesh;
 	void init();
 	void draw_frame();
-	void update_constant_buffer();
+	void update_constant_buffer(EMesh* mesh);
 	void init_pipeline();
 	void create_mesh_buffers(EMesh* mesh);
 	void create_buffer(ID3D11Buffer **buffer);

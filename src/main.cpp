@@ -10,10 +10,11 @@ int main() {
 	engine.renderer.engine = &engine;
 	engine.maps.engine = &engine;
 
+	std::string map_path = engine.assets.path("Maps/map01.map");
+	engine.maps.load_file_map(map_path);
 
 	engine.renderer.init();
-	//std::string map_path = engine.assets.path("Maps/map01.map");
-	//engine.maps.load_file_map(map_path);
+	
 	//MapManager* map_manager = (MapManager*)engine.component_by_name("MapManager");
 	//map_manager->load_file_map(map_path);
 
