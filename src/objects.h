@@ -106,14 +106,14 @@ namespace engine{
 
 }
 struct UniformBufferObject {
-#ifndef DX11
+
 	alignas(16) glm::mat4 model;
 	alignas(16) glm::mat4 view;
 	alignas(16) glm::mat4 proj;
-#endif // !DX11
+
 
   
-#ifdef DX11
+#ifdef XM
 	XMMATRIX model;
 	XMMATRIX view;
 	XMMATRIX projection;

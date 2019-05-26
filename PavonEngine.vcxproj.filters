@@ -43,4 +43,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="Game\Assets\shaders\dx\pixel.hlsl">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="Game\Assets\shaders\dx\vertex.hlsl">
+      <Filter>Resource Files</Filter>
+    </Text>
+  </ItemGroup>
 </Project>

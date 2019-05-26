@@ -85,6 +85,9 @@
       <AdditionalLibraryDirectories>C:\Users\pavon\Downloads\glfw-3.3.bin.WIN32\glfw-3.3.bin.WIN32\lib-vc2019;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <FxCompile>
+      <ShaderType>Effect</ShaderType>
+    </FxCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -137,6 +140,14 @@
     <ClCompile Include="src\objects.cpp" />
     <ClCompile Include="src\renderers\directx.cpp" />
     <ClCompile Include="src\WindowManager.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Game\Assets\shaders\dx\pixel.hlsl">
+      <FileType>Document</FileType>
+    </Text>
+    <Text Include="Game\Assets\shaders\dx\vertex.hlsl">
+      <FileType>Document</FileType>
+    </Text>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

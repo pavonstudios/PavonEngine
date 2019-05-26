@@ -1,3 +1,5 @@
+#pragma pack_matrix( row_major )
+
 cbuffer UniformBuffer : register ( b0 ) {
 	matrix model;
 	matrix view;

@@ -2,7 +2,8 @@
 #include "directx.hpp"
 
 #include <DirectXMath.h>
-
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 using namespace DirectX;
 
 void Renderer::init(){
@@ -139,11 +140,11 @@ void Renderer::draw_frame() {
 
 	
 	
-	//devcon->IASetVertexBuffers(0, 1, &pVBuffer, &stride, &offset);
+	devcon->IASetVertexBuffers(0, 1, &pVBuffer, &stride, &offset);
 
-	//devcon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	devcon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	//devcon->Draw(3, 0);
+	devcon->Draw(3, 0);
 
 	swapchain->Present(0, 0);
 }
@@ -171,9 +172,10 @@ void Renderer::update_constant_buffer()
 	auto currentTime = std::chrono::high_resolution_clock::now();
 	float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
+#ifdef  XM
 	XMMATRIX model = XMMatrixIdentity();
 	XMVECTOR rot_vector = XMVectorSet(0, 0, 1, 0);
-	model = XMMatrixRotationAxis(rot_vector , time * 0.5);
+	model = XMMatrixRotationAxis(rot_vector, time * 0.5);
 	XMVECTOR eye = XMVectorSet(0, 4.f, 2.f, 0);
 	XMVECTOR postion = XMVectorSet(0, 0, 0, 0);
 	XMVECTOR up = XMVectorSet(0, 0, 1, 0);
@@ -182,11 +184,28 @@ void Renderer::update_constant_buffer()
 
 
 	XMMATRIX proj = XMMatrixPerspectiveFovLH(45.f, 800.f / 600.f, 0.001f, 10000.f);
+#endif //  XM
+
+	glm::mat4 model = glm::rotate(glm::mat4(1.0), glm::radians(time * 30.f), glm::vec3(0, 0, 1));
+	glm::mat4 view = glm::lookAtLH(glm::vec3(0.f, 4.f, 2.f), glm::vec3(0, 0, 0), glm::vec3(0, 0, 1));
+	glm::mat4 proj = glm::perspectiveLH(45.f, 800.f / 600.f, 0.001f, 10000.f);
+
+	proj = glm::translate(glm::mat4(1.0), glm::vec3(0.0f, 0.0f, 0.5f)) * glm::scale(glm::mat4(1.0), glm::vec3(1.0f, 1.0f, 0.5f)) * proj;
+
+	
 
 	UniformBufferObject ubo = {};
-	ubo.model = XMMatrixTranspose( model );
-	ubo.view = XMMatrixTranspose( view );
+#ifdef XM
+
+	ubo.model = XMMatrixTranspose(model);
+	ubo.view = XMMatrixTranspose(view);
 	ubo.projection = XMMatrixTranspose(proj);
+#endif // XM
+	ubo.model = model;
+	ubo.view = view;
+	ubo.proj = proj;
+
+
 
 	
 

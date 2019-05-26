@@ -26,7 +26,7 @@ Engine::Engine()
 #ifdef VULKAN
 	renderer.engine = this;
 #endif
-	setup_components();
+	//setup_components();
 }
 
 

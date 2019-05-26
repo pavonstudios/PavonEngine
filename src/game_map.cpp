@@ -51,18 +51,18 @@ void MapManager::parse_map_file(std::stringstream &file){
 						mesh_type = MESH_WITH_COLLIDER;
 					}
 					
-					if (player_id = -1) {
+					if (player_id == -1) {
 						if (type == "player") {
 							player_id = counter;
 						}
 					}
-
-					/*if(engine->game->player_id == -1){
+#ifndef WINDOWS
+					if(engine->game->player_id == -1){
 						if(type == "player"){
 							engine->game->player_id = counter;
 							
 						}
-					}*/
+#endif
 
 					counter++;								
 					
