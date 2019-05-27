@@ -19,6 +19,7 @@
     #include <android_native_app_glue.h>
 #endif
 #if defined (VULKAN) || defined (WINDOWS)
+	#define GLFW_INCLUDE_NONE
     #include <GLFW/glfw3.h>
 #endif
 #ifdef WAYLAND
