@@ -152,10 +152,14 @@ public:
         VulkanData vkdata = {VK_NULL_HANDLE};
         vks::VulkanDevice* vulkan_device = nullptr; 
         void vulkan_loop();     
-        
-        GLFWwindow* window;
+      
   
     #endif    
+#if defined (VULKAN) || defined (DX11)
+
+		GLFWwindow* window;
+
+#endif
     
 
     void init_renderer();

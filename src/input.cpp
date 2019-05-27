@@ -400,7 +400,7 @@ void Input::update_input(Engine* engine){
 
 	//std::cout << this->mouse_in_gamey << std::endl;
 	//std::cout << this->mouse_in_gamex << std::endl;
-
+	
 	engine->input.mouse_in_gamex = 600;
 	engine->input.mouse_in_gamey = 800;
 	
@@ -411,6 +411,7 @@ void Input::update_input(Engine* engine){
 			engine->edit_mode = false;
 		}
 		this->TAB.Released = false;
+		
 	}
 	if(ESC.Released){
 		engine->window_manager.close_window = true;
@@ -429,7 +430,8 @@ void Input::update_input(Engine* engine){
 
 	if(engine->edit_mode){
 		if(S.bIsPressed){
-			engine->main_camera.MoveBackward();				
+			engine->main_camera.MoveBackward();		
+			
 		}
 
 		if(W.bIsPressed){

@@ -112,7 +112,7 @@ void WindowManager::clear(){
 #endif
 
 
-#ifdef VULKAN
+#if defined (VULKAN) || defined (DX11)
 void WindowManager::create_window_glfw(){
    	if( !glfwInit() )
 		{

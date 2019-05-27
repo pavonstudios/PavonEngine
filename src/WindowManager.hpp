@@ -71,10 +71,9 @@ public:
             void configure_egl();
         #endif
     #endif
-    #ifdef WINDOWS
-    GLFWwindow* glfw_window;
-    #endif
-    #ifdef VULKAN
+
+
+#if defined (VULKAN) || defined (DX11)
     GLFWwindow* get_window(){
         return glfw_window;
     }
