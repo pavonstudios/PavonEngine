@@ -170,13 +170,14 @@ void WindowManager::create_window(){
   
 
    #endif
-	#ifdef WINDOWS
 
-	#endif // WINDOWS
 
 
 }
 #ifdef WINDOWS
+
+Engine* WindowManager::static_engine_pointer;
+
 HWND WindowManager::create_window_windows(HINSTANCE hInstance) {
 	LPCSTR title = "new title";
 	LPCSTR clas_name = "engine";
@@ -228,8 +229,10 @@ HWND WindowManager::create_window_windows(HINSTANCE hInstance) {
 	
 	}
 
+	WindowManager::static_engine_pointer = engine;
 	return hWnd;
 }
+
 
 LRESULT CALLBACK WindowManager::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -239,6 +242,12 @@ LRESULT CALLBACK WindowManager::WndProc(HWND hWnd, UINT message, WPARAM wParam, 
 	case WM_CLOSE:
 		PostQuitMessage(0);
 		break;
+	case WM_KEYDOWN: {
+		Engine* engine = static_cast<Engine*>(static_engine_pointer);
+		engine->input.handle_input_windows_messages(wParam);
+
+	}
+		
 	default:
 		return DefWindowProc(hWnd, message, wParam, lParam);
 	}
@@ -347,6 +356,7 @@ void WindowManager::check_events(){
 #endif // WINDOWS
 
 }
+
 
 
 void WindowManager::swap_buffers(){

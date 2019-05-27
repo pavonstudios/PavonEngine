@@ -48,6 +48,7 @@ public:
     void swap_buffers();
     bool window_should_close();
     void check_events();
+	
     ~WindowManager();
     void update_window_size();
     void create_wayland_window();
@@ -56,6 +57,7 @@ public:
 	
 
 #ifdef WINDOWS
+	static Engine* static_engine_pointer;
 	HWND create_window_windows(HINSTANCE hInstance);
 	static LRESULT CALLBACK WndProc(
 		_In_ HWND   hwnd,

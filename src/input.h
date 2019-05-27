@@ -7,6 +7,9 @@
 #if defined(LINUX) && defined (ES2)
 	#include  <X11/Xlib.h>
 #endif
+#ifdef WINDOWS
+#include <Windows.h>
+#endif
 #include <iostream>
 class Engine;
 
@@ -49,6 +52,10 @@ public:
 	bool left_button_release = false;
 
 	bool move_camera = false;
+#ifdef WINDOWS
+	void handle_input_windows_messages(WPARAM wParam);
+#endif // WINDOWS
+
 #if defined (VULKAN) || defined (DX11)
     static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
     static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);

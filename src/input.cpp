@@ -3,7 +3,17 @@
 #include "objects.h"
 #include "camera.h"
 
+#ifdef WINDOWS
+void Input::handle_input_windows_messages(WPARAM wParam)
+{
+	if (wParam == 0x41) {
+		std::cout << "a pressed \n";
+	}
+}
+#endif // WINDOWS
+
 #if defined (VULKAN) || defined (DX11)
+
 void Input::scroll_callback(GLFWwindow* window, double xoffset, double yoffset){
 		
 	  	auto engine = reinterpret_cast<Engine*>(glfwGetWindowUserPointer(window));

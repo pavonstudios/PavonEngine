@@ -179,8 +179,10 @@ Node* NodeManager::node_by_name(SkeletalMesh* mesh, const char* name ){
         if(node_found)
             break;
     }
-    if(!node_found)
-        std::cout << "node not found : " << std::string(name) << std::endl;
+	if (!node_found) {
+		//std::cout << "node not found : " << std::string(name) << std::endl;
+	}
+       
     return node_found;
 }
 
@@ -203,8 +205,10 @@ Node* NodeManager::node_by_name(EMesh* mesh, const char* name ){
         if(node_found)
             break;
     }
-    if(!node_found)
-        std::cout << "node not found : " << std::string(name) << std::endl;
+	if (!node_found) {
+		//std::cout << "node not found : " << std::string(name) << std::endl;
+	}
+      
     return node_found;
 }
 
