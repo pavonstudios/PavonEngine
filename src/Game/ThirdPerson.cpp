@@ -20,6 +20,10 @@ void ThirdPerson::create_rotation_offset_matrixs(){
 	glm::mat4 rotated3 = glm::rotate(rotated2,glm::radians(90.f),glm::vec3(-1,0,0));
 
 	camera_rotation_offset = rotated3;
+#ifdef DX11
+	mat4 final_rot = rotate(mat4(1.0), radians(180.f), vec3(0, 0, 1));
+	camera_rotation_offset = camera_rotation_offset * final_rot;
+#endif // DX11
 
 	mat4 front_rotated = rotate(mat4(1.0),radians(-90.f),vec3(0,0,1));
 	mat4 front_rotated2 = rotate(mat4(1.0),radians(-90.f),vec3(0,0,1));
@@ -27,7 +31,10 @@ void ThirdPerson::create_rotation_offset_matrixs(){
 	mat4 front_rotated4 = rotate(mat4(1.0),radians(-45.f),vec3(0,0,1));
 	mat4 front_rotated5 = rotate(mat4(1.0),radians(16.f),vec3(0,1,0));
 
+
+
 	mat4 rotation = front_rotated * front_rotated2 * front_rotated3 * front_rotated4 * front_rotated5;
+
 	weapon_rotation_offset = rotation;
 }
 void ThirdPerson::update_camera_postion(){
@@ -35,10 +42,18 @@ void ThirdPerson::update_camera_postion(){
 
 	glm::mat4 translated =glm::translate(glm::mat4(1.0),this->camera_position);
 	
+#ifndef DX11
 	this->engine->main_camera.View = translated * camera_rotation_offset * glm::inverse(this->mesh->model_matrix);
-	//engine->main_camera.cameraPos = camera_position + mesh->location_vector;
+#endif // !DX11
 
-	
+
+#ifdef DX11
+	//vec3(-0.4, -1.7, -2.8)
+	translated = glm::translate(glm::mat4(1.0), vec3(-0.4, -1.7, 2.8) ) ;
+
+	this->engine->main_camera.View = translated * camera_rotation_offset * glm::inverse(this->mesh->model_matrix);
+#endif // DX11
+
 }
 
 void ThirdPerson::update_weapon_position(){

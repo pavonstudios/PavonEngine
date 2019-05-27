@@ -51,7 +51,7 @@ void Camera::update_look_at()
 #ifndef DX11
 	View = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 #else
-	View = glm::lookAtRH(cameraPos, cameraPos + cameraFront, cameraUp);
+	View = glm::lookAtLH(cameraPos, cameraPos + cameraFront, cameraUp);
 #endif // !DX11
 
 	
@@ -66,7 +66,7 @@ void Camera::update_projection_matrix() {
 #ifndef DX11
 	Projection = glm::perspective(glm::radians(45.f), screen_width / screen_height, 0.01f, 5000.f);
 #else
-	Projection = glm::perspectiveRH(glm::radians(45.f), screen_width / screen_height, 0.01f, 5000.f);
+	Projection = glm::perspectiveLH(glm::radians(45.f), screen_width / screen_height, 0.01f, 5000.f);
 #endif
 }
 
