@@ -121,11 +121,11 @@ void Renderer::init(){
 	create_mesh_buffers(mesh);
 	//engine->meshes.push_back(mesh);
 	
-	/*
+	
 	for (EMesh* mesh : engine->meshes) {
 		create_mesh_buffers(mesh);
 		load_texture(mesh);
-	}*/
+	}
 	
 	
 
@@ -138,8 +138,7 @@ void Renderer::draw_frame() {
 	float color[4] = { 1.0f, 0.0f, 0.0f, 1.0f };
 	devcon->ClearRenderTargetView(backbuffer, color);
 	
-	
-/*
+
 	devcon->ClearDepthStencilView(depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 	UINT stride = sizeof(Vertex);
@@ -170,7 +169,7 @@ void Renderer::draw_frame() {
 
 	devcon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	devcon->Draw(3, 0);*/
+	devcon->Draw(3, 0);
 
 
 

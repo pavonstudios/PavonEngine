@@ -339,7 +339,7 @@ void WindowManager::check_events(){
 
 #ifdef WINDOWS
 	MSG msg;
-	while (GetMessage(&msg, NULL, 0, 0))
+	if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE | PM_NOYIELD))
 	{
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);

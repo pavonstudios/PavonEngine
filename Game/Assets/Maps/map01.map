@@ -1,7 +1,7 @@
 
 #v textures/car01.jpg models/pavon_the_game/police_patrol.gltf
 
-s models/pavon_the_game/police02.gltf -6 -2 0 textures/character2.jpg player
+s models/pavon_the_game/police02.gltf -6 -2 0 textures/character2.jpg 
 
 #m models/pavon_the_game/glock_kit.gltf 2 1 3 textures/pavon_the_game/glock_kit.png
 m models/pavon_the_game/glock_kit.gltf 2 1 3 textures/pavon_the_game/lince.png 
@@ -10,7 +10,7 @@ a models/cube_collision.gltf -3 5 0 textures/car01.jpg
 m models/cube_collision.gltf 3 2 0 textures/character2.jpg 
 
 
-m models/pavon_the_game/police.gltf 1 1 0 textures/character2.jpg 
+m models/pavon_the_game/police.gltf 1 1 0 textures/character2.jpg player
 #b models/pavon_the_game/police_patrol.gltf 0 0 0 textures/car01.jpg 
 
 m models/pavon_the_game/lince.gltf -10 13 0 textures/pavon_the_game/lince.png 
