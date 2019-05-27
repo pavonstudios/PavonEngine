@@ -2,7 +2,7 @@
 #include "iostream"
 
 AssetManager::AssetManager() {
-	this->AssetPath = "Game/Assets/";
+	this->asset_path = "Game/Assets/";
 }
 
 void AssetManager::free_image(void * pixels){
@@ -10,15 +10,15 @@ void AssetManager::free_image(void * pixels){
 }
 
 std::string AssetManager::convert_to_asset_folder_path(std::string path_to_convert){
-    return AssetPath + path_to_convert;
+    return asset_path + path_to_convert;
 }
 std::string AssetManager::path(std::string path_to_convert){
     #ifdef ANDROID
-    AssetPath = "";
+    asset_path = "";
     #endif   
     #ifdef WINDOWS
-		this->AssetPath = "Game/Assets/";
-        for(char& c : this->AssetPath){
+		this->asset_path = "Game/Assets/";
+        for(char& c : this->asset_path){
             if(c == '/'){
                 c = '\\';
             }
@@ -30,7 +30,10 @@ std::string AssetManager::path(std::string path_to_convert){
         }    
         
     #endif
-    return AssetPath + path_to_convert;
+    if(asset_path == ""){
+        return path_to_convert;
+    }
+    return asset_path + path_to_convert;
 }
 
 Image AssetManager::load_and_get_size(std::string texture_path){
