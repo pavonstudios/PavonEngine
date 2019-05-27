@@ -42,6 +42,14 @@
 	auto function_time = std::chrono::high_resolution_clock::now();\
 	f;			/*funcion */				\
 	calculate_time(t,function_time);\
-}								
+}			
+
+#define ETIME(e,f,t)					\
+{								\
+								\
+	auto function_time = std::chrono::high_resolution_clock::now();\
+	f;			/*funcion */				\
+	e->calculate_time(t,function_time);\
+}		
 
 

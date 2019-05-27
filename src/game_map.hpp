@@ -19,7 +19,9 @@ public:
 	
 	void create_meshes_with_map_loaded_data();
 	void create_mesh_with_data(MapDataToLoad &data);
+	void create_meshes_with_data(std::vector<MapDataToLoad> &data);
 	void parse_map_file(std::stringstream &file);
+	void load_primitives();
 
 	void assign_shader_path();
 	void load_meshes_for_instance(struct MapDataToLoad &data);

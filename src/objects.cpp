@@ -203,7 +203,6 @@ void MeshManager::clean_pipeline_from_meshes(std::vector<EMesh*> meshes){
 
 int MeshManager::load_model_gltf(EMesh* mesh, const char* path){    
     
-    tinygltf::TinyGLTF loader;
     std::string err;
     std::string warn;
 
@@ -221,10 +220,6 @@ int MeshManager::load_model_gltf(EMesh* mesh, const char* path){
         #endif
 
     }   
-   
-    load_primitives_data(mesh, mesh->gltf_model);
-    //load_textures_gltf(mesh, mesh->gltf_model);    
-
     
     return 1;
 }
@@ -237,10 +232,9 @@ void MeshManager::load_primitives_data(EMesh* mesh, tinygltf::Model &gltf_model)
     std::vector<unsigned int> indices;
     for(size_t i = 0; i < gltf_model.meshes.size();i++){
         for(auto primitive : gltf_model.meshes[i].primitives){
-            //uint32_t indexStart = static_cast<uint32_t>(indices.size());
+           
             uint32_t vertexStart = static_cast<uint32_t>(vertices.size());
-            //uint32_t indexCount = 0;
-            //uint32_t vertexCount = 0;
+         
             const float *bufferPos = nullptr;
             const uint16_t *bufferJoints = nullptr;
             const float *bufferWeights = nullptr;
@@ -249,8 +243,7 @@ void MeshManager::load_primitives_data(EMesh* mesh, tinygltf::Model &gltf_model)
             const tinygltf::Accessor &posAccessor = gltf_model.accessors[primitive.attributes.find("POSITION")->second];
             const tinygltf::BufferView &posView = gltf_model.bufferViews[posAccessor.bufferView];
             bufferPos = reinterpret_cast<const float *>(&(gltf_model.buffers[posView.buffer].data[posAccessor.byteOffset + posView.byteOffset]));
-           // vertexCount = static_cast<uint32_t>(posAccessor.count);
-
+          
             if (primitive.attributes.find("TEXCOORD_0") != primitive.attributes.end()) {
                 const tinygltf::Accessor &uvAccessor = gltf_model.accessors[primitive.attributes.find("TEXCOORD_0")->second];
                 const tinygltf::BufferView &uvView = gltf_model.bufferViews[uvAccessor.bufferView];
@@ -287,7 +280,7 @@ void MeshManager::load_primitives_data(EMesh* mesh, tinygltf::Model &gltf_model)
             const tinygltf::BufferView &bufferView = gltf_model.bufferViews[accessor.bufferView];
             const tinygltf::Buffer &buffer = gltf_model.buffers[bufferView.buffer];
 
-            //indexCount = static_cast<uint32_t>(accessor.count);
+          
             const void *dataPtr = &(buffer.data[accessor.byteOffset + bufferView.byteOffset]);
 
             switch (accessor.componentType) {
@@ -314,7 +307,7 @@ void MeshManager::load_primitives_data(EMesh* mesh, tinygltf::Model &gltf_model)
                 }
                 default:
                     std::cerr << "Index component type " << accessor.componentType << " not supported!" << std::endl;
-                    //return 2;
+                  
                 }
         }//end loop primitives
 

@@ -97,7 +97,7 @@ void Engine::init()
 	maps.engine = this;
 	renderer.engine = this;
 
-#ifndef ANDROID
+#ifdef LINUX
 	window_manager.create_window();
 #endif
 #ifdef ANDROID
@@ -112,10 +112,10 @@ void Engine::init()
 	#ifdef LINUX
 	draw_loading_screen();
 	#endif
-	configure_window_callback();
+	
 
 #ifdef VULKAN
-	renderer.engine = this;
+	configure_window_callback();	
 	renderer.run(&vkdata);
 
 	mesh_manager.vulkan_device = this->vulkan_device;

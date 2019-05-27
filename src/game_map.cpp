@@ -89,6 +89,12 @@ void MapManager::parse_map_file(std::stringstream &file){
 
 		
 }
+void MapManager::load_primitives()
+{
+	for (EMesh* mesh : engine->meshes) {
+		engine->mesh_manager.load_primitives_data(mesh, mesh->gltf_model);
+	}
+}
 void MapManager::load_meshes_for_instance(struct MapDataToLoad &data){
 	std::string path = engine->assets.path(data.model_path);
 
@@ -155,6 +161,46 @@ void MapManager::create_mesh_with_data(struct MapDataToLoad &data){
 	engine->linear_meshes.push_back(model);
 
 
+}
+
+void MapManager::create_meshes_with_data(std::vector<MapDataToLoad>& data_pack)
+{
+	for (MapDataToLoad& data : data_pack) {
+		std::string path;
+		
+		
+		path = engine->assets.path(data.model_path);
+		
+
+		vec3 location = data.location;
+
+#ifdef VULKAN
+		EMesh* model = new EMesh(engine->vulkan_device);//vulkan device for create vertex buffers
+		model->texture.format = VK_FORMAT_R8G8B8A8_UNORM;
+#else
+		EMesh* model = new EMesh();
+#endif
+
+#ifdef ANDROID
+			engine->mesh_manager.load_mode_gltf_android(model, path.c_str(), engine->pAndroid_app->activity->assetManager);
+#else
+			engine->mesh_manager.load_model_gltf(model, path.c_str());
+#endif	
+		
+		model->location_vector = location;
+		model->model_matrix = glm::translate(glm::mat4(1.0f), location);
+
+		model->type = data.type;
+
+		engine->meshes.push_back(model);
+	
+		model->texture_path = engine->assets.path(data.texture_path);
+		model->texture.texture_id = data.texture_id;
+		model->model_id = data.model_id;
+		engine->linear_meshes.push_back(model);
+
+
+	}
 }
 
 void MapManager::assign_shader_path(){
@@ -236,16 +282,18 @@ void MapManager::load_skeletal_meshes(){
 
 void MapManager::create_meshes_with_map_loaded_data(){
 		
-		for(auto &data : unique_model_data){
+		/*for(auto &data : unique_model_data){
 			load_meshes_for_instance(data);
-		}
-		for(auto &data : meshes_load_data){
+		}*/
+		/*for(auto &data : meshes_load_data){
 			create_mesh_with_data(data);
-		}
+		}*/
+
+		create_meshes_with_data(meshes_load_data);
 
 		
 }
-
+#include "macros.h"
 void MapManager::load_file_map(std::string path) {
 #ifndef ANDROID
 
@@ -274,16 +322,22 @@ void MapManager::load_file_map(std::string path) {
 
 	if (!file)
 	{
-#ifndef ANDROID
-		throw std::runtime_error("failed to load map file");
-#endif
-#ifdef ANDROID
-		LOGW("No file map");
-#endif
+	#ifndef ANDROID
+			throw std::runtime_error("failed to load map file");
+	#endif
+	#ifdef ANDROID
+			LOGW("No file map");
+	#endif
 	}
+	auto time_parse = std::chrono::high_resolution_clock::now();
 
-	parse_map_file(file);
-	create_meshes_with_map_loaded_data();
+	ETIME(engine, parse_map_file(file) ,"parse map" )
+
+
+	ETIME(engine, create_meshes_with_map_loaded_data() , "create meshes" ) 
+
+	ETIME(engine , load_primitives() , "load primitives")
+
 	assign_shader_path();
 	load_skeletal_meshes();
 
