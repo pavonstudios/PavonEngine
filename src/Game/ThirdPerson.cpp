@@ -45,10 +45,13 @@ void ThirdPerson::update_weapon_position(){
 	EMesh* weapon = engine->mesh_manager.mesh_by_name("glock");
 
 	Node* hand = NodeManager::node_by_name(mesh,"Bone.012"); //TODO: node by name with skeletal parameter not updated
-	mat4 hand_local = NodeManager::get_global_matrix(hand);
+	if (hand) {
+		mat4 hand_local = NodeManager::get_global_matrix(hand);
 
-	
-	weapon->model_matrix =  mesh->model_matrix * hand_local * weapon_rotation_offset ;
+
+		weapon->model_matrix = mesh->model_matrix * hand_local * weapon_rotation_offset;
+	}
+
 }
 
 void ThirdPerson::update(){

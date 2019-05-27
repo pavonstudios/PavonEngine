@@ -17,17 +17,13 @@ public:
 	glm::vec3 cameraFront = glm::vec3(0.0f, 1.0f, 0.0f);
 	glm::vec3 cameraUp    = glm::vec3(0.0f, 0.0f,  1.0f);
 
-	glm::mat4 Projection = glm::perspective(glm::radians(45.f), screen_width/screen_height, 0.01f, 5000.f);
+	glm::mat4 Projection;
 
-	glm::mat4 View = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+	glm::mat4 View;
 	
-	
-	void update_projection_matrix(){
-	Projection = glm::perspective(glm::radians(45.f), screen_width/screen_height, 0.01f, 5000.f);
-	}
-	void update(){
-		View = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
-	};		
+	Camera();
+	void update_projection_matrix();
+	void update();
 	
 	float cameraSpeed = 0.05f; 
 	float velocity = 5.f;

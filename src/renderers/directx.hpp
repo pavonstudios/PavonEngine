@@ -16,6 +16,7 @@ class Renderer{
 public:
 	Engine* engine;
 	bool framebufferResized = false;
+
 	// global declarations
 	IDXGISwapChain* swapchain;             // the pointer to the swap chain interface
 	ID3D11Device* dev;                     // the pointer to our Direct3D device interface

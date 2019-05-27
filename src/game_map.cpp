@@ -56,13 +56,13 @@ void MapManager::parse_map_file(std::stringstream &file){
 							player_id = counter;
 						}
 					}
-#ifndef WINDOWS
-					if(engine->game->player_id == -1){
-						if(type == "player"){
+
+					if (engine->game->player_id == -1) {
+						if (type == "player") {
 							engine->game->player_id = counter;
-							
+
 						}
-#endif
+					}
 
 					counter++;								
 					
