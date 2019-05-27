@@ -37,7 +37,11 @@ class Game;
 
 #ifdef LINUX
 #include  <sys/time.h>
+typedef std::chrono::time_point<std::chrono::system_clock> TTime;
 #endif
+#ifdef WINDOWS
+typedef std::chrono::time_point<std::chrono::steady_clock> TTime;
+#endif // DEBUG
 class ConnectionManager;
 
 using namespace engine;
@@ -130,8 +134,8 @@ public:
 	void print_vector(glm::vec3);
 	void print_debug(const std::string text, int8_t posx, int8_t posy);
 	void print_fps();
-	void calculate_time(std::string, std::chrono::time_point<std::chrono::steady_clock>);
-	void calculate_fps(std::chrono::time_point<std::chrono::steady_clock>);
+	void calculate_time(std::string, TTime);
+	void calculate_fps(TTime);
 #endif 
 
 	void init_collision_engine();
