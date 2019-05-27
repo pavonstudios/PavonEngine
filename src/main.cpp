@@ -21,77 +21,23 @@
 //    return 1;
 //}
 
-LRESULT CALLBACK WndProc(
-	_In_ HWND   hwnd,
-	_In_ UINT   uMsg,
-	_In_ WPARAM wParam,
-	_In_ LPARAM lParam
-);
+
 
 int WINAPI WinMain(HINSTANCE hInstance,
 	HINSTANCE hPrevInstance,
 	LPSTR lpCmdLine,
-	int nCmdShow)
-{
+	int nCmdShow) {
+
 #ifdef DEVELOPMENT
 	AllocConsole();
 	AttachConsole(GetCurrentProcessId());
 	freopen("CON", "w", stdout);
 #endif // DEVELOPMENT
 
-	
+	Engine engine;
+	engine.window_manager.engine = &engine;
+	HWND hWnd = engine.window_manager.create_window_windows(hInstance);
 
-
-
-	LPCSTR title = "new title";
-	LPCSTR clas_name = "engine";
-	WNDCLASSEX wcex;
-
-	wcex.cbSize = sizeof(WNDCLASSEX);
-	wcex.style = CS_HREDRAW | CS_VREDRAW;
-	wcex.lpfnWndProc = WndProc;
-	wcex.cbClsExtra = 0;
-	wcex.cbWndExtra = 0;
-	wcex.hInstance = hInstance;
-	wcex.hIcon = LoadIcon(hInstance, IDI_APPLICATION);
-	wcex.hCursor = LoadCursor(NULL, IDC_ARROW);
-	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
-	wcex.lpszMenuName = NULL;
-	wcex.lpszClassName = clas_name;
-	wcex.hIconSm = LoadIcon(wcex.hInstance, IDI_APPLICATION);
-
-	if (!RegisterClassEx(&wcex))
-	{
-		MessageBox(NULL,
-			_T("Call to RegisterClassEx failed!"),
-			_T("Windows Desktop Guided Tour"),
-			NULL);
-
-		return 1;
-	}	
-
-
-	HWND hWnd = CreateWindow(
-		wcex.lpszClassName,
-		title,
-		WS_OVERLAPPEDWINDOW,
-		CW_USEDEFAULT, CW_USEDEFAULT,
-		800, 600,
-		NULL,
-		NULL,
-		hInstance,
-		NULL
-	);
-
-	if (!hWnd)
-	{
-		MessageBox(NULL,
-			_T("Call to CreateWindow failed!"),
-			_T("Windows Desktop Guided Tour"),
-			NULL);
-
-		return 1;
-	}
 
 
 	ShowWindow(hWnd,
@@ -101,36 +47,17 @@ int WINAPI WinMain(HINSTANCE hInstance,
 
 	
 
-	Engine engine;
-	//engine.init();
-	engine.renderer.init();
-	//engine.textures_manager.free_textures_from_cpu_memory(&engine, engine.meshes);
-	//engine.main_loop();
-	MSG msg;
-	while (GetMessage(&msg, NULL, 0, 0))
-	{
-		engine.renderer.draw_frame();
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
-
-	}
+	
+	engine.init();
+	
+	engine.textures_manager.free_textures_from_cpu_memory(&engine, engine.meshes);
+	engine.main_loop();
+	
 	return 1;
 }
 
-LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-{
 
-	switch (message)
-	{
-	case WM_CLOSE:
-		PostQuitMessage(0);
-		break;
-	default:
-		return DefWindowProc(hWnd, message, wParam, lParam);
-	}
-	return 0;
 
-}
 #endif
 
 #if defined (ES2) || defined (VULKAN) || defined (ANDROID)

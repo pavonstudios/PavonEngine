@@ -26,6 +26,11 @@
     #include <wayland-client.h>
 #endif
 
+#ifdef WINDOWS
+#include <Windows.h>
+#include <tchar.h>
+#endif
+
 
 #include  <iostream>
 #include  <cstdlib>
@@ -47,10 +52,17 @@ public:
     void update_window_size();
     void create_wayland_window();
 	static void error_callback(int error, const char* description);
-	void create_window_windows();
+	
+	
 
 #ifdef WINDOWS
-	
+	HWND create_window_windows(HINSTANCE hInstance);
+	static LRESULT CALLBACK WndProc(
+		_In_ HWND   hwnd,
+		_In_ UINT   uMsg,
+		_In_ WPARAM wParam,
+		_In_ LPARAM lParam
+	);
 #endif 
 
    

@@ -176,9 +176,77 @@ void WindowManager::create_window(){
 
 
 }
-void WindowManager::create_window_windows() {
+#ifdef WINDOWS
+HWND WindowManager::create_window_windows(HINSTANCE hInstance) {
+	LPCSTR title = "new title";
+	LPCSTR clas_name = "engine";
+	WNDCLASSEX wcex;
 
+	wcex.cbSize = sizeof(WNDCLASSEX);
+	wcex.style = CS_HREDRAW | CS_VREDRAW;
+	wcex.lpfnWndProc = WindowManager::WndProc;
+	wcex.cbClsExtra = 0;
+	wcex.cbWndExtra = 0;
+	wcex.hInstance = hInstance;
+	wcex.hIcon = LoadIcon(hInstance, IDI_APPLICATION);
+	wcex.hCursor = LoadCursor(NULL, IDC_ARROW);
+	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+	wcex.lpszMenuName = NULL;
+	wcex.lpszClassName = clas_name;
+	wcex.hIconSm = LoadIcon(wcex.hInstance, IDI_APPLICATION);
+
+	if (!RegisterClassEx(&wcex))
+	{
+		MessageBox(NULL,
+			_T("Call to RegisterClassEx failed!"),
+			_T("Windows Desktop Guided Tour"),
+			NULL);
+
+		
+	}
+
+
+	HWND hWnd = CreateWindow(
+		wcex.lpszClassName,
+		title,
+		WS_OVERLAPPEDWINDOW,
+		CW_USEDEFAULT, CW_USEDEFAULT,
+		800, 600,
+		NULL,
+		NULL,
+		hInstance,
+		NULL
+	);
+
+	if (!hWnd)
+	{
+		MessageBox(NULL,
+			_T("Call to CreateWindow failed!"),
+			_T("Windows Desktop Guided Tour"),
+			NULL);
+
+	
+	}
+
+	return hWnd;
 }
+
+LRESULT CALLBACK WindowManager::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+
+	switch (message)
+	{
+	case WM_CLOSE:
+		PostQuitMessage(0);
+		break;
+	default:
+		return DefWindowProc(hWnd, message, wParam, lParam);
+	}
+	return 0;
+}
+#endif // WINDOWS
+
+
 
 #ifdef WAYLAND
 void WindowManager::create_wayland_window(){

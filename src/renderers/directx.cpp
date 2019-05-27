@@ -8,39 +8,7 @@ using namespace DirectX;
 
 void Renderer::init(){
 
-	UINT creationFlags = D3D11_CREATE_DEVICE_DEBUG;
-
-	D3D_FEATURE_LEVEL featureLevels[] =
-	{
-		D3D_FEATURE_LEVEL_9_1
-	};
-
-	// Create the Direct3D 11 API device object and a corresponding context.
-	ID3D11Device* device;
-	ID3D11DeviceContext* context;
-	D3D11CreateDevice(
-		nullptr, // Specify nullptr to use the default adapter.
-		D3D_DRIVER_TYPE_HARDWARE,
-		nullptr,
-		creationFlags,
-		featureLevels,
-		ARRAYSIZE(featureLevels),
-		D3D11_SDK_VERSION, // UWP apps must set this to D3D11_SDK_VERSION.
-		&device, // Returns the Direct3D device created.
-		nullptr,
-		&context // Returns the device immediate context.
-	);
-	if (!device) {
-		std::cout << "device not created\n";
-		MessageBox(GetActiveWindow(), "device no created", NULL, 0);
-		throw std::runtime_error("device no created, inposible to continue");
-	}
-	std::cout << "simple device created\n";
-
-
-
-
-
+	
 	DXGI_SWAP_CHAIN_DESC scd;
 	
 	ZeroMemory(&scd, sizeof(DXGI_SWAP_CHAIN_DESC));
@@ -53,8 +21,8 @@ void Renderer::init(){
 	scd.SampleDesc.Count = 1;                             
 	scd.Windowed = TRUE;                                   
 	
-
-	D3D11CreateDeviceAndSwapChain(NULL,
+	HRESULT hr;
+	hr = D3D11CreateDeviceAndSwapChain(NULL,
 		D3D_DRIVER_TYPE_HARDWARE,
 		NULL,
 		D3D11_CREATE_DEVICE_DEBUG,
@@ -67,7 +35,9 @@ void Renderer::init(){
 		NULL,
 		&devcon);
 
-	
+	if (FAILED(hr)) {
+		std::cout << "HRESULT error: " << hr << std::endl;
+	}
 	
 	if (!dev) {
 		std::cout << "device not created\n";
