@@ -375,7 +375,7 @@ void Engine::print_fps()
 	printf(" Frame time: %f", frame_time);
 }
 
-void Engine::calculate_fps(std::chrono::time_point<std::chrono::steady_clock> tStart)
+void Engine::calculate_fps(TTime tStart)
 {
 #ifdef LINUX
 		auto tEnd = std::chrono::high_resolution_clock::now();
@@ -411,7 +411,7 @@ void Engine::calculate_fps(std::chrono::time_point<std::chrono::steady_clock> tS
 #endif // LINUX
 }
 
-void Engine::calculate_time(std::string text, std::chrono::time_point<std::chrono::steady_clock> tStart)
+void Engine::calculate_time(std::string text, TTime tStart)
 {
 	auto tEnd = std::chrono::high_resolution_clock::now();
 	auto tDiff = std::chrono::duration<double, std::milli>(tEnd - tStart).count();

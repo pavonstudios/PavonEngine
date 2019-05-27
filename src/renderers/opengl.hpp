@@ -48,6 +48,7 @@ class Engine;
 
 class Renderer{
 public:
+    Engine* engine;
     bool bReady = false;
     EMesh* triangle;
 	GLuint vertex_buffer;
