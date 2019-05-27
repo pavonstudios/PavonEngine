@@ -241,13 +241,16 @@ LRESULT CALLBACK WindowManager::WndProc(HWND hWnd, UINT message, WPARAM wParam, 
 	{
 	case WM_CLOSE:
 		PostQuitMessage(0);
+		static_engine_pointer->window_manager.close_window = true;
 		break;
 	case WM_KEYDOWN: {
-		Engine* engine = static_cast<Engine*>(static_engine_pointer);
-		engine->input.handle_input_windows_messages(wParam);
-
+		static_engine_pointer->input.handle_key_pressed(wParam);
+		break;
 	}
-		
+	case WM_KEYUP: {
+		static_engine_pointer->input.handle_key_released(wParam);
+		break;
+	}
 	default:
 		return DefWindowProc(hWnd, message, wParam, lParam);
 	}
@@ -404,7 +407,7 @@ void WindowManager::update_window_size(){
 
 bool WindowManager::window_should_close(){
   
-   #if defined (VULKAN) || defined (WINDOWS) 
+   #if defined (VULKAN)
       this->close_window = glfwWindowShouldClose(glfw_window);
    #endif
    #if defined(ES2)

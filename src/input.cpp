@@ -10,6 +10,70 @@ void Input::handle_input_windows_messages(WPARAM wParam)
 		std::cout << "a pressed \n";
 	}
 }
+void Input::handle_key_released(WPARAM wParam)
+{
+	switch (wParam)
+	{
+	case VK_TAB:
+		this->TAB.Released = true;
+		break;
+	case KEY_A:
+		this->A.bIsPressed = false;
+		break;
+	case KEY_D:
+		this->D.bIsPressed = false;
+		break;
+	case KEY_S:
+		this->S.bIsPressed = false;
+		break;
+	case KEY_W:
+		this->W.bIsPressed = false;
+		break;
+	case KEY_Q:
+		this->Q.bIsPressed = false;
+		break;
+	case KEY_E:
+		this->E.bIsPressed = false;
+		break;
+	case VK_SPACE:
+		this->SPACE.bIsPressed = false;
+		break;
+	default:
+		break;
+	}
+}
+void Input::handle_key_pressed(WPARAM wParam)
+{
+	switch (wParam)
+	{
+	case VK_TAB:
+		this->TAB.bIsPressed = true;
+		break;
+	case KEY_A:
+		this->A.bIsPressed = true;
+		break;
+	case KEY_D:
+		this->D.bIsPressed = true;
+		break;
+	case KEY_S:
+		this->S.bIsPressed = true;
+		break;
+	case KEY_W:
+		this->W.bIsPressed = true;
+		break;
+	case VK_SPACE:
+		this->SPACE.bIsPressed = true;
+		break;
+	case KEY_Q:
+		this->Q.bIsPressed = true;
+		break;
+	case KEY_E:
+		this->E.bIsPressed = true;
+		break;
+	default:
+		break;
+	}
+}
 #endif // WINDOWS
 
 #if defined (VULKAN) || defined (DX11)
