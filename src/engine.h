@@ -16,7 +16,7 @@
     #include "renderers/opengl.hpp"
 #endif
 
-#if defined (WINDOWS)
+#if defined (DX11)
     #include "renderers/directx.hpp"
 #endif
 
@@ -67,18 +67,14 @@ public:
 
 	AnimationManager animation_manager;
 
-	
-
-
 	void draw_loading_screen();
     void update_mvp(EMesh* mesh);
 
-     bool ready_to_game = false;
+    bool ready_to_game = false;
     bool loading = true;
     bool play_animations = false;
     Input input;
     bool edit_mode = false;
-
     
 
     float deltaTime = 0.0f;	// Time between current frame and last frame

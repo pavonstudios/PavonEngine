@@ -42,10 +42,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 
 	ShowWindow(hWnd,
 		nCmdShow);
-	UpdateWindow(hWnd);
-
-
-	
+	UpdateWindow(hWnd);	
 
 	
 	engine.init();
