@@ -18,7 +18,7 @@
     #include <GLES2/gl2.h>
     #include <android_native_app_glue.h>
 #endif
-#if defined (VULKAN) || defined (WINDOWS)
+#if defined (GLFW) 
 	#define GLFW_INCLUDE_NONE
     #include <GLFW/glfw3.h>
 #endif
@@ -94,7 +94,7 @@ public:
     #endif
 
 
-#if defined (VULKAN) || defined (DX11)
+#if defined (GLFW)
     GLFWwindow* get_window(){
         return glfw_window;
     }

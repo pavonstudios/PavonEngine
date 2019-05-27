@@ -112,7 +112,7 @@ void WindowManager::clear(){
 #endif
 
 
-#if defined (VULKAN) || defined (DX11)
+#if defined (GLFW)
 void WindowManager::create_window_glfw(){
    	if( !glfwInit() )
 		{
@@ -369,7 +369,7 @@ void WindowManager::swap_buffers(){
        #if defined(LINUX) && defined(X11) && defined (ES2)
          eglSwapBuffers ( egl_display, egl_surface );
       #endif
-      #if defined (WINDOWS) || defined (VULKAN) 
+      #if defined (GLFW)
          glfwSwapBuffers(glfw_window);
       #endif
 }

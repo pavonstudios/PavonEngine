@@ -439,7 +439,7 @@ float Engine::get_time()
 
 void Engine::configure_window_callback()
 {
-#if defined (VULKAN) || defined (DX11)
+#if defined (GLFW)
 	window = window_manager.get_window();
 	glfwSetWindowUserPointer(window, this);
 

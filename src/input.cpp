@@ -76,7 +76,7 @@ void Input::handle_key_pressed(WPARAM wParam)
 }
 #endif // WINDOWS
 
-#if defined (VULKAN) || defined (DX11)
+#if defined (GLFW) 
 
 void Input::scroll_callback(GLFWwindow* window, double xoffset, double yoffset){
 		
