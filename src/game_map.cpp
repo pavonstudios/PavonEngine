@@ -2,6 +2,7 @@
 #include "game_map.hpp"
 #include "Game/game.hpp"
 
+#include <thread>>
 void MapManager::parse_map_file(std::stringstream &file){
 		std::string line;
 		int counter = 0;		
@@ -95,6 +96,44 @@ void MapManager::load_primitives()
 		engine->mesh_manager.load_primitives_data(mesh, mesh->gltf_model);
 	}
 }
+void MapManager::load_model_to_cpu_memory()
+{
+	int core_count = std::thread::hardware_concurrency();
+	int meshes_count = model_load_data.size();
+
+	div_t division = std::div(meshes_count, core_count);
+
+	std::vector< std::vector<ModelLoadData*> > parts;
+
+	int cout_to_div = division.quot;
+	int counter = 0;
+	std::vector<ModelLoadData*> part;
+	for (int i = 0; i < model_load_data.size() - 1; i++) {
+
+		part.push_back(&model_load_data[i]);
+		counter++;
+		if (counter == cout_to_div) {
+
+			parts.push_back(part);
+			counter = 0;
+			part.clear();
+		}
+	}
+	if (division.rem >= 1) {
+		std::vector<ModelLoadData*> part;
+		part.push_back(&model_load_data.back());
+		parts.push_back(part);
+	}
+
+	std::vector<std::thread> threads;
+	for (int t = 0; t < parts.size(); t++) {
+		std::thread load(MeshManager::load_model, std::ref(parts[t]) ,  this->engine);
+		threads.push_back(std::move(load));
+	}
+	for (int v = 0; v < threads.size(); v++) {
+		threads[v].join();
+	}
+}
 void MapManager::load_meshes_for_instance(struct MapDataToLoad &data){
 	std::string path = engine->assets.path(data.model_path);
 
@@ -184,7 +223,11 @@ void MapManager::create_meshes_with_data(std::vector<MapDataToLoad>& data_pack)
 #ifdef ANDROID
 			engine->mesh_manager.load_mode_gltf_android(model, path.c_str(), engine->pAndroid_app->activity->assetManager);
 #else
-			engine->mesh_manager.load_model_gltf(model, path.c_str());
+		ModelLoadData model_load;
+		model_load.mesh_to_load = model;
+		model_load.path = path;
+		model_load_data.push_back(model_load);
+		//engine->mesh_manager.load_model_gltf(model, path.c_str());
 #endif	
 		
 		model->location_vector = location;
@@ -331,10 +374,12 @@ void MapManager::load_file_map(std::string path) {
 	}
 	auto time_parse = std::chrono::high_resolution_clock::now();
 
-	ETIME(engine, parse_map_file(file) ,"parse map" )
+	ETIME(engine, parse_map_file(file), "parse map")
 
 
-	ETIME(engine, create_meshes_with_map_loaded_data() , "create meshes" ) 
+		ETIME(engine, create_meshes_with_map_loaded_data(), "create meshes")
+
+		ETIME(engine, load_model_to_cpu_memory() , "model to cpu memory")
 
 	ETIME(engine , load_primitives() , "load primitives")
 

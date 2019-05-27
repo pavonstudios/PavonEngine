@@ -60,7 +60,9 @@ class Engine;
 using namespace glm;
 
 namespace engine{ 
-  
+
+	
+
     struct Transform{
         vec3 location;
         quat rotation;
@@ -229,6 +231,10 @@ public:
         #endif
     };
 
+	struct ModelLoadData {
+		std::string path;
+		EMesh* mesh_to_load;
+	};
 
     class MeshManager{
         public:
@@ -250,6 +256,8 @@ public:
             void load_textures_gltf(EMesh* mesh, tinygltf::Model & gltf_model);
 			#endif	
             EMesh* mesh_by_name(std::string);
+
+			static void load_model(std::vector<ModelLoadData*> model_data, Engine* engine);
     };
 
     class TexturesManager{

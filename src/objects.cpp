@@ -342,6 +342,14 @@ EMesh* MeshManager::mesh_by_name(std::string name){
     return nullptr;
 }
 
+void engine::MeshManager::load_model(std::vector<ModelLoadData*> model_data, Engine* engine)
+{
+	for (ModelLoadData* data : model_data) {
+		engine->mesh_manager.load_model_gltf(data->mesh_to_load, data->path.c_str());
+	}
+	
+}
+
 void TexturesManager::load_textures_to_cpu_memory(const std::vector<EMesh*> meshes){
     int core_count = std::thread::hardware_concurrency();
     int meshes_count = meshes.size();

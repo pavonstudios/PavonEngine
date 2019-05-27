@@ -10,6 +10,7 @@ class Engine;
 using namespace engine;
 #include "engine_component.hpp"
 
+
 struct Map{
 
 };
@@ -23,6 +24,8 @@ public:
 	void parse_map_file(std::stringstream &file);
 	void load_primitives();
 
+	void load_model_to_cpu_memory();
+
 	void assign_shader_path();
 	void load_meshes_for_instance(struct MapDataToLoad &data);
 	void load_skeletal_meshes();
@@ -32,6 +35,8 @@ public:
 	std::vector<std::string> meshes_paths;
 	std::vector<MapDataToLoad> meshes_load_data;
 	std::vector<MapDataToLoad> unique_model_data;
+
+	std::vector<ModelLoadData> model_load_data;
 
 	std::vector<int> skeletal_id;	
 
