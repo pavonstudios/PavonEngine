@@ -214,14 +214,7 @@ void Renderer::update_constant_buffer(EMesh* mesh)
 #endif //  XM
 
 	glm::mat4 model = glm::rotate(glm::mat4(1.0), glm::radians(time * 30.f), glm::vec3(0, 0, 1));
-	model = mesh->model_matrix;
-	
-	glm::mat4 view = engine->main_camera.View;
-	glm::mat4 proj = glm::perspectiveLH(45.f, 800.f / 600.f, 0.001f, 10000.f);
 
-	proj = glm::translate(glm::mat4(1.0), glm::vec3(0.0f, 0.0f, 0.5f)) * glm::scale(glm::mat4(1.0), glm::vec3(1.0f, 1.0f, 0.5f)) * proj;
-
-	
 
 	UniformBufferObject ubo = {};
 #ifdef XM
@@ -230,9 +223,9 @@ void Renderer::update_constant_buffer(EMesh* mesh)
 	ubo.view = XMMatrixTranspose(view);
 	ubo.projection = XMMatrixTranspose(proj);
 #endif // XM
-	ubo.model = model;
-	ubo.view = view;
-	ubo.proj = proj;
+	ubo.model = mesh->model_matrix;
+	ubo.view = engine->main_camera.View;
+	ubo.proj = engine->main_camera.Projection;
 
 
 

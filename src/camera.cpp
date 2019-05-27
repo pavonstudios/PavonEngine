@@ -67,6 +67,7 @@ void Camera::update_projection_matrix() {
 	Projection = glm::perspective(glm::radians(45.f), screen_width / screen_height, 0.01f, 5000.f);
 #else
 	Projection = glm::perspectiveLH(glm::radians(45.f), screen_width / screen_height, 0.01f, 5000.f);
+	Projection = glm::translate(glm::mat4(1.0), glm::vec3(0.0f, 0.0f, 0.5f)) * glm::scale(glm::mat4(1.0), glm::vec3(1.0f, 1.0f, 0.5f)) * Projection;
 #endif
 }
 

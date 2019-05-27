@@ -23,6 +23,7 @@
     <ProjectGuid>{C4DC6130-7562-4ECE-842A-F0F95C35615B}</ProjectGuid>
     <RootNamespace>PavonEngine</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>PavonEngineDX11</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
