@@ -7,12 +7,46 @@
 using namespace DirectX;
 
 void Renderer::init(){
+
+	UINT creationFlags = D3D11_CREATE_DEVICE_DEBUG;
+
+	D3D_FEATURE_LEVEL featureLevels[] =
+	{
+		D3D_FEATURE_LEVEL_9_1
+	};
+
+	// Create the Direct3D 11 API device object and a corresponding context.
+	ID3D11Device* device;
+	ID3D11DeviceContext* context;
+	D3D11CreateDevice(
+		nullptr, // Specify nullptr to use the default adapter.
+		D3D_DRIVER_TYPE_HARDWARE,
+		nullptr,
+		creationFlags,
+		featureLevels,
+		ARRAYSIZE(featureLevels),
+		D3D11_SDK_VERSION, // UWP apps must set this to D3D11_SDK_VERSION.
+		&device, // Returns the Direct3D device created.
+		nullptr,
+		&context // Returns the device immediate context.
+	);
+	if (!device) {
+		std::cout << "device not created\n";
+		MessageBox(GetActiveWindow(), "device no created", NULL, 0);
+		throw std::runtime_error("device no created, inposible to continue");
+	}
+	std::cout << "simple device created\n";
+
+
+
+
+
 	DXGI_SWAP_CHAIN_DESC scd;
 	
 	ZeroMemory(&scd, sizeof(DXGI_SWAP_CHAIN_DESC));
 
 
-	scd.BufferCount = 2;                                  
+	scd.BufferCount = 1;                                  
 	scd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;    
 	scd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;      
 	scd.OutputWindow = GetActiveWindow();
@@ -33,6 +67,16 @@ void Renderer::init(){
 		NULL,
 		&devcon);
 
+	
+	
+	if (!dev) {
+		std::cout << "device not created\n";
+		MessageBox(GetActiveWindow(), "device no created", NULL, 0);
+		throw std::runtime_error("device no created, inposible to continue");
+	}
+	if (!devcon) {
+		std::cout << "device context not created\n";
+	}
 	std::cout << "Device and Swap chain created\n";
 
 
@@ -105,25 +149,28 @@ void Renderer::init(){
 	mesh = new EMesh;
 	engine->mesh_manager.load_model_gltf(mesh, ".\\Game\\Assets\\models\\pavon_the_game\\lince.gltf");
 	create_mesh_buffers(mesh);
-
+	//engine->meshes.push_back(mesh);
+	
+	/*
 	for (EMesh* mesh : engine->meshes) {
 		create_mesh_buffers(mesh);
 		load_texture(mesh);
-	}
+	}*/
 	
 	
 
-	//engine->meshes.push_back(mesh);
+	
 	
 }
 
 void Renderer::draw_frame() {
 	// clear the back buffer 
 	float color[4] = { 1.0f, 0.0f, 0.0f, 1.0f };
-	devcon->ClearDepthStencilView(depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	devcon->ClearRenderTargetView(backbuffer, color);
 	
 	
+/*
+	devcon->ClearDepthStencilView(depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 	UINT stride = sizeof(Vertex);
 	UINT offset = 0;
@@ -153,7 +200,9 @@ void Renderer::draw_frame() {
 
 	devcon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	devcon->Draw(3, 0);
+	devcon->Draw(3, 0);*/
+
+
 
 	swapchain->Present(0, 0);
 }

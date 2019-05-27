@@ -149,7 +149,7 @@ void WindowManager::create_window(){
    #ifdef WAYLAND
       create_wayland_window();
    #endif
-   #ifdef WINDOWS
+   #if defined (WINDOWS) && defined (GLFW)
 	  glfwSetErrorCallback(error_callback);
       if( !glfwInit() )
 		{
@@ -170,8 +170,16 @@ void WindowManager::create_window(){
   
 
    #endif
+	#ifdef WINDOWS
+
+	#endif // WINDOWS
+
 
 }
+void WindowManager::create_window_windows() {
+
+}
+
 #ifdef WAYLAND
 void WindowManager::create_wayland_window(){
    struct wl_display* display = nullptr;
@@ -247,7 +255,7 @@ void WindowManager::check_events(){
       
      
    #endif
-#if defined VULKAN || defined (DX11) 
+#if defined VULKAN
       	glfwPollEvents();
    #endif
 
@@ -261,6 +269,14 @@ void WindowManager::check_events(){
     }
 #endif
 
+#ifdef WINDOWS
+	MSG msg;
+	while (GetMessage(&msg, NULL, 0, 0))
+	{
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
+	}
+#endif // WINDOWS
 
 }
 
