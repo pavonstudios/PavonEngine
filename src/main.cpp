@@ -6,28 +6,26 @@
 int main() {
 	std::cout << "Engine\n";
 	Engine engine;
-	engine.window_manager.create_window();
-	engine.renderer.engine = &engine;
-	engine.maps.engine = &engine;
+	//engine.window_manager.create_window();
+	//engine.renderer.engine = &engine;
+	//engine.maps.engine = &engine;
 
-	std::string map_path = engine.assets.path("Maps/map01.map");
-	engine.maps.load_file_map(map_path);
-	engine.textures_manager.load_textures_to_cpu_memory(engine.meshes);
-	engine.renderer.init();
+	//std::string map_path = engine.assets.path("Maps/map01.map");
+	//engine.maps.load_file_map(map_path);
+	//engine.textures_manager.load_textures_to_cpu_memory(engine.meshes);
+	//engine.renderer.init();
+
+	engine.init();
 	engine.textures_manager.free_textures_from_cpu_memory(&engine,engine.meshes);
-	for (EMesh* mesh : engine.meshes) {
-		//mesh->vertices.clear();
-		//mesh->indices.clear();
-	}
-	//MapManager* map_manager = (MapManager*)engine.component_by_name("MapManager");
-	//map_manager->load_file_map(map_path);
+	
 
-	while (!engine.window_manager.window_should_close()) {
+	/*while (!engine.window_manager.window_should_close()) {
        
 		engine.renderer.draw_frame();
 		
 		glfwPollEvents();
-    }
+    }*/
+	engine.main_loop();
     return 1;
 }
 #endif
@@ -43,7 +41,8 @@ int main() {
         int main() {
             
             Engine engine;
-            engine.init();           
+            engine.init();
+			engine.textures_manager.free_textures_from_cpu_memory(&engine, engine.meshes);
             engine.main_loop();                  
 
             return EXIT_SUCCESS;      

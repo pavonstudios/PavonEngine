@@ -1,27 +1,26 @@
 #include "camera.h"
 void Camera::MoveForward(){
 	 cameraPos += cameraSpeed * cameraFront;
-	View = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+	 update_look_at();
 }
 
 void Camera::MoveBackward(){
 	cameraPos -= cameraSpeed * cameraFront;
-	View = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+	update_look_at();
 }
 
 void Camera::MoveLeft(){
 	cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
-		View = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
-
+	update_look_at();
 	
 }
 
 void Camera::MoveRight(){
 	
 	cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
-	View = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 
 
+	update_look_at();
 
 }
 void Camera::mouse_control_update(float yaw, float pitch){
@@ -39,16 +38,26 @@ void Camera::mouse_control_update(float yaw, float pitch){
 	cameraFront = glm::normalize(front);
 	//cameraPos = glm::normalize(glm::cross(cameraFront, cameraUp));
 
-	View = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+	update_look_at();
 }
 
 void Camera::MoveDown(){
 	cameraPos -= cameraSpeed * cameraUp;
-	View = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+	update_look_at();
+}
 
+void Camera::update_look_at()
+{
+#ifndef DX11
+	View = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+#else
+	View = glm::lookAtLH(cameraPos, cameraPos + cameraFront, cameraUp);
+#endif // !DX11
+
+	
 }
 
 void Camera::MoveUp(){
 	cameraPos += cameraSpeed * cameraUp;
-	View = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+	update_look_at();
 }

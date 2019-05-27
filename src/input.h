@@ -1,7 +1,7 @@
 #ifndef INPUT_CONTROLLER
 #define INPUT_CONTROLLER
 
-#ifdef VULKAN
+#if defined (VULKAN) || defined (DX11)
 	#include <GLFW/glfw3.h>
 #endif
 #if defined(LINUX) && defined (ES2)
@@ -49,7 +49,7 @@ public:
 	bool left_button_release = false;
 
 	bool move_camera = false;
-#ifdef VULKAN
+#if defined (VULKAN) || defined (DX11)
     static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
     static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
     static void mouse_callback(GLFWwindow* window, double xpos, double ypos);

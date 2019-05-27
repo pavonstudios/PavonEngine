@@ -247,7 +247,7 @@ void WindowManager::check_events(){
       
      
    #endif
-   #ifdef VULKAN
+#if defined VULKAN || defined (DX11) 
       	glfwPollEvents();
    #endif
 

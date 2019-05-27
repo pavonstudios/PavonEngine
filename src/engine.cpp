@@ -85,7 +85,6 @@ void Engine::draw_loading_screen()
 
 
 
-#ifdef LINUX
 
 
 void Engine::init()
@@ -95,7 +94,8 @@ void Engine::init()
 	mesh_manager.engine = this;
 	maps.engine = this;
 	textures_manager.engine = this;		
-
+	maps.engine = this;
+	renderer.engine = this;
 
 #ifndef ANDROID
 	window_manager.create_window();
@@ -126,7 +126,7 @@ void Engine::init()
 	this->meshes.clear();
 	game = new Game(this);
 	auto time_load_map = std::chrono::high_resolution_clock::now();
-		load_map(map_path);
+	maps.load_file_map(map_path);
 	calculate_time("map to cpu memory",time_load_map);
 
 	game->init();
@@ -179,6 +179,10 @@ void Engine::init()
 	calculate_time("mesh",tStart);
 #endif
 
+#ifdef DX11
+	renderer.init();
+#endif // DX11
+
 	//init_collision_engine();
 }
 
@@ -199,6 +203,8 @@ void Engine::loop_data()
 
 	animation_manager.play_animations(this);
 }
+
+
 void Engine::es2_draw_frame()
 {
 
@@ -248,9 +254,9 @@ void Engine::es2_draw_frame()
 
 void Engine::main_loop()
 {
-
+#ifdef LINUX
 	gettimeofday(&t1, &tz);
-
+#endif
 	while (!window_manager.window_should_close())
 	{
 
@@ -262,7 +268,7 @@ void Engine::main_loop()
 
 		auto tStart = std::chrono::high_resolution_clock::now();
 
-#ifdef VULKAN
+#if defined VULKAN || defined (DX11) 
 		renderer.draw_frame();
 #endif
 
@@ -275,7 +281,11 @@ void Engine::main_loop()
 		calculate_fps(tStart);
 #endif
 
+#ifndef DX11
 		window_manager.swap_buffers();
+#endif // !DX11
+
+	
 
 		tranlation_update.movements.clear();
 	}
@@ -365,40 +375,43 @@ void Engine::print_fps()
 	printf(" Frame time: %f", frame_time);
 }
 
-void Engine::calculate_fps(std::chrono::time_point<std::chrono::system_clock> tStart)
+void Engine::calculate_fps(std::chrono::time_point<std::chrono::steady_clock> tStart)
 {
-	auto tEnd = std::chrono::high_resolution_clock::now();
-	auto tDiff = std::chrono::duration<double, std::milli>(tEnd - tStart).count();
-	frame_time = (float)tDiff / 1000.0f;
+#ifdef LINUX
+		auto tEnd = std::chrono::high_resolution_clock::now();
+		auto tDiff = std::chrono::duration<double, std::milli>(tEnd - tStart).count();
+		frame_time = (float)tDiff / 1000.0f;
 
-	fps += (float)tDiff;
-	if (fps > 1000.0f)
-	{
-		last_fps = static_cast<uint32_t>((float)frames * (1000.0f / fps));
-		fps = 0;
-		frames = 0;
-	}
+		fps += (float)tDiff;
+		if (fps > 1000.0f)
+		{
+			last_fps = static_cast<uint32_t>((float)frames * (1000.0f / fps));
+			fps = 0;
+			frames = 0;
+		}
 
-	if (++num_frames % 60 == 0)
-	{
-		gettimeofday(&t2, &tz);
-		//float dt  =  t2.tv_sec - t1.tv_sec + (t2.tv_usec - t1.tv_usec) * 1e-6;
-		//cout << "fps: " << num_frames / dt << endl;
-		//print_debug("",0,15);
-		//printf("FPS: ");
-		//float fps = num_frames / dt;
-		//std::cout << fps << std::endl;
+		if (++num_frames % 60 == 0)
+		{
+			gettimeofday(&t2, &tz);
+			//float dt  =  t2.tv_sec - t1.tv_sec + (t2.tv_usec - t1.tv_usec) * 1e-6;
+			//cout << "fps: " << num_frames / dt << endl;
+			//print_debug("",0,15);
+			//printf("FPS: ");
+			//float fps = num_frames / dt;
+			//std::cout << fps << std::endl;
 
-		num_frames = 0;
-		t1 = t2;
-	}
-#ifdef ANDROID
-	LIMIT_FPS = 32;
-#endif
-	usleep(1000 * LIMIT_FPS);
+			num_frames = 0;
+			t1 = t2;
+		}
+	#ifdef ANDROID
+		LIMIT_FPS = 32;
+	#endif
+		usleep(1000 * LIMIT_FPS);
+
+#endif // LINUX
 }
 
-void Engine::calculate_time(std::string text, std::chrono::time_point<std::chrono::system_clock> tStart)
+void Engine::calculate_time(std::string text, std::chrono::time_point<std::chrono::steady_clock> tStart)
 {
 	auto tEnd = std::chrono::high_resolution_clock::now();
 	auto tDiff = std::chrono::duration<double, std::milli>(tEnd - tStart).count();
@@ -624,6 +637,7 @@ void Engine::update_render_size()
 	glViewport(0, 0, main_camera.screen_width, main_camera.screen_height);
 #endif
 
+#ifdef  ES2
 	if (ready_to_game)
 	{
 		if (game)
@@ -632,7 +646,7 @@ void Engine::update_render_size()
 				game->gui->update_elements_mvp();
 		}
 	}
+#endif //  ES2
 }
 
 
-#endif

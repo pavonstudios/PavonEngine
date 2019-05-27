@@ -39,16 +39,22 @@ Game::Game(Engine* engine){
 	
 }
 void Game::init(){
+#ifdef ES2
 	gui = new GUI(engine);
 	gui->update_elements_mvp();
 	gui->update_engine_meshes();
+#endif
 	init_player();
-	
+
 }
 
 Game::~Game(){
+#ifdef LINUX
 	delete gui;
 	delete engine->net_manager;
+#endif // LINUX
+
+
 	delete player->weapons;
 }
 
@@ -56,7 +62,9 @@ void Game::update(){
 	if(!engine->edit_mode){
 			if(player->mesh){
 				player->update();
+#ifdef LINUX
 				engine->net_manager->send_player_data(player);					
+#endif
 			}
 			if(player2){
 				if(player2->mesh){
@@ -67,6 +75,7 @@ void Game::update(){
 			
 		}			
 
+#ifdef ES2
 	gui->calculate_mouse_position();			
 	
 	if(gui->is_button_pressed("jump")){
@@ -76,6 +85,7 @@ void Game::update(){
 		//std::cout << "jump pressd\n";
 
 	}
+#endif
 }
 
 void Game::spawn_new_player(){

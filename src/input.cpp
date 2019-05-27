@@ -3,7 +3,7 @@
 #include "objects.h"
 #include "camera.h"
 
-#ifdef VULKAN
+#if defined (VULKAN) || defined (DX11)
 void Input::scroll_callback(GLFWwindow* window, double xoffset, double yoffset){
 		
 	  	auto engine = reinterpret_cast<Engine*>(glfwGetWindowUserPointer(window));
@@ -21,7 +21,7 @@ void Input::scroll_callback(GLFWwindow* window, double xoffset, double yoffset){
 }
 
 void Input::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods){
-	#ifdef VULKAN
+#if defined (VULKAN) || defined (DX11)
 		auto engine = reinterpret_cast<Engine*>(glfwGetWindowUserPointer(window));
 	
 			if(key == GLFW_KEY_TAB){
@@ -112,7 +112,7 @@ void Input::key_callback(GLFWwindow* window, int key, int scancode, int action, 
 }
 
 void Input::mouse_callback(GLFWwindow* window, double xpos, double ypos){
-	#ifdef VULKAN
+	#if defined (VULKAN) || defined (DX11)
 	  auto engine = reinterpret_cast<Engine*>(glfwGetWindowUserPointer(window));
 	
 		engine->input.mouse_movement(engine,xpos,ypos);
@@ -123,7 +123,7 @@ void Input::mouse_callback(GLFWwindow* window, double xpos, double ypos){
 }
 
 void Input::mouse_button_callback(GLFWwindow* window, int button, int action, int mods){
-	#ifdef VULKAN
+#if defined (VULKAN) || defined (DX11)
 		auto engine = reinterpret_cast<Engine*>(glfwGetWindowUserPointer(window));
 	#endif
 

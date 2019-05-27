@@ -1,10 +1,6 @@
 #include "engine.h"
 #include "objects.h"
 
-
-#ifdef WINDOWS
-#include <GL/glext.h>
-#endif
 using namespace engine;
 /*
 Fill node uniform block of joints matrix for send to the vertex shader

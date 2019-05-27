@@ -38,6 +38,8 @@ public:
 	void mouse_control_update(float , float);
 	void MoveUp();
 	void MoveDown();
+
+	void update_look_at();
 };
 
 #endif

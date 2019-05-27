@@ -50,6 +50,8 @@ public:
 	void setup_components();
 	EngineComponent* component_by_name(const char* name);
 
+	Game* game = nullptr;
+
     Renderer renderer; 
     WindowManager window_manager;
 	MeshManager mesh_manager;
@@ -57,25 +59,46 @@ public:
     AssetManager assets;
 	MapManager maps;
 	TexturesManager textures_manager;
+#ifdef LINUX
+	AudioManager audio_manager;
+	ConnectionManager* net_manager;
+#endif // LINUX
+
+
+	AnimationManager animation_manager;
+
+	
+
 
 	void draw_loading_screen();
-     void update_mvp(EMesh* mesh);
-    std::vector<EMesh*> meshes;//mesh to draw
-    std::vector<EMesh*> linear_meshes;//loaded mesh 
+    void update_mvp(EMesh* mesh);
+
      bool ready_to_game = false;
     bool loading = true;
     bool play_animations = false;
     Input input;
     bool edit_mode = false;
-    std::vector<EMesh*> unique_meshes;
-    TranslationUpdate tranlation_update;
+
     
 
     float deltaTime = 0.0f;	// Time between current frame and last frame
 
     bool draw_gizmos = false;
 
-    
+	float lastFrame = 0.0f; // Time of last frame
+
+	int frames = 0;
+	float fps = 0;
+	int last_fps = 0;
+	float frame_time = 0;
+	
+	int  num_frames = 0;
+	float LIMIT_FPS = 8;
+
+	std::vector<EMesh*> meshes;//mesh to draw
+	std::vector<EMesh*> linear_meshes;//loaded mesh 
+	std::vector<EMesh*> unique_meshes;
+	TranslationUpdate tranlation_update;
     
     std::vector<EMesh*> skeletal_meshes;//loaded mesh
 
@@ -83,6 +106,40 @@ public:
     std::vector<EMesh*> colliders_draw_mesh;  
 
     std::vector<Model*> models_to_draw;
+
+	void es2_draw_frame();
+	void loop_data();
+
+	void distance_object_from_camera();
+
+	void init();
+	void translate_mesh(EMesh* mesh, uint direction, float value);
+	float get_time();
+
+
+	
+	void update_render_size();
+
+	void configure_window_callback();
+	void main_loop();
+
+	void delete_meshes();
+	
+#ifdef LINUX
+	struct timezone  tz;
+	timeval  t1, t2;
+#endif
+
+#ifdef DEVELOPMENT
+	void print_vector(glm::vec3);
+	void print_debug(const std::string text, int8_t posx, int8_t posy);
+	void print_fps();
+	void calculate_time(std::string, std::chrono::time_point<std::chrono::steady_clock>);
+	void calculate_fps(std::chrono::time_point<std::chrono::steady_clock>);
+#endif 
+
+	void init_collision_engine();
+
     #ifdef ES2 
     std::vector<GLuint> texture_ids;
     #endif
@@ -101,78 +158,13 @@ public:
     #endif    
     
 
-    #ifdef LINUX
-      
-    Game * game = nullptr;
-    void update_render_size();
-
-   
-    
-    AudioManager audio_manager; 
-    AnimationManager animation_manager; 
-    
-    
-   
-    
-    
-    
-    
-    
-
-    
-    
-
-    
-    ConnectionManager* net_manager;
-
-   
-    
-   
-    
-    
-    
-
-    float lastFrame = 0.0f; // Time of last frame
-
-    int frames = 0;
-    float fps = 0;
-    int last_fps = 0;
-    float frame_time = 0;
-    struct timezone  tz;
-	timeval  t1, t2;
-    int  num_frames = 0;
-    float LIMIT_FPS = 8;
-
-
-    void configure_window_callback();
-    void main_loop();
-    void update_window_size();
-    void delete_meshes();
     void init_renderer();
+	void update_window_size();
     void load_and_assing_location(std::string path, glm::vec3 location);
     void load_and_assing_location(struct MapDataToLoad data);
+      
    
-    float get_time();    
    
-    void init();
-    void es2_draw_frame();
-    void loop_data();
-   
-    void distance_object_from_camera(); 
-
-    void translate_mesh(EMesh* mesh, uint direction, float value);
- 
-    
-    #ifdef DEVELOPMENT
-        void print_vector(glm::vec3);
-        void print_debug(const std::string text, int8_t posx, int8_t posy);
-        void print_fps();
-        void calculate_time(std::string, std::chrono::time_point<std::chrono::system_clock>);
-        void calculate_fps(std::chrono::time_point<std::chrono::system_clock>);
-    #endif 
-
-    void init_collision_engine();
-    #endif   
 
     
 };

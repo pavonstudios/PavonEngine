@@ -133,14 +133,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\animation_manager.cpp" />
     <ClCompile Include="src\asset_manager.cpp" />
     <ClCompile Include="src\camera.cpp" />
+    <ClCompile Include="src\collision.cpp" />
     <ClCompile Include="src\engine.cpp" />
+    <ClCompile Include="src\Game\game.cpp" />
+    <ClCompile Include="src\Game\ThirdPerson.cpp" />
+    <ClCompile Include="src\Game\weapon.cpp" />
     <ClCompile Include="src\game_map.cpp" />
+    <ClCompile Include="src\input.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\model_loader.cpp" />
     <ClCompile Include="src\objects.cpp" />
     <ClCompile Include="src\renderers\directx.cpp" />
+    <ClCompile Include="src\skeletal.cpp" />
     <ClCompile Include="src\WindowManager.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -150,6 +157,9 @@
     <Text Include="Game\Assets\shaders\dx\vertex.hlsl">
       <FileType>Document</FileType>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Game\Assets\Maps\map01.map" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
