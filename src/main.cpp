@@ -29,8 +29,9 @@ int WINAPI WinMain(HINSTANCE hInstance,
 		nCmdShow);
 	UpdateWindow(engine.window_manager.window_handler);
 
-	engine.init();
+	
 #ifdef OPENGL
+	engine.init();
 	while (!engine.window_manager.window_should_close()) {
 		engine.window_manager.check_events();
 		/*glClearColor(0.0, 1.0, 0.0, 1.0);
@@ -43,7 +44,13 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	engine.textures_manager.free_textures_from_cpu_memory(&engine, engine.meshes);
 	engine.main_loop();
 #endif // DX11
+#ifdef DX12
+	engine.renderer.init();
+	while (!engine.window_manager.window_should_close()) {
+		engine.window_manager.check_events();
 
+	}
+#endif
 	
 	return 1;
 }

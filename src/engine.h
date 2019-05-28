@@ -23,6 +23,10 @@
     #include "renderers/directx.hpp"
 #endif
 
+#if defined (DX12)
+	#include "renderers/dx12.hpp"
+#endif
+
 #include <chrono>
 #include <vector>
 
