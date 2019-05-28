@@ -15,12 +15,10 @@ using namespace engine;
 class Renderer{
 public:
 	Engine* engine;
-	bool framebufferResized = false;
 
-	// global declarations
-	IDXGISwapChain* swapchain;             // the pointer to the swap chain interface
-	ID3D11Device* dev;                     // the pointer to our Direct3D device interface
-	ID3D11DeviceContext* devcon;           // the pointer to our Direct3D device context
+	IDXGISwapChain* swapchain;            
+	ID3D11Device* dev;                    
+	ID3D11DeviceContext* devcon;          
 	ID3D11RenderTargetView* backbuffer;
 
 	ID3D11Texture2D* texture_render_target = NULL;
@@ -40,8 +38,7 @@ public:
 	ID3D11SamplerState* CubesTexSamplerState;
 	ID3D11Texture2D* texture = NULL;
 
-
-	EMesh* mesh;
+	
 	void init();
 	void draw_frame();
 	void update_constant_buffer(EMesh* mesh);

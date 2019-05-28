@@ -114,12 +114,6 @@ void Renderer::init(){
 
 
 	init_pipeline();
-
-
-	mesh = new EMesh;
-	engine->mesh_manager.load_model_gltf(mesh, ".\\Game\\Assets\\models\\pavon_the_game\\lince.gltf");
-	create_mesh_buffers(mesh);
-	//engine->meshes.push_back(mesh);
 	
 	
 	for (EMesh* mesh : engine->meshes) {
