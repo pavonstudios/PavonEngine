@@ -6,9 +6,49 @@
 
 #include <array>
 
-#ifdef WINDOWS
-	#define NOMINMAX
+void Renderer::setupDebugMessenger() {
+	std::cout << "setup debug messages\n";
+	if (!enableValidationLayers) {
+		return;
+	}
+
+	VkDebugUtilsMessengerCreateInfoEXT createInfo = {};
+	createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
+	createInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
+	createInfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
+	createInfo.pfnUserCallback = debugCallback;
+
+	if (CreateDebugUtilsMessengerEXT(instance, &createInfo, nullptr, &debugMessenger) != VK_SUCCESS) {
+		throw std::runtime_error("failed to set up debug messenger!");
+	}
+}
+
+void Renderer::createSurface() {
+#ifdef GLFW
+	if (glfwCreateWindowSurface(instance, engine->window_manager.get_window(), nullptr, &surface) != VK_SUCCESS) {
+		throw std::runtime_error("failed to create window surface!");
+	}
+#endif // GLFW   
+#if defined (WINDOWS) && !defined (GLFW)
+	VkWin32SurfaceCreateInfoKHR surface_create_info;
+	surface_create_info.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;
+	surface_create_info.pNext = NULL;
+	surface_create_info.flags = 0;
+	surface_create_info.hinstance = engine->window_manager.window_instance;
+	surface_create_info.hwnd = engine->window_manager.window_handler;
+	VK_CHECK_RESULT(vkCreateWin32SurfaceKHR(instance, &surface_create_info, NULL, &surface));
 #endif
+}
+
+void Renderer::initVulkan() {
+	createInstance();
+	setupDebugMessenger();
+	createSurface();
+	pickPhysicalDevice();
+	createLogicalDevice();
+	createSwapChain();
+
+}
 
 void Renderer::run(VulkanData* vkdata) {                  
         initVulkan();
@@ -23,6 +63,9 @@ VkExtent2D Renderer::chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabiliti
 
 		#ifdef GLFW
 				glfwGetFramebufferSize(engine->window_manager.get_window(), &width, &height);
+		#else
+		width = 800;
+		height = 600;
 		#endif // GLFW      
 
         VkExtent2D actualExtent = {
@@ -37,15 +80,6 @@ VkExtent2D Renderer::chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabiliti
     }
 }
 
-inline void Renderer::initVulkan() {
-	createInstance();
-	setupDebugMessenger();
-	createSurface();
-	pickPhysicalDevice();
-	createLogicalDevice();
-	createSwapChain();
-
-}
 
 void Renderer::createInstance() {
 	if (enableValidationLayers && !checkValidationLayerSupport()) {
@@ -95,7 +129,7 @@ void Renderer::pickPhysicalDevice() {
 	for (const auto& device : devices) {
 		if (isDeviceSuitable(device)) {
 			physicalDevice = device;
-			//break;
+			break;
 		}
 	}
 
@@ -439,6 +473,23 @@ inline void Renderer::createUniformBuffers(EMesh* mesh) {
 	}
 }
 
+inline bool Renderer::isDeviceSuitable(VkPhysicalDevice device) {
+	QueueFamilyIndices indices = findQueueFamilies(device);
+
+	bool extensionsSupported = checkDeviceExtensionSupport(device);
+
+	bool swapChainAdequate = false;
+	if (extensionsSupported) {
+		SwapChainSupportDetails swapChainSupport = querySwapChainSupport(device);
+		swapChainAdequate = !swapChainSupport.formats.empty() && !swapChainSupport.presentModes.empty();
+	}
+
+	VkPhysicalDeviceFeatures supportedFeatures;
+	vkGetPhysicalDeviceFeatures(device, &supportedFeatures);
+
+	return indices.isComplete() && extensionsSupported && swapChainAdequate && supportedFeatures.samplerAnisotropy;
+}
+
 inline std::vector<const char*> Renderer::getRequiredExtensions() {
 	uint32_t extention_count = 0;
 	const char** extentions_point_char;
@@ -447,24 +498,20 @@ inline std::vector<const char*> Renderer::getRequiredExtensions() {
 	std::vector<const char*> extensions(extentions_point_char, extentions_point_char + glfwExtensionCount);
 #else
 	std::vector<const char*> extensions;
+	extensions.push_back("VK_KHR_surface");
 	extensions.push_back("VK_KHR_win32_surface");
 #endif // GLFW
 	
 
 	if (enableValidationLayers) {
 		extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+		extensions.push_back("VK_EXT_debug_report");
 	}
 
 	return extensions;
 }
 
-void Renderer::createSurface() {
-	#ifdef GLFW
-		if (glfwCreateWindowSurface(instance, engine->window_manager.get_window(), nullptr, &surface) != VK_SUCCESS) {
-			throw std::runtime_error("failed to create window surface!");
-	}
-	#endif // GLFW   
-}
+
 
 void Renderer::finish(){
     vkDeviceWaitIdle(device);
@@ -671,19 +718,6 @@ void Renderer::createTextureImage(std::string texture_path, EMesh* mesh) {
 }
 
 
-void Renderer::setupDebugMessenger() {
-    if (!enableValidationLayers) return;
-
-    VkDebugUtilsMessengerCreateInfoEXT createInfo = {};
-    createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
-    createInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
-    createInfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
-    createInfo.pfnUserCallback = debugCallback;
-
-    if (CreateDebugUtilsMessengerEXT(instance, &createInfo, nullptr, &debugMessenger) != VK_SUCCESS) {
-        throw std::runtime_error("failed to set up debug messenger!");
-    }
-}
 
 
  void Renderer::createDescriptorPool(EMesh *mesh) {
@@ -1044,9 +1078,7 @@ void Renderer::createGraphicsPipeline( const struct PipelineData * data, VkPipel
         pipelineInfo.subpass = 0;
         pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
 
-        if (vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, out_pipeline) != VK_SUCCESS) {
-            throw std::runtime_error("failed to create graphics pipeline!");
-        }
+		VK_CHECK_RESULT(vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, out_pipeline) );
 
         vkDestroyShaderModule(device, fragShaderModule, nullptr);
         vkDestroyShaderModule(device, vertShaderModule, nullptr);

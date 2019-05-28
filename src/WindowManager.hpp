@@ -59,6 +59,7 @@ public:
 	#ifdef WINDOWS
 		static Engine* static_engine_pointer;
 		HWND window_handler;
+		HINSTANCE window_instance;
 		void create_window_windows(HINSTANCE hInstance);
 		static LRESULT CALLBACK WndProc(
 			_In_ HWND   hwnd,

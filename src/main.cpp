@@ -29,6 +29,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 		nCmdShow);
 	UpdateWindow(engine.window_manager.window_handler);
 
+	engine.init();
 	while (!engine.window_manager.window_should_close()) {
 		engine.window_manager.check_events();
 		/*glClearColor(0.0, 1.0, 0.0, 1.0);

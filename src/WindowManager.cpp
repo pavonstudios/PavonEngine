@@ -228,7 +228,7 @@ void WindowManager::create_window_windows(HINSTANCE hInstance) {
 
 	
 	}
-
+	this->window_instance = hInstance;
 	WindowManager::static_engine_pointer = engine;
 
 	#ifdef OPENGL
