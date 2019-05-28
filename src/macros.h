@@ -1,12 +1,6 @@
-/*
-* Global macros
-*
-* Copyright (C) 2018 by Sascha Willems - www.saschawillems.de
-*
-* This code is licensed under the MIT license (MIT) (http://opensource.org/licenses/MIT)
-*/
 
-#pragma once
+#ifndef MACROS_H
+#define MACROS_H
 
 #ifdef VULKAN
 #include "vulkan/vulkan.h"
@@ -44,7 +38,7 @@
 	calculate_time(t,function_time);\
 }			
 
-#define ETIME(e,f,t)					\
+#define ENGINE_TIME(e,f,t)					\
 {								\
 								\
 	auto function_time = std::chrono::high_resolution_clock::now();\
@@ -53,3 +47,6 @@
 }		
 
 
+
+
+#endif // !MACROS_H

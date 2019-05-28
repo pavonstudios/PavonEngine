@@ -1,5 +1,5 @@
-#include "animation_manager.hpp"
 #include "engine.h"
+#include "animation_manager.hpp"
 #include <iterator>
 
 Animation* AnimationManager::animation_by_name(std::string name){

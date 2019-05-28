@@ -4,6 +4,7 @@
 
 #define GLM_FORCE_SWIZZLE
 
+#include "macros.h"
 
 #ifdef VULKAN
     #include "renderers/vulkan.hpp"    

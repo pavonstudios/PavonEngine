@@ -233,6 +233,8 @@
       <AdditionalIncludeDirectories>C:\Users\pavon\source\include;$(VULKAN_SDK)\Include;$(VULKAN_SDK)\Third-Party\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>VULKAN;GLTF;DEVELOPMENT;WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -253,6 +255,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='OpenGL|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Vulkan|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="src\renderers\vulkan.cpp" />
     <ClCompile Include="src\skeletal.cpp" />
     <ClCompile Include="src\WindowManager.cpp" />
   </ItemGroup>
@@ -266,6 +269,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Game\Assets\Maps\map01.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\macros.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

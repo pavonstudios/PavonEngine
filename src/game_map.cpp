@@ -2,7 +2,7 @@
 #include "game_map.hpp"
 #include "Game/game.hpp"
 
-#include <thread>>
+#include <thread>
 void MapManager::parse_map_file(std::stringstream &file){
 		std::string line;
 		int counter = 0;		
@@ -336,7 +336,7 @@ void MapManager::create_meshes_with_map_loaded_data(){
 
 		
 }
-#include "macros.h"
+
 void MapManager::load_file_map(std::string path) {
 #ifndef ANDROID
 
@@ -374,14 +374,14 @@ void MapManager::load_file_map(std::string path) {
 	}
 	auto time_parse = std::chrono::high_resolution_clock::now();
 
-	ETIME(engine, parse_map_file(file), "parse map")
+	ENGINE_TIME(engine, parse_map_file(file), "parse map")
 
 
-		ETIME(engine, create_meshes_with_map_loaded_data(), "create meshes")
+	ENGINE_TIME(engine, create_meshes_with_map_loaded_data(), "create meshes")
 
-		ETIME(engine, load_model_to_cpu_memory() , "model to cpu memory")
+	ENGINE_TIME(engine, load_model_to_cpu_memory() , "model to cpu memory")
 
-	ETIME(engine , load_primitives() , "load primitives")
+	ENGINE_TIME(engine , load_primitives() , "load primitives")
 
 	assign_shader_path();
 	load_skeletal_meshes();

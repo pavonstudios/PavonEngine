@@ -1,14 +1,5 @@
-/*
-* Vulkan device class
-*
-* Encapsulates a physical Vulkan device and it's logical representation
-*
-* Copyright (C) 2016-2018 by Sascha Willems - www.saschawillems.de
-*
-* This code is licensed under the MIT license (MIT) (http://opensource.org/licenses/MIT)
-*/
-
-#pragma once
+#ifndef VULKAN_DEVICE_HPP
+#define  VULKAN_DEVICE_HPP
 
 #include <exception>
 #include <assert.h>
@@ -373,3 +364,5 @@ namespace vks
 		}
 	};
 }
+
+#endif // !VULKAN_DEVICE_HPP

@@ -63,6 +63,9 @@
     <ClCompile Include="src\Game\weapon.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\renderers\vulkan.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Game\Assets\shaders\dx\pixel.hlsl">
@@ -76,5 +79,10 @@
     <None Include="Game\Assets\Maps\map01.map">
       <Filter>Resource Files</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\macros.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

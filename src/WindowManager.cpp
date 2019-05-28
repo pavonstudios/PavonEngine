@@ -382,7 +382,7 @@ void WindowManager::check_events(){
       
      
    #endif
-#if defined VULKAN
+#if defined GLFW
       	glfwPollEvents();
    #endif
 
@@ -422,7 +422,7 @@ void WindowManager::swap_buffers(){
 }
 
 WindowManager::~WindowManager(){
-   #ifdef VULKAN
+   #ifdef GLFW
    glfwDestroyWindow(glfw_window);
 
    glfwTerminate();
@@ -454,7 +454,7 @@ void WindowManager::update_window_size(){
 
 bool WindowManager::window_should_close(){
   
-   #if defined (VULKAN)
+   #if defined (GLFW)
       this->close_window = glfwWindowShouldClose(glfw_window);
    #endif
    #if defined(ES2)
