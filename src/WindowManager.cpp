@@ -143,7 +143,7 @@ void WindowManager::create_window(){
    #ifdef X11
       create_window_xorg();
    #endif
-   #ifdef VULKAN
+   #ifdef GLFW
       create_window_glfw();
    #endif
    #ifdef WAYLAND

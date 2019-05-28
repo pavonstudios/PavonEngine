@@ -31,9 +31,9 @@ int WINAPI WinMain(HINSTANCE hInstance,
 
 	while (!engine.window_manager.window_should_close()) {
 		engine.window_manager.check_events();
-		glClearColor(0.0, 1.0, 0.0, 1.0);
+		/*glClearColor(0.0, 1.0, 0.0, 1.0);
 		glClear(GL_COLOR_BUFFER_BIT);
-		SwapBuffers(engine.window_manager.device_context);
+		SwapBuffers(engine.window_manager.device_context);*/
 	}
 	//engine.init();
 	

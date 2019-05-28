@@ -100,7 +100,7 @@ public:
     #endif
 
 
-#if defined (GLFW)
+	#if defined (GLFW)
     GLFWwindow* get_window(){
         return glfw_window;
     }

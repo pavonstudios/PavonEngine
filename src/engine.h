@@ -6,11 +6,13 @@
 
 
 #ifdef VULKAN
-    #include "renderers/vulkan.hpp"
-    #define GLFW_INCLUDE_VULKAN
-    #include "VulkanData.hpp"
-    #include <GLFW/glfw3.h>
+    #include "renderers/vulkan.hpp"    
+    #include "VulkanData.hpp"    
 #endif    
+#ifdef GLFW
+	#define GLFW_INCLUDE_VULKAN
+	#include <GLFW/glfw3.h>
+#endif
 
 #if defined (ES2) || defined (OPENGL)
     #include "renderers/opengl.hpp"
@@ -155,11 +157,10 @@ public:
       
   
     #endif    
-#if defined (VULKAN) || defined (DX11)
 
+	#if defined (GLFW)
 		GLFWwindow* window;
-
-#endif
+	#endif
     
 
     void init_renderer();

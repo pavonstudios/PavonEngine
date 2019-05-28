@@ -1,10 +1,11 @@
 #ifndef _Renderer_H_
 #define _Renderer_H_
 
-
-#define GLFW_INCLUDE_VULKAN
-#include <GLFW/glfw3.h>
-
+#ifdef GLFW
+	#define GLFW_INCLUDE_VULKAN
+	#include <GLFW/glfw3.h>
+#endif // GLFW
+#include <vulkan/vulkan.h>
 
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE

@@ -13,6 +13,8 @@ Global
 		OpenGL|x86 = OpenGL|x86
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
+		Vulkan|x64 = Vulkan|x64
+		Vulkan|x86 = Vulkan|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{C4DC6130-7562-4ECE-842A-F0F95C35615B}.Debug|x64.ActiveCfg = Debug|x64
@@ -27,6 +29,10 @@ Global
 		{C4DC6130-7562-4ECE-842A-F0F95C35615B}.Release|x64.Build.0 = Release|x64
 		{C4DC6130-7562-4ECE-842A-F0F95C35615B}.Release|x86.ActiveCfg = Release|Win32
 		{C4DC6130-7562-4ECE-842A-F0F95C35615B}.Release|x86.Build.0 = Release|Win32
+		{C4DC6130-7562-4ECE-842A-F0F95C35615B}.Vulkan|x64.ActiveCfg = Vulkan|x64
+		{C4DC6130-7562-4ECE-842A-F0F95C35615B}.Vulkan|x64.Build.0 = Vulkan|x64
+		{C4DC6130-7562-4ECE-842A-F0F95C35615B}.Vulkan|x86.ActiveCfg = Vulkan|Win32
+		{C4DC6130-7562-4ECE-842A-F0F95C35615B}.Vulkan|x86.Build.0 = Vulkan|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
