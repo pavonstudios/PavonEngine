@@ -27,11 +27,13 @@ TYPE :=
 
 vk: DEFINES := -DVULKAN
 vk: DEFINES += -DLINUX
+vk: DEFINES += -DGLFW
+vk: DEFINES += -DDEVELOPMENT
 vk: Library += -lglfw
 vk: GAME += Multiplayer/*.o
 vk: TYPE := vk
 vk: CC := $(CCLINUX)
-vk: vulkan.o  $(OBJs) game
+vk: vulkan.o  $(OBJs) game game connectivity.o
 	
 	$(CC) -o ../renderer ./renderers/vulkan.o audio.o $(OBJs) $(GAME) $(Library) -I./ -lvulkan $(DEFINES)
 

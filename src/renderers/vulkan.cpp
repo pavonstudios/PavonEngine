@@ -494,8 +494,8 @@ inline std::vector<const char*> Renderer::getRequiredExtensions() {
 	uint32_t extention_count = 0;
 	const char** extentions_point_char;
 #ifdef GLFW
-	extentions_point_char = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
-	std::vector<const char*> extensions(extentions_point_char, extentions_point_char + glfwExtensionCount);
+	extentions_point_char = glfwGetRequiredInstanceExtensions(&extention_count);
+	std::vector<const char*> extensions(extentions_point_char, extentions_point_char + extention_count);
 #else
 	std::vector<const char*> extensions;
 	extensions.push_back("VK_KHR_surface");
