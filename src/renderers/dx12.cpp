@@ -45,6 +45,17 @@ void Renderer::init() {
 
 	int frame_index = swap_chain->GetCurrentBackBufferIndex();
 
+	D3D12_DESCRIPTOR_HEAP_DESC render_target_view_desc;
+	render_target_view_desc.NumDescriptors = 2;
+	render_target_view_desc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
+	render_target_view_desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+	render_target_view_desc.NodeMask = 0;
+	
+
+	result = device->CreateDescriptorHeap(&render_target_view_desc, __uuidof(ID3D12DescriptorHeap), (void**)(&render_target_view_descriptor_heap) );
+
+
+	 descriptor_heap_size = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 
 
 }
