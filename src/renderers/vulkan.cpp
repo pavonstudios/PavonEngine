@@ -5,6 +5,11 @@
 #include "../engine.h"
 
 #include <array>
+
+#ifdef WINDOWS
+	#define NOMINMAX
+#endif
+
 void Renderer::run(VulkanData* vkdata) {                  
         initVulkan();
         this->pVkData = vkdata;  
@@ -15,7 +20,10 @@ VkExtent2D Renderer::chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabiliti
         return capabilities.currentExtent;
     } else {
         int width, height;
-        glfwGetFramebufferSize(engine->window_manager.get_window(), &width, &height);
+
+		#ifdef GLFW
+				glfwGetFramebufferSize(engine->window_manager.get_window(), &width, &height);
+		#endif // GLFW      
 
         VkExtent2D actualExtent = {
             static_cast<uint32_t>(width),
@@ -451,10 +459,11 @@ inline std::vector<const char*> Renderer::getRequiredExtensions() {
 }
 
 void Renderer::createSurface() {
-
-    if (glfwCreateWindowSurface(instance, engine->window_manager.get_window(), nullptr, &surface) != VK_SUCCESS) {
-        throw std::runtime_error("failed to create window surface!");
-    }
+	#ifdef GLFW
+		if (glfwCreateWindowSurface(instance, engine->window_manager.get_window(), nullptr, &surface) != VK_SUCCESS) {
+			throw std::runtime_error("failed to create window surface!");
+	}
+	#endif // GLFW   
 }
 
 void Renderer::finish(){
@@ -1043,7 +1052,7 @@ void Renderer::createGraphicsPipeline( const struct PipelineData * data, VkPipel
         vkDestroyShaderModule(device, vertShaderModule, nullptr);
     }
 
-	inline void Renderer::configure_objects() {
+	void Renderer::configure_objects() {
 		createSyncObjects();
 		createCommandBuffers();
 	}
