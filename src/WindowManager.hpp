@@ -68,7 +68,9 @@ public:
 		);
 	#endif 
 
-	#if OPENGL
+	#ifdef OPENGL
+		HGLRC rendering_context;
+		HDC device_context;
 		void prepare_window_to_opengl();
 	#endif // OPENGL
 

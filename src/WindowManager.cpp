@@ -184,7 +184,7 @@ void WindowManager::create_window_windows(HINSTANCE hInstance) {
 	WNDCLASSEX wcex;
 
 	wcex.cbSize = sizeof(WNDCLASSEX);
-	wcex.style = CS_HREDRAW | CS_VREDRAW;
+	wcex.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
 	wcex.lpfnWndProc = WindowManager::WndProc;
 	wcex.cbClsExtra = 0;
 	wcex.cbWndExtra = 0;
@@ -267,15 +267,40 @@ LRESULT CALLBACK WindowManager::WndProc(HWND hWnd, UINT message, WPARAM wParam, 
 #ifdef OPENGL
 void WindowManager::prepare_window_to_opengl()
 {
-	HGLRC rendering_context;
-	HDC device_context;
+	PIXELFORMATDESCRIPTOR pfd =
+	{
+		sizeof(PIXELFORMATDESCRIPTOR),
+		1,
+		PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER,    //Flags
+		PFD_TYPE_RGBA,        // The kind of framebuffer. RGBA or palette.
+		32,                   // Colordepth of the framebuffer.
+		0, 0, 0, 0, 0, 0,
+		0,
+		0,
+		0,
+		0, 0, 0, 0,
+		24,                   // Number of bits for the depthbuffer
+		8,                    // Number of bits for the stencilbuffer
+		0,                    // Number of Aux buffers in the framebuffer.
+		PFD_MAIN_PLANE,
+		0,
+		0, 0, 0
+	};
+
 
 	device_context = GetDC(window_handler);
+
+
+	int  letWindowsChooseThisPixelFormat;
+	letWindowsChooseThisPixelFormat = ChoosePixelFormat(device_context, &pfd);
+	SetPixelFormat(device_context, letWindowsChooseThisPixelFormat, &pfd);
+
 
 	rendering_context = wglCreateContext(device_context);
 
 	wglMakeCurrent(device_context,rendering_context);
 
+	MessageBoxA(0, (char*)glGetString(GL_VERSION), "OPENGL VERSION", 0);
 }
 
 #endif // OPENGL
