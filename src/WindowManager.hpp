@@ -42,7 +42,7 @@ public:
     Engine* engine;
     int window_width = 800;
     int window_height = 600;
-    std::string window_name = "Engine";
+    const char* window_name = "Engine";
     bool close_window = false;
     void create_window();
     void swap_buffers();

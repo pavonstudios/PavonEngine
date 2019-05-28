@@ -93,7 +93,7 @@ void WindowManager::create_window_xorg(){
               &swa ); 
 
    XMapWindow ( x_display , x_window );             // make the window visible on the screen
-   XStoreName ( x_display , x_window , this->window_name.c_str() ); // give the window a name 
+   XStoreName ( x_display , x_window , this->window_name); // give the window a name 
 
    Atom wmDeleteMessage = XInternAtom(x_display, "WM_DESTROY_WINDOW", False);
    XSetWMProtocols(x_display, x_window, &wmDeleteMessage, 1);
@@ -179,7 +179,7 @@ void WindowManager::create_window(){
 Engine* WindowManager::static_engine_pointer;
 
 void WindowManager::create_window_windows(HINSTANCE hInstance) {
-	LPCSTR title = "new title";
+	LPCSTR title = this->window_name;
 	LPCSTR clas_name = "engine";
 	WNDCLASSEX wcex;
 
