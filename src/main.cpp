@@ -30,16 +30,20 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	UpdateWindow(engine.window_manager.window_handler);
 
 	engine.init();
+#ifdef OPENGL
 	while (!engine.window_manager.window_should_close()) {
 		engine.window_manager.check_events();
 		/*glClearColor(0.0, 1.0, 0.0, 1.0);
 		glClear(GL_COLOR_BUFFER_BIT);
 		SwapBuffers(engine.window_manager.device_context);*/
 	}
-	//engine.init();
-	
-	//engine.textures_manager.free_textures_from_cpu_memory(&engine, engine.meshes);
-	//engine.main_loop();
+#endif
+
+#ifdef DX11
+	engine.textures_manager.free_textures_from_cpu_memory(&engine, engine.meshes);
+	engine.main_loop();
+#endif // DX11
+
 	
 	return 1;
 }

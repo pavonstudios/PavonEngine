@@ -21,6 +21,7 @@ void Renderer::setupDebugMessenger() {
 	if (CreateDebugUtilsMessengerEXT(instance, &createInfo, nullptr, &debugMessenger) != VK_SUCCESS) {
 		throw std::runtime_error("failed to set up debug messenger!");
 	}
+	std::cout << "deug messages ready\n";
 }
 
 void Renderer::createSurface() {
