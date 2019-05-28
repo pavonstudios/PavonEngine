@@ -8,20 +8,6 @@
 #include "engine.h"
 #include <Windows.h>
 #include <tchar.h>
-//int main() {
-//	std::cout << "Engine\n";
-//	Engine engine;
-//
-//	engine.init();
-//	engine.textures_manager.free_textures_from_cpu_memory(&engine,engine.meshes);
-//	
-//
-//
-//	engine.main_loop();
-//    return 1;
-//}
-
-
 
 int WINAPI WinMain(HINSTANCE hInstance,
 	HINSTANCE hPrevInstance,
@@ -36,19 +22,21 @@ int WINAPI WinMain(HINSTANCE hInstance,
 
 	Engine engine;
 	engine.window_manager.engine = &engine;
-	HWND hWnd = engine.window_manager.create_window_windows(hInstance);
+	engine.window_manager.create_window_windows(hInstance);
 
 
-
-	ShowWindow(hWnd,
+	ShowWindow(engine.window_manager.window_handler,
 		nCmdShow);
-	UpdateWindow(hWnd);	
+	UpdateWindow(engine.window_manager.window_handler);
 
+	while (!engine.window_manager.window_should_close()) {
+		engine.window_manager.check_events();
+
+	}
+	//engine.init();
 	
-	engine.init();
-	
-	engine.textures_manager.free_textures_from_cpu_memory(&engine, engine.meshes);
-	engine.main_loop();
+	//engine.textures_manager.free_textures_from_cpu_memory(&engine, engine.meshes);
+	//engine.main_loop();
 	
 	return 1;
 }

@@ -11,11 +11,13 @@
 #include <vector>
 
 #ifdef WINDOWS
-    #define GLEW_STATIC
-    //#include <GL/glew.h>
-    
-    
+#include <Windows.h>
+#endif // WINDOWS
+
+#ifdef OPENGL
+	#include<gl/GL.h>
 #endif
+
 #ifdef LINUX
     #include <GLES2/gl2.h>
 #endif

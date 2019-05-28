@@ -12,7 +12,7 @@
     #include <GLFW/glfw3.h>
 #endif    
 
-#if defined (ES2)
+#if defined (ES2) || defined (OPENGL)
     #include "renderers/opengl.hpp"
 #endif
 

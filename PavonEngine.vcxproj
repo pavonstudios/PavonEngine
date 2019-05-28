@@ -169,7 +169,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <PreprocessorDefinitions>WIN32;GLTF;WINDOWS;DEVELOPMENT;DX11;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>OPENGL;WIN32;GLTF;WINDOWS;DEVELOPMENT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -177,7 +177,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -224,7 +224,9 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\model_loader.cpp" />
     <ClCompile Include="src\objects.cpp" />
-    <ClCompile Include="src\renderers\directx.cpp" />
+    <ClCompile Include="src\renderers\directx.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='OpenGL|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="src\skeletal.cpp" />
     <ClCompile Include="src\WindowManager.cpp" />
   </ItemGroup>

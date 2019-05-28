@@ -13,7 +13,7 @@
         #include "VulkanDevice.hpp"
     #endif
     #ifdef WINDOWS
-        #include <GL/gl.h>
+        //#include <GL/gl.h>
     #endif
     #if defined(LINUX) && defined (ES2)
         #include <GLES2/gl2.h>

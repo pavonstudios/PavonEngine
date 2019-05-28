@@ -178,7 +178,7 @@ void WindowManager::create_window(){
 
 Engine* WindowManager::static_engine_pointer;
 
-HWND WindowManager::create_window_windows(HINSTANCE hInstance) {
+void WindowManager::create_window_windows(HINSTANCE hInstance) {
 	LPCSTR title = "new title";
 	LPCSTR clas_name = "engine";
 	WNDCLASSEX wcex;
@@ -207,7 +207,7 @@ HWND WindowManager::create_window_windows(HINSTANCE hInstance) {
 	}
 
 
-	HWND hWnd = CreateWindow(
+	window_handler = CreateWindow(
 		wcex.lpszClassName,
 		title,
 		WS_OVERLAPPEDWINDOW,
@@ -219,7 +219,7 @@ HWND WindowManager::create_window_windows(HINSTANCE hInstance) {
 		NULL
 	);
 
-	if (!hWnd)
+	if (!window_handler)
 	{
 		MessageBox(NULL,
 			_T("Call to CreateWindow failed!"),
@@ -230,7 +230,12 @@ HWND WindowManager::create_window_windows(HINSTANCE hInstance) {
 	}
 
 	WindowManager::static_engine_pointer = engine;
-	return hWnd;
+
+	#ifdef OPENGL
+	prepare_window_to_opengl();
+	#endif // OPENGL
+
+	
 }
 
 
@@ -256,7 +261,24 @@ LRESULT CALLBACK WindowManager::WndProc(HWND hWnd, UINT message, WPARAM wParam, 
 	}
 	return 0;
 }
+
 #endif // WINDOWS
+
+#ifdef OPENGL
+void WindowManager::prepare_window_to_opengl()
+{
+	HGLRC rendering_context;
+	HDC device_context;
+
+	device_context = GetDC(window_handler);
+
+	rendering_context = wglCreateContext(device_context);
+
+	wglMakeCurrent(device_context,rendering_context);
+
+}
+
+#endif // OPENGL
 
 
 

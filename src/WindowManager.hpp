@@ -56,18 +56,22 @@ public:
 	
 	
 
-#ifdef WINDOWS
-	static Engine* static_engine_pointer;
-	HWND create_window_windows(HINSTANCE hInstance);
-	static LRESULT CALLBACK WndProc(
-		_In_ HWND   hwnd,
-		_In_ UINT   uMsg,
-		_In_ WPARAM wParam,
-		_In_ LPARAM lParam
-	);
-#endif 
+	#ifdef WINDOWS
+		static Engine* static_engine_pointer;
+		HWND window_handler;
+		void create_window_windows(HINSTANCE hInstance);
+		static LRESULT CALLBACK WndProc(
+			_In_ HWND   hwnd,
+			_In_ UINT   uMsg,
+			_In_ WPARAM wParam,
+			_In_ LPARAM lParam
+		);
+	#endif 
 
-   
+	#if OPENGL
+		void prepare_window_to_opengl();
+	#endif // OPENGL
+
     #ifdef ES2
        
         #ifdef ANDROID
