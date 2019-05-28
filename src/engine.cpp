@@ -126,10 +126,10 @@ void Engine::init()
 	this->meshes.clear();
 	game = new Game(this);
 	auto time_load_map = std::chrono::high_resolution_clock::now();
-	maps.load_file_map(map_path);
+	//maps.load_file_map(map_path);
 	calculate_time("map to cpu memory",time_load_map);
 
-	game->init();
+	
 
 #if defined(DEVELOPMENT)  && defined(ES2) //gizmos helpers
 	SkeletalManager::create_bones_vertices(this);
@@ -140,10 +140,12 @@ void Engine::init()
 
 	auto tStart = std::chrono::high_resolution_clock::now();
 
-#ifdef VULKAN
-	renderer.VulkanConfig();
-#endif
+	#ifdef VULKAN
+		renderer.VulkanConfig();
+	#endif
 
+	game->engine = this;
+	game->init();
 	
 	//mesh_manager.create_buffers(this, unique_meshes);
 	#ifdef ES2

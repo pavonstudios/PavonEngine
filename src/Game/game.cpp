@@ -50,7 +50,9 @@ void Game::init(){
 
 Game::~Game(){
 #ifdef LINUX
+	#ifdef ES2
 	delete gui;
+	#endif // ES2		
 	delete engine->net_manager;
 #endif // LINUX
 

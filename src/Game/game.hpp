@@ -12,7 +12,9 @@ class Game{
 		Game(Engine* engine);
 		~Game();
 		Engine* engine;
+		#ifdef ES2
 		GUI* gui = nullptr;
+		#endif // DEBUG	
 
 		void update();
 		void init_player();
