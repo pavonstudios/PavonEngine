@@ -45,6 +45,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	engine.main_loop();
 #endif // DX11
 #ifdef DX12
+	engine.renderer.engine = &engine;
 	engine.renderer.init();
 	while (!engine.window_manager.window_should_close()) {
 		engine.window_manager.check_events();
