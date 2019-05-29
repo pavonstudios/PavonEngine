@@ -18,6 +18,9 @@
 #if defined (ES2) || defined (OPENGL)
     #include "renderers/opengl.hpp"
 #endif
+#ifdef DX9
+	#include "renderers/dx9.hpp"
+#endif // DX9
 
 #if defined (DX11)
     #include "renderers/directx.hpp"

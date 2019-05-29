@@ -72,6 +72,9 @@
     <ClCompile Include="src\renderers\opengl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\renderers\dx9.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Game\Assets\shaders\dx\pixel.hlsl">

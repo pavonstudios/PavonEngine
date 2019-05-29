@@ -48,6 +48,14 @@ int WINAPI WinMain(HINSTANCE hInstance,
 		SwapBuffers(engine.window_manager.device_context);
 	}*/
 #endif
+#ifdef DX9
+	engine.renderer.engine = &engine;
+	engine.renderer.init();
+	while (!engine.window_manager.window_should_close()) {
+		engine.window_manager.check_events();
+		engine.renderer.draw_frame();
+	}
+#endif // DX9
 
 #ifdef DX11
 	engine.init();
