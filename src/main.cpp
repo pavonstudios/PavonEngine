@@ -33,7 +33,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	engine.init();
 	while (!engine.window_manager.window_should_close()) {
 		engine.window_manager.check_events();
-		
+		engine.renderer.draw_frame();
 	}
 #endif
 	

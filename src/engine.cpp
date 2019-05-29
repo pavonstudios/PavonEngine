@@ -124,15 +124,17 @@ void Engine::init()
 	mesh_manager.vulkan_device = this->vulkan_device;
 #endif
 
+	
+
+#ifndef VULKAN
 	std::string map_path = assets.path("Maps/map01.map");
 
 	this->meshes.clear();
 	game = new Game(this);
 	auto time_load_map = std::chrono::high_resolution_clock::now();
 	maps.load_file_map(map_path);
-	calculate_time("---->map to cpu memory",time_load_map);
+	calculate_time("---->map to cpu memory", time_load_map);
 
-#ifndef VULKAN
 	game->engine = this;
 	game->init();
 #endif // !VULKAN
@@ -143,9 +145,12 @@ void Engine::init()
 	TIME(renderer.create_buffers(this, linear_meshes), "vertices to CPU")
 
 #endif // "ES2"
+
+	if (meshes.size() > 0) {
+		mesh_manager.create_buffers(this, linear_meshes);
+		TIME(textures_manager.load_textures_to_cpu_memory(linear_meshes), "texture to CPU")
+	}
 	
-	mesh_manager.create_buffers(this, linear_meshes);
-	TIME(textures_manager.load_textures_to_cpu_memory(linear_meshes), "texture to CPU")
 
 #if defined(DEVELOPMENT)  && defined(ES2) //gizmos helpers
 	SkeletalManager::create_bones_vertices(this);
@@ -166,7 +171,8 @@ void Engine::init()
 			renderer.update_descriptor_set(mesh);
 		}
 
-		renderer.configure_objects(); */
+		 */
+		renderer.configure_objects();
 	#endif
 
 #ifdef DX11
