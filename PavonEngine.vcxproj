@@ -405,6 +405,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DX11|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DX12|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='OpenGL|x64'">true</ExcludedFromBuild>
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Vulkan|x64'">MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <ClCompile Include="src\skeletal.cpp" />
     <ClCompile Include="src\WindowManager.cpp" />

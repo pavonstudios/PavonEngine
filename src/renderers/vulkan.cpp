@@ -301,6 +301,34 @@ inline void Renderer::createCommandPool() {
 	}
 }
 
+ VkFormat Renderer::findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features) {
+	 std::cout << "formats\n";
+	 for (VkFormat format : candidates) {
+		VkFormatProperties props;
+		vkGetPhysicalDeviceFormatProperties(physicalDevice, format, &props);
+
+		if (tiling == VK_IMAGE_TILING_LINEAR && (props.linearTilingFeatures & features) == features) {
+			return format;
+		}
+		else if (tiling == VK_IMAGE_TILING_OPTIMAL && (props.optimalTilingFeatures & features) == features) {
+			return format;
+		}
+	}
+
+	throw std::runtime_error("failed to find supported format!");
+}
+
+VkFormat Renderer::findDepthFormat() {
+	std::vector<VkFormat> formats;
+	formats.push_back(VK_FORMAT_D32_SFLOAT);
+	formats.push_back(VK_FORMAT_D32_SFLOAT_S8_UINT);
+	formats.push_back(VK_FORMAT_D24_UNORM_S8_UINT);
+
+	VkFormat work_format = findSupportedFormat(formats, VK_IMAGE_TILING_OPTIMAL, VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT);
+	
+	return work_format;
+}
+
 inline void Renderer::createTextureSampler() {
 	VkSamplerCreateInfo samplerInfo = {};
 	samplerInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
@@ -557,10 +585,9 @@ void Renderer::VulkanConfig(){
 
         createCommandPool();
         createDepthResources();
-        createFramebuffers();
+        createFramebuffers();       
         
-        create_meshes_graphics_pipeline();
-        
+        //here pipeline
         createTextureSampler();
             
 }

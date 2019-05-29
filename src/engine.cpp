@@ -150,7 +150,9 @@ void Engine::init()
 	auto tStart = std::chrono::high_resolution_clock::now();
 
 	#ifdef VULKAN
-		/*renderer.VulkanConfig();
+		renderer.VulkanConfig();		
+		/*
+		renderer.create_meshes_graphics_pipeline();
 		for (auto mesh : linear_meshes)
 		{
 			renderer.load_mesh(mesh);

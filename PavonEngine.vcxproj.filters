@@ -84,10 +84,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\macros.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\renderers\dx12.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\macros.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
