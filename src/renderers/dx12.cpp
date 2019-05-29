@@ -1,6 +1,7 @@
 #include "../engine.h"
 #include "dx12.hpp"
 
+#include <d3dx12.h>
 
 void Renderer::init() {
 	ID3D12Debug* debug_controller;
@@ -58,6 +59,86 @@ void Renderer::init() {
 	 descriptor_heap_size = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 
 
+
+	 CD3DX12_CPU_DESCRIPTOR_HANDLE  rtv_handle(render_target_view_descriptor_heap->GetCPUDescriptorHandleForHeapStart());
+
+	 for (UINT i = 0; i < 2; i++) {
+		 swap_chain->GetBuffer(i, __uuidof(ID3D12Resource), (void**)(&render_targets[i]));
+		 device->CreateRenderTargetView(render_targets[i].Get(), nullptr, rtv_handle);
+		 rtv_handle.Offset(1, descriptor_heap_size);
+	 }
+
+	 result = device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, __uuidof(ID3D12CommandAllocator) ,(void**)(&command_allocator));
+
+
+	 create_root_signature();
+	 create_pipeline_state_object();
+	 create_syncronization_objects();
+	 record_command();
+
+}
+void Renderer::create_root_signature() {
+
+}
+
+void Renderer::record_command() {
+	device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, command_allocator, nullptr, __uuidof(ID3D12GraphicsCommandList) , (void**)(&command_list));
+	
+	command_list->Close();
+
+
+}
+void Renderer::create_pipeline_state_object() {
+
+}
+
+void Renderer::create_syncronization_objects() {
+	device->CreateFence(0, D3D12_FENCE_FLAG_NONE, __uuidof(ID3D12Fence), (void**)(&fence));
+	fence_value = 1;
+
+	fence_event = CreateEvent(nullptr, FALSE, FALSE, nullptr);
+
+}
+
+void Renderer::populate_command_list() {
+	command_allocator->Reset();
+
+	command_list->Reset(command_allocator, nullptr);
+
+	command_list->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(render_targets[frame_index].Get(),
+										D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
+
+	CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(render_target_view_descriptor_heap->GetCPUDescriptorHandleForHeapStart(),
+											frame_index,
+											descriptor_heap_size);
+
+	command_list->OMSetRenderTargets(1, &rtvHandle, FALSE, nullptr);
+
+	// Record commands.
+	const float clearColor[] = { 0.0f, 0.2f, 0.4f, 1.0f };
+	command_list->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
+
+	command_list->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(render_targets[frame_index].Get(),
+		D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
+
+	command_list->Close();
+
+
+}
+
+void Renderer::wait_for_previous_frame() {
+
+}
+
+void Renderer::draw_frame() {
+	populate_command_list();
+
+	ID3D12CommandList* ppCommandLists[] = {command_list};
+	command_queue->ExecuteCommandLists(1, ppCommandLists);
+
+
+	swap_chain->Present(1, 0);
+	wait_for_previous_frame();
 }
 
 void Renderer::get_hardware_adapter(IDXGIFactory4* pFactory, IDXGIAdapter1** ppAdapter)
