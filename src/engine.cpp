@@ -104,18 +104,20 @@ void Engine::init()
 	window_manager.create_window(pAndroid_app);
 #endif
 
+#ifdef GLFW
+	configure_window_callback();
+#endif // GLFW
+
+
 #ifdef LINUX
 	audio_manager.init();
 	audio_manager.play();
 #endif
 	
-	#ifdef LINUX
-	draw_loading_screen();
+	#if defined (LINUX)
+		draw_loading_screen();
 	#endif
-	
-#ifdef GLFW
-	configure_window_callback();
-#endif // GLFW
+
 
 #ifdef VULKAN
 		
@@ -219,7 +221,7 @@ void Engine::loop_data()
 void Engine::es2_draw_frame()
 {
 
-#if defined(ES2) || defined(ANDROID)
+#if defined(ES2) || defined(ANDROID) || defined (OPENGL)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	for (EMesh *mesh : meshes)
@@ -283,7 +285,7 @@ void Engine::main_loop()
 		renderer.draw_frame();
 #endif
 
-#if defined(ES2) || defined(ANDROID)
+#if defined(ES2) || defined(ANDROID) || defined (OPENGL)
 		es2_draw_frame();
 #endif
 
@@ -345,18 +347,17 @@ void Engine::update_mvp(EMesh* mesh)
 	{
 		mesh->MVP = mat;
 	}
-#if defined(ES2) || defined(ANDROID)
+#if defined(ES2) || defined(ANDROID) || defined (OPENGL)
 	if (mesh->type == MESH_TYPE_SKINNED)
 	{
 		mesh->ubo.proj = main_camera.Projection;
 		mesh->ubo.view = main_camera.View;
 		mesh->ubo.model = mesh->model_matrix;
 	}
-#endif
 
-#if defined(ES2) || defined(ANDROID)
 	renderer.update_mvp(mesh);
 #endif
+
 }
 
 void Engine::delete_meshes()

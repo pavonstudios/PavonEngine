@@ -397,7 +397,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='OpenGL|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Vulkan|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="src\renderers\opengl.cpp" />
+    <ClCompile Include="src\renderers\opengl.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='OpenGL|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DX11|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="src\renderers\vulkan.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DX11|x64'">true</ExcludedFromBuild>

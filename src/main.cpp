@@ -41,12 +41,12 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	engine.init();
 	engine.textures_manager.free_textures_from_cpu_memory(&engine, engine.meshes);
 	engine.main_loop();
-	while (!engine.window_manager.window_should_close()) {
+	/*while (!engine.window_manager.window_should_close()) {
 		engine.window_manager.check_events();
 		glClearColor(0.0, 1.0, 0.0, 1.0);
 		glClear(GL_COLOR_BUFFER_BIT);
 		SwapBuffers(engine.window_manager.device_context);
-	}
+	}*/
 #endif
 
 #ifdef DX11

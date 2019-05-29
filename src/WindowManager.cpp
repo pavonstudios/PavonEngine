@@ -305,8 +305,8 @@ void WindowManager::prepare_window_to_opengl()
 		cout << "glewInit failed: " << glewGetErrorString(err) << endl;
 		exit(1);
 	}
-
-	MessageBoxA(0, (char*)glGetString(GL_VERSION), "OPENGL VERSION", 0);
+	std::cout << "OpenGL: " << (char*)glGetString(GL_VERSION) << std::endl;
+	
 
 	
 }
@@ -427,7 +427,7 @@ void WindowManager::swap_buffers(){
       #if defined (GLFW)
          glfwSwapBuffers(glfw_window);
       #endif
-	#ifdef WINDOWS
+	#if defined (WINDOWS) && defined (OPENGL)
 		SwapBuffers(device_context);
 	#endif // WINDOWS
 
