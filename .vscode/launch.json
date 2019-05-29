@@ -62,7 +62,7 @@
 					"ignoreFailures": true
 				}
 			],
-			"preLaunchTask": "make"
+			"preLaunchTask": "make vk"
 		}
 	]
 }

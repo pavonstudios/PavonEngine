@@ -51,10 +51,10 @@ void Renderer::initVulkan() {
 	createInstance();
 	setupDebugMessenger();
 	
-	/*createSurface();
+	createSurface();
 	pickPhysicalDevice();
 	createLogicalDevice();
-	createSwapChain();*/
+	createSwapChain();
 
 }
 

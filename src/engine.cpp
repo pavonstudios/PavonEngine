@@ -129,8 +129,11 @@ void Engine::init()
 	maps.load_file_map(map_path);
 	calculate_time("map to cpu memory",time_load_map);
 
+#ifndef VULKAN
 	game->engine = this;
 	game->init();
+#endif // !VULKAN
+
 
 	//mesh_manager.create_buffers(this, unique_meshes);
 #ifdef ES2
