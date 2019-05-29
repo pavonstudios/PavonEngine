@@ -6,6 +6,12 @@
 
 #include <array>
 
+VKAPI_ATTR VkBool32 VKAPI_CALL Renderer::debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData) {
+	std::cout << "validation layer: " << pCallbackData->pMessage << std::endl;
+
+	return VK_FALSE;
+}
+
 void Renderer::setupDebugMessenger() {
 	std::cout << "setup debug messages\n";
 	if (!enableValidationLayers) {
@@ -44,10 +50,11 @@ void Renderer::createSurface() {
 void Renderer::initVulkan() {
 	createInstance();
 	setupDebugMessenger();
-	createSurface();
+	
+	/*createSurface();
 	pickPhysicalDevice();
 	createLogicalDevice();
-	createSwapChain();
+	createSwapChain();*/
 
 }
 
@@ -471,6 +478,27 @@ inline void Renderer::createUniformBuffers(EMesh* mesh) {
 			VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
 			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
 			mesh->uniformBuffers[i], mesh->uniformBuffersMemory[i]);
+	}
+
+	if (mesh->type == MESH_TYPE_SKINNED) {
+		//node uniform buffer
+		mesh->node_uniform.matrix = glm::mat4(1.0);
+
+
+		VkDeviceSize bufferSize = sizeof(NodeUniform);
+
+		mesh->uniform_node_buffers.resize(3);
+		mesh->uniform_node_buffer_memory.resize(3);
+
+		for (size_t i = 0; i < 3; i++) {
+			vulkan_device->createBuffer(
+				VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+				sizeof(NodeUniform),
+				&mesh->uniform_node_buffers[i],
+				&mesh->uniform_node_buffer_memory[i],
+				&mesh->node_uniform);
+		}
 	}
 }
 

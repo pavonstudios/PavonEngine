@@ -69,31 +69,7 @@ EMesh::~EMesh(){
     #endif
 }
 void MeshManager::create_buffers(Engine* engine, const std::vector<EMesh*>& meshes){
-    for(EMesh* mesh : meshes){   
-        #ifdef VULKAN
-            if(mesh->type == MESH_TYPE_SKINNED){
-                    //node uniform buffer
-                mesh->node_uniform.matrix = glm::mat4(1.0);
-                    
 
-                VkDeviceSize bufferSize = sizeof(NodeUniform);
-
-                mesh->uniform_node_buffers.resize(3);
-                mesh->uniform_node_buffer_memory.resize(3);
-
-                for (size_t i = 0; i < 3; i++) {
-                    vulkan_device->createBuffer(
-                        VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
-                        VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-                        sizeof(NodeUniform),
-                        &mesh->uniform_node_buffers[i],
-                        &mesh->uniform_node_buffer_memory[i],
-                        &mesh->node_uniform);               
-                }
-            }
-           
-        #endif        
-    }
     
 }
 void MeshManager::create_buffers(EMesh* mesh){

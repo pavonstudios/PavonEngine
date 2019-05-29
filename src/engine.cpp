@@ -132,6 +132,14 @@ void Engine::init()
 	game->engine = this;
 	game->init();
 
+	//mesh_manager.create_buffers(this, unique_meshes);
+#ifdef ES2
+	TIME(renderer.create_buffers(this, linear_meshes), "vertices to CPU")
+
+#endif // "ES2"
+		mesh_manager.create_buffers(this, linear_meshes);
+	TIME(textures_manager.load_textures_to_cpu_memory(linear_meshes), "texture to CPU")
+
 #if defined(DEVELOPMENT)  && defined(ES2) //gizmos helpers
 	SkeletalManager::create_bones_vertices(this);
 	Collision::create_collision_helper_vertices(this);
@@ -142,31 +150,19 @@ void Engine::init()
 	auto tStart = std::chrono::high_resolution_clock::now();
 
 	#ifdef VULKAN
-		renderer.VulkanConfig();
+		/*renderer.VulkanConfig();
+		for (auto mesh : linear_meshes)
+		{
+			renderer.load_mesh(mesh);
+			renderer.update_descriptor_set(mesh);
+		}
+
+		renderer.configure_objects();*/
 	#endif
 
-
-	
-	//mesh_manager.create_buffers(this, unique_meshes);
-	#ifdef ES2
-	 	TIME(renderer.create_buffers(this, linear_meshes),"vertices to CPU")	
-
-	#endif // "ES2"
-	mesh_manager.create_buffers(this, linear_meshes);
-	TIME(textures_manager.load_textures_to_cpu_memory(linear_meshes),"texture to CPU")
-	
-
-#ifdef VULKAN
-
-	for (auto mesh : linear_meshes)
-	{
-		renderer.load_mesh(mesh);
-		renderer.update_descriptor_set(mesh);
-	}
-
-	renderer.configure_objects();
-
-#endif
+#ifdef DX11
+	renderer.init();
+#endif // DX11
 
 #if defined(ES2) || defined(ANDROID)
 	renderer.init_gl();
@@ -178,12 +174,10 @@ void Engine::init()
 #endif
 
 #ifdef DEVELOPMENT
-	calculate_time("mesh",tStart);
+	calculate_time("total init",tStart);
 #endif
 
-#ifdef DX11
-	renderer.init();
-#endif // DX11
+
 
 	//init_collision_engine();
 }
