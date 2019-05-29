@@ -5,9 +5,14 @@
 
 void Renderer::init() {
 	ID3D12Debug* debug_controller;
-	if ( SUCCEEDED( D3D12GetDebugInterface( IID_PPV_ARGS(&debug_controller) ) ) ) {
+	
+	if ( SUCCEEDED( D3D12GetDebugInterface( IID_PPV_ARGS(&debug_controller) ) ) ) {		
 		debug_controller->EnableDebugLayer();
 	}
+
+	ID3D12Debug1* debug_controller_1;
+	debug_controller->QueryInterface(IID_PPV_ARGS(&debug_controller_1));
+	debug_controller_1->SetEnableGPUBasedValidation(true);
 
 	IDXGIFactory5* factory;
 	HRESULT result;
@@ -17,7 +22,7 @@ void Renderer::init() {
 	
 	get_hardware_adapter(factory, &hardware_adapter);
 
-	result = D3D12CreateDevice(hardware_adapter, D3D_FEATURE_LEVEL_11_0, __uuidof(ID3D12Device1), (void**)(&device) );
+	result = D3D12CreateDevice(hardware_adapter, D3D_FEATURE_LEVEL_11_0, __uuidof(ID3D12Device), (void**)(&device) );
 
 	D3D12_COMMAND_QUEUE_DESC command_queue_description;
 	command_queue_description.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
@@ -70,6 +75,7 @@ void Renderer::init() {
 
 	 result = device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, __uuidof(ID3D12CommandAllocator) ,(void**)(&command_allocator));
 
+	
 
 	 create_root_signature();
 	 create_pipeline_state_object();
@@ -181,7 +187,7 @@ void Renderer::create_pipeline_state_object() {
 	pipeline_state_desc.VS = vs_shader_byte_code;
 	pipeline_state_desc.PS = ps_shader_byte_code;
 
-	HRESULT hr = device->CreateGraphicsPipelineState(&pipeline_state_desc, __uuidof(ID3D12PipelineState), (void**)(&pipeline));
+	HRESULT hr = device->CreateGraphicsPipelineState(&pipeline_state_desc, IID_PPV_ARGS(&pipeline));
 
 
 }

@@ -17,7 +17,7 @@ class Renderer
 public:
 	Engine* engine;
 
-	ID3D12Device1* device;
+	ID3D12Device* device;
 	ID3D12CommandQueue* command_queue;
 	ComPtr<IDXGISwapChain3> swap_chain;
 	ComPtr<ID3D12Resource> render_targets[2];
