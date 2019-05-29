@@ -296,10 +296,19 @@ void WindowManager::prepare_window_to_opengl()
 
 
 	rendering_context = wglCreateContext(device_context);
-
+	
 	wglMakeCurrent(device_context,rendering_context);
 
+	GLenum err = glewInit();
+	if (err != GLEW_OK) {
+		// Problem: glewInit failed, something is seriously wrong.
+		cout << "glewInit failed: " << glewGetErrorString(err) << endl;
+		exit(1);
+	}
+
 	MessageBoxA(0, (char*)glGetString(GL_VERSION), "OPENGL VERSION", 0);
+
+	
 }
 
 #endif // OPENGL
@@ -418,6 +427,10 @@ void WindowManager::swap_buffers(){
       #if defined (GLFW)
          glfwSwapBuffers(glfw_window);
       #endif
+	#ifdef WINDOWS
+		SwapBuffers(device_context);
+	#endif // WINDOWS
+
 }
 
 WindowManager::~WindowManager(){

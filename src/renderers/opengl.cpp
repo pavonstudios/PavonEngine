@@ -1,5 +1,11 @@
 #include "opengl.hpp"
 #include "../engine.h"
+
+#ifdef WINDOWS
+#pragma warning(disable:4996)
+#endif // WINDOWS
+
+
 GLuint Renderer::load_shader(shader_src &shader_data, GLenum type)
 {
 	const char *shader_source;
@@ -162,9 +168,7 @@ void Renderer::load_shaders(const std::vector<EMesh *> &meshes)
 void Renderer::init_gl()
 {
 	//glViewport(0,0,800,600);
-	#ifdef WINDOWS
-	glewInit();
-	#endif
+
 	glClearColor(0.2, 0.0, 0.0, 1.0);
 
 	glEnable(GL_DEPTH_TEST);

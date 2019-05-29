@@ -166,7 +166,7 @@ public:
     VkDeviceMemory textureImageMemory;      
 #endif
 
-#if defined(ES2) || defined(ANDROID)
+#if defined(ES2) || defined(ANDROID) || defined (OPENGL)
     GLuint vertex_buffer = -1;
 	GLuint indices_buffer = -1;
     GLuint shader_program = -1;

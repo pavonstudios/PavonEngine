@@ -8,7 +8,10 @@ using namespace DirectX;
 
 void Renderer::init(){
 
-	
+	const D3D_FEATURE_LEVEL lvl[] = { D3D_FEATURE_LEVEL_11_1, D3D_FEATURE_LEVEL_11_0,
+	D3D_FEATURE_LEVEL_10_1, D3D_FEATURE_LEVEL_10_0,
+	D3D_FEATURE_LEVEL_9_3, D3D_FEATURE_LEVEL_9_2, D3D_FEATURE_LEVEL_9_1 };
+
 	DXGI_SWAP_CHAIN_DESC scd;
 	
 	ZeroMemory(&scd, sizeof(DXGI_SWAP_CHAIN_DESC));
@@ -26,8 +29,8 @@ void Renderer::init(){
 		D3D_DRIVER_TYPE_HARDWARE,
 		NULL,
 		D3D11_CREATE_DEVICE_DEBUG,
-		NULL,
-		NULL,
+		lvl,
+		7,
 		D3D11_SDK_VERSION,
 		&scd,
 		&swapchain,

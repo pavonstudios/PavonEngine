@@ -141,7 +141,7 @@ void Engine::init()
 
 
 	//mesh_manager.create_buffers(this, unique_meshes);
-#ifdef ES2
+#if defined (ES2) || defined (OPENGL)
 	TIME(renderer.create_buffers(this, linear_meshes), "vertices to CPU")
 
 #endif // "ES2"
@@ -179,7 +179,7 @@ void Engine::init()
 	renderer.init();
 #endif // DX11
 
-#if defined(ES2) || defined(ANDROID)
+#if defined(ES2) || defined(ANDROID) || defined (OPENGL)
 	renderer.init_gl();
 	renderer.load_shaders(linear_meshes);
 	renderer.load_textures(maps.same_textures);

@@ -269,7 +269,7 @@ void MapManager::assign_shader_path(){
 
 		PipelineData data = {};
 
-			#ifdef ES2				
+			#if defined (ES2) || defined (OPENGL)
 				data.fragment_shader_path = engine->assets.path("shaders/gles/frag.glsl");
 				data.vertex_shader_path = engine->assets.path("shaders/gles/vert_mvp.glsl");			
 			#endif
@@ -300,7 +300,7 @@ void MapManager::assign_shader_path(){
 			data_skinned_mesh.fragment_shader_path = "Game/Assets/shaders/vk/frag.spv";
 			data_skinned_mesh.vertex_shader_path = "Game/Assets/shaders/vk/skin_shader.spv";
 			#endif
-			#if defined(ES2) || defined(ANDROID)
+			#if defined(ES2) || defined(ANDROID) || defined (OPENGL)
 			data_skinned_mesh.fragment_shader_path = engine->assets.path("shaders/gles/frag.glsl");
 			data_skinned_mesh.vertex_shader_path = engine->assets.path("shaders/gles/skin_vert.glsl");
 			#endif

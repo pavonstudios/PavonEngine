@@ -15,7 +15,8 @@
 #endif // WINDOWS
 
 #ifdef OPENGL
-	#include<gl/GL.h>
+	#include <GL/glew.h>
+	#include <GL/wglew.h>
 #endif
 
 #ifdef LINUX

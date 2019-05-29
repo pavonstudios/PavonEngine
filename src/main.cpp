@@ -39,6 +39,8 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	
 #ifdef OPENGL
 	engine.init();
+	engine.textures_manager.free_textures_from_cpu_memory(&engine, engine.meshes);
+	engine.main_loop();
 	while (!engine.window_manager.window_should_close()) {
 		engine.window_manager.check_events();
 		glClearColor(0.0, 1.0, 0.0, 1.0);
