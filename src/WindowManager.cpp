@@ -5,11 +5,7 @@
 #if defined(LINUX) && defined (ES2)
 
 void WindowManager::configure_egl(){
-    ///////  the egl part  //////////////////////////////////////////////////////////////////
-   //  egl provides an interface to connect the graphics related functionality of openGL ES
-   //  with the windowing interface and functionality of the native operation system (X11
-   //  in our case.
- 
+
    egl_display  =  eglGetDisplay( (EGLNativeDisplayType) x_display );
    if ( egl_display == EGL_NO_DISPLAY ) {
       cerr << "Got no EGL display." << endl;
@@ -47,7 +43,6 @@ void WindowManager::configure_egl(){
       
    }
  
-   //// egl-contexts collect all state descriptions needed required for operation
    EGLint ctxattr[] = {
       EGL_CONTEXT_CLIENT_VERSION, 2,
       EGL_NONE
@@ -57,7 +52,7 @@ void WindowManager::configure_egl(){
       cerr << "Unable to create EGL context (eglError: " << eglGetError() << ")" << endl;
       
    } 
-   //// associate the egl-context with the egl-surface
+
    eglMakeCurrent( egl_display, egl_surface, egl_surface, egl_context );
 }
 
@@ -68,11 +63,9 @@ void WindowManager::move_cursor_to_center(){
 
 
 void WindowManager::create_window_xorg(){
-       ///////  the X11 part  //////////////////////////////////////////////////////////////////
-   // in the first part the program opens a connection to the X11 window manager
-   //
+
  
-   x_display = XOpenDisplay ( NULL );   // open the standard display (the primary screen)
+   x_display = XOpenDisplay ( NULL );   
    if ( x_display == NULL ) {
       cerr << "cannot connect to X server" << endl;
       

@@ -113,11 +113,14 @@ void Engine::init()
 	draw_loading_screen();
 	#endif
 	
+#ifdef GLFW
+	configure_window_callback();
+#endif // GLFW
 
 #ifdef VULKAN
-	configure_window_callback();	
+		
 	renderer.run(&vkdata);
-
+	renderer.vulkan_device = this->vulkan_device;
 	mesh_manager.vulkan_device = this->vulkan_device;
 #endif
 
@@ -127,7 +130,7 @@ void Engine::init()
 	game = new Game(this);
 	auto time_load_map = std::chrono::high_resolution_clock::now();
 	maps.load_file_map(map_path);
-	calculate_time("map to cpu memory",time_load_map);
+	calculate_time("---->map to cpu memory",time_load_map);
 
 #ifndef VULKAN
 	game->engine = this;
@@ -140,7 +143,8 @@ void Engine::init()
 	TIME(renderer.create_buffers(this, linear_meshes), "vertices to CPU")
 
 #endif // "ES2"
-		mesh_manager.create_buffers(this, linear_meshes);
+	
+	mesh_manager.create_buffers(this, linear_meshes);
 	TIME(textures_manager.load_textures_to_cpu_memory(linear_meshes), "texture to CPU")
 
 #if defined(DEVELOPMENT)  && defined(ES2) //gizmos helpers
@@ -154,15 +158,15 @@ void Engine::init()
 
 	#ifdef VULKAN
 		renderer.VulkanConfig();		
-		/*
-		renderer.create_meshes_graphics_pipeline();
+		
+	/* 	renderer.create_meshes_graphics_pipeline();
 		for (auto mesh : linear_meshes)
 		{
 			renderer.load_mesh(mesh);
 			renderer.update_descriptor_set(mesh);
 		}
 
-		renderer.configure_objects();*/
+		renderer.configure_objects(); */
 	#endif
 
 #ifdef DX11
