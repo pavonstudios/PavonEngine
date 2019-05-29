@@ -47,9 +47,11 @@ int WINAPI WinMain(HINSTANCE hInstance,
 #endif
 
 #ifdef DX11
+	engine.init();
 	engine.textures_manager.free_textures_from_cpu_memory(&engine, engine.meshes);
 	engine.main_loop();
 #endif // DX11
+
 #ifdef DX12
 	engine.renderer.engine = &engine;
 	engine.renderer.init();
