@@ -29,14 +29,20 @@ int WINAPI WinMain(HINSTANCE hInstance,
 		nCmdShow);
 	UpdateWindow(engine.window_manager.window_handler);
 
+#ifdef VULKAN
+	engine.init();
+	while (!engine.window_manager.window_should_close()) {
+		engine.window_manager.check_events();
+	}
+#endif
 	
 #ifdef OPENGL
 	engine.init();
 	while (!engine.window_manager.window_should_close()) {
 		engine.window_manager.check_events();
-		/*glClearColor(0.0, 1.0, 0.0, 1.0);
+		glClearColor(0.0, 1.0, 0.0, 1.0);
 		glClear(GL_COLOR_BUFFER_BIT);
-		SwapBuffers(engine.window_manager.device_context);*/
+		SwapBuffers(engine.window_manager.device_context);
 	}
 #endif
 
