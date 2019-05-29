@@ -98,14 +98,20 @@ void WindowManager::create_window_xorg(){
    Atom wmDeleteMessage = XInternAtom(x_display, "WM_DESTROY_WINDOW", False);
    XSetWMProtocols(x_display, x_window, &wmDeleteMessage, 1);
 
+   #ifdef EGL
    configure_egl();
+   #endif // EGL
+   
     
 }
 
 void WindowManager::clear(){
+      #ifdef EGL
       eglDestroyContext ( egl_display, egl_context );
       eglDestroySurface ( egl_display, egl_surface );
       eglTerminate      ( egl_display );
+      #endif // EGL
+      
       XDestroyWindow    ( x_display, x_window );
       XCloseDisplay     ( x_display );
 }

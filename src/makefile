@@ -41,6 +41,7 @@ vk: vulkan.o  $(OBJs) game game connectivity.o
 es2: DEFINES := -DLINUX
 es2: DEFINES += -DES2
 es2: DEFINES += -DX11
+es2: DEFINES += -DEGL
 es2: DEFINES += -DDEVELOPMENT
 es2: GAME += Multiplayer/*.o
 es2: TYPE := es2

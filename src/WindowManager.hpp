@@ -91,7 +91,7 @@ public:
             void clear();
             void move_cursor_to_center();            
         #endif
-        #if defined(LINUX) && defined(X11) && defined (ES2)
+        #if defined (EGL)
         EGLDisplay  egl_display;
         EGLContext  egl_context;
         EGLSurface  egl_surface;
