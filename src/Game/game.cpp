@@ -29,8 +29,7 @@ void Game::init_player(){
 
 
 }
-Game::Game(Engine* engine){
-	this->engine = engine;
+Game::Game(){
 	
 }
 void Game::init(){

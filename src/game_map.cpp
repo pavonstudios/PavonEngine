@@ -83,14 +83,13 @@ void MapManager::parse_map_file(std::stringstream &file){
 
 		
 }
-void MapManager::load_primitives()
-{
+void MapManager::load_primitives(){
 	for (EMesh* mesh : engine->meshes) {
 		engine->mesh_manager.load_primitives_data(mesh, mesh->gltf_model);
 	}
 }
-void MapManager::load_model_to_cpu_memory()
-{
+void MapManager::load_model_to_cpu_memory_async(){
+
 	int core_count = std::thread::hardware_concurrency();
 	int meshes_count = model_load_data.size();
 
@@ -374,7 +373,12 @@ void MapManager::load_file_map(std::string path) {
 
 	ENGINE_TIME(engine, create_meshes_with_map_loaded_data(), "create meshes")
 
-	ENGINE_TIME(engine, load_model_to_cpu_memory() , "model to cpu memory")
+	#ifdef WINDOWS
+	ENGINE_TIME(engine, load_model_to_cpu_memory_async() , "model to cpu memory")
+	#else
+	load_models_to_cpu_memory();
+	#endif // WINDOWS
+	
 
 	ENGINE_TIME(engine , load_primitives() , "load primitives")
 
@@ -402,3 +406,8 @@ void MapManager::load_file_map(std::string path) {
 	}
 }
 
+void MapManager::load_models_to_cpu_memory(){
+	for(auto & load_data : model_load_data){
+		engine->mesh_manager.load_model_gltf(load_data.mesh_to_load, load_data.path.c_str());
+	}
+}

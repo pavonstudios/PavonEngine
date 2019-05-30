@@ -40,13 +40,13 @@ Engine::Engine(android_app *pApp)
 
 void Engine::setup_components()
 {
-	MapManager* map_manager = new MapManager();
+	/* MapManager* map_manager = new MapManager();
 	map_manager->name = "MapManager";
 	components.push_back( (EngineComponent*)map_manager );
 
 	for (EngineComponent* component : this->components) {
 		component->engine = this;
-	}
+	} */
 }
 
 EngineComponent* Engine::component_by_name(const char* name)
@@ -96,6 +96,7 @@ void Engine::init()
 	textures_manager.engine = this;		
 	maps.engine = this;
 	renderer.engine = this;
+	
 
 #ifdef LINUX
 	window_manager.create_window();
@@ -131,7 +132,9 @@ void Engine::init()
 	std::string map_path = assets.path("Maps/map01.map");
 
 	this->meshes.clear();
-	game = new Game(this);
+	game = new Game();
+	game->engine = this;
+	
 	auto time_load_map = std::chrono::high_resolution_clock::now();
 	maps.load_file_map(map_path);
 	calculate_time("---->map to cpu memory", time_load_map);
@@ -141,21 +144,19 @@ void Engine::init()
 	game->player->mesh = player_mesh;
 
 
-	//mesh_manager.create_buffers(this, unique_meshes);
 #if defined (ES2) || defined (OPENGL)
-	TIME(renderer.create_buffers(this, linear_meshes), "vertices to CPU")
+	TIME(renderer.create_buffers(this, linear_meshes), "vertices to GPU")
 
 #endif // "ES2"
 
-	if (meshes.size() > 0) {
-		mesh_manager.create_buffers(this, linear_meshes);
+	if (meshes.size() > 0) {		
 		TIME(textures_manager.load_textures_to_cpu_memory(linear_meshes), "texture to CPU")
 	}
 	
 
 #if defined(DEVELOPMENT)  && ( defined(ES2) || defined (OPENGL) ) //gizmos helpers
-	//SkeletalManager::create_bones_vertices(this);
-	//Collision::create_collision_helper_vertices(this);
+//	SkeletalManager::create_bones_vertices(this);
+//	Collision::create_collision_helper_vertices(this);
 #endif
 
 	ready_to_game = true;
@@ -184,9 +185,9 @@ void Engine::init()
 #if defined(ES2) || defined(ANDROID) || defined (OPENGL)
 	renderer.init_gl();
 	renderer.load_shaders(linear_meshes);
-	renderer.load_textures(maps.same_textures);
+	//renderer.load_textures(maps.same_textures);
 	auto texture_time = std::chrono::high_resolution_clock::now();
-	renderer.load_textures(linear_meshes);
+	renderer.load_textures(linear_meshes);//to cpu
 	calculate_time("texture to GPU memory", texture_time);
 #endif
 
@@ -235,9 +236,7 @@ void Engine::es2_draw_frame()
 
 			update_mvp(mesh);
 			renderer.draw(mesh);
-		}
-		if (mesh->bIsGUI)
-		{
+		}else{
 
 			renderer.update_mvp(mesh);
 			renderer.draw_gui(mesh);

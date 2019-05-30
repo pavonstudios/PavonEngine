@@ -9,7 +9,7 @@
 
 class Game{
 	public:
-		Game(Engine* engine);
+		Game();
 		~Game();
 		Engine* engine;
 		EMesh* player_mesh;

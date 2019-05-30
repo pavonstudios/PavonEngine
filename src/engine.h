@@ -40,19 +40,19 @@
 #include "camera.h"
 #include "game_map.hpp"
 #include "audio_manager.hpp"
-class Game;
-
 #include "gui.hpp"
 #include "animation_manager.hpp"
 
 #ifdef LINUX
-#include  <sys/time.h>
-typedef std::chrono::time_point<std::chrono::system_clock> TTime;
+	#include  <sys/time.h>
+	typedef std::chrono::time_point<std::chrono::system_clock> TTime;
 #endif
 #ifdef WINDOWS
-typedef std::chrono::time_point<std::chrono::steady_clock> TTime;
-#endif // DEBUG
+	typedef std::chrono::time_point<std::chrono::steady_clock> TTime;
+#endif // WINDOWS
+
 class ConnectionManager;
+class Game;
 
 using namespace engine;
 #include "engine_component.hpp"
