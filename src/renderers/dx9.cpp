@@ -56,7 +56,7 @@ void Renderer::init(){
 }
 
 void Renderer::draw_frame() {
-	// clear the window to a deep blue
+	
 	d3ddev->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 40, 100), 1.0f, 0);
 
 	d3ddev->BeginScene();    // begins the 3D scene
@@ -64,13 +64,19 @@ void Renderer::draw_frame() {
 		 // select which vertex format we are using
 		d3ddev->SetFVF(CUSTOMFVF);
 
+
+	
+		
+
 		// select the vertex buffer to display
 		d3ddev->SetStreamSource(0, vertex_buffer, 0, sizeof(Vertex));
 
-		// copy the vertex buffer to the back buffer
+		
+
+		
 		d3ddev->DrawPrimitive(D3DPT_TRIANGLELIST, 0, 1);
 
-	d3ddev->EndScene();    // ends the 3D scene
+	d3ddev->EndScene();  
 
 	d3ddev->Present(NULL, NULL, NULL, NULL);    // displays the created frame
 }
