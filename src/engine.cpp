@@ -136,9 +136,9 @@ void Engine::init()
 	maps.load_file_map(map_path);
 	calculate_time("---->map to cpu memory", time_load_map);
 
-	game->engine = this;
+	EMesh* player_mesh = this->meshes[maps.player_id];
 	game->init();
-
+	game->player->mesh = player_mesh;
 
 
 	//mesh_manager.create_buffers(this, unique_meshes);
@@ -154,8 +154,8 @@ void Engine::init()
 	
 
 #if defined(DEVELOPMENT)  && ( defined(ES2) || defined (OPENGL) ) //gizmos helpers
-	SkeletalManager::create_bones_vertices(this);
-	Collision::create_collision_helper_vertices(this);
+	//SkeletalManager::create_bones_vertices(this);
+	//Collision::create_collision_helper_vertices(this);
 #endif
 
 	ready_to_game = true;

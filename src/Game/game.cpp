@@ -4,22 +4,17 @@
 void Game::init_player(){
 
 		player = new ThirdPerson();		
-		//player = new Vehicle();
-
-		player->engine = this->engine;	
-		player->mesh = nullptr;
-		player->camera_position = vec3(-0.4,-1.7,-2.8);
-		if(this->player_id == -1){
-			std::runtime_error("no player assigned from map file");
-		}else{
-				
-			player->mesh = engine->meshes[this->player_id];
-		}		
+		//player = new Vehicle();		
+		
+		player->mesh = player_mesh;
 		
 		if(player->mesh == nullptr){
 			std::runtime_error("no player mesh pointer assigned");
 		}
 		
+		player->engine = this->engine;			
+		player->camera_position = vec3(-0.4,-1.7,-2.8);
+
 		#ifdef LINUX
 		engine->net_manager = new ConnectionManager();
 		engine->net_manager->engine = engine;

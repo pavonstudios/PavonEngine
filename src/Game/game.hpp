@@ -12,6 +12,7 @@ class Game{
 		Game(Engine* engine);
 		~Game();
 		Engine* engine;
+		EMesh* player_mesh;
 		#ifdef ES2
 		GUI* gui = nullptr;
 		#endif // DEBUG	
