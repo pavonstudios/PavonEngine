@@ -34,7 +34,7 @@ vk: Library += -lX11
 vk: GAME += Multiplayer/*.o
 vk: TYPE := vk
 vk: CC := $(CCLINUX)
-vk: vulkan.o  $(OBJs) game connectivity.o
+vk: vulkan $(OBJs) game connectivity.o
 	
 	$(CC) -o ../renderer ./renderers/vulkan.o audio.o $(OBJs) $(GAME) $(Library) -I./ -lvulkan $(DEFINES)
 
@@ -78,6 +78,9 @@ WindowManager.o: WindowManager.cpp WindowManager.hpp
 	
 	$(CC) -c WindowManager.cpp -DGLTF $(DEFINES)
 
+.PHONY: vulkan
+vulkan:
+	$(MAKE) -C ./renderers $(TYPE)
 
 opengl.o: ./renderers/opengl.cpp ./renderers/opengl.hpp
 	$(CC) -c ./renderers/opengl.cpp -o ./renderers/opengl.o -DGLTF $(DEFINES)
@@ -142,8 +145,7 @@ main.o: main.cpp
 
 
 
-vulkan.o: ./renderers/vulkan.cpp ./renderers/vulkan.hpp
-	$(CC) -c ./renderers/vulkan.cpp -o ./renderers/vulkan.o -DGLTF $(DEFINES)
+
 
 
 asset_manager.o: asset_manager.h asset_manager.cpp
