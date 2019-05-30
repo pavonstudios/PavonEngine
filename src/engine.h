@@ -23,7 +23,7 @@
 #endif // DX9
 
 #if defined (DX11)
-    #include "renderers/directx.hpp"
+    #include "renderers/dx11.hpp"
 #endif
 
 #if defined (DX12)

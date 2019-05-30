@@ -455,7 +455,7 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\model_loader.cpp" />
     <ClCompile Include="src\objects.cpp" />
-    <ClCompile Include="src\renderers\directx.cpp">
+    <ClCompile Include="src\renderers\dx11.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='OpenGL|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Vulkan|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DX12|x64'">true</ExcludedFromBuild>
@@ -467,11 +467,18 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='OpenGL|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Vulkan|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="src\renderers\dx9.cpp" />
-    <ClCompile Include="src\renderers\opengl.cpp">
+    <ClCompile Include="src\renderers\dx9.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DX12|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DX11|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='OpenGL|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Vulkan|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="src\renderers\opengl.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='OpenGL|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DX11|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DX9|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DX12|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Vulkan|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="src\renderers\vulkan.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
