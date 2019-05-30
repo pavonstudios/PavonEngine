@@ -2,18 +2,18 @@
 #include "WindowManager.hpp"
 
 
-#if defined(LINUX) && defined (ES2)
+#if defined(EGL)
 
 void WindowManager::configure_egl(){
 
    egl_display  =  eglGetDisplay( (EGLNativeDisplayType) x_display );
    if ( egl_display == EGL_NO_DISPLAY ) {
-      cerr << "Got no EGL display." << endl;
+      std::cerr << "Got no EGL display." << std::endl;
       
    }
  
    if ( !eglInitialize( egl_display, NULL, NULL ) ) {
-      cerr << "Unable to initialize EGL" << endl;
+      std::cerr << "Unable to initialize EGL" << std::endl;
      
    }
  
@@ -55,7 +55,10 @@ void WindowManager::configure_egl(){
 
    eglMakeCurrent( egl_display, egl_surface, egl_surface, egl_context );
 }
+#endif
 
+#ifdef X11
+using namespace std;
 void WindowManager::move_cursor_to_center(){
    
    XWarpPointer(x_display, None, x_window, 0, 0, 0, 0, 400, 300);
@@ -104,9 +107,11 @@ void WindowManager::clear(){
       eglDestroySurface ( egl_display, egl_surface );
       eglTerminate      ( egl_display );
       #endif // EGL
-      
-      XDestroyWindow    ( x_display, x_window );
+      #ifdef X11
+		XDestroyWindow    ( x_display, x_window );
       XCloseDisplay     ( x_display );
+		#endif // DEBUG
+      
 }
 #endif
 

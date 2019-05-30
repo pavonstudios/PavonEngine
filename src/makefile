@@ -7,7 +7,8 @@ Library := -lpthread -lm -lSDL2
 MAIN_OBJS = camera.cpp engine.cpp
 DEFINES= -DGLTF -DDEVELOPMENT
 
-OBJs := main.o engine.o camera.o asset_manager.o objects.o input.o skeletal.o WindowManager.o game_map.o collision.o audio_manager.o
+OBJs := main.o WindowManager.o game_map.o collision.o audio_manager.o
+OBJs += engine.o camera.o asset_manager.o objects.o input.o skeletal.o
 OBJs += animation_manager.o
 OBJs += model_loader.o
 OBJs += gui.o
@@ -27,13 +28,13 @@ TYPE :=
 
 vk: DEFINES := -DVULKAN
 vk: DEFINES += -DLINUX
-vk: DEFINES += -DGLFW
+vk: DEFINES += -DX11
 vk: DEFINES += -DDEVELOPMENT
-vk: Library += -lglfw
+vk: Library += -lX11
 vk: GAME += Multiplayer/*.o
 vk: TYPE := vk
 vk: CC := $(CCLINUX)
-vk: vulkan.o  $(OBJs) game game connectivity.o
+vk: vulkan.o  $(OBJs) game connectivity.o
 	
 	$(CC) -o ../renderer ./renderers/vulkan.o audio.o $(OBJs) $(GAME) $(Library) -I./ -lvulkan $(DEFINES)
 

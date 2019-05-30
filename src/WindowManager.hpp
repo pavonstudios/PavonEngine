@@ -1,14 +1,17 @@
 #ifndef WINDOW
 #define WINDOW
 
-#if defined(LINUX) && defined (ES2)
+#if defined(X11)
     #include  <X11/Xlib.h>
     #include  <X11/Xatom.h>
-    #include  <X11/Xutil.h>
-    #include <GLES2/gl2.h>
-   
+    #include  <X11/Xutil.h>  
 #endif
- #if defined(LINUX) && defined(X11) && defined (ES2)
+
+#ifdef ES2
+    #include <GLES2/gl2.h>
+#endif
+
+#if defined(LINUX) && defined(X11) && defined (ES2)
     #include <EGL/egl.h>
   
     using namespace std;
@@ -52,6 +55,7 @@ public:
     ~WindowManager();
     void update_window_size();
     void create_wayland_window();
+    void clear();
 	static void error_callback(int error, const char* description);
 	
 	
@@ -74,32 +78,34 @@ public:
 		HGLRC rendering_context;
 		HDC device_context;
 		void prepare_window_to_opengl();
-	#endif // OPENGL
-
-    #ifdef ES2
+	#endif // OPENGL    
+    
        
-        #ifdef ANDROID
-            void create_window(android_app * app);
-        #endif
-        
-        #ifdef X11
-            Display    *x_display;
-            Window      x_window;
-            Atom wmDeleteMessage;
-            
-                        
-            void create_window_xorg();
-            void clear();
-            void move_cursor_to_center();            
-        #endif
-        #if defined (EGL)
-        EGLDisplay  egl_display;
-        EGLContext  egl_context;
-        EGLSurface  egl_surface;
-        private:
-            void configure_egl();
-        #endif
+    #ifdef ANDROID
+        void create_window(android_app * app);
     #endif
+        
+    
+
+    #ifdef X11
+        Display    *x_display;
+        Window      x_window;
+        Atom wmDeleteMessage;
+        
+                    
+        void create_window_xorg();
+        
+        void move_cursor_to_center();            
+    #endif
+    #if defined (EGL)
+    EGLDisplay  egl_display;
+    EGLContext  egl_context;
+    EGLSurface  egl_surface;
+    private:
+        void configure_egl();
+    #endif
+   
+   
 
 
 	#if defined (GLFW)
