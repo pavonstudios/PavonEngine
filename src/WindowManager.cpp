@@ -258,6 +258,28 @@ LRESULT CALLBACK WindowManager::WndProc(HWND hWnd, UINT message, WPARAM wParam, 
 			static_engine_pointer->input.handle_key_released(wParam);
 			break;
 		}
+		case WM_RBUTTONDOWN: {
+
+			static_engine_pointer->input.right_button_pressed = true;
+			
+			break;
+		}
+		case WM_LBUTTONDOWN: {			
+			static_engine_pointer->input.left_button_pressed = true;
+			break;
+		}
+		case WM_RBUTTONUP: {
+			static_engine_pointer->input.right_button_release = true;
+			static_engine_pointer->input.right_button_pressed = false;
+			break;
+		}
+
+		case WM_LBUTTONUP: {
+
+			static_engine_pointer->input.left_button_release = true;
+			static_engine_pointer->input.left_button_pressed = false;
+			break;
+		}
 		case WM_MOUSEMOVE:
 			static_engine_pointer->input.handle_mouse_movement(static_engine_pointer, lParam);
 			break;
