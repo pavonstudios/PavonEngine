@@ -67,6 +67,7 @@ public:
 			_In_ WPARAM wParam,
 			_In_ LPARAM lParam
 		);
+		void window_resize();
 	#endif 
 
 	#ifdef OPENGL

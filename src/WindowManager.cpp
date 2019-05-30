@@ -243,22 +243,40 @@ LRESULT CALLBACK WindowManager::WndProc(HWND hWnd, UINT message, WPARAM wParam, 
 
 	switch (message)
 	{
-	case WM_CLOSE:
-		PostQuitMessage(0);
-		static_engine_pointer->window_manager.close_window = true;
-		break;
-	case WM_KEYDOWN: {
-		static_engine_pointer->input.handle_key_pressed(wParam);
-		break;
-	}
-	case WM_KEYUP: {
-		static_engine_pointer->input.handle_key_released(wParam);
-		break;
-	}
-	default:
-		return DefWindowProc(hWnd, message, wParam, lParam);
+		case WM_CLOSE:
+			PostQuitMessage(0);
+			static_engine_pointer->window_manager.close_window = true;
+			break;
+		case WM_SIZE:
+			static_engine_pointer->window_manager.window_resize();
+			break;
+		case WM_KEYDOWN: {
+			static_engine_pointer->input.handle_key_pressed(wParam);
+			break;
+		}
+		case WM_KEYUP: {
+			static_engine_pointer->input.handle_key_released(wParam);
+			break;
+		}
+		default:
+			return DefWindowProc(hWnd, message, wParam, lParam);
 	}
 	return 0;
+}
+
+void WindowManager::window_resize()
+{
+	RECT rect;
+	int width = 800;
+	int height = 600;
+	if (GetWindowRect(window_handler, &rect))
+	{
+		width = rect.right - rect.left;
+		height = rect.bottom - rect.top;
+	}
+	this->window_width =  width;
+	this->window_height = height;
+	update_window_size();
 }
 
 #endif // WINDOWS
@@ -442,7 +460,7 @@ WindowManager::~WindowManager(){
 }
 
 void WindowManager::update_window_size(){
-   #ifdef LINUX
+   
 	int width = 0, height = 0;
    #ifdef VULKAN
       while (width == 0 || height == 0) {
@@ -458,10 +476,11 @@ void WindowManager::update_window_size(){
 
    engine->main_camera.screen_width = window_width;
    engine->main_camera.screen_height = window_height;
-   #if defined (ES2) || defined (ANDROID)  || defined(VULKAN)
-   engine->update_render_size();
+
+   #if defined (ES2) || defined (ANDROID)  || defined(VULKAN) || defined (OPENGL)
+	engine->update_render_size();
    #endif
-   #endif//(linux)
+  
 }
 
 bool WindowManager::window_should_close(){

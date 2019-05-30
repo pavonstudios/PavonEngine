@@ -10,6 +10,7 @@ void Input::handle_input_windows_messages(WPARAM wParam)
 		std::cout << "a pressed \n";
 	}
 }
+
 void Input::handle_key_released(WPARAM wParam)
 {
 	switch (wParam)
@@ -42,6 +43,7 @@ void Input::handle_key_released(WPARAM wParam)
 		break;
 	}
 }
+
 void Input::handle_key_pressed(WPARAM wParam)
 {
 	switch (wParam)
@@ -276,6 +278,7 @@ void Input::mouse_movement(Engine* engine, float xpos, float ypos){
 	
 	}//end right click pressed
 }	
+
 #if defined(LINUX) && defined(X11)
 
 void Input::check_input_event(Engine* engine, XEvent &xev){
@@ -470,6 +473,7 @@ void Input::key_set(const char key, bool isPressed){
 	}
 }
 #endif
+
 void Input::update_input(Engine* engine){
 
 	//std::cout << this->mouse_in_gamey << std::endl;
@@ -566,6 +570,7 @@ void Input::update_input(Engine* engine){
 
 	}
 }
+
 #ifdef ANDROID
 void Input::input_event(AInputEvent* event){
     float x =  AMotionEvent_getX(event,0);
