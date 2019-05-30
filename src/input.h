@@ -66,6 +66,7 @@ public:
 	void handle_input_windows_messages(WPARAM wParam);
 	void handle_key_released(WPARAM wParam);
 	void handle_key_pressed(WPARAM wParam);
+	void handle_mouse_movement(Engine*, LPARAM);
 #endif // WINDOWS
 
 #if defined (VULKAN) || defined (DX11)

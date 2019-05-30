@@ -258,6 +258,9 @@ LRESULT CALLBACK WindowManager::WndProc(HWND hWnd, UINT message, WPARAM wParam, 
 			static_engine_pointer->input.handle_key_released(wParam);
 			break;
 		}
+		case WM_MOUSEMOVE:
+			static_engine_pointer->input.handle_mouse_movement(static_engine_pointer, lParam);
+			break;
 		default:
 			return DefWindowProc(hWnd, message, wParam, lParam);
 	}
@@ -462,7 +465,7 @@ WindowManager::~WindowManager(){
 void WindowManager::update_window_size(){
    
 	int width = 0, height = 0;
-   #ifdef VULKAN
+   #ifdef GLFW
       while (width == 0 || height == 0) {
          glfwGetFramebufferSize(glfw_window, &width, &height);
          glfwWaitEvents();

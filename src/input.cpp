@@ -76,6 +76,19 @@ void Input::handle_key_pressed(WPARAM wParam)
 		break;
 	}
 }
+
+void Input::handle_mouse_movement(Engine* engine, LPARAM param)
+{
+	POINT p;
+
+	 p.x = LOWORD(param);
+	 p.y = HIWORD(param);
+
+	ShowCursor(TRUE);
+	engine->input.mouse_movement(engine, p.x, p.y);
+}
+
+
 #endif // WINDOWS
 
 #if defined (GLFW) 
