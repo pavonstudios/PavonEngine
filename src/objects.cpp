@@ -434,23 +434,47 @@ std::array<VkVertexInputAttributeDescription, 5> Vertex::get_attribute_descripti
 	return attributeDescriptions;
 }
 
-std::array<VkVertexInputAttributeDescription, 3> Vertex::getAttributeDescriptions() {
-	std::array<VkVertexInputAttributeDescription, 3> attributeDescriptions = {};
+std::vector<VkVertexInputAttributeDescription> Vertex::getAttributeDescriptions(int mesh_type) {
+	
+	VkVertexInputAttributeDescription position = {};
+	position.binding = 0;
+	position.location = 0;
+	position.format = VK_FORMAT_R32G32B32_SFLOAT;
+	position.offset = offsetof(Vertex, pos);
 
-	attributeDescriptions[0].binding = 0;
-	attributeDescriptions[0].location = 0;
-	attributeDescriptions[0].format = VK_FORMAT_R32G32B32_SFLOAT;
-	attributeDescriptions[0].offset = offsetof(Vertex, pos);
+	VkVertexInputAttributeDescription color = {};
+	color.binding = 0;
+	color.location = 1;
+	color.format = VK_FORMAT_R32G32B32_SFLOAT;
+	color.offset = offsetof(Vertex, color);
 
-	attributeDescriptions[1].binding = 0;
-	attributeDescriptions[1].location = 1;
-	attributeDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
-	attributeDescriptions[1].offset = offsetof(Vertex, color);
+	VkVertexInputAttributeDescription texture_coord = {};
+	texture_coord.binding = 0;
+	texture_coord.location = 2;
+	texture_coord.format = VK_FORMAT_R32G32_SFLOAT;
+	texture_coord.offset = offsetof(Vertex, texCoord);
 
-	attributeDescriptions[2].binding = 0;
-	attributeDescriptions[2].location = 2;
-	attributeDescriptions[2].format = VK_FORMAT_R32G32_SFLOAT;
-	attributeDescriptions[2].offset = offsetof(Vertex, texCoord);
+	std::vector<VkVertexInputAttributeDescription> attributes = { position, color , texture_coord };
 
-	return attributeDescriptions;
+	if (mesh_type == MESH_TYPE_SKINNED) {
+		VkVertexInputAttributeDescription joint = {};
+		joint.binding = 0;
+		joint.location = 3;
+		joint.format = VK_FORMAT_R32G32B32_SFLOAT;
+		joint.offset = offsetof(Vertex, joint0);
+
+		VkVertexInputAttributeDescription weight = {};
+		weight.binding = 0;
+		weight.location = 4;
+		weight.format = VK_FORMAT_R32G32B32_SFLOAT;
+		weight.offset = offsetof(Vertex, weight0);
+
+		attributes.push_back(joint);
+		attributes.push_back(weight);
+
+	}
+	
+
+
+	return attributes;
 }

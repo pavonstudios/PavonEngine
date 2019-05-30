@@ -1103,20 +1103,20 @@ void Renderer::createGraphicsPipeline( const struct PipelineData * data, VkPipel
 
         auto bindingDescription = Vertex::getBindingDescription();
         
+		std::vector<VkVertexInputAttributeDescription> attributes_description;
         if(data->mesh_type == MESH_TYPE_STATIC){
-			std::array<VkVertexInputAttributeDescription, 3> attributes_description = Vertex::getAttributeDescriptions();
-            vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(attributes_description.size());
-            vertexInputInfo.pVertexAttributeDescriptions = attributes_description.data();
+			attributes_description = Vertex::getAttributeDescriptions(MESH_TYPE_STATIC);
+           
         }
         else if (data->mesh_type == MESH_TYPE_SKINNED){
-            auto attributes_description =  Vertex::get_attribute_descriptions_skeletal_mesh();
-            vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(attributes_description.size());
-            vertexInputInfo.pVertexAttributeDescriptions = attributes_description.data();
+			attributes_description = Vertex::getAttributeDescriptions(MESH_TYPE_SKINNED);
         }       
 
-        vertexInputInfo.vertexBindingDescriptionCount = 1;
-        
+        vertexInputInfo.vertexBindingDescriptionCount = 1;        
         vertexInputInfo.pVertexBindingDescriptions = &bindingDescription;
+
+		vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(attributes_description.size());
+		vertexInputInfo.pVertexAttributeDescriptions = &attributes_description[0];
 
         VkGraphicsPipelineCreateInfo pipelineInfo = {};
         pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;

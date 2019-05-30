@@ -71,7 +71,7 @@ namespace engine{
 		public:
 				static VkVertexInputBindingDescription getBindingDescription();
 				static std::array<VkVertexInputAttributeDescription, 5> get_attribute_descriptions_skeletal_mesh();
-				static std::array<VkVertexInputAttributeDescription, 3> getAttributeDescriptions();
+				static std::vector<VkVertexInputAttributeDescription> getAttributeDescriptions(int mesh_type);
 				bool operator==(const Vertex& other) const {
 					return pos == other.pos && color == other.color && texCoord == other.texCoord;
 				}
