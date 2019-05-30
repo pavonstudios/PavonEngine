@@ -1104,7 +1104,7 @@ void Renderer::createGraphicsPipeline( const struct PipelineData * data, VkPipel
         auto bindingDescription = Vertex::getBindingDescription();
         
         if(data->mesh_type == MESH_TYPE_STATIC){
-            auto attributes_description = Vertex::getAttributeDescriptions();
+			std::array<VkVertexInputAttributeDescription, 3> attributes_description = Vertex::getAttributeDescriptions();
             vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(attributes_description.size());
             vertexInputInfo.pVertexAttributeDescriptions = attributes_description.data();
         }

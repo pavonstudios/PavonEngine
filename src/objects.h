@@ -61,6 +61,22 @@ using namespace glm;
 
 namespace engine{ 
 
+	struct Vertex {
+		glm::vec3 pos;
+		glm::vec3 color;
+		glm::vec2 texCoord;
+		glm::vec4 joint0;
+		glm::vec4 weight0;
+		#ifdef VULKAN
+		public:
+				static VkVertexInputBindingDescription getBindingDescription();
+				static std::array<VkVertexInputAttributeDescription, 5> get_attribute_descriptions_skeletal_mesh();
+				static std::array<VkVertexInputAttributeDescription, 3> getAttributeDescriptions();
+				bool operator==(const Vertex& other) const {
+					return pos == other.pos && color == other.color && texCoord == other.texCoord;
+				}
+		#endif //VULKAN 
+	};
 	
 
     struct Transform{
@@ -274,7 +290,7 @@ public:
         static void translate(Engine* engine, EMesh* mesh, Movement& movement);
     };
 
-
+	
 
 }//namespace engine
 

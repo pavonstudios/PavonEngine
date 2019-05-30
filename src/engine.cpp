@@ -128,7 +128,6 @@ void Engine::init()
 
 	
 
-#ifndef VULKAN
 	std::string map_path = assets.path("Maps/map01.map");
 
 	this->meshes.clear();
@@ -139,7 +138,7 @@ void Engine::init()
 
 	game->engine = this;
 	game->init();
-#endif // !VULKAN
+
 
 
 	//mesh_manager.create_buffers(this, unique_meshes);
@@ -166,14 +165,15 @@ void Engine::init()
 	#ifdef VULKAN
 		renderer.VulkanConfig();		
 		
-	/* 	renderer.create_meshes_graphics_pipeline();
+		renderer.create_meshes_graphics_pipeline();
+
 		for (auto mesh : linear_meshes)
 		{
 			renderer.load_mesh(mesh);
 			renderer.update_descriptor_set(mesh);
 		}
 
-		 */
+	
 		renderer.configure_objects();
 	#endif
 
