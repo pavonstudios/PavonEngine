@@ -33,6 +33,7 @@ vk: DEFINES += -DDEVELOPMENT
 vk: Library += -lX11
 vk: GAME += Multiplayer/*.o
 vk: TYPE := vk
+vk: Library += -lGL
 vk: CC := $(CCLINUX)
 vk: vulkan $(OBJs) game connectivity.o
 	

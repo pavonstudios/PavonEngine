@@ -166,16 +166,18 @@ void Engine::init()
 	#ifdef VULKAN
 		renderer.VulkanConfig();		
 		
-		renderer.create_meshes_graphics_pipeline();
+		/* renderer.create_meshes_graphics_pipeline();
 
 		for (auto mesh : linear_meshes)
 		{
 			renderer.load_mesh(mesh);
 			renderer.update_descriptor_set(mesh);
-		}
+		} */
 
-	
-		renderer.configure_objects();
+		renderer.create_sync_objects();
+		//create_command_buffer
+		
+		
 	#endif
 
 #ifdef DX11

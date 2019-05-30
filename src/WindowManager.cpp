@@ -97,7 +97,15 @@ void WindowManager::create_window_xorg(){
    #ifdef EGL
    configure_egl();
    #endif // EGL
-   
+   #ifdef X11
+	XVisualInfo *vi;
+	static int attributeList[] = { GLX_RGBA, None };
+	 vi = glXChooseVisual(x_display, DefaultScreen(x_display), attributeList);
+	 GLXContext cx;
+	 cx = glXCreateContext(x_display, vi, 0, GL_TRUE);
+	  glXMakeCurrent(x_display, x_window, cx);
+
+	#endif // DEBUG
     
 }
 
@@ -478,7 +486,9 @@ void WindowManager::swap_buffers(){
 	#if defined (WINDOWS) && defined (OPENGL)
 		SwapBuffers(device_context);
 	#endif // WINDOWS
-
+		#ifdef X11		 
+		 glXSwapBuffers(engine->window_manager.x_display , engine->window_manager.x_window);
+		#endif // x11
 }
 
 WindowManager::~WindowManager(){
