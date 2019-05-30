@@ -31,10 +31,12 @@ int WINAPI WinMain(HINSTANCE hInstance,
 
 #ifdef VULKAN
 	engine.init();
-	while (!engine.window_manager.window_should_close()) {
+	engine.textures_manager.free_textures_from_cpu_memory(&engine, engine.meshes);
+	engine.main_loop();
+	/*while (!engine.window_manager.window_should_close()) {
 		engine.window_manager.check_events();
 		engine.renderer.draw_frame();
-	}
+	}*/
 #endif
 	
 #ifdef OPENGL

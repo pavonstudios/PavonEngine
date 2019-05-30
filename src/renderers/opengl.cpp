@@ -1,5 +1,6 @@
-#include "opengl.hpp"
 #include "../engine.h"
+#include "opengl.hpp"
+
 
 #ifdef WINDOWS
 #pragma warning(disable:4996)

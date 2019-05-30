@@ -317,7 +317,7 @@ void MapManager::assign_shader_path(){
 }
 
 void MapManager::load_skeletal_meshes(){
-	#ifndef WINDOWS
+	#if defined (OPENGL)
 		for (int id : skeletal_id) {
 			engine->skeletal_meshes.push_back(engine->linear_meshes[id]);
 			SkeletalManager::load_data(&engine->animation_manager, engine->linear_meshes[id]);

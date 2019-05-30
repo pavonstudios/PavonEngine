@@ -393,6 +393,7 @@ void engine::TexturesManager::free_textures_from_cpu_memory(Engine* engine, cons
 		engine->assets.free_image(mesh->image.data);
 	}
 }
+#ifdef VULKAN
 
 VkVertexInputBindingDescription Vertex::getBindingDescription() {
 	VkVertexInputBindingDescription bindingDescription = {};
@@ -478,3 +479,4 @@ std::vector<VkVertexInputAttributeDescription> Vertex::getAttributeDescriptions(
 
 	return attributes;
 }
+#endif // VULKAN

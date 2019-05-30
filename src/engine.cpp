@@ -153,7 +153,7 @@ void Engine::init()
 	}
 	
 
-#if defined(DEVELOPMENT)  && defined(ES2) //gizmos helpers
+#if defined(DEVELOPMENT)  && ( defined(ES2) || defined (OPENGL) ) //gizmos helpers
 	SkeletalManager::create_bones_vertices(this);
 	Collision::create_collision_helper_vertices(this);
 #endif
@@ -645,7 +645,7 @@ void Engine::init_collision_engine()
 void Engine::update_render_size()
 {
 	main_camera.update_projection_matrix();
-#if defined(ES2) || (ANDROID)
+#if defined(ES2) || defined (ANDROID) || defined (OPENGL)
 	glViewport(0, 0, main_camera.screen_width, main_camera.screen_height);
 #endif
 
