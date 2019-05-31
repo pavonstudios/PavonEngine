@@ -3,7 +3,6 @@
 
 
 #if defined(EGL)
-
 void WindowManager::configure_egl(){
 
    egl_display  =  eglGetDisplay( (EGLNativeDisplayType) x_display );
@@ -84,10 +83,10 @@ void WindowManager::create_window_xorg(){
                         KeyReleaseMask | StructureNotifyMask | ButtonPressMask |
                         ButtonReleaseMask;
 
-	unsigned long mask = CWBackPixel | CWBorderPixel | CWColormap | CWEventMask;
+	unsigned long mask = CWBackPixel | CWBorderPixel | CWEventMask;
 
 	#ifdef GLX
-	
+	mask |= CWColormap;
 	XVisualInfo *visual_info;
 
 	int attr[] = {
