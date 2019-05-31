@@ -92,9 +92,16 @@ int WINAPI WinMain(HINSTANCE hInstance,
         int main() {
             
             Engine engine;
-            engine.init();
-			engine.textures_manager.free_textures_from_cpu_memory(&engine, engine.meshes);
-            engine.main_loop();                  
+            
+            engine.window_manager.engine = &engine;
+            engine.window_manager.create_window_xorg();
+            while(!engine.window_manager.window_should_close()){
+               engine.window_manager.check_events();
+               engine.window_manager.swap_buffers();
+            }
+            //engine.init();
+			//engine.textures_manager.free_textures_from_cpu_memory(&engine, engine.meshes);
+            //engine.main_loop();                  
 
             return EXIT_SUCCESS;      
         }
