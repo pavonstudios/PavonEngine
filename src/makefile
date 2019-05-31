@@ -1,6 +1,6 @@
 CLANG=clang++ -g -std=c++17 -stdlib=libc++
 CC:=
-CCLINUX=g++ -g -std=c++17 -Wall
+CCLINUX=g++ -g -std=c++17
 CCWIN=x86_64-w64-mingw32-g++ -g -std=c++17 -Wall
 Library := -lpthread -lm -lSDL2
 
@@ -24,10 +24,12 @@ INCLUDE_OPENGL = -lGLESv2 -lEGL -lX11 -lGL
 DEFINES :=
 TYPE :=
 
-
+export DEFINES
+export CC
 
 vk: DEFINES := -DVULKAN
 vk: DEFINES += -DLINUX
+vk: DEFINES += -DGLTF
 vk: DEFINES += -DGLFW
 vk: DEFINES += -DDEVELOPMENT
 vk: Library += -lglfw
