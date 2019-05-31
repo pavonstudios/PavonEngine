@@ -96,7 +96,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
             engine.window_manager.engine = &engine;
            
             engine.meshes.clear();
-            engine.window_manager.create_window_glfw();
+            /* engine.window_manager.create_window_glfw();
 
             
             
@@ -113,10 +113,11 @@ int WINAPI WinMain(HINSTANCE hInstance,
                engine.renderer.draw_frame();
                engine.window_manager.swap_buffers();
               
-            }
-            //engine.init();
-			//engine.textures_manager.free_textures_from_cpu_memory(&engine, engine.meshes);
-            //engine.main_loop();                  
+            } */
+            engine.init();
+			engine.textures_manager.free_textures_from_cpu_memory(&engine, engine.meshes);
+            engine.renderer.create_command_buffer(engine.meshes);
+            engine.main_loop();                  
 
             return EXIT_SUCCESS;      
         }

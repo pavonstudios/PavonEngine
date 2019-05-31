@@ -143,7 +143,7 @@ void Engine::init()
 	game->init();
 	game->player->mesh = player_mesh;
 
-
+	
 #if defined (ES2) || defined (OPENGL)
 	TIME(renderer.create_buffers(this, linear_meshes), "vertices to GPU")
 
@@ -164,15 +164,16 @@ void Engine::init()
 	auto tStart = std::chrono::high_resolution_clock::now();
 
 	#ifdef VULKAN
+		renderer.meshes = meshes;
 		renderer.VulkanConfig();		
 		
-		/* renderer.create_meshes_graphics_pipeline();
+		renderer.create_meshes_graphics_pipeline();
 
 		for (auto mesh : linear_meshes)
 		{
 			renderer.load_mesh(mesh);
 			renderer.update_descriptor_set(mesh);
-		} */
+		}
 
 		renderer.create_sync_objects();
 		//create_command_buffer

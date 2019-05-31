@@ -148,10 +148,6 @@ main.o: main.cpp
 	$(CC) -c main.cpp -DGLTF $(DEFINES)
 
 
-
-
-
-
 asset_manager.o: asset_manager.h asset_manager.cpp
 	
 	$(CC) -c asset_manager.cpp -I./ -DGLTF $(DEFINES)
