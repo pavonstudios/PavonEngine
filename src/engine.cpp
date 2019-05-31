@@ -300,8 +300,6 @@ void Engine::main_loop()
 		window_manager.swap_buffers();
 #endif // !DX11
 
-	
-
 		tranlation_update.movements.clear();
 	}
 

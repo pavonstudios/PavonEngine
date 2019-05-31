@@ -309,7 +309,7 @@ void MapManager::assign_shader_path(){
 }
 
 void MapManager::load_skeletal_meshes(){
-	#if defined (OPENGL) || defined (VULKAN)
+	#if defined (OPENGL) || defined (VULKAN) || defined (ES2)
 		for (int id : skeletal_id) {
 			engine->skeletal_meshes.push_back(engine->linear_meshes[id]);
 			SkeletalManager::load_data(&engine->animation_manager, engine->linear_meshes[id]);

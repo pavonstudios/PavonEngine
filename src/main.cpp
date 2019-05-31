@@ -116,7 +116,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
             } */
             engine.init();
 			engine.textures_manager.free_textures_from_cpu_memory(&engine, engine.meshes);
-            engine.renderer.create_command_buffer(engine.meshes);
+            //engine.renderer.create_command_buffer(engine.meshes);
             engine.main_loop();                  
 
             return EXIT_SUCCESS;      
