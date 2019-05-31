@@ -4,7 +4,7 @@
 #if defined (VULKAN) || defined (DX11)
 	#include <GLFW/glfw3.h>
 #endif
-#if defined(LINUX) && defined (ES2)
+#if defined(X11)
 	#include  <X11/Xlib.h>
 #endif
 #ifdef WINDOWS

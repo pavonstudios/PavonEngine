@@ -166,11 +166,10 @@ void Renderer::load_shaders(const std::vector<EMesh *> &meshes)
 	}
 }
 
-void Renderer::init_gl()
-{
-	//glViewport(0,0,800,600);
+void Renderer::init_gl(){
+	
 
-	glClearColor(0.2, 0.0, 0.0, 1.0);
+	glClearColor(1, 0.0, 0.0, 1.0);
 
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);

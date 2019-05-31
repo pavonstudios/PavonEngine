@@ -45,6 +45,16 @@ void Renderer::createSurface() {
 	surface_create_info.hwnd = engine->window_manager.window_handler;
 	VK_CHECK_RESULT(vkCreateWin32SurfaceKHR(instance, &surface_create_info, NULL, &surface));
 #endif
+#if defined (X11) && defined (GLX)
+    //"VK_KHR_xlib_surface"
+   VkXlibSurfaceCreateInfoKHR create_info = {};
+   create_info.dpy = engine->window_manager.x_display;
+   create_info.sType = VK_STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR;
+   create_info.pNext = NULL;
+   create_info.flags = 0;
+   create_info.window = engine->window_manager.x_window;
+    vkCreateXlibSurfaceKHR(instance,&create_info,nullptr,&surface);
+#endif // X11
 }
 
 void Renderer::initVulkan() {
@@ -128,19 +138,21 @@ void Renderer::pickPhysicalDevice() {
 	vkEnumeratePhysicalDevices(instance, &deviceCount, nullptr);
 
 	if (deviceCount == 0) {
-		throw std::runtime_error("failed to find GPUs with Vulkan support!");
+		throw std::string("failed to find GPUs with Vulkan support!");
 	}
 
 	std::vector<VkPhysicalDevice> devices(deviceCount);
 	vkEnumeratePhysicalDevices(instance, &deviceCount, devices.data());
 
 	for (const auto& device : devices) {
-		if (isDeviceSuitable(device)) {
+		/* if (isDeviceSuitable(device)) {
 			physicalDevice = device;
-			break;
-		}
+			//break;
+		} */
 	}
+    physicalDevice = devices[1];
 
+   
 	if (physicalDevice == VK_NULL_HANDLE) {
 		throw std::runtime_error("failed to find a suitable GPU!");
 	}
@@ -556,7 +568,13 @@ inline std::vector<const char*> Renderer::getRequiredExtensions() {
 #else
 	std::vector<const char*> extensions;
 	extensions.push_back("VK_KHR_surface");
-	extensions.push_back("VK_KHR_win32_surface");
+    #ifdef WINDOWS
+    extensions.push_back("VK_KHR_win32_surface");
+    #endif
+    #ifdef X11
+    extensions.push_back("VK_KHR_xlib_surface");
+    #endif
+	
 #endif // GLFW
 	
 
@@ -721,6 +739,66 @@ void Renderer::createCommandBuffers() {
         }
 }
 
+void Renderer::create_command_buffer(std::vector<EMesh*>& meshes){
+    commandBuffers.resize(swapChainFramebuffers.size());
+
+        VkCommandBufferAllocateInfo allocInfo = {};
+        allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+        allocInfo.commandPool = commandPool;
+        allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+        allocInfo.commandBufferCount = (uint32_t) commandBuffers.size();
+
+        if (vkAllocateCommandBuffers(device, &allocInfo, commandBuffers.data()) != VK_SUCCESS) {
+            throw std::runtime_error("failed to allocate command buffers!");
+        }
+
+        for (size_t i = 0; i < commandBuffers.size(); i++) {
+            VkCommandBufferBeginInfo beginInfo = {};
+            beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+            beginInfo.flags = VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT;
+
+            if (vkBeginCommandBuffer(commandBuffers[i], &beginInfo) != VK_SUCCESS) {
+                throw std::runtime_error("failed to begin recording command buffer!");
+            }
+
+            VkRenderPassBeginInfo renderPassInfo = {};
+            renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+            renderPassInfo.renderPass = renderPass;
+            renderPassInfo.framebuffer = swapChainFramebuffers[i];
+            renderPassInfo.renderArea.offset = {0, 0};
+            renderPassInfo.renderArea.extent = swapChainExtent;
+
+            std::array<VkClearValue, 2> clearValues = {};
+            clearValues[0].color = {1.f, 0.1f, 0.1f, 1.0f};
+            clearValues[1].depthStencil = {1.0f, 0};
+
+            renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
+            renderPassInfo.pClearValues = clearValues.data();
+
+            vkCmdBeginRenderPass(commandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+                for(size_t mesh_id = 0; mesh_id < meshes.size(); mesh_id++){
+
+                    vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, meshes[mesh_id]->graphics_pipeline);
+
+                    //VkBuffer vertexBuffers[] = {my_3d_model.vertices_buffer};
+                    VkDeviceSize offsets[] = {0};
+                    vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, &meshes[mesh_id]->vertices_buffer, offsets);
+
+                    vkCmdBindIndexBuffer(commandBuffers[i], meshes[mesh_id]->indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+
+                    vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 2, 
+                                                meshes[mesh_id]->descriptorSets.data(), 0, nullptr);
+
+                    vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(meshes[mesh_id]->indices.size()), 1, 0, 0, 0);
+                }
+
+            vkCmdEndRenderPass(commandBuffers[i]);
+
+            if (vkEndCommandBuffer(commandBuffers[i]) != VK_SUCCESS) {
+                throw std::runtime_error("failed to record command buffer!");
+            }
+        }
+}
 void Renderer::createTextureImage(std::string texture_path, EMesh* mesh) {
        VkDeviceSize imageSize = 0;
        Image size;
@@ -933,16 +1011,16 @@ void Renderer::update_descriptor_set(EMesh* mesh){
 void Renderer::updateUniformBuffer(uint32_t currentImage) {
        
  
-          for(int i = 0; i < engine->meshes.size(); i++){
-              engine->meshes[i]->ubo.view = engine->main_camera.View;
-               engine->meshes[i]->ubo.proj = engine->main_camera.Projection;
-               engine->meshes[i]->ubo.proj[1][1] *= -1;
-               engine->meshes[i]->ubo.model = engine->meshes[i]->model_matrix;
+          for(size_t i = 0; i < meshes.size(); i++){
+              meshes[i]->ubo.view = engine->main_camera.View;
+               meshes[i]->ubo.proj = engine->main_camera.Projection;
+               meshes[i]->ubo.proj[1][1] *= -1;
+               meshes[i]->ubo.model = meshes[i]->model_matrix;
 
             void* data;
-            vkMapMemory(device, engine->meshes[i]->uniformBuffersMemory[currentImage], 0, sizeof(engine->meshes[i]->ubo), 0, &data);
-                memcpy(data, &engine->meshes[i]->ubo, sizeof(engine->meshes[i]->ubo));
-            vkUnmapMemory(device, engine->meshes[i]->uniformBuffersMemory[currentImage]);           
+            vkMapMemory(device, meshes[i]->uniformBuffersMemory[currentImage], 0, sizeof(meshes[i]->ubo), 0, &data);
+                memcpy(data, &meshes[i]->ubo, sizeof(meshes[i]->ubo));
+            vkUnmapMemory(device, meshes[i]->uniformBuffersMemory[currentImage]);           
           }
               //skinned
           for(EMesh* mesh : engine->skeletal_meshes){
@@ -1141,7 +1219,7 @@ void Renderer::createGraphicsPipeline( const struct PipelineData * data, VkPipel
     }
 
 	void Renderer::configure_objects() {
-		createSyncObjects();
+		//createSyncObjects();
 		createCommandBuffers();
 	}
 
@@ -1337,4 +1415,25 @@ void Renderer::draw_frame() {
         }
 
         currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
+    }
+
+void Renderer::create_sync_objects() {
+        imageAvailableSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
+        renderFinishedSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
+        inFlightFences.resize(MAX_FRAMES_IN_FLIGHT);
+
+        VkSemaphoreCreateInfo semaphoreInfo = {};
+        semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+
+        VkFenceCreateInfo fenceInfo = {};
+        fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+        fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
+
+        for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
+            if (vkCreateSemaphore(device, &semaphoreInfo, nullptr, &imageAvailableSemaphores[i]) != VK_SUCCESS ||
+                vkCreateSemaphore(device, &semaphoreInfo, nullptr, &renderFinishedSemaphores[i]) != VK_SUCCESS ||
+                vkCreateFence(device, &fenceInfo, nullptr, &inFlightFences[i]) != VK_SUCCESS) {
+                throw std::runtime_error("failed to create synchronization objects for a frame!");
+            }
+        }
     }

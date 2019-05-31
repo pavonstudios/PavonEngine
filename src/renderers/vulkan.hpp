@@ -73,7 +73,7 @@ using namespace engine;
 class Renderer {
 
 public:
-    Engine* engine = nullptr;
+    Engine* engine;
     VulkanData* pVkData;
     vks::VulkanDevice *vulkan_device;
 	void run(VulkanData* vkdata);
@@ -85,10 +85,11 @@ public:
     bool framebufferResized = false;
     bool resized = false;
     
+    void initVulkan();
     void repeat();
     void finish();
     
-
+    std::vector<EMesh*> meshes;
 	void configure_objects();
 
     void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, 
@@ -98,7 +99,8 @@ public:
     void draw_frame();
     void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
 	void create_meshes_graphics_pipeline();
-
+    void create_command_buffer(std::vector<EMesh*>& meshes);
+    void create_sync_objects();
 private: 
 
     VkInstance instance;
@@ -160,7 +162,7 @@ private:
     VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
    
     
-	void initVulkan();
+	
 
     
 	void createInstance();
@@ -270,26 +272,7 @@ private:
 
     
 
-    void createSyncObjects() {
-        imageAvailableSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
-        renderFinishedSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
-        inFlightFences.resize(MAX_FRAMES_IN_FLIGHT);
-
-        VkSemaphoreCreateInfo semaphoreInfo = {};
-        semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
-
-        VkFenceCreateInfo fenceInfo = {};
-        fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-        fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
-
-        for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
-            if (vkCreateSemaphore(device, &semaphoreInfo, nullptr, &imageAvailableSemaphores[i]) != VK_SUCCESS ||
-                vkCreateSemaphore(device, &semaphoreInfo, nullptr, &renderFinishedSemaphores[i]) != VK_SUCCESS ||
-                vkCreateFence(device, &fenceInfo, nullptr, &inFlightFences[i]) != VK_SUCCESS) {
-                throw std::runtime_error("failed to create synchronization objects for a frame!");
-            }
-        }
-    }
+    
 
 
 

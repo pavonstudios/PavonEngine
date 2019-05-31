@@ -1,13 +1,14 @@
 CLANG=clang++ -g -std=c++17 -stdlib=libc++
 CC:=
-CCLINUX=g++ -g -std=c++17 -Wall
+CCLINUX=g++ -g -std=c++17
 CCWIN=x86_64-w64-mingw32-g++ -g -std=c++17 -Wall
 Library := -lpthread -lm -lSDL2
 
 MAIN_OBJS = camera.cpp engine.cpp
 DEFINES= -DGLTF -DDEVELOPMENT
 
-OBJs := main.o engine.o camera.o asset_manager.o objects.o input.o skeletal.o WindowManager.o game_map.o collision.o audio_manager.o
+OBJs := main.o WindowManager.o game_map.o collision.o audio_manager.o
+OBJs += engine.o camera.o asset_manager.o objects.o input.o skeletal.o
 OBJs += animation_manager.o
 OBJs += model_loader.o
 OBJs += gui.o
@@ -18,22 +19,25 @@ COMPILE= $(CC) -c -DGLTF $(DEFINES) -DDEVELOPMENT
 GAME := Game/*.o
 
 
-INCLUDE_OPENGL = -lGLESv2 -lEGL -lX11 
+INCLUDE_OPENGL = -lGLESv2 -lEGL -lX11 -lGL
 
 DEFINES :=
 TYPE :=
 
-
+export DEFINES
+export CC
 
 vk: DEFINES := -DVULKAN
 vk: DEFINES += -DLINUX
+vk: DEFINES += -DGLTF
 vk: DEFINES += -DGLFW
 vk: DEFINES += -DDEVELOPMENT
 vk: Library += -lglfw
 vk: GAME += Multiplayer/*.o
 vk: TYPE := vk
+vk: Library += -lGL
 vk: CC := $(CCLINUX)
-vk: vulkan.o  $(OBJs) game game connectivity.o
+vk: vulkan $(OBJs) game connectivity.o
 	
 	$(CC) -o ../renderer ./renderers/vulkan.o audio.o $(OBJs) $(GAME) $(Library) -I./ -lvulkan $(DEFINES)
 
@@ -42,6 +46,7 @@ es2: DEFINES := -DLINUX
 es2: DEFINES += -DES2
 es2: DEFINES += -DX11
 es2: DEFINES += -DEGL
+#es2: DEFINES += -DGLX
 es2: DEFINES += -DDEVELOPMENT
 es2: GAME += Multiplayer/*.o
 es2: TYPE := es2
@@ -77,6 +82,9 @@ WindowManager.o: WindowManager.cpp WindowManager.hpp
 	
 	$(CC) -c WindowManager.cpp -DGLTF $(DEFINES)
 
+.PHONY: vulkan
+vulkan:
+	$(MAKE) -C ./renderers $(TYPE)
 
 opengl.o: ./renderers/opengl.cpp ./renderers/opengl.hpp
 	$(CC) -c ./renderers/opengl.cpp -o ./renderers/opengl.o -DGLTF $(DEFINES)
@@ -138,11 +146,6 @@ objects.o: objects.cpp objects.h
 main.o: main.cpp
 	
 	$(CC) -c main.cpp -DGLTF $(DEFINES)
-
-
-
-vulkan.o: ./renderers/vulkan.cpp ./renderers/vulkan.hpp
-	$(CC) -c ./renderers/vulkan.cpp -o ./renderers/vulkan.o -DGLTF $(DEFINES)
 
 
 asset_manager.o: asset_manager.h asset_manager.cpp
