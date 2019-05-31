@@ -1,6 +1,9 @@
 #include "game.hpp"
 #include "weapon.hpp"
 #include "../Multiplayer/connectivity.hpp"
+
+#include "select.hpp"
+
 void Game::init_player(){
 
 		player = new ThirdPerson();		
@@ -27,6 +30,9 @@ void Game::init_player(){
 		player->weapons->main_weapon = new Weapon;
 		player->weapons->main_weapon->ammo = 30;
 
+		player_mesh_select = new ObjectSelect();
+		player_mesh_select->available_meshes.push_back(engine->meshes[1]);
+		player_mesh_select->available_meshes.push_back(engine->meshes[2]);
 
 }
 Game::Game(){
@@ -49,27 +55,34 @@ Game::~Game(){
 	#endif // ES2		
 	delete engine->net_manager;
 #endif // LINUX
-
+	delete player_mesh_select;
 
 	delete player->weapons;
 }
 
 void Game::update(){
 	if(!engine->edit_mode){
-			if(player->mesh){
-				player->update();
-#ifdef LINUX
-				engine->net_manager->send_player_data(player);					
-#endif
-			}
-			if(player2){
-				if(player2->mesh){
-				player2->mesh->model_matrix = glm::translate( glm::mat4(1.0),player2->location );
 
-				}
+
+		if(engine->input.M.bIsPressed){
+			spawn_new_mesh();
+		}
+
+		if(player->mesh){
+			player->update();
+			#ifdef LINUX
+				engine->net_manager->send_player_data(player);					
+			#endif
+		}
+		
+		if(player2){
+			if(player2->mesh){
+			player2->mesh->model_matrix = glm::translate( glm::mat4(1.0),player2->location );
+
 			}
-			
-		}			
+		}
+		
+	}			
 
 #ifdef ES2
 	gui->calculate_mouse_position();			
@@ -108,4 +121,16 @@ void Game::spawn_new_player(){
 	}
 
 	this->player2 = new_player;
+}
+
+void Game::spawn_new_mesh(){
+	if(!mesh_spawned){
+		EMesh* new_player_mesh = new EMesh;
+		memcpy(new_player_mesh,engine->meshes[2], sizeof(EMesh));
+		engine->meshes.push_back(new_player_mesh);
+		new_player_mesh->model_matrix = engine->meshes[1]->model_matrix;
+		//delete(engine->meshes[1]);
+		player->mesh = new_player_mesh;
+		mesh_spawned = true;
+	}
 }

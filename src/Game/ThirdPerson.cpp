@@ -73,6 +73,8 @@ void ThirdPerson::update(){
 
 		engine->play_animations = false;
 		
+	
+
 	if(engine->input.left_button_pressed){
 		weapons->shoot(weapons->main_weapon);		
 	}

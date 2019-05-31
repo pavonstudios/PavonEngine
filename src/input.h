@@ -46,6 +46,7 @@ public:
 	Key ESC;
 	Key SHIFT;
 	Key R;
+	Key M;
 
 	float pitch = 0;
 	float yaw = 0;
