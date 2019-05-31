@@ -138,19 +138,21 @@ void Renderer::pickPhysicalDevice() {
 	vkEnumeratePhysicalDevices(instance, &deviceCount, nullptr);
 
 	if (deviceCount == 0) {
-		throw std::runtime_error("failed to find GPUs with Vulkan support!");
+		throw std::string("failed to find GPUs with Vulkan support!");
 	}
 
 	std::vector<VkPhysicalDevice> devices(deviceCount);
 	vkEnumeratePhysicalDevices(instance, &deviceCount, devices.data());
 
 	for (const auto& device : devices) {
-		if (isDeviceSuitable(device)) {
+		/* if (isDeviceSuitable(device)) {
 			physicalDevice = device;
-			break;
-		}
+			//break;
+		} */
 	}
+    physicalDevice = devices[0];
 
+   
 	if (physicalDevice == VK_NULL_HANDLE) {
 		throw std::runtime_error("failed to find a suitable GPU!");
 	}

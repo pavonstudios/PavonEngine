@@ -75,21 +75,83 @@ void WindowManager::create_window_xorg(){
    }
  
    x_window  =  DefaultRootWindow( x_display );   // get the root window (usually the whole screen)
- 
-   XSetWindowAttributes  swa;
+
+	int screen_number = DefaultScreen(x_display);
+	Window root_window = RootWindow(x_display,screen_number);
+
+	XSetWindowAttributes  swa;
    swa.event_mask  =    ExposureMask | PointerMotionMask | KeyPressMask | 
                         KeyReleaseMask | StructureNotifyMask | ButtonPressMask |
                         ButtonReleaseMask;
+
+	unsigned long mask = CWBackPixel | CWBorderPixel | CWColormap | CWEventMask;
+
+	#ifdef GLX
+	
+	XVisualInfo *visual_info;
+
+	int attr[] = {
+		GLX_RGBA,
+		GLX_RED_SIZE, 1,
+		GLX_GREEN_SIZE, 1,
+		GLX_BLUE_SIZE, 1,
+		GLX_DOUBLEBUFFER,
+		GLX_DEPTH_SIZE, 1,
+		None
+	};
+
+	int elemc;
+	GLXFBConfig *fbcfg = glXChooseFBConfig(x_display, screen_number, NULL, &elemc);
+	if (!fbcfg) 
+		throw std::string("Couldn't get FB configs\n");
+	else
+		printf("Got %d FB configs\n", elemc);
+
+	visual_info = glXChooseVisual(x_display, screen_number, attr);
+	#endif // glx
+	
  
-   x_window  =  XCreateWindow (   // create a window with the provided parameters
-              x_display, x_window,
+   
+	#ifdef GLX
+	swa.colormap = XCreateColormap(x_display, root_window , visual_info->visual , AllocNone);
+	x_window  =  XCreateWindow (   // create a window with the provided parameters
+              x_display, root_window,
               0, 0, this->window_width, this->window_height,   0,
-              CopyFromParent, InputOutput,
-              CopyFromParent, CWEventMask,
+              visual_info->depth, InputOutput,
+              visual_info->visual, mask,
               &swa ); 
 
-   XMapWindow ( x_display , x_window );             // make the window visible on the screen
-   XStoreName ( x_display , x_window , this->window_name); // give the window a name 
+
+	int gl3attr[] = {
+    GLX_CONTEXT_MAJOR_VERSION_ARB, 3,
+    GLX_CONTEXT_MINOR_VERSION_ARB, 2,
+    GLX_CONTEXT_FLAGS_ARB, GLX_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB,
+		None
+	};
+
+	GLXContext cx;
+	cx = glXCreateContextAttribsARB(x_display, fbcfg[0], NULL, true, gl3attr);
+
+	#endif 
+
+	#ifdef EGL
+		x_window  =  XCreateWindow (   // create a window with the provided parameters
+              x_display, root_window,
+              0, 0, this->window_width, this->window_height,   0,
+              CopyFromParent, InputOutput,
+              CopyFromParent, mask,
+              &swa ); 
+	#endif // DEBUG
+
+	XStoreName ( x_display , x_window , this->window_name); // give the window a name 
+	XMapWindow ( x_display , x_window );             // make the window visible on the screen
+
+	#ifdef GLX
+		glXMakeCurrent(x_display, x_window, cx);
+	#endif // glx
+
+   
+  
 
    Atom wmDeleteMessage = XInternAtom(x_display, "WM_DESTROY_WINDOW", False);
    XSetWMProtocols(x_display, x_window, &wmDeleteMessage, 1);
@@ -97,16 +159,7 @@ void WindowManager::create_window_xorg(){
    #ifdef EGL
    configure_egl();
    #endif // EGL
-   #ifdef X11
-	XVisualInfo *vi;
-	static int attributeList[] = { GLX_RGBA, None };
-	 vi = glXChooseVisual(x_display, DefaultScreen(x_display), attributeList);
-	 GLXContext cx;
-	 cx = glXCreateContext(x_display, vi, 0, GL_TRUE);
-	  glXMakeCurrent(x_display, x_window, cx);
 
-	#endif // DEBUG
-    
 }
 
 void WindowManager::clear(){
@@ -319,7 +372,7 @@ void WindowManager::window_resize()
 
 #endif // WINDOWS
 
-#ifdef OPENGL
+#if defined (WINDOWS) && defined(OPENGL)
 void WindowManager::prepare_window_to_opengl()
 {
 	PIXELFORMATDESCRIPTOR pfd =
@@ -477,18 +530,19 @@ void WindowManager::swap_buffers(){
       #ifdef ANDROID
          eglSwapBuffers(display, surface);
       #endif
-       #if defined(LINUX) && defined(X11) && defined (ES2)
+       #if defined(EGL)
          eglSwapBuffers ( egl_display, egl_surface );
       #endif
       #if defined (GLFW)
          glfwSwapBuffers(glfw_window);
       #endif
-	#if defined (WINDOWS) && defined (OPENGL)
-		SwapBuffers(device_context);
-	#endif // WINDOWS
-		#ifdef X11		 
-		 glXSwapBuffers(engine->window_manager.x_display , engine->window_manager.x_window);
-		#endif // x11
+		#if defined (WINDOWS) && defined (OPENGL)
+			SwapBuffers(device_context);
+		#endif // WINDOWS
+
+		#ifdef GLX		 
+			glXSwapBuffers(engine->window_manager.x_display , engine->window_manager.x_window);
+		#endif // GLX
 }
 
 WindowManager::~WindowManager(){
