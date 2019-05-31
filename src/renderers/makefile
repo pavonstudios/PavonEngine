@@ -4,7 +4,7 @@ CC = $(CCLINUX)
 vk: vulkan.o
 
 vulkan.o: vulkan.cpp vulkan.hpp
-	$(CC) -c vulkan.cpp -DX11 -DVK_USE_PLATFORM_XLIB_KHR -DVULKAN -DGLTF
+	$(CC) -c vulkan.cpp -DVULKAN -DGLTF -DGLFW
 
 gl: opengl.cpp opengl.hpp
 	$(CC) -c opengl.cpp

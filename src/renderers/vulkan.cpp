@@ -45,7 +45,7 @@ void Renderer::createSurface() {
 	surface_create_info.hwnd = engine->window_manager.window_handler;
 	VK_CHECK_RESULT(vkCreateWin32SurfaceKHR(instance, &surface_create_info, NULL, &surface));
 #endif
-#ifdef X11
+#if defined (X11) && defined (GLX)
     //"VK_KHR_xlib_surface"
    VkXlibSurfaceCreateInfoKHR create_info = {};
    create_info.dpy = engine->window_manager.x_display;
@@ -150,7 +150,7 @@ void Renderer::pickPhysicalDevice() {
 			//break;
 		} */
 	}
-    physicalDevice = devices[0];
+    physicalDevice = devices[1];
 
    
 	if (physicalDevice == VK_NULL_HANDLE) {

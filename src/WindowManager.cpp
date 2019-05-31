@@ -204,7 +204,7 @@ void WindowManager::error_callback(int error, const char* description)
 	fprintf(stderr, "Error: %s \n Error Number: %i\n", description, error);
 }
 void WindowManager::create_window(){
-   #ifdef X11
+   #if defined (X11) && !defined (GLFW)
       create_window_xorg();
    #endif
    #ifdef GLFW

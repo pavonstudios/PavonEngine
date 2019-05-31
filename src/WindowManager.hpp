@@ -119,9 +119,10 @@ public:
     }
     public:
         static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
+        void create_window_glfw();
     private:
         GLFWwindow* glfw_window;
-        void create_window_glfw();
+        
         
     #endif
     #ifdef ANDROID

@@ -28,9 +28,9 @@ TYPE :=
 
 vk: DEFINES := -DVULKAN
 vk: DEFINES += -DLINUX
-vk: DEFINES += -DX11
+vk: DEFINES += -DGLFW
 vk: DEFINES += -DDEVELOPMENT
-vk: Library += -lX11
+vk: Library += -lglfw
 vk: GAME += Multiplayer/*.o
 vk: TYPE := vk
 vk: Library += -lGL

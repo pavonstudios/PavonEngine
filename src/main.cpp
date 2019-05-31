@@ -94,23 +94,23 @@ int WINAPI WinMain(HINSTANCE hInstance,
             Engine engine;
             
             engine.window_manager.engine = &engine;
-            engine.renderer.engine = &engine;
+           
             engine.meshes.clear();
-            engine.window_manager.create_window_xorg();
+            engine.window_manager.create_window_glfw();
 
             
-            /* 
+            
             engine.renderer.meshes = engine.meshes;
+             engine.renderer.engine = &engine;
             engine.renderer.initVulkan();
             engine.renderer.VulkanConfig();		
             engine.renderer.create_sync_objects();
             engine.renderer.create_command_buffer(engine.meshes);
-	 */
+	 
             
             while(!engine.window_manager.window_should_close()){
                engine.window_manager.check_events();
-               glClearColor(1, 0.0, 0.0, 1.0);
-               glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+               engine.renderer.draw_frame();
                engine.window_manager.swap_buffers();
               
             }
