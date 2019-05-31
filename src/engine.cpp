@@ -177,6 +177,7 @@ void Engine::init()
 
 		renderer.create_sync_objects();
 		//create_command_buffer
+		renderer.create_command_buffer(meshes);
 		
 		
 	#endif
