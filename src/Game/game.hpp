@@ -28,5 +28,6 @@ class Game{
 		ThirdPerson * player = nullptr;
 		ThirdPerson* player2 = nullptr;
 		int player_id = -1;
+
 };
 #endif

@@ -64,7 +64,7 @@ void Game::update(){
 	if(!engine->edit_mode){
 
 
-		if(engine->input.M.bIsPressed){
+		if(engine->input.M.Released){
 			spawn_new_mesh();
 		}
 

@@ -150,7 +150,7 @@ void Renderer::pickPhysicalDevice() {
 			//break;
 		} */
 	}
-    physicalDevice = devices[1];
+    physicalDevice = devices[0];
 
    
 	if (physicalDevice == VK_NULL_HANDLE) {

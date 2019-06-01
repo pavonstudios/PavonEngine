@@ -153,7 +153,7 @@ asset_manager.o: asset_manager.h asset_manager.cpp
 	$(CC) -c asset_manager.cpp -I./ -DGLTF $(DEFINES)
 
 
-engine.o: engine.cpp engine.h
+engine.o: engine.cpp engine.h ./Game/game.hpp
 	
 	$(CC) -c engine.cpp -I./ -DGLTF $(DEFINES) -DDEVELOPMENT
 	
