@@ -1,7 +1,26 @@
 
+DEFINES_WINLIB:= 
+INLCUDE_WINLIB :=
+export DEFINES_WINLIB
+export INLCUDE_WINLIB
+#es2: DEFINES += -DGLX
+
 .PHONY: es2
+es2: DEFINES_WINLIB += -DX11 -DEGL
 es2:
 	$(MAKE) -C ./src es2
+
+.PHONY: es2glx
+es2glx: DEFINES_WINLIB += -DX11 -DGLX
+es2glx:
+	$(MAKE) -C ./src es2
+
+.PHONY: es2wayland
+es2wayland: INLCUDE_WINLIB += -lwayland-client ./WindowManager/xdg-shell-protocol.o
+es2wayland: DEFINES_WINLIB += -DWAYLAND
+es2wayland:
+	$(MAKE) -C ./src es2
+
 
 .PHONY: vk
 vk:

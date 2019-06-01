@@ -2,7 +2,7 @@ CLANG=clang++ -g -std=c++17 -stdlib=libc++
 CC:=
 CCLINUX=g++ -g -std=c++17
 CCWIN=x86_64-w64-mingw32-g++ -g -std=c++17 -Wall
-Library := -lpthread -lm -lSDL2
+Library := -lpthread -lm -lSDL2 $(INLCUDE_WINLIB)
 
 MAIN_OBJS = camera.cpp engine.cpp
 DEFINES= -DGLTF -DDEVELOPMENT
@@ -27,6 +27,7 @@ TYPE :=
 export DEFINES
 export CC
 
+
 vk: DEFINES := -DVULKAN
 vk: DEFINES += -DLINUX
 vk: DEFINES += -DGLTF
@@ -44,15 +45,13 @@ vk: vulkan $(OBJs) game connectivity.o
 
 es2: DEFINES := -DLINUX
 es2: DEFINES += -DES2
-es2: DEFINES += -DX11
-es2: DEFINES += -DEGL
-#es2: DEFINES += -DGLX
 es2: DEFINES += -DDEVELOPMENT
+es2: DEFINES += $(DEFINES_WINLIB)
 es2: GAME += Multiplayer/*.o
 es2: TYPE := es2
 es2: CC := $(CCLINUX)
 es2: $(OBJs) game connectivity.o opengl.o	
-	$(CC) -o ../renderer audio.o $(OBJs) ./renderers/opengl.o $(GAME) $(Library) $(INCLUDE_OPENGL) -I./ $(DEFINES) -DGLTF 
+	$(CC) -o ../renderer audio.o $(OBJs) ./renderers/opengl.o $(GAME) $(Library) $(INCLUDE_OPENGL) -I./ $(DEFINES)  -DGLTF 
 
 
 #win: CC := $(CCWIN)
@@ -62,6 +61,8 @@ win: DEFINES += -DDEVELOPMENT
 win: main.o engine.o WindowManager.o directx.o
 	
 	$(CC) -o ../renderer.exe main.o engine.o WindowManager.o directx.o -lglfw3 -lgdi32 -static -static-libstdc++ -DWINDOWS
+
+
 
 
 

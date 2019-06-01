@@ -96,28 +96,29 @@ int WINAPI WinMain(HINSTANCE hInstance,
             engine.window_manager.engine = &engine;
            
             engine.meshes.clear();
-            /* engine.window_manager.create_window_glfw();
+            //engine.window_manager.create_window_glfw();
 
             
             
-            engine.renderer.meshes = engine.meshes;
+           // engine.renderer.meshes = engine.meshes;
              engine.renderer.engine = &engine;
-            engine.renderer.initVulkan();
+           /*  engine.renderer.initVulkan();
             engine.renderer.VulkanConfig();		
             engine.renderer.create_sync_objects();
-            engine.renderer.create_command_buffer(engine.meshes);
+            engine.renderer.create_command_buffer(engine.meshes); */
 	 
-            
+            engine.window_manager.create_window();
             while(!engine.window_manager.window_should_close()){
-               engine.window_manager.check_events();
-               engine.renderer.draw_frame();
-               engine.window_manager.swap_buffers();
+               //engine.window_manager.check_events();
+               //engine.renderer.draw_frame();
+               //engine.window_manager.swap_buffers();
               
-            } */
-            engine.init();
+            }
+
+          /*   engine.init();
 			engine.textures_manager.free_textures_from_cpu_memory(&engine, engine.meshes);            
             
-            engine.main_loop();                  
+            engine.main_loop();    */               
 
             return EXIT_SUCCESS;      
         }

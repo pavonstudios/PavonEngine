@@ -4,45 +4,52 @@
 #if defined(X11)
     #include  <X11/Xlib.h>
     #include  <X11/Xatom.h>
-    #include  <X11/Xutil.h> 
+    #include  <X11/Xutil.h>     
+#endif
 
+#ifdef GLX
     #define GL_GLEXT_PROTOTYPES
     #define GLX_GLXEXT_PROTOTYPES
     #include <GL/glx.h> 
     #include <GL/glxext.h>
-#endif
+#endif // GLX
 
 #ifdef ES2
     #include <GLES2/gl2.h>
 #endif
 
-#if defined(LINUX) && defined(X11) && defined (ES2)
-    #include <EGL/egl.h>
-  
+#if defined (EGL)
+    #include <EGL/egl.h>  
     using namespace std;
 #endif
+
 #ifdef ANDROID
     #include <EGL/egl.h>
     #include <GLES2/gl2.h>
     #include <android_native_app_glue.h>
 #endif
+
 #if defined (GLFW) 
 	#define GLFW_INCLUDE_NONE
     #include <GLFW/glfw3.h>
 #endif
+
 #ifdef WAYLAND
     #include <wayland-client.h>
+    #include <wayland-server.h>
+    #include "WindowManager/xdg-shell-protocol.h"
+    #include <wayland-client-protocol.h>
 #endif
 
 #ifdef WINDOWS
-#include <Windows.h>
-#include <tchar.h>
+    #include <Windows.h>
+    #include <tchar.h>
 #endif
-
 
 #include  <iostream>
 #include  <cstdlib>
 #include  <cstring>
+
 class Engine;
 
 class WindowManager{
@@ -90,7 +97,11 @@ public:
         void create_window(android_app * app);
     #endif
         
-    
+    #ifdef WAYLAND
+       struct wl_display* display = nullptr;
+       struct xdg_surface *xdg_surface = nullptr;        
+        struct wl_surface *surface;
+    #endif
 
     #ifdef X11
         Display    *x_display;

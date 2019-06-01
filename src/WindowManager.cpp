@@ -424,11 +424,80 @@ void WindowManager::prepare_window_to_opengl()
 
 
 #ifdef WAYLAND
+struct wl_compositor *compositor = NULL;
+struct xdg_wm_base * wm_base = NULL ;     
+
+static void
+global_registry_handler(void *data, struct wl_registry *registry, uint32_t id,
+			const char *interface, uint32_t version)
+{
+	printf("Got a registry event for %s id %d\n", interface, id);
+	if (strcmp(interface, "wl_compositor") == 0)
+			compositor = (struct wl_compositor*)wl_registry_bind(registry, 
+							id, 
+							&wl_compositor_interface, 
+							1);
+	if(strcmp(interface, "xdg_wm_base") == 0){
+		wm_base = (struct xdg_wm_base*)wl_registry_bind(registry,id,&xdg_wm_base_interface,1);
+	}
+}
+
+static void
+global_registry_remover(void *data, struct wl_registry *registry, uint32_t id)
+{
+	printf("Got a registry losing event for %d\n", id);
+}
+
+static const struct wl_registry_listener registry_listener = {
+	global_registry_handler,
+	global_registry_remover
+};
+
 void WindowManager::create_wayland_window(){
-   struct wl_display* display = nullptr;
+	std::cout << "creating a wayland window" << std::endl;
+   
    display = wl_display_connect(nullptr);
    
+	struct wl_registry *registry = wl_display_get_registry(display);
+    wl_registry_add_listener(registry, &registry_listener, NULL);
 
+    wl_display_dispatch(display);
+    wl_display_roundtrip(display);
+
+	 if (compositor == NULL) {
+	fprintf(stderr, "Can't find compositor\n");
+	exit(1);
+    } else {
+	fprintf(stderr, "Found compositor\n");
+    }
+
+
+    surface = wl_compositor_create_surface(compositor);
+    if (surface == NULL) {
+	fprintf(stderr, "Can't create surface\n");
+	exit(1);
+    } else {
+	fprintf(stderr, "Created surface\n");
+    }
+
+
+	 //xdg_wm_base_get_xdg_surface()
+
+	//xdg_surface_send_configure()
+	//xdg_toplevel_send_configure();
+	std::cout << "XDG method count " << xdg_wm_base_interface.method_count << std::endl;
+	//xdg_wm_base_interface::get_xdg_surface();
+
+
+	 if (wm_base == NULL) {
+	fprintf(stderr, "Can't find wm base\n");
+	exit(1);
+    } else {
+	fprintf(stderr, "Found wn base\n");
+    }
+
+	wl_surface_commit(surface);
+	
 }
 
 #endif 
@@ -498,32 +567,30 @@ void WindowManager::check_events(){
       
      
    #endif
-#if defined GLFW
-      	glfwPollEvents();
-   #endif
+	#if defined GLFW
+			glfwPollEvents();
+	#endif
 
-#ifdef  ANDROID
-    int events;
-    android_poll_source *pSource;
-    if (ALooper_pollAll(0, nullptr, &events, (void **) &pSource) >= 0) {
-        if (pSource) {
-            pSource->process(engine->pAndroid_app, pSource);
-        }
-    }
-#endif
+	#ifdef  ANDROID
+		int events;
+		android_poll_source *pSource;
+		if (ALooper_pollAll(0, nullptr, &events, (void **) &pSource) >= 0) {
+			if (pSource) {
+					pSource->process(engine->pAndroid_app, pSource);
+			}
+		}
+	#endif
 
-#ifdef WINDOWS
-	MSG msg;
-	if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE | PM_NOYIELD))
-	{
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
-	}
-#endif // WINDOWS
+	#ifdef WINDOWS
+		MSG msg;
+		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE | PM_NOYIELD))
+		{
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
+	#endif // WINDOWS
 
 }
-
-
 
 void WindowManager::swap_buffers(){
       #ifdef ANDROID
