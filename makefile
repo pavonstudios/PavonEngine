@@ -16,8 +16,8 @@ es2glx:
 	$(MAKE) -C ./src es2
 
 .PHONY: es2wayland
-es2wayland: INLCUDE_WINLIB += -lwayland-client ./WindowManager/xdg-shell-protocol.o
-es2wayland: DEFINES_WINLIB += -DWAYLAND
+es2wayland: INLCUDE_WINLIB += -lwayland-client ./WindowManager/xdg-shell-protocol.o -ldl -lEGL
+es2wayland: DEFINES_WINLIB += -DWAYLAND -DEGL
 es2wayland:
 	$(MAKE) -C ./src es2
 

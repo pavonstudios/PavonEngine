@@ -109,7 +109,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	 
             engine.window_manager.create_window();
             while(!engine.window_manager.window_should_close()){
-               //engine.window_manager.check_events();
+               engine.window_manager.check_events();
                //engine.renderer.draw_frame();
                //engine.window_manager.swap_buffers();
               

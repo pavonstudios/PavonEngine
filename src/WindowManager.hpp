@@ -38,7 +38,11 @@
     #include <wayland-client.h>
     #include <wayland-server.h>
     #include "WindowManager/xdg-shell-protocol.h"
+    #include "WindowManager/wayland-xdg-shell-client-protocol.h"
     #include <wayland-client-protocol.h>
+    #include <dlfcn.h>
+    #include <EGL/egl.h>
+    typedef struct wl_egl_window* (* PFN_wl_egl_window_create)(struct wl_surface*, int, int);
 #endif
 
 #ifdef WINDOWS
@@ -98,9 +102,10 @@ public:
     #endif
         
     #ifdef WAYLAND
-       struct wl_display* display = nullptr;
-       struct xdg_surface *xdg_surface = nullptr;        
+        struct wl_display* display = nullptr;
+        struct xdg_surface *xdg_surface = nullptr;        
         struct wl_surface *surface;
+        struct wl_egl_window* egl_window;
     #endif
 
     #ifdef X11

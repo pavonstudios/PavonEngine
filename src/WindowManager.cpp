@@ -5,17 +5,25 @@
 #if defined(EGL)
 void WindowManager::configure_egl(){
 
-   egl_display  =  eglGetDisplay( (EGLNativeDisplayType) x_display );
+	#ifdef X11
+	 egl_display  =  eglGetDisplay( (EGLNativeDisplayType) x_display );
+	#endif // DEBUG
+	#ifdef WAYLAND
+		 egl_display  =  eglGetDisplay( (EGLNativeDisplayType) display );
+	#endif // DEBUG
+  
    if ( egl_display == EGL_NO_DISPLAY ) {
-      std::cerr << "Got no EGL display." << std::endl;
+      std::cout << "Got no EGL display." << std::endl;
       
    }
  
    if ( !eglInitialize( egl_display, NULL, NULL ) ) {
-      std::cerr << "Unable to initialize EGL" << std::endl;
+      std::cout << "Unable to initialize EGL" << std::endl;
      
    }
  
+
+	//context
    EGLint attr[] = {       // some attributes to set up our egl-interface
       EGL_BUFFER_SIZE, 16,
       EGL_RENDERABLE_TYPE,
@@ -27,20 +35,31 @@ void WindowManager::configure_egl(){
    EGLConfig  ecfg;
    EGLint     num_config;
    if ( !eglChooseConfig( egl_display, attr, &ecfg, 1, &num_config ) ) {
-      cerr << "Failed to choose config (eglError: " << eglGetError() << ")" << endl;
+      std::cout << "Failed to choose config (eglError: " << eglGetError() << ")" << endl;
       
    }
  
    if ( num_config != 1 ) {
-      cerr << "Didn't get exactly one config, but " << num_config << endl;
+      std::cout << "Didn't get exactly one config, but " << num_config << endl;
     
    }
- 
-   egl_surface = eglCreateWindowSurface ( egl_display, ecfg, x_window, NULL );
+	
+	#ifdef X11
+	egl_surface = eglCreateWindowSurface ( egl_display, ecfg, x_window, NULL );
    if ( egl_surface == EGL_NO_SURFACE ) {
-      cerr << "Unable to create EGL surface (eglError: " << eglGetError() << ")" << endl;
+      std::cout << "Unable to create EGL surface (eglError: " << eglGetError() << ")" << endl;
       
    }
+	#endif // X11
+
+	#ifdef WAYLAND
+		egl_surface = eglCreateWindowSurface(egl_display,ecfg,(EGLNativeWindowType)egl_window,NULL);
+		if ( egl_surface == EGL_NO_SURFACE ) {
+      std::cout << "Unable to create EGL surface (eglError: " << eglGetError() << ")" << endl;
+      
+   	}
+	#endif //WAYLAND
+  
  
    EGLint ctxattr[] = {
       EGL_CONTEXT_CLIENT_VERSION, 2,
@@ -452,8 +471,52 @@ static const struct wl_registry_listener registry_listener = {
 	global_registry_handler,
 	global_registry_remover
 };
+static void xdgSurfaceHandleConfigure(void* data,
+                                      struct xdg_surface* surface,
+                                      uint32_t serial)
+{
+    xdg_surface_ack_configure(surface, serial);
+}
+
+static const struct xdg_surface_listener xdgSurfaceListener = {
+    xdgSurfaceHandleConfigure
+};
+
+
+static void xdgToplevelHandleConfigure(void* data,
+                                       struct xdg_toplevel* toplevel,
+                                       int32_t width,
+                                       int32_t height,
+                                       struct wl_array* states)
+{
+   printf("Size: %i\n",width);
+}
+
+static void xdgToplevelHandleClose(void* data,
+                                   struct xdg_toplevel* toplevel)
+{
+  
+}
+
+static const struct xdg_toplevel_listener xdgToplevelListener = {
+    xdgToplevelHandleConfigure,
+    xdgToplevelHandleClose
+};
+
+
 
 void WindowManager::create_wayland_window(){
+	
+
+	std::cout << "Loading wayland libraty\n";
+
+	void* hanlde = dlopen("libwayland-egl.so.1", RTLD_LAZY | RTLD_LOCAL);
+
+	
+	PFN_wl_egl_window_create crete_egl_window = (PFN_wl_egl_window_create) dlsym(hanlde, "wl_egl_window_create");
+
+	
+
 	std::cout << "creating a wayland window" << std::endl;
    
    display = wl_display_connect(nullptr);
@@ -462,7 +525,7 @@ void WindowManager::create_wayland_window(){
     wl_registry_add_listener(registry, &registry_listener, NULL);
 
     wl_display_dispatch(display);
-    wl_display_roundtrip(display);
+   
 
 	 if (compositor == NULL) {
 	fprintf(stderr, "Can't find compositor\n");
@@ -481,6 +544,18 @@ void WindowManager::create_wayland_window(){
     }
 
 
+	 egl_window = crete_egl_window(surface,800,600);
+
+	if(!egl_window){
+		std::cout << "failed to create window\n";
+	}else{
+		std::cout << "created egl window\n";
+	}
+
+	std::cout << "Egl configure\n";
+
+	 configure_egl();
+	
 	 //xdg_wm_base_get_xdg_surface()
 
 	//xdg_surface_send_configure()
@@ -488,6 +563,7 @@ void WindowManager::create_wayland_window(){
 	std::cout << "XDG method count " << xdg_wm_base_interface.method_count << std::endl;
 	//xdg_wm_base_interface::get_xdg_surface();
 
+	xdg_surface = xdg_wm_base_get_xdg_surface(wm_base,surface);
 
 	 if (wm_base == NULL) {
 	fprintf(stderr, "Can't find wm base\n");
@@ -496,8 +572,25 @@ void WindowManager::create_wayland_window(){
 	fprintf(stderr, "Found wn base\n");
     }
 
-	wl_surface_commit(surface);
+	xdg_surface_add_listener(xdg_surface,&xdgSurfaceListener,nullptr);
+
+	struct xdg_toplevel* top_level =  xdg_surface_get_toplevel(xdg_surface);
+
+	if(!top_level){
+		printf("no top level \n");
+	}
+
+	xdg_toplevel_add_listener(top_level,&xdgToplevelListener,nullptr);
+
+	//xdg_toplevel_set_fullscreen()
 	
+	//xdg_toplevel_set_maximized(top_level);
+
+	//xdg_toplevel_set_fullscreen()
+	
+
+	wl_surface_commit(surface);
+	 wl_display_roundtrip(display);
 }
 
 #endif 
@@ -590,6 +683,13 @@ void WindowManager::check_events(){
 		}
 	#endif // WINDOWS
 
+	#ifdef WAYLAND
+		while (wl_display_prepare_read(display) != 0)
+        wl_display_dispatch_pending(display);
+
+		wl_display_read_events(display);
+      wl_display_dispatch_pending(display);
+	#endif // WAYLAND
 }
 
 void WindowManager::swap_buffers(){
