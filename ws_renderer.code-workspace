@@ -61,6 +61,7 @@
 			"__nullptr": "cpp",
 			"thread": "cpp",
 			"typeindex": "cpp"
-		}
+		},
+		"workbench.colorTheme": "Default Light+"
 	}
 }
